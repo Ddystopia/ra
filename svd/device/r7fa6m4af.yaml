@@ -2,3 +2,4 @@ _svd: "../patch/r7fa6m4af.svd"
 
 _include: 
   - "periph/sdhi.yaml"
+  - "periph/rtc.yaml"

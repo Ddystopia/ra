@@ -1,1 +1,4 @@
 _svd: "../patch/r7fa6m2af.svd"
+
+_include: 
+  - "periph/usb.yaml"

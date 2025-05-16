@@ -1,0 +1,9 @@
+USBHS:
+  "DEVADD%s":
+    _modify:
+      UPPHUB:
+        _write_constraint: [0, 10]
+  DEVADDA:
+    _modify:
+      UPPHUB:
+        _write_constraint: [0, 10]
