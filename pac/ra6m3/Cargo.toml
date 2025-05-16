@@ -1,0 +1,35 @@
+
+[package]
+name = "ra6m3-pac"
+description = "Peripheral access API for RA6M3 microcontrollers (generated using svd2rust)"
+version = "0.1.0"
+authors = [
+    "Nathan Larsen <n8tlarsen@gmail.com>",
+    "Addison Heavner <addisonheavner@gmail.com>",
+    "Oleksandr Babak <alexanderbabak@proton.me>",
+]
+keywords = ["no-std", "arm", "cortex-m", "renesas", "fsp"]
+categories = ["embedded", "hardware-support", "no-std"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/ra-rs/ra"
+readme = "README.md"
+edition = "2021"
+
+[dependencies]
+critical-section = { version = "1.0", optional = true }
+cortex-m = "0.7.6"
+cortex-m-rt = { version = "0.7.5", optional = true }
+vcell = "0.1.2"
+portable-atomic = { version = "0.3.16", default-features = false, optional = true }
+# TODO: from `crates.io`
+ra-fsp-sys = { git = "https://github.com/Ddystopia/ra-fsp-sys", optional = true, features = ["ra6m3"] }
+
+[features]
+rt = []
+fsp = ["dep:ra-fsp-sys", "rt"]
+cortex-m-rt-device = ["cortex-m-rt/device", "rt"]
+atomics = ["dep:portable-atomic"]
+critical-section = ["dep:critical-section"]
+
+[lints]
+rust.unreachable_patterns = "allow"

@@ -1,0 +1,186 @@
+///Register `SDCCR` reader
+pub type R = crate::R<SDCCR_SPEC>;
+///Register `SDCCR` writer
+pub type W = crate::W<SDCCR_SPEC>;
+/**Operation Enable
+
+Value on reset: 0*/
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum EXENB_A {
+    ///0: Disable
+    _0 = 0,
+    ///1: Enable
+    _1 = 1,
+}
+impl From<EXENB_A> for bool {
+    #[inline(always)]
+    fn from(variant: EXENB_A) -> Self {
+        variant as u8 != 0
+    }
+}
+///Field `EXENB` reader - Operation Enable
+pub type EXENB_R = crate::BitReader<EXENB_A>;
+impl EXENB_R {
+    ///Get enumerated values variant
+    #[inline(always)]
+    pub const fn variant(&self) -> EXENB_A {
+        match self.bits {
+            false => EXENB_A::_0,
+            true => EXENB_A::_1,
+        }
+    }
+    ///Disable
+    #[inline(always)]
+    pub fn is_0(&self) -> bool {
+        *self == EXENB_A::_0
+    }
+    ///Enable
+    #[inline(always)]
+    pub fn is_1(&self) -> bool {
+        *self == EXENB_A::_1
+    }
+}
+///Field `EXENB` writer - Operation Enable
+pub type EXENB_W<'a, REG> = crate::BitWriter<'a, REG, EXENB_A>;
+impl<'a, REG> EXENB_W<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    ///Disable
+    #[inline(always)]
+    pub fn _0(self) -> &'a mut crate::W<REG> {
+        self.variant(EXENB_A::_0)
+    }
+    ///Enable
+    #[inline(always)]
+    pub fn _1(self) -> &'a mut crate::W<REG> {
+        self.variant(EXENB_A::_1)
+    }
+}
+/**SDRAM Bus Width Select
+
+Value on reset: 0*/
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[repr(u8)]
+pub enum BSIZE_A {
+    ///0: A 16-bit bus space
+    _00 = 0,
+    ///1: Setting prohibited
+    _01 = 1,
+    ///2: An 8-bit bus space
+    _10 = 2,
+    ///3: Setting prohibited
+    _11 = 3,
+}
+impl From<BSIZE_A> for u8 {
+    #[inline(always)]
+    fn from(variant: BSIZE_A) -> Self {
+        variant as _
+    }
+}
+impl crate::FieldSpec for BSIZE_A {
+    type Ux = u8;
+}
+impl crate::IsEnum for BSIZE_A {}
+///Field `BSIZE` reader - SDRAM Bus Width Select
+pub type BSIZE_R = crate::FieldReader<BSIZE_A>;
+impl BSIZE_R {
+    ///Get enumerated values variant
+    #[inline(always)]
+    pub const fn variant(&self) -> BSIZE_A {
+        match self.bits {
+            0 => BSIZE_A::_00,
+            1 => BSIZE_A::_01,
+            2 => BSIZE_A::_10,
+            3 => BSIZE_A::_11,
+            _ => unreachable!(),
+        }
+    }
+    ///A 16-bit bus space
+    #[inline(always)]
+    pub fn is_00(&self) -> bool {
+        *self == BSIZE_A::_00
+    }
+    ///Setting prohibited
+    #[inline(always)]
+    pub fn is_01(&self) -> bool {
+        *self == BSIZE_A::_01
+    }
+    ///An 8-bit bus space
+    #[inline(always)]
+    pub fn is_10(&self) -> bool {
+        *self == BSIZE_A::_10
+    }
+    ///Setting prohibited
+    #[inline(always)]
+    pub fn is_11(&self) -> bool {
+        *self == BSIZE_A::_11
+    }
+}
+///Field `BSIZE` writer - SDRAM Bus Width Select
+pub type BSIZE_W<'a, REG> = crate::FieldWriter<'a, REG, 2, BSIZE_A, crate::Safe>;
+impl<'a, REG> BSIZE_W<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    ///A 16-bit bus space
+    #[inline(always)]
+    pub fn _00(self) -> &'a mut crate::W<REG> {
+        self.variant(BSIZE_A::_00)
+    }
+    ///Setting prohibited
+    #[inline(always)]
+    pub fn _01(self) -> &'a mut crate::W<REG> {
+        self.variant(BSIZE_A::_01)
+    }
+    ///An 8-bit bus space
+    #[inline(always)]
+    pub fn _10(self) -> &'a mut crate::W<REG> {
+        self.variant(BSIZE_A::_10)
+    }
+    ///Setting prohibited
+    #[inline(always)]
+    pub fn _11(self) -> &'a mut crate::W<REG> {
+        self.variant(BSIZE_A::_11)
+    }
+}
+impl R {
+    ///Bit 0 - Operation Enable
+    #[inline(always)]
+    pub fn exenb(&self) -> EXENB_R {
+        EXENB_R::new((self.bits & 1) != 0)
+    }
+    ///Bits 4:5 - SDRAM Bus Width Select
+    #[inline(always)]
+    pub fn bsize(&self) -> BSIZE_R {
+        BSIZE_R::new((self.bits >> 4) & 3)
+    }
+}
+impl W {
+    ///Bit 0 - Operation Enable
+    #[inline(always)]
+    pub fn exenb(&mut self) -> EXENB_W<SDCCR_SPEC> {
+        EXENB_W::new(self, 0)
+    }
+    ///Bits 4:5 - SDRAM Bus Width Select
+    #[inline(always)]
+    pub fn bsize(&mut self) -> BSIZE_W<SDCCR_SPEC> {
+        BSIZE_W::new(self, 4)
+    }
+}
+/**SDC Control Register
+
+You can [`read`](crate::Reg::read) this register and get [`sdccr::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`sdccr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).*/
+pub struct SDCCR_SPEC;
+impl crate::RegisterSpec for SDCCR_SPEC {
+    type Ux = u8;
+}
+///`read()` method returns [`sdccr::R`](R) reader structure
+impl crate::Readable for SDCCR_SPEC {}
+///`write(|w| ..)` method takes [`sdccr::W`](W) writer structure
+impl crate::Writable for SDCCR_SPEC {
+    type Safety = crate::Unsafe;
+}
+///`reset()` method sets SDCCR to value 0
+impl crate::Resettable for SDCCR_SPEC {}
