@@ -8,12 +8,18 @@ use std::{
 use anyhow::{Context, Result};
 use svd2rust::config::IdentFormatsTheme;
 
+// todo: linker script management
+
 const MANIFEST_TEMPLATE: &str = r#"
 [package]
-name = "@name@-fsp-pac"
-description = "Peripheral access API for @NAME@ microcontrollers (generated using svd2rust) to work with ra-fsp-sys"
+name = "@name@-pac"
+description = "Peripheral access API for @NAME@ microcontrollers (generated using svd2rust)"
 version = "@version@"
-authors = ["Nathan Larsen <n8tlarsen@gmail.com>", "Addison Heavner <addisonheavner@gmail.com>"]
+authors = [
+    "Nathan Larsen <n8tlarsen@gmail.com>",
+    "Addison Heavner <addisonheavner@gmail.com>",
+    "Oleksandr Babak <alexanderbabak@proton.me>",
+]
 keywords = ["no-std", "arm", "cortex-m", "renesas", "fsp"]
 categories = ["embedded", "hardware-support", "no-std"]
 license = "MIT OR Apache-2.0"
@@ -31,7 +37,9 @@ portable-atomic = { version = "0.3.16", default-features = false, optional = tru
 ra-fsp-sys = { git = "https://github.com/Ddystopia/ra-fsp-sys", optional = true, features = ["@name@"] }
 
 [features]
-rt = ["dep:ra-fsp-sys"]
+rt = []
+fsp = ["dep:ra-fsp-sys", "rt"]
+cortex-m-rt-device = ["cortex-m-rt/device", "rt"]
 atomics = ["dep:portable-atomic"]
 critical-section = ["dep:critical-section"]
 
@@ -53,10 +61,13 @@ It is designed to preserve the familiar `cortex-m-rt` interface while handling `
 
 ## Features
 
-- **`rt`** (optional, disabled by default)
+- **`rt`**: Standart `rt` feature. But you still need to decide which runtime to use: `fsp` or `cortex-m-rt/device`.
+- **`fsp`**
   + Pulls in the [`ra-fsp-sys`] runtime dependency (instead of `cortex-m-rt/device`).
   + Applies a manufacturer‑provided linker script to support features like ID code protection.
   + Delegates vector table setup and reset handling to `ra-fsp-rs` (runs `SystemInit` then `main`).
+- **`cortex-m-rt-device`**
+  + Alternative to `fsp`, uses `cortex-m-rt/device`. Pure Rust, but does not use vendor-peovided code.
 
 [`ra-fsp-sys`]: https://docs.rs/ra-fsp-sys/
 
@@ -66,14 +77,14 @@ Add this crate to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-%name%_fsp_pac = "0.1.0"
+%name%_pac = "0.1.0"
 ```
 
 To enable the FSP‑based runtime:
 
 ```toml
 [dependencies]
-%name%_fsp_pac = { version = "%version%", features = ["rt"] }
+%name%_pac = { version = "%version%", features = ["rt"] }
 ```
 
 ## Usage
@@ -88,7 +99,7 @@ the code is looking exactly the same. You can use an OS like [`RTIC`] or just:
 #![no_main]
 
 use cortex_m_rt::entry;
-use %name%_fsp_pac::Peripherals;
+use %name%_pac::Peripherals;
 
 #[entry]
 fn main() -> ! {
@@ -211,6 +222,8 @@ fn main() -> Result<()> {
         let version = version.clone();
 
         if name != "ra6m3" {
+            // fixme: when running in debug mode, we see that `svd2rust` panics on debug assertion
+            //        due to bad SVD files. We need to patch those errors.
             println!("Skipping {name} as it is not supported yet");
             continue;
         }
@@ -271,7 +284,10 @@ fn generate_pac(pac_dir: &Path, name: &str, svd_file: &Path, version: &str) -> R
     let lib_rs = res.lib_rs;
     let lib_rs = lib_rs + "\n#[cfg(feature = \"rt\")] pub use self::Interrupt as interrupt;\n";
     let lib_rs = lib_rs
-        + "\n
+        + "
+        #[cfg(all(feature = \"fsp\", feature = \"cortex-m-rt-device\"))]
+        compile_error!(\"Cannot enable both `fsp` and `cortex-m-rt-device` features at the same time.\");
+
         #[cfg(feature = \"rt\")]
         impl Interrupt {
             pub const fn try_from_u16(n: u16) -> Option<Self> {
