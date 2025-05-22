@@ -14,7 +14,7 @@ const MANIFEST_TEMPLATE: &str = r#"
 [package]
 name = "@name@-pac"
 description = "Peripheral access API for @NAME@ microcontrollers (generated using svd2rust)"
-version = "@version@"
+version = { workspace = true }
 authors = [
     "Nathan Larsen <n8tlarsen@gmail.com>",
     "Addison Heavner <addisonheavner@gmail.com>",
@@ -77,14 +77,14 @@ Add this crate to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-%name%_pac = "0.1.0"
+%name%_pac = "0.*"
 ```
 
 To enable the FSP‑based runtime:
 
 ```toml
 [dependencies]
-%name%_pac = { version = "%version%", features = ["rt"] }
+%name%_pac = { version = "0.*", features = ["rt"] }
 ```
 
 ## Usage
@@ -146,8 +146,6 @@ at your option.
 "#;
 
 fn main() -> Result<()> {
-    let version = env::args().nth(1).expect("Missing version argument");
-
     let pac_dir = Path::new("pac");
     let patch_dir = Path::new("svd/patch");
     if patch_dir.exists() {
@@ -155,7 +153,7 @@ fn main() -> Result<()> {
     }
     fs::create_dir_all(patch_dir)?;
 
-    eprintln!("Generating PACs for version {version}");
+    eprintln!("Generating PACs");
 
     // Copy lowercase-named SVDs to patch dir
     for entry in fs::read_dir("svd/vendor")? {
@@ -219,7 +217,6 @@ fn main() -> Result<()> {
         let name = extract_pac_name(&svd_file)
             .with_context(|| format!("Failed to extract PAC name from: {}", svd_file.display()))?;
         let pac_dir = pac_dir.join(&name);
-        let version = version.clone();
 
         if name != "ra6m3" {
             // fixme: when running in debug mode, we see that `svd2rust` panics on debug assertion
@@ -229,7 +226,7 @@ fn main() -> Result<()> {
         }
 
         handles.push(std::thread::spawn(move || {
-            generate_pac(&pac_dir, &name, &svd_file, &version)
+            generate_pac(&pac_dir, &name, &svd_file)
                 .with_context(|| format!("Failed to generate PAC for: {}", svd_file.display()))
         }));
     }
@@ -259,7 +256,7 @@ fn extract_pac_name(svd_file: &Path) -> Result<String> {
         .to_string())
 }
 
-fn generate_pac(pac_dir: &Path, name: &str, svd_file: &Path, version: &str) -> Result<()> {
+fn generate_pac(pac_dir: &Path, name: &str, svd_file: &Path) -> Result<()> {
     let name_upper = name.to_uppercase();
 
     if pac_dir.exists() {
@@ -332,8 +329,7 @@ fn generate_pac(pac_dir: &Path, name: &str, svd_file: &Path, version: &str) -> R
 
     let manifest = MANIFEST_TEMPLATE
         .replace("@name@", &name)
-        .replace("@NAME@", &name_upper)
-        .replace("@version@", &version);
+        .replace("@NAME@", &name_upper);
 
     fs::write(pac_dir.join("Cargo.toml"), manifest).context("Failed to write Cargo.toml")?;
 
@@ -342,7 +338,6 @@ fn generate_pac(pac_dir: &Path, name: &str, svd_file: &Path, version: &str) -> R
         README_TEMPLATE
             .replace("%NAME%", &name_upper)
             .replace("%name%", &name)
-            .replace("%version%", &version),
     )?;
 
     Command::new("cargo")
