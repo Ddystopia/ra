@@ -34,18 +34,20 @@ pub fn wrap_component(modules: &[&str]) {
     let fsp_cfg = PathBuf::from(std::env::var("FSP_CFG").expect("FSP_CFG must be set"));
     let linker_scripts = out_path.join("script");
 
+    let pwd = std::env::current_dir().expect("Can't get current dir");
+
     let cmsis_dir = match std::env::var("CMSIS_OVERWRITE") {
         Ok(path) => PathBuf::from(path),
         Err(_) => {
             eprintln!("`CMSIS_OVERWRITE` not set, using default");
-            PathBuf::from("CMSIS_5")
+            pwd.join("CMSIS_5")
         }
     };
     let ra_fsp_repo = match std::env::var("FSP_OVERWRITE") {
         Ok(path) => PathBuf::from(path),
         Err(_) => {
             eprintln!("`FSP_OVERWRITE` not set, using default");
-            PathBuf::from("fsp")
+            pwd.join("fsp")
         }
     };
     let fsp_dir = ra_fsp_repo.join("ra/fsp");
