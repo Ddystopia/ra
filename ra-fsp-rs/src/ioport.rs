@@ -1,6 +1,6 @@
 #![allow(non_upper_case_globals)]
 
-use core::{pin::Pin, ptr};
+use core::{mem::MaybeUninit, pin::Pin, ptr};
 
 use crate::unsafe_pinned::UnsafePinned;
 
@@ -96,10 +96,12 @@ impl IoPortConfig {
         Self(data)
     }
     pub const fn c_conf(self) -> ioport_cfg_t {
-        ioport_cfg_t {
-            number_of_pins: self.0.len() as u16,
-            p_pin_cfg_data: self.0.as_ptr(),
-        }
+        let mut cfg: ioport_cfg_t = unsafe { MaybeUninit::zeroed().assume_init() };
+
+        cfg.number_of_pins = self.0.len() as u16;
+        cfg.p_pin_cfg_data = self.0.as_ptr();
+
+        cfg
     }
 }
 

@@ -1,6 +1,6 @@
 #![allow(non_upper_case_globals)]
 
-use core::{pin::Pin, ptr};
+use core::{mem::MaybeUninit, pin::Pin, ptr};
 
 use crate::unsafe_pinned::UnsafePinned;
 
@@ -81,12 +81,9 @@ const fn get_mut(this: Pin<&mut EtherPhyInstance>) -> *mut core::ffi::c_void {
 
 impl EtherPhyInstance {
     pub const fn new() -> Self {
-        Self(UnsafePinned::new(st_ether_phy_instance_ctrl {
-            open: 0,
-            p_ether_phy_cfg: ptr::null(),
-            p_reg_pir: ptr::null_mut(),
-            local_advertise: 0,
-        }))
+        let ctrl: st_ether_phy_instance_ctrl = unsafe { MaybeUninit::zeroed().assume_init() };
+
+        Self(UnsafePinned::new(ctrl))
     }
 
     #[inline(always)]
