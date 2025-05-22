@@ -11,3 +11,4 @@ resolver = "2"
 
 [workspace.dependencies]
 ra-fsp-sys = { version = "0.1.2" }
+ra6m3-pac = { version = "0.1.2", package = "ra6m3-fsp-pac"  }

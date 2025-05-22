@@ -8,11 +8,9 @@ use std::{
 use anyhow::{Context, Result};
 use svd2rust::config::IdentFormatsTheme;
 
-// todo: linker script management
-
 const MANIFEST_TEMPLATE: &str = r#"
 [package]
-name = "@name@-pac"
+name = "@name@-fsp-pac"
 description = "Peripheral access API for @NAME@ microcontrollers (generated using svd2rust)"
 version = { workspace = true }
 authors = [
@@ -33,8 +31,7 @@ cortex-m = "0.7.6"
 cortex-m-rt = { version = "0.7.5", optional = true }
 vcell = "0.1.2"
 portable-atomic = { version = "0.3.16", default-features = false, optional = true }
-# TODO: from `crates.io`
-ra-fsp-sys = { git = "https://github.com/Ddystopia/ra-fsp-sys", optional = true, features = ["@name@"] }
+ra-fsp-sys = { workspace = true, optional = true }
 
 [features]
 rt = []
