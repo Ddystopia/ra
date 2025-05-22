@@ -6,8 +6,7 @@ members = [
   "ra-fsp-sys",
   "update-pacs",
 ]
-exclude = [
-]
+exclude = []
 resolver = "2"
 
 [workspace.dependencies]

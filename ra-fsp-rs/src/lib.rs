@@ -69,6 +69,7 @@ pub mod ioport;
 mod macros;
 
 #[doc(hidden)]
+#[allow(dead_code)]
 mod unsafe_pinned {
     use core::{cell::UnsafeCell, marker::PhantomPinned};
 
