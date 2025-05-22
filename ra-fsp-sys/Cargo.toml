@@ -7,7 +7,7 @@ authors = ["Oleksandr Babak <alexanderbabak@proton.me>"]
 keywords = ["no-std", "embedded", "arm", "cortex-m", "renesas"]
 categories = ["embedded", "hardware-support", "no-std"]
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/Ddystopia/ra-fsp-sys"
+repository = "https://github.com/Ddystopia/ra"
 readme = "README.md"
 exclude = ["CMSIS_5", ".helix", "fsp"]
 

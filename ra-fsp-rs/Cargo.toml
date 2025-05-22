@@ -7,7 +7,7 @@ authors = ["Oleksandr Babak <alexanderbabak@proton.me>"]
 keywords = ["no-std", "embedded", "hal", "renesas", "fsp"]
 categories = ["embedded", "hardware-support", "no-std"]
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/Ddystopia/ra-fsp-rs"
+repository = "https://github.com/Ddystopia/ra"
 readme = "README.md"
 
 [dependencies]
