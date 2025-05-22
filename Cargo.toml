@@ -1,11 +1,14 @@
-[package]
-name = "update-pacs"
-version = "0.1.0"
-edition = "2021"
+[workspace]
+package.version = "0.1.2"
+members = [
+  "pac/ra6m3",
+  "ra-fsp-rs",
+  "ra-fsp-sys",
+  "update-pacs",
+]
+exclude = [
+]
+resolver = "2"
 
-[dependencies]
-anyhow = "1"
-svd2rust = "0.36.1"
-svdtools = "0.4.6"
-form = "0.13.0"
-
+[workspace.dependencies]
+ra-fsp-sys = { path = "./ra-fsp-sys" }

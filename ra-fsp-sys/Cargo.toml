@@ -1,0 +1,80 @@
+[package]
+name = "ra-fsp-sys"
+version.workspace = true
+edition = "2021"
+description = "Rust raw bindings for Renesas RA Flexible Software Package (FSP)"
+authors = ["Oleksandr Babak <alexanderbabak@proton.me>"]
+keywords = ["no-std", "embedded", "arm", "cortex-m", "renesas"]
+categories = ["embedded", "hardware-support", "no-std"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/Ddystopia/ra-fsp-sys"
+readme = "README.md"
+exclude = ["CMSIS_5", ".helix", "fsp"]
+
+[dependencies]
+cortex-m = { version = "0.7.7", default-features = false }
+log = { version = "0.4.27", default-features = false, optional = true }
+
+[build-dependencies]
+bindgen = "0.69"
+# bindgen_helpers = "0.3.2"
+cc = "1.1"
+build_cfg = "1.1"
+walkdir = "2"
+# tera = "1.20"
+
+[features]
+default = [
+  "log",
+  "mod-r_dmac",
+  "mod-r_elc",
+  "mod-r_flash_hp",
+  "mod-r_icu",
+  "mod-r_ioport",
+]
+
+log = ["dep:log"]
+
+mod-r_dmac = []
+mod-r_elc = []
+
+mod-r_flash_hp = []
+
+mod-r_icu = []
+mod-r_ioport = []
+mod-r_ether = ["mod-r_ether_phy"]
+mod-r_ether_phy = []
+mod-r_ether_phy_target_ics1894 = ["mod-r_ether_phy"]
+mod-r_ether_phy_target_ksz8091rnb = ["mod-r_ether_phy"]
+mod-r_ether_phy_target_ksz8041 = ["mod-r_ether_phy"]
+mod-r_ether_phy_target_dp83620 = ["mod-r_ether_phy"]
+
+# todo: support stuff except ra6m3
+ra0e1 = []
+ra2a1 = []
+ra2a2 = []
+ra2e1 = []
+ra2e2 = []
+ra2e3 = []
+ra2l1 = []
+ra4e1 = []
+ra4e2 = []
+ra4m1 = []
+ra4m2 = []
+ra4m3 = []
+ra4t1 = []
+ra4w1 = []
+ra6e1 = []
+ra6e2 = []
+ra6m1 = []
+ra6m2 = []
+ra6m3 = []
+ra6m4 = []
+ra6m5 = []
+ra6t1 = []
+ra6t2 = []
+ra6t3 = []
+ra8m1 = []
+ra8d1 = []
+ra8t1 = []
+

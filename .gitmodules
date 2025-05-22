@@ -1,0 +1,6 @@
+[submodule "fsp"]
+	path = ra-fsp-sys/fsp
+	url = https://github.com/renesas/fsp
+[submodule "CMSIS_5"]
+	path = ra-fsp-sys/CMSIS_5
+	url = https://github.com/ARM-software/CMSIS_5

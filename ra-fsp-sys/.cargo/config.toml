@@ -1,0 +1,9 @@
+[build]
+target = "thumbv7em-none-eabihf"
+
+[env]
+TARGET_CC = "/opt/arm-none-eabi-gcc-11.4.0-nano/bin/arm-bare_newlibnano_cortex_m4f_nommu-eabihf-gcc"
+BINDGEN_EXTRA_CLANG_ARGS = "--sysroot=/opt/arm-none-eabi-gcc-11.4.0-nano/arm-bare_newlibnano_cortex_m4f_nommu-eabihf"
+
+[target.'cfg(all(target_arch = "arm", target_os = "none"))']
+runner = "probe-rs run --chip nRF52832_xxAA"
