@@ -28,14 +28,14 @@ Add this crate to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-ra6m3_pac = "0.1.0"
+ra6m3_pac = "0.*"
 ```
 
 To enable the FSP‑based runtime:
 
 ```toml
 [dependencies]
-ra6m3_pac = { version = "0.1.0", features = ["rt"] }
+ra6m3_pac = { version = "0.*", features = ["rt"] }
 ```
 
 ## Usage

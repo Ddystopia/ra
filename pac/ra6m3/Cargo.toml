@@ -1,8 +1,8 @@
 
 [package]
-name = "ra6m3-pac"
+name = "ra6m3-fsp-pac"
 description = "Peripheral access API for RA6M3 microcontrollers (generated using svd2rust)"
-version = "0.1.0"
+version = { workspace = true }
 authors = [
     "Nathan Larsen <n8tlarsen@gmail.com>",
     "Addison Heavner <addisonheavner@gmail.com>",
@@ -21,8 +21,7 @@ cortex-m = "0.7.6"
 cortex-m-rt = { version = "0.7.5", optional = true }
 vcell = "0.1.2"
 portable-atomic = { version = "0.3.16", default-features = false, optional = true }
-# TODO: from `crates.io`
-ra-fsp-sys = { git = "https://github.com/Ddystopia/ra-fsp-sys", optional = true, features = ["ra6m3"] }
+ra-fsp-sys = { workspace = true, optional = true }
 
 [features]
 rt = []
