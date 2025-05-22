@@ -274,6 +274,7 @@ fn generate_pac(pac_dir: &Path, name: &str, svd_file: &Path, version: &str) -> R
 
     let mut svd2rust_config = svd2rust::Config::default();
     svd2rust_config.atomics = true;
+    svd2rust_config.atomics_feature = Some("atomics".to_string());
     svd2rust_config.target = svd2rust::Target::CortexM;
     svd2rust_config.output_dir = Some(pac_dir.to_path_buf());
     svd2rust_config.ident_formats_theme = Some(IdentFormatsTheme::Legacy);
