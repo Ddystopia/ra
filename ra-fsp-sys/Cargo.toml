@@ -9,7 +9,7 @@ categories = ["embedded", "hardware-support", "no-std"]
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/Ddystopia/ra"
 readme = "README.md"
-exclude = ["CMSIS_5", ".helix", "fsp"]
+exclude = ["CMSIS_5", "fsp"]
 
 [dependencies]
 cortex-m = { version = "0.7.7", default-features = false }
