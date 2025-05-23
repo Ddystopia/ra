@@ -12,13 +12,7 @@ It is designed to preserve the familiar `cortex-m-rt` interface while handling `
 
 ## Features
 
-- **`rt`**: Standart `rt` feature. But you still need to decide which runtime to use: `fsp` or `cortex-m-rt/device`.
-- **`fsp`**
-  + Pulls in the [`ra-fsp-sys`] runtime dependency (instead of `cortex-m-rt/device`).
-  + Applies a manufacturer‑provided linker script to support features like ID code protection.
-  + Delegates vector table setup and reset handling to `ra-fsp-rs` (runs `SystemInit` then `main`).
-- **`cortex-m-rt-device`**
-  + Alternative to `fsp`, uses `cortex-m-rt/device`. Pure Rust, but does not use vendor-peovided code.
+- **`rt`**: Includes IV in ".application_vectors" section. Does not enable any runtime. Either use `ra-fsp-sys` or `cortex-m-rt/device`. In case you are using `cortex-m-rt/device`, you need to map the vector table correctly.
 
 [`ra-fsp-sys`]: https://docs.rs/ra-fsp-sys/
 

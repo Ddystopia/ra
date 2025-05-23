@@ -30,12 +30,9 @@ cortex-m = "0.7.6"
 cortex-m-rt = { version = "0.7.5", optional = true }
 vcell = "0.1.2"
 portable-atomic = { version = "0.3.16", default-features = false, optional = true }
-ra-fsp-sys = { workspace = true, optional = true }
 
 [features]
 rt = []
-fsp = ["dep:ra-fsp-sys", "rt"]
-cortex-m-rt-device = ["cortex-m-rt/device", "rt"]
 atomics = ["dep:portable-atomic"]
 critical-section = ["dep:critical-section"]
 
@@ -57,13 +54,7 @@ It is designed to preserve the familiar `cortex-m-rt` interface while handling `
 
 ## Features
 
-- **`rt`**: Standart `rt` feature. But you still need to decide which runtime to use: `fsp` or `cortex-m-rt/device`.
-- **`fsp`**
-  + Pulls in the [`ra-fsp-sys`] runtime dependency (instead of `cortex-m-rt/device`).
-  + Applies a manufacturer‑provided linker script to support features like ID code protection.
-  + Delegates vector table setup and reset handling to `ra-fsp-rs` (runs `SystemInit` then `main`).
-- **`cortex-m-rt-device`**
-  + Alternative to `fsp`, uses `cortex-m-rt/device`. Pure Rust, but does not use vendor-peovided code.
+- **`rt`**: Includes IV in ".application_vectors" section. Does not enable any runtime. Either use `ra-fsp-sys` or `cortex-m-rt/device`. In case you are using `cortex-m-rt/device`, you need to map the vector table correctly.
 
 [`ra-fsp-sys`]: https://docs.rs/ra-fsp-sys/
 
@@ -281,9 +272,6 @@ fn generate_pac(pac_dir: &Path, name: &str, svd_file: &Path) -> Result<()> {
     let lib_rs = lib_rs + "\n#[cfg(feature = \"rt\")] pub use self::Interrupt as interrupt;\n";
     let lib_rs = lib_rs
         + "
-        #[cfg(all(feature = \"fsp\", feature = \"cortex-m-rt-device\"))]
-        compile_error!(\"Cannot enable both `fsp` and `cortex-m-rt-device` features at the same time.\");
-
         #[cfg(feature = \"rt\")]
         impl Interrupt {
             pub const fn try_from_u16(n: u16) -> Option<Self> {

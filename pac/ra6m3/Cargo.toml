@@ -21,12 +21,9 @@ cortex-m = "0.7.6"
 cortex-m-rt = { version = "0.7.5", optional = true }
 vcell = "0.1.2"
 portable-atomic = { version = "0.3.16", default-features = false, optional = true }
-ra-fsp-sys = { workspace = true, optional = true }
 
 [features]
 rt = []
-fsp = ["dep:ra-fsp-sys", "rt"]
-cortex-m-rt-device = ["cortex-m-rt/device", "rt"]
 atomics = ["dep:portable-atomic"]
 critical-section = ["dep:critical-section"]
 

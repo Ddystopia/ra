@@ -32,31 +32,28 @@ pub fn load_env<P: AsRef<std::path::Path>>(path: P) -> HashMap<String, String> {
 pub fn wrap_component(modules: &[&str]) {
     let out_path = PathBuf::from(std::env::var("OUT_DIR").unwrap());
     let fsp_cfg = PathBuf::from(std::env::var("FSP_CFG").expect("FSP_CFG must be set"));
+    let cmsis_dir = PathBuf::from(std::env::var("CMSIS_PATH").expect("`CMSIS_PATH` must be set"));
+    let ra_fsp_repo = PathBuf::from(std::env::var("FSP_PATH").expect("`FSP_PATH` must be set"));
     let linker_scripts = out_path.join("script");
 
-    let pwd = std::env::current_dir().expect("Can't get current dir");
+    if !fsp_cfg.exists() {
+        panic!("`FSP_CFG` must be set to a valid path");
+    }
+    if !cmsis_dir.exists() {
+        panic!("`CMSIS_PATH` must be set to a valid path");
+    }
+    if !ra_fsp_repo.exists() {
+        panic!("`FSP_PATH` must be set to a valid path");
+    }
 
-    let cmsis_dir = match std::env::var("CMSIS_OVERWRITE") {
-        Ok(path) => PathBuf::from(path),
-        Err(_) => {
-            eprintln!("`CMSIS_OVERWRITE` not set, using default");
-            pwd.join("CMSIS_5")
-        }
-    };
-    let ra_fsp_repo = match std::env::var("FSP_OVERWRITE") {
-        Ok(path) => PathBuf::from(path),
-        Err(_) => {
-            eprintln!("`FSP_OVERWRITE` not set, using default");
-            pwd.join("fsp")
-        }
-    };
     let fsp_dir = ra_fsp_repo.join("ra/fsp");
     let fsp_src = fsp_dir.join("src");
 
     println!("cargo:rerun-if-changed=script");
     println!("cargo:rerun-if-changed=build.rs");
-    println!("cargo:rerun-if-env-changed=CMSIS_OVERWRITE");
-    println!("cargo:rerun-if-env-changed=FSP_OVERWRITE");
+    println!("cargo:rerun-if-env-changed=CMSIS_PATH");
+    println!("cargo:rerun-if-env-changed=FSP_PATH");
+    println!("cargo:rerun-if-env-changed=FSP_CFG");
 
     println!("cargo:rerun-if-changed={}", fsp_cfg.display());
     println!("cargo:rerun-if-changed={}", ra_fsp_repo.display());

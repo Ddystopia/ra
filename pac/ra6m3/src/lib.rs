@@ -1791,8 +1791,6 @@ impl Peripherals {
 }
 #[cfg(feature = "rt")]
 pub use self::Interrupt as interrupt;
-#[cfg(all(feature = "fsp", feature = "cortex-m-rt-device"))]
-compile_error!("Cannot enable both `fsp` and `cortex-m-rt-device` features at the same time.");
 #[cfg(feature = "rt")]
 impl Interrupt {
     pub const fn try_from_u16(n: u16) -> Option<Self> {
