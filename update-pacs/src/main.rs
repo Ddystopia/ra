@@ -172,6 +172,7 @@ fn main() -> Result<()> {
         let entry = entry?;
         let patch_dir = patch_dir.to_path_buf();
         let svdtools_config = svdtools::patch::Config::default();
+
         let handle = std::thread::spawn(move || {
             if entry.file_type()?.is_file() && entry.path().extension() == Some("yaml".as_ref()) {
                 let mut out_path = patch_dir.join(entry.file_name());
@@ -271,6 +272,7 @@ fn generate_pac(pac_dir: &Path, name: &str, svd_file: &Path) -> Result<()> {
     svd2rust_config.target = svd2rust::Target::CortexM;
     svd2rust_config.output_dir = Some(pac_dir.to_path_buf());
     svd2rust_config.ident_formats_theme = Some(IdentFormatsTheme::Legacy);
+    svd2rust_config.interrupt_link_section = Some(".application_vectors".into());
 
     let res = svd2rust::generate(&svd, &svd2rust_config).context("Failed to run svd2rust")?;
     let specific = res.device_specific.context("No device-scecific files")?;

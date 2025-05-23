@@ -124,7 +124,7 @@ pub union Vector {
 }
 #[cfg(feature = "rt")]
 #[doc(hidden)]
-#[link_section = ".vector_table.interrupts"]
+#[link_section = ".application_vectors"]
 #[no_mangle]
 pub static __INTERRUPTS: [Vector; 96] = [
     Vector { _handler: IEL0 },
