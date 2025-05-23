@@ -166,6 +166,8 @@ impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
     /// all descriptors are currently used or if there is no descriptor.
     ///
     /// Descriptor is not moved. Note that the only way to move the descriptor is to transmit the message.
+    ///
+    /// If you want to put it back, use [`Self::tx_buffer_update`].
     pub fn take_tx_buf(self: Pin<&mut Self>) -> Option<Pin<&'static mut Buffer<BUF_SIZE>>> {
         unsafe {
             let this = self.get_unchecked_mut();
