@@ -14,7 +14,7 @@ readme = "README.md"
 ra-fsp-sys.workspace = true
 cortex-m = { version = "0.7.7", default-features = false }
 log = { version = "0.4.27", default-features = false, optional = true }
-ra6m3-pac = { workspace = true, optional = true, features = ["rt"] }
+ra6m3-pac = { workspace = true, optional = true, features = ["fsp"] }
 
 [features]
 default = ["log"]
