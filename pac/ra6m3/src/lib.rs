@@ -124,7 +124,11 @@ pub union Vector {
 }
 #[cfg(feature = "rt")]
 #[doc(hidden)]
-#[link_section = ".application_vectors"]
+#[cfg_attr(feature = "fsp", link_section = ".application_vectors")]
+#[cfg_attr(
+    feature = "cortex-m-rt-device",
+    link_section = ".vector_table.interrupts"
+)]
 #[no_mangle]
 pub static __INTERRUPTS: [Vector; 96] = [
     Vector { _handler: IEL0 },
@@ -1791,6 +1795,8 @@ impl Peripherals {
 }
 #[cfg(feature = "rt")]
 pub use self::Interrupt as interrupt;
+#[cfg(all(feature = "fsp", feature = "cortex-m-rt-device"))]
+compile_error!("Cannot enable both `fsp` and `cortex-m-rt-device` features at the same time.");
 #[cfg(feature = "rt")]
 impl Interrupt {
     pub const fn try_from_u16(n: u16) -> Option<Self> {

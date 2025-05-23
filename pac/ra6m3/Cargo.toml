@@ -24,6 +24,8 @@ portable-atomic = { version = "0.3.16", default-features = false, optional = tru
 
 [features]
 rt = []
+fsp = ["rt"]
+cortex-m-rt-device = ["cortex-m-rt/device", "rt"]
 atomics = ["dep:portable-atomic"]
 critical-section = ["dep:critical-section"]
 

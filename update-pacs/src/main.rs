@@ -33,6 +33,8 @@ portable-atomic = { version = "0.3.16", default-features = false, optional = tru
 
 [features]
 rt = []
+fsp = ["rt"]
+cortex-m-rt-device = ["cortex-m-rt/device", "rt"]
 atomics = ["dep:portable-atomic"]
 critical-section = ["dep:critical-section"]
 
@@ -54,7 +56,9 @@ It is designed to preserve the familiar `cortex-m-rt` interface while handling `
 
 ## Features
 
-- **`rt`**: Includes IV in ".application_vectors" section. Does not enable any runtime. Either use `ra-fsp-sys` or `cortex-m-rt/device`. In case you are using `cortex-m-rt/device`, you need to map the vector table correctly.
+- **`rt`**: Includes IV in ".application_vectors" section. Does not enable any runtime. Either use `ra-fsp-sys` or `cortex-m-rt/device`.
+- **`fsp`**: places IV in ".application_vectors" section. You still need to add `ra-fsp-sys/@name@` or `ra-fsp-rs/@name@` crate to your dependencies.
+- **`cortex-m-rt-device`**: places IV in ".vector_table.interrupts" section and enables `cortex-m-rt/device` feature.
 
 [`ra-fsp-sys`]: https://docs.rs/ra-fsp-sys/
 
@@ -71,7 +75,8 @@ To enable the FSP‑based runtime:
 
 ```toml
 [dependencies]
-%name%_pac = { version = "0.*", features = ["rt"] }
+%name%_pac = { version = "0.*", features = ["rt", "fsp"] }
+ra_fsp-sys = { version = "0.*", features = ["@name@"] }
 ```
 
 ## Usage
@@ -263,45 +268,63 @@ fn generate_pac(pac_dir: &Path, name: &str, svd_file: &Path) -> Result<()> {
     svd2rust_config.target = svd2rust::Target::CortexM;
     svd2rust_config.output_dir = Some(pac_dir.to_path_buf());
     svd2rust_config.ident_formats_theme = Some(IdentFormatsTheme::Legacy);
-    svd2rust_config.interrupt_link_section = Some(".application_vectors".into());
+    svd2rust_config.interrupt_link_section = Some(".CHANGE_ME".into());
 
     let res = svd2rust::generate(&svd, &svd2rust_config).context("Failed to run svd2rust")?;
     let specific = res.device_specific.context("No device-scecific files")?;
 
     let lib_rs = res.lib_rs;
-    let lib_rs = lib_rs + "\n#[cfg(feature = \"rt\")] pub use self::Interrupt as interrupt;\n";
+    let lib_rs = lib_rs + "\n";
     let lib_rs = lib_rs
         + "
-        #[cfg(feature = \"rt\")]
-        impl Interrupt {
-            pub const fn try_from_u16(n: u16) -> Option<Self> {
-                assert!(__INTERRUPTS.len() < u16::MAX as usize);
+#[cfg(feature = \"rt\")]
+pub use self::Interrupt as interrupt;
 
-                if n >= __INTERRUPTS.len() as u16 {
-                    return None;
-                }
+#[cfg(all(feature = \"fsp\", feature = \"cortex-m-rt-device\"))]
+compile_error!(\"Cannot enable both `fsp` and `cortex-m-rt-device` features at the same time.\");
 
-                Some(unsafe { ::core::mem::transmute(n as u16) })
-            }
+#[cfg(feature = \"rt\")]
+impl Interrupt {
+    pub const fn try_from_u16(n: u16) -> Option<Self> {
+        assert!(__INTERRUPTS.len() < u16::MAX as usize);
+
+        if n >= __INTERRUPTS.len() as u16 {
+            return None;
         }
-        #[cfg(feature = \"rt\")]
-        #[derive(Debug)]
-        pub struct InvalidInterruptNumber;
-        #[cfg(feature = \"rt\")]
-        impl TryFrom<u16> for Interrupt {
-            type Error = InvalidInterruptNumber;
-            fn try_from(value: u16) -> Result<Self, Self::Error> {
-                Interrupt::try_from_u16(value).ok_or(InvalidInterruptNumber)
-            }
-        }
-        #[cfg(feature = \"rt\")]
-        impl core::error::Error for InvalidInterruptNumber {}
-        #[cfg(feature = \"rt\")]
-        impl core::fmt::Display for InvalidInterruptNumber {
-            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                write!(f, \"Invalid interrupt number\")
-            }
-        }\n";
+
+        Some(unsafe { ::core::mem::transmute(n as u16) })
+    }
+}
+
+#[cfg(feature = \"rt\")]
+#[derive(Debug)]
+pub struct InvalidInterruptNumber;
+#[cfg(feature = \"rt\")]
+impl TryFrom<u16> for Interrupt {
+    type Error = InvalidInterruptNumber;
+    fn try_from(value: u16) -> Result<Self, Self::Error> {
+        Interrupt::try_from_u16(value).ok_or(InvalidInterruptNumber)
+    }
+}
+#[cfg(feature = \"rt\")]
+impl core::error::Error for InvalidInterruptNumber {}
+#[cfg(feature = \"rt\")]
+impl core::fmt::Display for InvalidInterruptNumber {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, \"Invalid interrupt number\")
+    }
+}
+\n";
+    let lib_rs = lib_rs.replace(
+        "# [link_section = \".CHANGE_ME\"]",
+        "
+#[cfg_attr(feature = \"fsp\", link_section = \".application_vectors\")]
+#[cfg_attr(feature = \"cortex-m-rt-device\", link_section = \".vector_table.interrupts\")]",
+    );
+    assert!(
+        !lib_rs.contains("CHANGE_ME"),
+        "Failed to replace CHANGE_ME in lib.rs"
+    );
     let build_rs = specific.build_rs;
     let device_x = specific.device_x;
 
@@ -323,7 +346,7 @@ fn generate_pac(pac_dir: &Path, name: &str, svd_file: &Path) -> Result<()> {
         pac_dir.join("README.md"),
         README_TEMPLATE
             .replace("%NAME%", &name_upper)
-            .replace("%name%", &name)
+            .replace("%name%", &name),
     )?;
 
     Command::new("cargo")

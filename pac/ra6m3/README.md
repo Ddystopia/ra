@@ -12,7 +12,9 @@ It is designed to preserve the familiar `cortex-m-rt` interface while handling `
 
 ## Features
 
-- **`rt`**: Includes IV in ".application_vectors" section. Does not enable any runtime. Either use `ra-fsp-sys` or `cortex-m-rt/device`. In case you are using `cortex-m-rt/device`, you need to map the vector table correctly.
+- **`rt`**: Includes IV in ".application_vectors" section. Does not enable any runtime. Either use `ra-fsp-sys` or `cortex-m-rt/device`.
+- **`fsp`**: places IV in ".application_vectors" section. You still need to add `ra-fsp-sys/@name@` or `ra-fsp-rs/@name@` crate to your dependencies.
+- **`cortex-m-rt-device`**: places IV in ".vector_table.interrupts" section and enables `cortex-m-rt/device` feature.
 
 [`ra-fsp-sys`]: https://docs.rs/ra-fsp-sys/
 
@@ -29,7 +31,8 @@ To enable the FSP‑based runtime:
 
 ```toml
 [dependencies]
-ra6m3_pac = { version = "0.*", features = ["rt"] }
+ra6m3_pac = { version = "0.*", features = ["rt", "fsp"] }
+ra_fsp-sys = { version = "0.*", features = ["@name@"] }
 ```
 
 ## Usage
