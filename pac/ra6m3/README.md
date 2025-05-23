@@ -61,20 +61,6 @@ fn main() -> ! {
 then calls `main`. `cortex-m-rt::entry` can still be used, but `cortex-m-rt/device` \
 feature cannot be enabled, as `FSP` is responsible for the vector table and `Reset`.
 
-## Security Considerations
-
-`RA6M3` devices support ID code protection via the OSIS register:
-
-* The OSIS register stores a 128-bit ID code used for authentication when \
-connecting a debugger or serial programmer.
-* If the ID codes do not match, the device remains locked and prohibits external \
-access.
-* A special linker script and startup procedure are required to configure the \
-OSIS register safely and avoid accidental locking of the MCU.
-
-This crate’s `rt` feature uses the manufacturer‑provided FSP to handle ID code \
-setup in `SystemInit`. **Do not** rewrite or bypass this logic unless you fully understand the implications.
-
 ## Contributing
 
 Contributions are welcome! Please open an issue or pull request in this repository. Follow these guidelines:

@@ -16,16 +16,26 @@ This crate should be used *instead* of `cortex-m-rt`, but it makes a best effort
   - Contains all `r_.*_cfg.h` coniguration files.
   - Containst `/bsp` directory witb bsp configurations, like `bsp_cfg.h`, `board_cfg.h`, `bsp_clock_cfg.h` etc.
 - `memory.x`.
-- `device.x` provided by [PAC](https://github.com/Ddystopia/ra).
+- Use [PAC](https://github.com/Ddystopia/ra/tree/main/pac) crate, which will have `device.x` and export IV.
 - Add `-C link-arg=-Tra-fsp-sys.x` (as `-Tlink.x` with `cortex-m-rt`).
-- `FSP_OVERWRITE` env variable provides the source code for FSP.
-- `CMSIS_OVERWRITE` env variable provides the source code for CMSIS.
+- `FSP_PATH` env variable provides the source code for FSP.
+- `CMSIS_PATH` env variable provides the source code for CMSIS.
+
+## Security Considerations
+
+Renesas devices support ID code protection via the OSIS register:
+
+* The OSIS register stores a 128-bit ID code used for authentication when connecting a debugger or serial programmer.
+* If the ID codes do not match, the device remains locked and prohibits external access.
+* A special linker script and startup procedure are required to configure the OSIS register safely and avoid accidental locking of the MCU.
+
+Manufacturer‑provided FSP to handles ID code setup in `SystemInit` and linker script. **Do not** rewrite or bypass this logic unless you fully understand the implications. Authour of this crate killed several MCUs to figure it out.
 
 ## License
 
 By using this software, you agree to the additonal terms and conditions found at: http://www.renesas.com/disclaimer.
 
-`script/fsp_base.ld`, `ra-fsp` are licensed under Renesas license.
+`script/fsp_base.ld` is licensed under Renesas license.
 
 All Rust source code exept `generated` module is licensed under either of
 
