@@ -58,16 +58,18 @@ pub struct EtherInstance<const BUF_SIZE: usize> {
     inst: UnsafePinned<ether_instance_ctrl_t>,
     tx_buffers: &'static mut [Pin<&'static mut Buffer<BUF_SIZE>>],
     rx_buffers: &'static mut [Pin<&'static mut Buffer<BUF_SIZE>>],
-    tx_taken: &'static mut [bool],
+    tx_taken: u32,
 }
 
 #[repr(C, align(32))]
-pub struct Buffer<const BUF_SIZE: usize>(UnsafePinned<[u8; BUF_SIZE]>);
+pub struct Buffer<const BUF_SIZE: usize> {
+    buf: UnsafePinned<[u8; BUF_SIZE]>,
+    tx_taken_position: u8,
+}
 
 pub struct Buffers<const BUF_SIZE: usize, const TX: usize, const RX: usize> {
     tx_buffers: [Pin<&'static mut Buffer<BUF_SIZE>>; TX],
     rx_buffers: [Pin<&'static mut Buffer<BUF_SIZE>>; RX],
-    tx_taken: [bool; TX],
 }
 
 // Is it okay to even have references to this stuct? Hardware can r/w `status`
@@ -108,7 +110,6 @@ pub struct EtherConfig<const BUF_SIZE: usize> {
     pub tx_buffers: &'static mut [Pin<&'static mut Buffer<BUF_SIZE>>],
     pub rx_buffers: &'static mut [Pin<&'static mut Buffer<BUF_SIZE>>],
 
-    tx_taken: &'static mut [bool],
     c_ext_cfg: UnsafePinned<MaybeUninit<ether_extended_cfg_t>>,
     c_cfg: UnsafePinned<MaybeUninit<ether_cfg_t>>,
 }
@@ -146,7 +147,7 @@ impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
                 p_context: ptr::null(),
             }),
             tx_buffers: &mut [],
-            tx_taken: &mut [],
+            tx_taken: 0,
             rx_buffers: &mut [],
         }
     }
@@ -170,26 +171,23 @@ impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
             let this = self.get_unchecked_mut();
             let p_inst = this.inst.get();
             let p_desc = (*p_inst).p_tx_descriptor;
-            if !Descriptor::<BUF_SIZE>::is_available(p_desc) {
-                #[cfg(feature = "log")]
-                log::error!("TX not available");
-                return None;
-            }
 
             let p_conf = (*p_inst).p_ether_cfg;
             let p_extend = (*p_conf).p_extend.cast::<ether_extended_cfg_t>();
             let p_tx_descriptors = (*p_extend).p_tx_descriptors;
             let position = p_desc.offset_from(p_tx_descriptors);
-            let position = usize::try_from(position).ok()?;
-
-            if this.tx_taken[position] {
+            let position = position as u8;
+            if this.tx_taken & (1 << position) != 0 {
                 log::error!("TX taken");
                 return None;
             }
 
-            this.tx_taken[position] = true;
+            debug_assert!(Descriptor::<BUF_SIZE>::is_available(p_desc));
 
-            let buffer = this.tx_buffers[position].as_mut().get_unchecked_mut();
+            this.tx_taken |= 1 << position;
+
+            let buffer = this.tx_buffers[position as usize].as_mut().get_unchecked_mut();
+            buffer.tx_taken_position = position;
 
             Some(Pin::new_unchecked(&mut *ptr::from_mut(buffer)))
         }
@@ -205,11 +203,21 @@ impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
 
         for buffer in &mut *this.rx_buffers {
             unsafe {
-                let ptr = buffer.as_mut().get_unchecked_mut().0.get();
+                let ptr = buffer.as_mut().get_unchecked_mut().buf.get();
 
                 R_ETHER_RxBufferUpdate(instance, ptr.cast());
             }
         }
+    }
+
+    pub fn update_tx_buffers<'a>(self: Pin<&'a mut Self>, cause: InterruptCause) {
+        if !cause.transmits {
+            return;
+        }
+
+        let this = unsafe { self.get_unchecked_mut() };
+        this.tx_taken = 0;
+        // log::info!("Update TX buffers");
     }
 
     pub fn tx_buffer_update(
@@ -217,21 +225,9 @@ impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
         buffer: Pin<&'static mut Buffer<BUF_SIZE>>,
     ) -> Option<Pin<&'static mut Buffer<BUF_SIZE>>> {
         let this = unsafe { self.get_unchecked_mut() };
-        let ptr = ptr::from_ref(buffer.as_ref().get_ref());
+        let position = buffer.as_ref().tx_taken_position;
 
-        match this
-            .tx_buffers
-            .iter()
-            .map(|b| b.as_ref().get_ref())
-            .map(ptr::from_ref)
-            .position(|p| p == ptr)
-        {
-            Some(i) => this.tx_taken[i] = false,
-            None => {
-                log::error!("Not found which TX is update");
-                return Some(buffer);
-            }
-        }
+        this.tx_taken &= !(1 << position);
 
         None
     }
@@ -289,7 +285,6 @@ impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
             tx_descriptors: &[],
             tx_buffers: &mut [],
             rx_buffers: &mut [],
-            tx_taken: &mut [],
             c_ext_cfg: UnsafePinned::new(MaybeUninit::uninit()),
             c_cfg: UnsafePinned::new(MaybeUninit::uninit()),
         }
@@ -315,13 +310,12 @@ impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
     pub const fn buffers<const TX: usize, const RX: usize>(mut self, buffers: &'static mut Buffers<BUF_SIZE, TX, RX>) -> Self { 
         self.rx_buffers = &mut buffers.rx_buffers;
         self.tx_buffers = &mut buffers.tx_buffers; 
-        self.tx_taken = &mut buffers.tx_taken; 
         self 
     }
     pub const fn set_buffers<const TX: usize, const RX: usize>(&mut self, buffers: &'static mut Buffers<BUF_SIZE, TX, RX>) {
+        const { assert!(TX <= u32::BITS as usize, "`u32` bitset is used to account for taken TX buffers.") };
         self.rx_buffers = &mut buffers.rx_buffers;
         self.tx_buffers = &mut buffers.tx_buffers; 
-        self.tx_taken = &mut buffers.tx_taken; 
     }
     pub fn unchange_irq_priority(&mut self) {
         let hw_priority = cortex_m::peripheral::NVIC::get_priority(self.irq);
@@ -462,11 +456,14 @@ impl<const BUF_SIZE: usize> Drop for Descriptor<BUF_SIZE> {
 
 impl<const BUF_SIZE: usize> Buffer<BUF_SIZE> {
     pub const fn new() -> Self {
-        Self(UnsafePinned::new([0; BUF_SIZE]))
+        Self {
+            buf: UnsafePinned::new([0; BUF_SIZE]),
+            tx_taken_position: 0,
+        }
     }
 
     pub fn as_mut_bytes(self: Pin<&mut Self>) -> &mut [u8; BUF_SIZE] {
-        unsafe { &mut *self.get_unchecked_mut().0.get() }
+        unsafe { &mut *self.get_unchecked_mut().buf.get() }
     }
 }
 
@@ -482,7 +479,6 @@ impl<const BUF_SIZE: usize, const TX: usize, const RX: usize> Buffers<BUF_SIZE, 
             rx_buffers: unsafe { core::mem::transmute_copy(&rx_buffers) },
             // rx_buffers: rx_buffers.map(Pin::static_mut),
             // rx_buffers: rx_buffers.map(Pin::static_mut),
-            tx_taken: [false; TX],
         }
     }
 }
@@ -491,12 +487,12 @@ impl<const BUF_SIZE: usize> Deref for Buffer<BUF_SIZE> {
     type Target = [u8; BUF_SIZE];
     fn deref(&self) -> &Self::Target {
         // todo: autite it
-        unsafe { &*self.0.get() }
+        unsafe { &*self.buf.get() }
     }
 }
 impl<const BUF_SIZE: usize> DerefMut for Buffer<BUF_SIZE> {
     fn deref_mut(&mut self) -> &mut Self::Target {
-        unsafe { &mut *self.0.get() }
+        unsafe { &mut *self.buf.get() }
     }
 }
 
@@ -537,7 +533,7 @@ impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
 
             this.tx_buffers = replace(&mut conf.tx_buffers, &mut []);
             this.rx_buffers = replace(&mut conf.rx_buffers, &mut []);
-            this.tx_taken = replace(&mut conf.tx_taken, &mut []);
+            this.tx_taken = 0;
         }
 
         fsp_try!(R_ETHER_Open(get_mut(self), conf.c_conf()))
@@ -586,7 +582,7 @@ impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
         self: Pin<&mut Self>,
         buffer: Pin<&'static mut Buffer<BUF_SIZE>>,
     ) -> Result<(), fsp_err_t> {
-        let ptr = unsafe { buffer.get_unchecked_mut().0.get() };
+        let ptr = unsafe { buffer.get_unchecked_mut().buf.get() };
 
         fsp_try!(R_ETHER_RxBufferUpdate(get_mut(self), ptr.cast()))
     }
@@ -600,18 +596,20 @@ impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
             return Err(ra_fsp_sys::generated::FSP_ERR_ASSERTION);
         }
 
-        let ptr = buffer.as_ref().get_ref().0.get();
+        let ptr = buffer.as_ref().get_ref().buf.get();
         let len = len.min(BUF_SIZE);
 
-        // - If we will successfully submit the buffer, it will become
-        //   unavailable and user will not be able to get it
-        // - If we faced the error, `buffer` is consumed from user, so we can
-        //   allow them to take it with `take_tx_buf`.
-        self.as_mut().tx_buffer_update(buffer);
-
-        fsp_try!(R_ETHER_Write(get_mut(self), ptr.cast(), len as u32))?;
-
-        Ok(())
+        match fsp_try!(R_ETHER_Write(
+            get_mut(self.as_mut()),
+            ptr.cast(),
+            len as u32
+        )) {
+            Ok(()) => Ok(()),
+            Err(err) => {
+                self.as_mut().tx_buffer_update(buffer);
+                Err(err)
+            }
+        }
     }
     pub fn write_non_zerocopy(self: Pin<&mut Self>, buffer: &[u8]) -> Result<(), fsp_err_t> {
         let zerocopy = unsafe { (*(*self.as_ref().get_ref().inst.get()).p_ether_cfg).zerocopy };
