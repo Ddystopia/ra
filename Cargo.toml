@@ -1,5 +1,5 @@
 [workspace]
-package.version = "0.1.3"
+package.version = "0.1.4"
 members = [
   "pac/ra6m3",
   "ra-fsp-rs",
