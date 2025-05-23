@@ -10,5 +10,5 @@ exclude = []
 resolver = "2"
 
 [workspace.dependencies]
-ra-fsp-sys = { version = "0.1.3" }
-ra6m3-pac = { version = "0.1.3", package = "ra6m3-fsp-pac"  }
+ra-fsp-sys = { version = "0.1.4" }
+ra6m3-pac = { version = "0.1.4", package = "ra6m3-fsp-pac"  }
