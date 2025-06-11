@@ -201,7 +201,7 @@ fn main() -> Result<()> {
             .with_context(|| format!("Failed to extract PAC name from: {}", svd_file.display()))?;
         let pac_dir = pac_dir.join(&name);
 
-        if name != "ra6m3" {
+        if name != "ra6m3" && name != "ra4m1" {
             // fixme: when running in debug mode, we see that `svd2rust` panics on debug assertion
             //        due to bad SVD files. We need to patch those errors.
             println!("Skipping {name} as it is not supported yet");

@@ -15,6 +15,7 @@ ra-fsp-sys.workspace = true
 cortex-m = { version = "0.7.7", default-features = false }
 log = { version = "0.4.27", default-features = false, optional = true }
 ra6m3-pac = { workspace = true, optional = true, features = ["fsp"] }
+ra4m1-pac = { workspace = true, optional = true, features = ["fsp"] }
 
 [features]
 default = ["log"]
@@ -44,7 +45,7 @@ ra2e3 = []
 ra2l1 = []
 ra4e1 = []
 ra4e2 = []
-ra4m1 = []
+ra4m1 = ["ra-fsp-sys/ra4m1", "dep:ra4m1-pac"]
 ra4m2 = []
 ra4m3 = []
 ra4t1 = []

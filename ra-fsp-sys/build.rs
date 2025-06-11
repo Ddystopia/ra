@@ -237,7 +237,7 @@ pub fn wrap_component(modules: &[&str]) {
 
     write!(
         &mut rust_codegen,
-        "\npub type e_elc_event = e_elc_event_ra6m3;\n"
+        "\npub type e_elc_event = e_elc_event_{mcu_group};\n"
     )
     .unwrap();
 }

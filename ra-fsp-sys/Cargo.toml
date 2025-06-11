@@ -49,7 +49,7 @@ mod-r_ether_phy_target_ksz8091rnb = ["mod-r_ether_phy"]
 mod-r_ether_phy_target_ksz8041 = ["mod-r_ether_phy"]
 mod-r_ether_phy_target_dp83620 = ["mod-r_ether_phy"]
 
-# todo: support stuff except ra6m3
+# todo: support stuff except ra6m3 and ra4m1
 ra0e1 = []
 ra2a1 = []
 ra2a2 = []
