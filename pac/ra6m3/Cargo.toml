@@ -15,6 +15,10 @@ repository = "https://github.com/ra-rs/ra"
 readme = "README.md"
 edition = "2021"
 
+[lib]
+path = "src/lib.rs"
+crate-type = ["lib"]
+
 [dependencies]
 critical-section = { version = "1.0", optional = true }
 cortex-m = "0.7.6"

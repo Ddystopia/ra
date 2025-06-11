@@ -24,6 +24,10 @@ repository = "https://github.com/ra-rs/ra"
 readme = "README.md"
 edition = "2021"
 
+[lib]
+path = "src/lib.rs"
+crate-type = ["lib"]
+
 [dependencies]
 critical-section = { version = "1.0", optional = true }
 cortex-m = "0.7.6"
@@ -243,6 +247,21 @@ fn generate_pac(pac_dir: &Path, name: &str, svd_file: &Path) -> Result<()> {
     }
     fs::create_dir_all(&pac_dir).context("Failed to create PAC directory")?;
 
+    let output = pac_dir.join("src");
+
+    let manifest = MANIFEST_TEMPLATE
+        .replace("@name@", &name)
+        .replace("@NAME@", &name_upper);
+
+    fs::write(pac_dir.join("Cargo.toml"), manifest).context("Failed to write Cargo.toml")?;
+
+    fs::write(
+        pac_dir.join("README.md"),
+        README_TEMPLATE
+            .replace("%NAME%", &name_upper)
+            .replace("%name%", &name),
+    )?;
+
     println!("Found device family {name_upper}");
 
     // read to string `svd_file`
@@ -311,29 +330,15 @@ impl core::fmt::Display for InvalidInterruptNumber {
         !lib_rs.contains("CHANGE_ME"),
         "Failed to replace CHANGE_ME in lib.rs"
     );
+
     let build_rs = specific.build_rs;
     let device_x = specific.device_x;
 
     fs::write(pac_dir.join("build.rs"), build_rs).context("Failed to write build.rs")?;
     fs::write(pac_dir.join("device.x"), device_x).context("Failed to write device.x")?;
 
-    let output = pac_dir.join("src");
-
     form::create_directory_structure(output, &lib_rs, true)
         .context("Failed to create directory structure ")?;
-
-    let manifest = MANIFEST_TEMPLATE
-        .replace("@name@", &name)
-        .replace("@NAME@", &name_upper);
-
-    fs::write(pac_dir.join("Cargo.toml"), manifest).context("Failed to write Cargo.toml")?;
-
-    fs::write(
-        pac_dir.join("README.md"),
-        README_TEMPLATE
-            .replace("%NAME%", &name_upper)
-            .replace("%name%", &name),
-    )?;
 
     Command::new("cargo")
         .args(["fmt", "--manifest-path"])
