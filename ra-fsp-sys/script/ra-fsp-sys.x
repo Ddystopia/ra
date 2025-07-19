@@ -22,8 +22,19 @@ PROVIDE(
 );
 
 PROVIDE(
-  _stack_start = DEFINED(.bss.g_main_stack)
-    ? ADDR(.bss.g_main_stack) + SIZEOF(.bss.g_main_stack)
+  _stack_start = DEFINED(__ram_noinit$$Limit)
+
+    /*
+      unfortunately, it is not actually stack start. It has `*(.ram_noinit)` `*(.noinit)`
+      too, but `_stack_start` is solely used by RTIC to compare against `__ebss` to
+      determine if the stack may overwrite the BSS section. But this is a private
+      symbol and should not be actually used, and it is not used anywhere else.
+      So we might let it be slightly incorrect, because it will not change
+      `_stack_start > __ebss` comparation.
+      Ideally:
+      ? ADDR(.bss.g_main_stack) + SIZEOF(.bss.g_main_stack)
+    */
+    ? __ram_noinit$$Limit
     : DEFINED(__stack) ? __stack : 0
 );
 
