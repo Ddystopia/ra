@@ -79,10 +79,9 @@ impl IoPortInstance {
         // There is always `open` field and methods check it. When zeroed, they
         // will return with an error unless it is opened.
 
-        Self(UnsafePinned::new(st_ioport_instance_ctrl {
-            open: 0,
-            p_context: ptr::null(),
-        }))
+        let zeroed: ioport_instance_ctrl_t = unsafe { MaybeUninit::zeroed().assume_init() };
+
+        Self(UnsafePinned::new(zeroed))
     }
 
     #[inline(always)]

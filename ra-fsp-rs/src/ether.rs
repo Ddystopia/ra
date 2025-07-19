@@ -130,22 +130,9 @@ unsafe impl<const BUF_SIZE: usize> Send for EtherInstance<BUF_SIZE> {}
 
 impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
     pub const fn new() -> Self {
+        let zeroed = unsafe { MaybeUninit::zeroed().assume_init() };
         Self {
-            inst: UnsafePinned::new(st_ether_instance_ctrl {
-                open: 0,
-                p_ether_cfg: ptr::null(),
-                p_rx_descriptor: ptr::null_mut(),
-                p_tx_descriptor: ptr::null_mut(),
-                p_reg_etherc: ptr::null_mut(),
-                p_reg_edmac: ptr::null_mut(),
-                previous_link_status: 0,
-                link_change: 0,
-                magic_packet: 0,
-                link_establish_status: 0,
-                p_callback: None,
-                p_callback_memory: ptr::null_mut(),
-                p_context: ptr::null(),
-            }),
+            inst: UnsafePinned::new(zeroed),
             tx_buffers: &mut [],
             tx_taken: 0,
             rx_buffers: &mut [],
