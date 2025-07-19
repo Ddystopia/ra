@@ -137,6 +137,10 @@ fn main() -> Result<()> {
 
     eprintln!("Generating PACs");
 
+    if !fs::exists("svd/vendor") {
+        return Err(anyhow::anyhow!("`./svd/vendor` directory does not exist."));
+    }
+
     // Copy lowercase-named SVDs to patch dir
     for entry in fs::read_dir("svd/vendor")? {
         let entry = entry?;
