@@ -36,8 +36,6 @@ Manufacturer‑provided FSP to handles ID code setup in `SystemInit` and linker 
 
 By using this software, you agree to the additonal terms and conditions found at: http://www.renesas.com/disclaimer.
 
-`script/fsp_base.ld` is licensed under Renesas license.
-
 All Rust source code exept `generated` module is licensed under either of
 
 - Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or
