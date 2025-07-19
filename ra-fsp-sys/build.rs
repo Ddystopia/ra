@@ -152,10 +152,8 @@ pub fn wrap_component(modules: &[&str]) {
         .expect("failed to copy `script`");
 
     let bindgen = bindgen::Builder::default()
-        // The input header we would like to generate
-        // bindings for
         .header_contents(
-            "r_ethernet_rs_wrapper.h",
+            "rs_bsp_wrapper.h",
             r#"
                 #include "bsp_api.h"
                 #include "bsp_cfg.h"
@@ -163,14 +161,31 @@ pub fn wrap_component(modules: &[&str]) {
                 #include "renesas.h"
                 #include "bsp_elc.h"
                 #include "bsp_irq.h"
-
-                #include "r_ether.h"
-                #include "r_ether_phy.h"
-                #include "r_ether_api.h"
-
-                #include <r_ioport_api.h>
-                #include <r_ioport.h>
             "#,
+        )
+        .header_contents(
+            "rs_ether_wrapper.h",
+            if cfg!(feature = "mod-r_ether") {
+                r#" #include "r_ether.h" #include "r_ether_api.h" "#
+            } else {
+                ""
+            },
+        )
+        .header_contents(
+            "rs_ether_phy_wrapper.h",
+            if cfg!(feature = "mod-r_ether_phy") {
+                r#" #include "r_ether_phy.h" #include "r_ether_phy_api.h" "#
+            } else {
+                ""
+            },
+        )
+        .header_contents(
+            "rs_ioport_wrapper.h",
+            if cfg!(feature = "mod-r_ioport") {
+                r#" #include "r_ioport.h" #include "r_ioport_api.h" "#
+            } else {
+                ""
+            },
         )
         .use_core()
         .clang_arg(format!("-D{bsp_mcu_group}=1"))
