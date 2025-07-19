@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - The start address of the receive descriptor list is set. Set the start address according to the descriptor length selected by the EDMR.DL\[1:0\] bits.16-byte boundary: Lower 4 bits = 0000b32-byte boundary: Lower 5 bits = 00000b64-byte boundary: Lower 6 bits = 000000b
     #[inline(always)]
-    pub fn rdlar(&mut self) -> RDLAR_W<RDLAR_SPEC> {
+    pub fn rdlar(&mut self) -> RDLAR_W<'_, RDLAR_SPEC> {
         RDLAR_W::new(self, 0)
     }
 }

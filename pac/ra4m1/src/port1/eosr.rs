@@ -74,7 +74,7 @@ impl R {
 impl W {
     ///Bits 0:15 - Pmn Event Output Set
     #[inline(always)]
-    pub fn eosr(&mut self) -> EOSR_W<EOSR_SPEC> {
+    pub fn eosr(&mut self) -> EOSR_W<'_, EOSR_SPEC> {
         EOSR_W::new(self, 0)
     }
 }

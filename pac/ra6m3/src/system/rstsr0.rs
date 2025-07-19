@@ -317,27 +317,27 @@ impl R {
 impl W {
     ///Bit 0 - Power-On Reset Detect FlagNOTE: Writable only to clear the flag. Confirm the value is 1 and then write 0.
     #[inline(always)]
-    pub fn porf(&mut self) -> PORF_W<RSTSR0_SPEC> {
+    pub fn porf(&mut self) -> PORF_W<'_, RSTSR0_SPEC> {
         PORF_W::new(self, 0)
     }
     ///Bit 1 - Voltage Monitor 0 Reset Detect FlagNOTE: Writable only to clear the flag. Confirm the value is 1 and then write 0.
     #[inline(always)]
-    pub fn lvd0rf(&mut self) -> LVD0RF_W<RSTSR0_SPEC> {
+    pub fn lvd0rf(&mut self) -> LVD0RF_W<'_, RSTSR0_SPEC> {
         LVD0RF_W::new(self, 1)
     }
     ///Bit 2 - Voltage Monitor 1 Reset Detect FlagNOTE: Writable only to clear the flag. Confirm the value is 1 and then write 0.
     #[inline(always)]
-    pub fn lvd1rf(&mut self) -> LVD1RF_W<RSTSR0_SPEC> {
+    pub fn lvd1rf(&mut self) -> LVD1RF_W<'_, RSTSR0_SPEC> {
         LVD1RF_W::new(self, 2)
     }
     ///Bit 3 - Voltage Monitor 2 Reset Detect FlagNOTE: Writable only to clear the flag. Confirm the value is 1 and then write 0.
     #[inline(always)]
-    pub fn lvd2rf(&mut self) -> LVD2RF_W<RSTSR0_SPEC> {
+    pub fn lvd2rf(&mut self) -> LVD2RF_W<'_, RSTSR0_SPEC> {
         LVD2RF_W::new(self, 3)
     }
     ///Bit 7 - Deep Software Standby Reset FlagNOTE: Writable only to clear the flag. Confirm the value is 1 and then write 0.
     #[inline(always)]
-    pub fn dpsrstf(&mut self) -> DPSRSTF_W<RSTSR0_SPEC> {
+    pub fn dpsrstf(&mut self) -> DPSRSTF_W<'_, RSTSR0_SPEC> {
         DPSRSTF_W::new(self, 7)
     }
 }

@@ -5,7 +5,7 @@ pub type LVYADDI_W<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
 impl W {
     ///Bits 0:31 - V limiter y-axis increment integer part
     #[inline(always)]
-    pub fn lvyaddi(&mut self) -> LVYADDI_W<LVYADDI_SPEC> {
+    pub fn lvyaddi(&mut self) -> LVYADDI_W<'_, LVYADDI_SPEC> {
         LVYADDI_W::new(self, 0)
     }
 }

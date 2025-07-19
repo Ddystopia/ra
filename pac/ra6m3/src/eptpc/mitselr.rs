@@ -367,32 +367,32 @@ impl R {
 impl W {
     ///Bit 0 - Pulse Output Timer 0 MINT Interrupt Output Enable
     #[inline(always)]
-    pub fn minten0(&mut self) -> MINTEN0_W<MITSELR_SPEC> {
+    pub fn minten0(&mut self) -> MINTEN0_W<'_, MITSELR_SPEC> {
         MINTEN0_W::new(self, 0)
     }
     ///Bit 1 - Pulse Output Timer 1 MINT Interrupt Output Enable
     #[inline(always)]
-    pub fn minten1(&mut self) -> MINTEN1_W<MITSELR_SPEC> {
+    pub fn minten1(&mut self) -> MINTEN1_W<'_, MITSELR_SPEC> {
         MINTEN1_W::new(self, 1)
     }
     ///Bit 2 - Pulse Output Timer 2 MINT Interrupt Output Enable
     #[inline(always)]
-    pub fn minten2(&mut self) -> MINTEN2_W<MITSELR_SPEC> {
+    pub fn minten2(&mut self) -> MINTEN2_W<'_, MITSELR_SPEC> {
         MINTEN2_W::new(self, 2)
     }
     ///Bit 3 - Pulse Output Timer 3 MINT Interrupt Output Enable
     #[inline(always)]
-    pub fn minten3(&mut self) -> MINTEN3_W<MITSELR_SPEC> {
+    pub fn minten3(&mut self) -> MINTEN3_W<'_, MITSELR_SPEC> {
         MINTEN3_W::new(self, 3)
     }
     ///Bit 4 - Pulse Output Timer 4 MINT Interrupt Output Enable
     #[inline(always)]
-    pub fn minten4(&mut self) -> MINTEN4_W<MITSELR_SPEC> {
+    pub fn minten4(&mut self) -> MINTEN4_W<'_, MITSELR_SPEC> {
         MINTEN4_W::new(self, 4)
     }
     ///Bit 5 - Pulse Output Timer 5 MINT Interrupt Output Enable
     #[inline(always)]
-    pub fn minten5(&mut self) -> MINTEN5_W<MITSELR_SPEC> {
+    pub fn minten5(&mut self) -> MINTEN5_W<'_, MITSELR_SPEC> {
         MINTEN5_W::new(self, 5)
     }
 }

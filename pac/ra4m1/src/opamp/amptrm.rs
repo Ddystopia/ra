@@ -487,42 +487,42 @@ impl R {
 impl W {
     ///Bit 0 - Operational amplifier function activation/stop trigger control
     #[inline(always)]
-    pub fn amptrm00(&mut self) -> AMPTRM00_W<AMPTRM_SPEC> {
+    pub fn amptrm00(&mut self) -> AMPTRM00_W<'_, AMPTRM_SPEC> {
         AMPTRM00_W::new(self, 0)
     }
     ///Bit 1 - Operational amplifier function activation/stop trigger control
     #[inline(always)]
-    pub fn amptrm01(&mut self) -> AMPTRM01_W<AMPTRM_SPEC> {
+    pub fn amptrm01(&mut self) -> AMPTRM01_W<'_, AMPTRM_SPEC> {
         AMPTRM01_W::new(self, 1)
     }
     ///Bit 2 - Operational amplifier function activation/stop trigger control
     #[inline(always)]
-    pub fn amptrm10(&mut self) -> AMPTRM10_W<AMPTRM_SPEC> {
+    pub fn amptrm10(&mut self) -> AMPTRM10_W<'_, AMPTRM_SPEC> {
         AMPTRM10_W::new(self, 2)
     }
     ///Bit 3 - Operational amplifier function activation/stop trigger control
     #[inline(always)]
-    pub fn amptrm11(&mut self) -> AMPTRM11_W<AMPTRM_SPEC> {
+    pub fn amptrm11(&mut self) -> AMPTRM11_W<'_, AMPTRM_SPEC> {
         AMPTRM11_W::new(self, 3)
     }
     ///Bit 4 - Operational amplifier function activation/stop trigger control
     #[inline(always)]
-    pub fn amptrm20(&mut self) -> AMPTRM20_W<AMPTRM_SPEC> {
+    pub fn amptrm20(&mut self) -> AMPTRM20_W<'_, AMPTRM_SPEC> {
         AMPTRM20_W::new(self, 4)
     }
     ///Bit 5 - Operational amplifier function activation/stop trigger control
     #[inline(always)]
-    pub fn amptrm21(&mut self) -> AMPTRM21_W<AMPTRM_SPEC> {
+    pub fn amptrm21(&mut self) -> AMPTRM21_W<'_, AMPTRM_SPEC> {
         AMPTRM21_W::new(self, 5)
     }
     ///Bit 6 - Operational amplifier function activation/stop trigger control
     #[inline(always)]
-    pub fn amptrm30(&mut self) -> AMPTRM30_W<AMPTRM_SPEC> {
+    pub fn amptrm30(&mut self) -> AMPTRM30_W<'_, AMPTRM_SPEC> {
         AMPTRM30_W::new(self, 6)
     }
     ///Bit 7 - Operational amplifier function activation/stop trigger control
     #[inline(always)]
-    pub fn amptrm31(&mut self) -> AMPTRM31_W<AMPTRM_SPEC> {
+    pub fn amptrm31(&mut self) -> AMPTRM31_W<'_, AMPTRM_SPEC> {
         AMPTRM31_W::new(self, 7)
     }
 }

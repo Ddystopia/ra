@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - Length These bits store the USB request wLength value.
     #[inline(always)]
-    pub fn wlentuh(&mut self) -> WLENTUH_W<USBLENG_SPEC> {
+    pub fn wlentuh(&mut self) -> WLENTUH_W<'_, USBLENG_SPEC> {
         WLENTUH_W::new(self, 0)
     }
 }

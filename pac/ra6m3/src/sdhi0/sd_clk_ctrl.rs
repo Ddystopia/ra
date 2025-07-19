@@ -297,17 +297,17 @@ impl R {
 impl W {
     ///Bits 0:7 - SDHI Clock Frequency Select
     #[inline(always)]
-    pub fn clksel(&mut self) -> CLKSEL_W<SD_CLK_CTRL_SPEC> {
+    pub fn clksel(&mut self) -> CLKSEL_W<'_, SD_CLK_CTRL_SPEC> {
         CLKSEL_W::new(self, 0)
     }
     ///Bit 8 - SD/MMC Clock Output Control Enable
     #[inline(always)]
-    pub fn clken(&mut self) -> CLKEN_W<SD_CLK_CTRL_SPEC> {
+    pub fn clken(&mut self) -> CLKEN_W<'_, SD_CLK_CTRL_SPEC> {
         CLKEN_W::new(self, 8)
     }
     ///Bit 9 - SD/MMC Clock Output Automatic Control Enable
     #[inline(always)]
-    pub fn clkctrlen(&mut self) -> CLKCTRLEN_W<SD_CLK_CTRL_SPEC> {
+    pub fn clkctrlen(&mut self) -> CLKCTRLEN_W<'_, SD_CLK_CTRL_SPEC> {
         CLKCTRLEN_W::new(self, 9)
     }
 }

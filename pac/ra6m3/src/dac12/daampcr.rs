@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 6 - Amplifier Control 0
     #[inline(always)]
-    pub fn daamp0(&mut self) -> DAAMP0_W<DAAMPCR_SPEC> {
+    pub fn daamp0(&mut self) -> DAAMP0_W<'_, DAAMPCR_SPEC> {
         DAAMP0_W::new(self, 6)
     }
     ///Bit 7 - Amplifier Control 1
     #[inline(always)]
-    pub fn daamp1(&mut self) -> DAAMP1_W<DAAMPCR_SPEC> {
+    pub fn daamp1(&mut self) -> DAAMP1_W<'_, DAAMPCR_SPEC> {
         DAAMP1_W::new(self, 7)
     }
 }

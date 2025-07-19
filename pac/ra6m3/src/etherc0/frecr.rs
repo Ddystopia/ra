@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Frame Receive Error Counter RegisterThe FRECR register is a counter indicating the number of times a frame receive error has occurred.
     #[inline(always)]
-    pub fn frecr(&mut self) -> FRECR_W<FRECR_SPEC> {
+    pub fn frecr(&mut self) -> FRECR_W<'_, FRECR_SPEC> {
         FRECR_W::new(self, 0)
     }
 }

@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:4 - Bit Rate High-Level Period (High-level period of SCL clock)
     #[inline(always)]
-    pub fn brh(&mut self) -> BRH_W<ICBRH_SPEC> {
+    pub fn brh(&mut self) -> BRH_W<'_, ICBRH_SPEC> {
         BRH_W::new(self, 0)
     }
 }

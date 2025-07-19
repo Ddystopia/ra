@@ -243,17 +243,17 @@ impl R {
 impl W {
     ///Bits 0:3 - Selection of the number of dummy cycles of Fast Read instructions
     #[inline(always)]
-    pub fn sfmdn(&mut self) -> SFMDN_W<SFMSDC_SPEC> {
+    pub fn sfmdn(&mut self) -> SFMDN_W<'_, SFMSDC_SPEC> {
         SFMDN_W::new(self, 0)
     }
     ///Bit 7 - XIP mode permission
     #[inline(always)]
-    pub fn sfmxen(&mut self) -> SFMXEN_W<SFMSDC_SPEC> {
+    pub fn sfmxen(&mut self) -> SFMXEN_W<'_, SFMSDC_SPEC> {
         SFMXEN_W::new(self, 7)
     }
     ///Bits 8:15 - Mode data for serial ROM. (Control XIP mode)
     #[inline(always)]
-    pub fn sfmxd(&mut self) -> SFMXD_W<SFMSDC_SPEC> {
+    pub fn sfmxd(&mut self) -> SFMXD_W<'_, SFMSDC_SPEC> {
         SFMXD_W::new(self, 8)
     }
 }

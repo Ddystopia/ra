@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - HOCO Stop
     #[inline(always)]
-    pub fn hcstp(&mut self) -> HCSTP_W<HOCOCR_SPEC> {
+    pub fn hcstp(&mut self) -> HCSTP_W<'_, HOCOCR_SPEC> {
         HCSTP_W::new(self, 0)
     }
 }

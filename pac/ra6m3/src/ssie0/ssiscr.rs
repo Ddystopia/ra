@@ -193,12 +193,12 @@ impl R {
 impl W {
     ///Bits 0:4 - RDF Setting Condition Select
     #[inline(always)]
-    pub fn rdfs(&mut self) -> RDFS_W<SSISCR_SPEC> {
+    pub fn rdfs(&mut self) -> RDFS_W<'_, SSISCR_SPEC> {
         RDFS_W::new(self, 0)
     }
     ///Bits 8:12 - TDE Setting Condition Select
     #[inline(always)]
-    pub fn tdes(&mut self) -> TDES_W<SSISCR_SPEC> {
+    pub fn tdes(&mut self) -> TDES_W<'_, SSISCR_SPEC> {
         TDES_W::new(self, 8)
     }
 }

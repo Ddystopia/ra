@@ -709,42 +709,42 @@ impl R {
 impl W {
     ///Bit 0 - Input Capture/Compare Match Flag A
     #[inline(always)]
-    pub fn tcfa(&mut self) -> TCFA_W<GTST_SPEC> {
+    pub fn tcfa(&mut self) -> TCFA_W<'_, GTST_SPEC> {
         TCFA_W::new(self, 0)
     }
     ///Bit 1 - Input Capture/Compare Match Flag B
     #[inline(always)]
-    pub fn tcfb(&mut self) -> TCFB_W<GTST_SPEC> {
+    pub fn tcfb(&mut self) -> TCFB_W<'_, GTST_SPEC> {
         TCFB_W::new(self, 1)
     }
     ///Bit 2 - Input Compare Match Flag C
     #[inline(always)]
-    pub fn tcfc(&mut self) -> TCFC_W<GTST_SPEC> {
+    pub fn tcfc(&mut self) -> TCFC_W<'_, GTST_SPEC> {
         TCFC_W::new(self, 2)
     }
     ///Bit 3 - Input Compare Match Flag D
     #[inline(always)]
-    pub fn tcfd(&mut self) -> TCFD_W<GTST_SPEC> {
+    pub fn tcfd(&mut self) -> TCFD_W<'_, GTST_SPEC> {
         TCFD_W::new(self, 3)
     }
     ///Bit 4 - Input Compare Match Flag E
     #[inline(always)]
-    pub fn tcfe(&mut self) -> TCFE_W<GTST_SPEC> {
+    pub fn tcfe(&mut self) -> TCFE_W<'_, GTST_SPEC> {
         TCFE_W::new(self, 4)
     }
     ///Bit 5 - Input Compare Match Flag F
     #[inline(always)]
-    pub fn tcff(&mut self) -> TCFF_W<GTST_SPEC> {
+    pub fn tcff(&mut self) -> TCFF_W<'_, GTST_SPEC> {
         TCFF_W::new(self, 5)
     }
     ///Bit 6 - Overflow Flag
     #[inline(always)]
-    pub fn tcfpo(&mut self) -> TCFPO_W<GTST_SPEC> {
+    pub fn tcfpo(&mut self) -> TCFPO_W<'_, GTST_SPEC> {
         TCFPO_W::new(self, 6)
     }
     ///Bit 7 - Underflow Flag
     #[inline(always)]
-    pub fn tcfpu(&mut self) -> TCFPU_W<GTST_SPEC> {
+    pub fn tcfpu(&mut self) -> TCFPU_W<'_, GTST_SPEC> {
         TCFPU_W::new(self, 7)
     }
 }

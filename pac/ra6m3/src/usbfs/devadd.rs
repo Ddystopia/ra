@@ -100,7 +100,7 @@ impl R {
 impl W {
     ///Bits 6:7 - Transfer Speed of Communication Target Device
     #[inline(always)]
-    pub fn usbspd(&mut self) -> USBSPD_W<DEVADD_SPEC> {
+    pub fn usbspd(&mut self) -> USBSPD_W<'_, DEVADD_SPEC> {
         USBSPD_W::new(self, 6)
     }
 }

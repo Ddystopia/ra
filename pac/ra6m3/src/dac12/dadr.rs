@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - D/A Data RegisterNOTE: When DADPR.DPSEL = 0, the high-order 4 bits are fixed to 0: right justified format. When DADPR.DPSEL = 1, the low-order 4 bits are fixed to 0: left justified format.
     #[inline(always)]
-    pub fn dadr(&mut self) -> DADR_W<DADR_SPEC> {
+    pub fn dadr(&mut self) -> DADR_W<'_, DADR_SPEC> {
         DADR_W::new(self, 0)
     }
 }

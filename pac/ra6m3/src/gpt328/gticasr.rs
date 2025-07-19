@@ -1447,122 +1447,122 @@ impl R {
 impl W {
     ///Bit 0 - GTETRGA Pin Rising Input Source GTCCRA Input Capture Enable
     #[inline(always)]
-    pub fn asgtrgar(&mut self) -> ASGTRGAR_W<GTICASR_SPEC> {
+    pub fn asgtrgar(&mut self) -> ASGTRGAR_W<'_, GTICASR_SPEC> {
         ASGTRGAR_W::new(self, 0)
     }
     ///Bit 1 - GTETRGA Pin Falling Input Source GTCCRA Input Capture Enable
     #[inline(always)]
-    pub fn asgtrgaf(&mut self) -> ASGTRGAF_W<GTICASR_SPEC> {
+    pub fn asgtrgaf(&mut self) -> ASGTRGAF_W<'_, GTICASR_SPEC> {
         ASGTRGAF_W::new(self, 1)
     }
     ///Bit 2 - GTETRGB Pin Rising Input Source GTCCRA Input Capture Enable
     #[inline(always)]
-    pub fn asgtrgbr(&mut self) -> ASGTRGBR_W<GTICASR_SPEC> {
+    pub fn asgtrgbr(&mut self) -> ASGTRGBR_W<'_, GTICASR_SPEC> {
         ASGTRGBR_W::new(self, 2)
     }
     ///Bit 3 - GTETRGB Pin Falling Input Source GTCCRA Input Capture Enable
     #[inline(always)]
-    pub fn asgtrgbf(&mut self) -> ASGTRGBF_W<GTICASR_SPEC> {
+    pub fn asgtrgbf(&mut self) -> ASGTRGBF_W<'_, GTICASR_SPEC> {
         ASGTRGBF_W::new(self, 3)
     }
     ///Bit 4 - GTETRGC Pin Rising Input Source GTCCRA Input Capture Enable
     #[inline(always)]
-    pub fn asgtrgcr(&mut self) -> ASGTRGCR_W<GTICASR_SPEC> {
+    pub fn asgtrgcr(&mut self) -> ASGTRGCR_W<'_, GTICASR_SPEC> {
         ASGTRGCR_W::new(self, 4)
     }
     ///Bit 5 - GTETRGC Pin Falling Input Source GTCCRA Input Capture Enable
     #[inline(always)]
-    pub fn asgtrgcf(&mut self) -> ASGTRGCF_W<GTICASR_SPEC> {
+    pub fn asgtrgcf(&mut self) -> ASGTRGCF_W<'_, GTICASR_SPEC> {
         ASGTRGCF_W::new(self, 5)
     }
     ///Bit 6 - GTETRGD Pin Rising Input Source GTCCRA Input Capture Enable
     #[inline(always)]
-    pub fn asgtrgdr(&mut self) -> ASGTRGDR_W<GTICASR_SPEC> {
+    pub fn asgtrgdr(&mut self) -> ASGTRGDR_W<'_, GTICASR_SPEC> {
         ASGTRGDR_W::new(self, 6)
     }
     ///Bit 7 - GTETRGD Pin Falling Input Source GTCCRA Input Capture Enable
     #[inline(always)]
-    pub fn asgtrgdf(&mut self) -> ASGTRGDF_W<GTICASR_SPEC> {
+    pub fn asgtrgdf(&mut self) -> ASGTRGDF_W<'_, GTICASR_SPEC> {
         ASGTRGDF_W::new(self, 7)
     }
     ///Bit 8 - GTIOCA Pin Rising Input during GTIOCB Value Low Source GTCCRA Input Capture Enable
     #[inline(always)]
-    pub fn ascarbl(&mut self) -> ASCARBL_W<GTICASR_SPEC> {
+    pub fn ascarbl(&mut self) -> ASCARBL_W<'_, GTICASR_SPEC> {
         ASCARBL_W::new(self, 8)
     }
     ///Bit 9 - GTIOCA Pin Rising Input during GTIOCB Value High Source GTCCRA Input Capture Enable
     #[inline(always)]
-    pub fn ascarbh(&mut self) -> ASCARBH_W<GTICASR_SPEC> {
+    pub fn ascarbh(&mut self) -> ASCARBH_W<'_, GTICASR_SPEC> {
         ASCARBH_W::new(self, 9)
     }
     ///Bit 10 - GTIOCA Pin Falling Input during GTIOCB Value Low Source GTCCRA Input Capture Enable
     #[inline(always)]
-    pub fn ascafbl(&mut self) -> ASCAFBL_W<GTICASR_SPEC> {
+    pub fn ascafbl(&mut self) -> ASCAFBL_W<'_, GTICASR_SPEC> {
         ASCAFBL_W::new(self, 10)
     }
     ///Bit 11 - GTIOCA Pin Falling Input during GTIOCB Value High Source GTCCRA Input Capture Enable
     #[inline(always)]
-    pub fn ascafbh(&mut self) -> ASCAFBH_W<GTICASR_SPEC> {
+    pub fn ascafbh(&mut self) -> ASCAFBH_W<'_, GTICASR_SPEC> {
         ASCAFBH_W::new(self, 11)
     }
     ///Bit 12 - GTIOCB Pin Rising Input during GTIOCA Value Low Source GTCCRA Input Capture Enable
     #[inline(always)]
-    pub fn ascbral(&mut self) -> ASCBRAL_W<GTICASR_SPEC> {
+    pub fn ascbral(&mut self) -> ASCBRAL_W<'_, GTICASR_SPEC> {
         ASCBRAL_W::new(self, 12)
     }
     ///Bit 13 - GTIOCB Pin Rising Input during GTIOCA Value High Source GTCCRA Input Capture Enable
     #[inline(always)]
-    pub fn ascbrah(&mut self) -> ASCBRAH_W<GTICASR_SPEC> {
+    pub fn ascbrah(&mut self) -> ASCBRAH_W<'_, GTICASR_SPEC> {
         ASCBRAH_W::new(self, 13)
     }
     ///Bit 14 - GTIOCB Pin Falling Input during GTIOCA Value Low Source GTCCRA Input Capture Enable
     #[inline(always)]
-    pub fn ascbfal(&mut self) -> ASCBFAL_W<GTICASR_SPEC> {
+    pub fn ascbfal(&mut self) -> ASCBFAL_W<'_, GTICASR_SPEC> {
         ASCBFAL_W::new(self, 14)
     }
     ///Bit 15 - GTIOCB Pin Falling Input during GTIOCA Value High Source GTCCRA Input Capture Enable
     #[inline(always)]
-    pub fn ascbfah(&mut self) -> ASCBFAH_W<GTICASR_SPEC> {
+    pub fn ascbfah(&mut self) -> ASCBFAH_W<'_, GTICASR_SPEC> {
         ASCBFAH_W::new(self, 15)
     }
     ///Bit 16 - ELC_GPTA Event Source GTCCRA Input Capture Enable
     #[inline(always)]
-    pub fn aselca(&mut self) -> ASELCA_W<GTICASR_SPEC> {
+    pub fn aselca(&mut self) -> ASELCA_W<'_, GTICASR_SPEC> {
         ASELCA_W::new(self, 16)
     }
     ///Bit 17 - ELC_GPTB Event Source GTCCRA Input Capture Enable
     #[inline(always)]
-    pub fn aselcb(&mut self) -> ASELCB_W<GTICASR_SPEC> {
+    pub fn aselcb(&mut self) -> ASELCB_W<'_, GTICASR_SPEC> {
         ASELCB_W::new(self, 17)
     }
     ///Bit 18 - ELC_GPTC Event Source GTCCRA Input Capture Enable
     #[inline(always)]
-    pub fn aselcc(&mut self) -> ASELCC_W<GTICASR_SPEC> {
+    pub fn aselcc(&mut self) -> ASELCC_W<'_, GTICASR_SPEC> {
         ASELCC_W::new(self, 18)
     }
     ///Bit 19 - ELC_GPTD Event Source GTCCRA Input Capture Enable
     #[inline(always)]
-    pub fn aselcd(&mut self) -> ASELCD_W<GTICASR_SPEC> {
+    pub fn aselcd(&mut self) -> ASELCD_W<'_, GTICASR_SPEC> {
         ASELCD_W::new(self, 19)
     }
     ///Bit 20 - ELC_GPTE Event Source GTCCRA Input Capture Enable
     #[inline(always)]
-    pub fn aselce(&mut self) -> ASELCE_W<GTICASR_SPEC> {
+    pub fn aselce(&mut self) -> ASELCE_W<'_, GTICASR_SPEC> {
         ASELCE_W::new(self, 20)
     }
     ///Bit 21 - ELC_GPTF Event Source GTCCRA Input Capture Enable
     #[inline(always)]
-    pub fn aselcf(&mut self) -> ASELCF_W<GTICASR_SPEC> {
+    pub fn aselcf(&mut self) -> ASELCF_W<'_, GTICASR_SPEC> {
         ASELCF_W::new(self, 21)
     }
     ///Bit 22 - ELC_GPTG Event Source GTCCRA Input Capture Enable
     #[inline(always)]
-    pub fn aselcg(&mut self) -> ASELCG_W<GTICASR_SPEC> {
+    pub fn aselcg(&mut self) -> ASELCG_W<'_, GTICASR_SPEC> {
         ASELCG_W::new(self, 22)
     }
     ///Bit 23 - ELC_GPTH Event Source GTCCRA Input Capture Enable
     #[inline(always)]
-    pub fn aselch(&mut self) -> ASELCH_W<GTICASR_SPEC> {
+    pub fn aselch(&mut self) -> ASELCH_W<'_, GTICASR_SPEC> {
         ASELCH_W::new(self, 23)
     }
 }

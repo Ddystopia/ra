@@ -277,17 +277,17 @@ impl R {
 impl W {
     ///Bits 0:2 - ACMPLP0 Reference Voltage(IVREF0) Selection*
     #[inline(always)]
-    pub fn crvs20(&mut self) -> CRVS20_W<COMPSEL1_SPEC> {
+    pub fn crvs20(&mut self) -> CRVS20_W<'_, COMPSEL1_SPEC> {
         CRVS20_W::new(self, 0)
     }
     ///Bits 4:6 - ACMPLP1 Reference Voltage(IVREF1) Selection
     #[inline(always)]
-    pub fn crvs64(&mut self) -> CRVS64_W<COMPSEL1_SPEC> {
+    pub fn crvs64(&mut self) -> CRVS64_W<'_, COMPSEL1_SPEC> {
         CRVS64_W::new(self, 4)
     }
     ///Bit 7 - ACMPLP1 Reference Voltage Selection
     #[inline(always)]
-    pub fn c1vrf2(&mut self) -> C1VRF2_W<COMPSEL1_SPEC> {
+    pub fn c1vrf2(&mut self) -> C1VRF2_W<'_, COMPSEL1_SPEC> {
         C1VRF2_W::new(self, 7)
     }
 }

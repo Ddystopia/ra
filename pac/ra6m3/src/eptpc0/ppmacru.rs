@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:23 - These bits hold the setting for the higher-order 24 bits of the destination MAC address for PTP-primary messages.
     #[inline(always)]
-    pub fn ppmacru(&mut self) -> PPMACRU_W<PPMACRU_SPEC> {
+    pub fn ppmacru(&mut self) -> PPMACRU_W<'_, PPMACRU_SPEC> {
         PPMACRU_W::new(self, 0)
     }
 }

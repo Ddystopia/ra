@@ -330,17 +330,17 @@ impl R {
 impl W {
     ///Bits 0:2 - Clock out source select
     #[inline(always)]
-    pub fn ckosel(&mut self) -> CKOSEL_W<CKOCR_SPEC> {
+    pub fn ckosel(&mut self) -> CKOSEL_W<'_, CKOCR_SPEC> {
         CKOSEL_W::new(self, 0)
     }
     ///Bits 4:6 - Clock out input frequency Division Select
     #[inline(always)]
-    pub fn ckodiv(&mut self) -> CKODIV_W<CKOCR_SPEC> {
+    pub fn ckodiv(&mut self) -> CKODIV_W<'_, CKOCR_SPEC> {
         CKODIV_W::new(self, 4)
     }
     ///Bit 7 - Clock out enable
     #[inline(always)]
-    pub fn ckoen(&mut self) -> CKOEN_W<CKOCR_SPEC> {
+    pub fn ckoen(&mut self) -> CKOEN_W<'_, CKOCR_SPEC> {
         CKOEN_W::new(self, 7)
     }
 }

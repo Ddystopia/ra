@@ -493,37 +493,37 @@ impl R {
 impl W {
     ///Bit 0 - Power-Down Control
     #[inline(always)]
-    pub fn dirpd(&mut self) -> DIRPD_W<PHYSET_SPEC> {
+    pub fn dirpd(&mut self) -> DIRPD_W<'_, PHYSET_SPEC> {
         DIRPD_W::new(self, 0)
     }
     ///Bit 1 - PLL Reset Control
     #[inline(always)]
-    pub fn pllreset(&mut self) -> PLLRESET_W<PHYSET_SPEC> {
+    pub fn pllreset(&mut self) -> PLLRESET_W<'_, PHYSET_SPEC> {
         PLLRESET_W::new(self, 1)
     }
     ///Bit 3 - Charging Downstream Port Enable
     #[inline(always)]
-    pub fn cdpen(&mut self) -> CDPEN_W<PHYSET_SPEC> {
+    pub fn cdpen(&mut self) -> CDPEN_W<'_, PHYSET_SPEC> {
         CDPEN_W::new(self, 3)
     }
     ///Bits 4:5 - Input System Clock Frequency
     #[inline(always)]
-    pub fn clksel(&mut self) -> CLKSEL_W<PHYSET_SPEC> {
+    pub fn clksel(&mut self) -> CLKSEL_W<'_, PHYSET_SPEC> {
         CLKSEL_W::new(self, 4)
     }
     ///Bits 8:9 - Terminating Resistance Adjustment Cycle
     #[inline(always)]
-    pub fn repsel(&mut self) -> REPSEL_W<PHYSET_SPEC> {
+    pub fn repsel(&mut self) -> REPSEL_W<'_, PHYSET_SPEC> {
         REPSEL_W::new(self, 8)
     }
     ///Bit 11 - Forcibly Start Terminating Resistance Adjustment
     #[inline(always)]
-    pub fn repstart(&mut self) -> REPSTART_W<PHYSET_SPEC> {
+    pub fn repstart(&mut self) -> REPSTART_W<'_, PHYSET_SPEC> {
         REPSTART_W::new(self, 11)
     }
     ///Bit 15 - CL-Only Mode
     #[inline(always)]
-    pub fn hseb(&mut self) -> HSEB_W<PHYSET_SPEC> {
+    pub fn hseb(&mut self) -> HSEB_W<'_, PHYSET_SPEC> {
         HSEB_W::new(self, 15)
     }
 }

@@ -152,7 +152,7 @@ impl R {
 impl W {
     ///Bits 0:2 - RSPCK Delay Setting
     #[inline(always)]
-    pub fn sckdl(&mut self) -> SCKDL_W<SPCKD_SPEC> {
+    pub fn sckdl(&mut self) -> SCKDL_W<'_, SPCKD_SPEC> {
         SCKDL_W::new(self, 0)
     }
 }

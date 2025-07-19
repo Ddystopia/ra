@@ -232,17 +232,17 @@ impl R {
 impl W {
     ///Bits 6:7 - Transfer Speed of Communication Target Device
     #[inline(always)]
-    pub fn usbspd(&mut self) -> USBSPD_W<DEVADDA_SPEC> {
+    pub fn usbspd(&mut self) -> USBSPD_W<'_, DEVADDA_SPEC> {
         USBSPD_W::new(self, 6)
     }
     ///Bits 8:10 - Communication Target Connecting Hub Port
     #[inline(always)]
-    pub fn hubport(&mut self) -> HUBPORT_W<DEVADDA_SPEC> {
+    pub fn hubport(&mut self) -> HUBPORT_W<'_, DEVADDA_SPEC> {
         HUBPORT_W::new(self, 8)
     }
     ///Bits 11:14 - Communication Target Connecting Hub Register
     #[inline(always)]
-    pub fn upphub(&mut self) -> UPPHUB_W<DEVADDA_SPEC> {
+    pub fn upphub(&mut self) -> UPPHUB_W<'_, DEVADDA_SPEC> {
         UPPHUB_W::new(self, 11)
     }
 }

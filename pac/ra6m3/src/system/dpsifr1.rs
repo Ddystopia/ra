@@ -441,37 +441,37 @@ impl R {
 impl W {
     ///Bit 0 - IRQ8-DS Pin Deep Standby Cancel Flag
     #[inline(always)]
-    pub fn dirq8f(&mut self) -> DIRQ8F_W<DPSIFR1_SPEC> {
+    pub fn dirq8f(&mut self) -> DIRQ8F_W<'_, DPSIFR1_SPEC> {
         DIRQ8F_W::new(self, 0)
     }
     ///Bit 1 - IRQ9-DS Pin Deep Standby Cancel Flag
     #[inline(always)]
-    pub fn dirq9f(&mut self) -> DIRQ9F_W<DPSIFR1_SPEC> {
+    pub fn dirq9f(&mut self) -> DIRQ9F_W<'_, DPSIFR1_SPEC> {
         DIRQ9F_W::new(self, 1)
     }
     ///Bit 2 - IRQ10-DS Pin Deep Standby Cancel Flag
     #[inline(always)]
-    pub fn dirq10f(&mut self) -> DIRQ10F_W<DPSIFR1_SPEC> {
+    pub fn dirq10f(&mut self) -> DIRQ10F_W<'_, DPSIFR1_SPEC> {
         DIRQ10F_W::new(self, 2)
     }
     ///Bit 3 - IRQ11-DS Pin Deep Standby Cancel Flag
     #[inline(always)]
-    pub fn dirq11f(&mut self) -> DIRQ11F_W<DPSIFR1_SPEC> {
+    pub fn dirq11f(&mut self) -> DIRQ11F_W<'_, DPSIFR1_SPEC> {
         DIRQ11F_W::new(self, 3)
     }
     ///Bit 4 - IRQ12-DS Pin Deep Standby Cancel Flag
     #[inline(always)]
-    pub fn dirq12f(&mut self) -> DIRQ12F_W<DPSIFR1_SPEC> {
+    pub fn dirq12f(&mut self) -> DIRQ12F_W<'_, DPSIFR1_SPEC> {
         DIRQ12F_W::new(self, 4)
     }
     ///Bit 5 - IRQ13-DS Pin Deep Standby Cancel Flag
     #[inline(always)]
-    pub fn dirq13f(&mut self) -> DIRQ13F_W<DPSIFR1_SPEC> {
+    pub fn dirq13f(&mut self) -> DIRQ13F_W<'_, DPSIFR1_SPEC> {
         DIRQ13F_W::new(self, 5)
     }
     ///Bit 6 - IRQ14-DS Pin Deep Standby Cancel Flag
     #[inline(always)]
-    pub fn dirq14f(&mut self) -> DIRQ14F_W<DPSIFR1_SPEC> {
+    pub fn dirq14f(&mut self) -> DIRQ14F_W<'_, DPSIFR1_SPEC> {
         DIRQ14F_W::new(self, 6)
     }
 }

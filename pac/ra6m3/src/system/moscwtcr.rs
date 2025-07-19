@@ -177,7 +177,7 @@ impl R {
 impl W {
     ///Bits 0:3 - Main clock oscillator wait time setting
     #[inline(always)]
-    pub fn msts(&mut self) -> MSTS_W<MOSCWTCR_SPEC> {
+    pub fn msts(&mut self) -> MSTS_W<'_, MOSCWTCR_SPEC> {
         MSTS_W::new(self, 0)
     }
 }

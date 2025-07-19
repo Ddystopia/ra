@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:14 - Output Image Data Lines Offset (in 8-byte units) The lower three bits should be set to 0.
     #[inline(always)]
-    pub fn ddmw(&mut self) -> DDMW_W<JIFDDOFST_SPEC> {
+    pub fn ddmw(&mut self) -> DDMW_W<'_, JIFDDOFST_SPEC> {
         DDMW_W::new(self, 0)
     }
 }

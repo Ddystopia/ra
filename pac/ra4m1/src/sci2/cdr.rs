@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:8 - Compare Match Data Compare data pattern for address match wake-up function
     #[inline(always)]
-    pub fn cmpd(&mut self) -> CMPD_W<CDR_SPEC> {
+    pub fn cmpd(&mut self) -> CMPD_W<'_, CDR_SPEC> {
         CMPD_W::new(self, 0)
     }
 }

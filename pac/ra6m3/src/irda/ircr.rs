@@ -187,17 +187,17 @@ impl R {
 impl W {
     ///Bit 2 - IRRXD Polarity Switching
     #[inline(always)]
-    pub fn irrxinv(&mut self) -> IRRXINV_W<IRCR_SPEC> {
+    pub fn irrxinv(&mut self) -> IRRXINV_W<'_, IRCR_SPEC> {
         IRRXINV_W::new(self, 2)
     }
     ///Bit 3 - IRTXD Polarity Switching
     #[inline(always)]
-    pub fn irtxinv(&mut self) -> IRTXINV_W<IRCR_SPEC> {
+    pub fn irtxinv(&mut self) -> IRTXINV_W<'_, IRCR_SPEC> {
         IRTXINV_W::new(self, 3)
     }
     ///Bit 7 - IrDA Enable
     #[inline(always)]
-    pub fn ire(&mut self) -> IRE_W<IRCR_SPEC> {
+    pub fn ire(&mut self) -> IRE_W<'_, IRCR_SPEC> {
         IRE_W::new(self, 7)
     }
 }

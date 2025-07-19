@@ -367,32 +367,32 @@ impl R {
 impl W {
     ///Bit 0 - Slave Address Register 0 Enable
     #[inline(always)]
-    pub fn sar0e(&mut self) -> SAR0E_W<ICSER_SPEC> {
+    pub fn sar0e(&mut self) -> SAR0E_W<'_, ICSER_SPEC> {
         SAR0E_W::new(self, 0)
     }
     ///Bit 1 - Slave Address Register 1 Enable
     #[inline(always)]
-    pub fn sar1e(&mut self) -> SAR1E_W<ICSER_SPEC> {
+    pub fn sar1e(&mut self) -> SAR1E_W<'_, ICSER_SPEC> {
         SAR1E_W::new(self, 1)
     }
     ///Bit 2 - Slave Address Register 2 Enable
     #[inline(always)]
-    pub fn sar2e(&mut self) -> SAR2E_W<ICSER_SPEC> {
+    pub fn sar2e(&mut self) -> SAR2E_W<'_, ICSER_SPEC> {
         SAR2E_W::new(self, 2)
     }
     ///Bit 3 - General Call Address Enable
     #[inline(always)]
-    pub fn gcae(&mut self) -> GCAE_W<ICSER_SPEC> {
+    pub fn gcae(&mut self) -> GCAE_W<'_, ICSER_SPEC> {
         GCAE_W::new(self, 3)
     }
     ///Bit 5 - Device-ID Address Detection Enable
     #[inline(always)]
-    pub fn dide(&mut self) -> DIDE_W<ICSER_SPEC> {
+    pub fn dide(&mut self) -> DIDE_W<'_, ICSER_SPEC> {
         DIDE_W::new(self, 5)
     }
     ///Bit 7 - Host Address Enable
     #[inline(always)]
-    pub fn hoae(&mut self) -> HOAE_W<ICSER_SPEC> {
+    pub fn hoae(&mut self) -> HOAE_W<'_, ICSER_SPEC> {
         HOAE_W::new(self, 7)
     }
 }

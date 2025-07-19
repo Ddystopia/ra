@@ -268,27 +268,27 @@ impl R {
 impl W {
     ///Bits 0:3 - Card Detect Time Counter
     #[inline(always)]
-    pub fn ctop(&mut self) -> CTOP_W<SD_OPTION_SPEC> {
+    pub fn ctop(&mut self) -> CTOP_W<'_, SD_OPTION_SPEC> {
         CTOP_W::new(self, 0)
     }
     ///Bits 4:7 - Timeout Counter
     #[inline(always)]
-    pub fn top(&mut self) -> TOP_W<SD_OPTION_SPEC> {
+    pub fn top(&mut self) -> TOP_W<'_, SD_OPTION_SPEC> {
         TOP_W::new(self, 4)
     }
     ///Bit 8 - Timeout MASKWhen timeout occurs in case of inactivating timeout, software reset should be executed to terminate command sequence.
     #[inline(always)]
-    pub fn toutmask(&mut self) -> TOUTMASK_W<SD_OPTION_SPEC> {
+    pub fn toutmask(&mut self) -> TOUTMASK_W<'_, SD_OPTION_SPEC> {
         TOUTMASK_W::new(self, 8)
     }
     ///Bit 13 - Bus Widthsee b15, WIDTH bit
     #[inline(always)]
-    pub fn width8(&mut self) -> WIDTH8_W<SD_OPTION_SPEC> {
+    pub fn width8(&mut self) -> WIDTH8_W<'_, SD_OPTION_SPEC> {
         WIDTH8_W::new(self, 13)
     }
     ///Bit 15 - Bus WidthNOTE: The initial value is applied at a reset and when the SOFT_RST.SDRST flag is 0.
     #[inline(always)]
-    pub fn width(&mut self) -> WIDTH_W<SD_OPTION_SPEC> {
+    pub fn width(&mut self) -> WIDTH_W<'_, SD_OPTION_SPEC> {
         WIDTH_W::new(self, 15)
     }
 }

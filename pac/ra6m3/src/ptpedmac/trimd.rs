@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 0 - Transmit Interrupt EnableSet the EESR.TWB flag to 1 in the mode selected by the TIM bit to notify an interrupt.
     #[inline(always)]
-    pub fn tis(&mut self) -> TIS_W<TRIMD_SPEC> {
+    pub fn tis(&mut self) -> TIS_W<'_, TRIMD_SPEC> {
         TIS_W::new(self, 0)
     }
     ///Bit 4 - Transmit Interrupt Mode
     #[inline(always)]
-    pub fn tim(&mut self) -> TIM_W<TRIMD_SPEC> {
+    pub fn tim(&mut self) -> TIM_W<'_, TRIMD_SPEC> {
         TIM_W::new(self, 4)
     }
 }

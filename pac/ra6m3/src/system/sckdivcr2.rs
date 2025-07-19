@@ -99,7 +99,7 @@ impl R {
 impl W {
     ///Bits 4:6 - USB Clock (UCLK) Select
     #[inline(always)]
-    pub fn uck(&mut self) -> UCK_W<SCKDIVCR2_SPEC> {
+    pub fn uck(&mut self) -> UCK_W<'_, SCKDIVCR2_SPEC> {
         UCK_W::new(self, 4)
     }
 }

@@ -322,27 +322,27 @@ impl R {
 impl W {
     ///Bits 0:2 - SDRAMC Column Latency
     #[inline(always)]
-    pub fn cl(&mut self) -> CL_W<SDTR_SPEC> {
+    pub fn cl(&mut self) -> CL_W<'_, SDTR_SPEC> {
         CL_W::new(self, 0)
     }
     ///Bit 8 - Write Recovery Interval
     #[inline(always)]
-    pub fn wr(&mut self) -> WR_W<SDTR_SPEC> {
+    pub fn wr(&mut self) -> WR_W<'_, SDTR_SPEC> {
         WR_W::new(self, 8)
     }
     ///Bits 9:11 - Row Precharge Interval ( RP+1 cycles )
     #[inline(always)]
-    pub fn rp(&mut self) -> RP_W<SDTR_SPEC> {
+    pub fn rp(&mut self) -> RP_W<'_, SDTR_SPEC> {
         RP_W::new(self, 9)
     }
     ///Bits 12:13 - Row Column Latency ( RCD+1 cycles )
     #[inline(always)]
-    pub fn rcd(&mut self) -> RCD_W<SDTR_SPEC> {
+    pub fn rcd(&mut self) -> RCD_W<'_, SDTR_SPEC> {
         RCD_W::new(self, 12)
     }
     ///Bits 16:18 - Row Active Interval
     #[inline(always)]
-    pub fn ras(&mut self) -> RAS_W<SDTR_SPEC> {
+    pub fn ras(&mut self) -> RAS_W<'_, SDTR_SPEC> {
         RAS_W::new(self, 16)
     }
 }

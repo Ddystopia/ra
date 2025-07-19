@@ -69,7 +69,7 @@ impl R {
 impl W {
     ///Bit 0 - Compare window B flag.It is a status flag that shows the comparative result of CH (AN000-AN007,AN016-AN020, temperature sensor, and internal reference voltage) made the object of window B relation condition.
     #[inline(always)]
-    pub fn cmpstb(&mut self) -> CMPSTB_W<ADCMPBSR_SPEC> {
+    pub fn cmpstb(&mut self) -> CMPSTB_W<'_, ADCMPBSR_SPEC> {
         CMPSTB_W::new(self, 0)
     }
 }

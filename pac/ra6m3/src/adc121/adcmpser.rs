@@ -131,12 +131,12 @@ impl R {
 impl W {
     ///Bit 0 - Compare Window A Temperature Sensor Output Compare Flag When window A operation is enabled (ADCMPCR.CMPAE = 1b), this bit indicates the temperature sensor output comparison result. When window A operation is disabled (ADCMPCR.CMPAE = 0b), comparison conditions for CMPSTTSA are not met any time.
     #[inline(always)]
-    pub fn cmpsttsa(&mut self) -> CMPSTTSA_W<ADCMPSER_SPEC> {
+    pub fn cmpsttsa(&mut self) -> CMPSTTSA_W<'_, ADCMPSER_SPEC> {
         CMPSTTSA_W::new(self, 0)
     }
     ///Bit 1 - Compare Window A Internal Reference Voltage Compare Flag When window A operation is enabled (ADCMPCR.CMPAE = 1b), this bit indicates the temperature sensor output comparison result. When window A operation is disabled (ADCMPCR.CMPAE = 0b), comparison conditions for CMPSTTSA are not met any time.
     #[inline(always)]
-    pub fn cmpstoca(&mut self) -> CMPSTOCA_W<ADCMPSER_SPEC> {
+    pub fn cmpstoca(&mut self) -> CMPSTOCA_W<'_, ADCMPSER_SPEC> {
         CMPSTOCA_W::new(self, 1)
     }
 }

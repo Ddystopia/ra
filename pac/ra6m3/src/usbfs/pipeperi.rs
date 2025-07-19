@@ -76,12 +76,12 @@ impl R {
 impl W {
     ///Bits 0:2 - Interval Error Detection IntervalSpecifies the interval error detection timing for the selected pipe in terms of frames, which is expressed as nth power of 2.
     #[inline(always)]
-    pub fn iitv(&mut self) -> IITV_W<PIPEPERI_SPEC> {
+    pub fn iitv(&mut self) -> IITV_W<'_, PIPEPERI_SPEC> {
         IITV_W::new(self, 0)
     }
     ///Bit 12 - Isochronous IN Buffer Flush
     #[inline(always)]
-    pub fn ifis(&mut self) -> IFIS_W<PIPEPERI_SPEC> {
+    pub fn ifis(&mut self) -> IFIS_W<'_, PIPEPERI_SPEC> {
         IFIS_W::new(self, 12)
     }
 }

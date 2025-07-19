@@ -25,12 +25,12 @@ impl R {
 impl W {
     ///Bits 0:5 - A/D Conversion Start Trigger Select for Group B Select the A/D conversion start trigger for group B in group scan mode.
     #[inline(always)]
-    pub fn trsb(&mut self) -> TRSB_W<ADSTRGR_SPEC> {
+    pub fn trsb(&mut self) -> TRSB_W<'_, ADSTRGR_SPEC> {
         TRSB_W::new(self, 0)
     }
     ///Bits 8:13 - A/D Conversion Start Trigger Select Select the A/D conversion start trigger in single scan mode and continuous mode. In group scan mode, the A/D conversion start trigger for group A is selected.
     #[inline(always)]
-    pub fn trsa(&mut self) -> TRSA_W<ADSTRGR_SPEC> {
+    pub fn trsa(&mut self) -> TRSA_W<'_, ADSTRGR_SPEC> {
         TRSA_W::new(self, 8)
     }
 }

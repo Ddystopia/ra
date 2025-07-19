@@ -487,42 +487,42 @@ impl R {
 impl W {
     ///Bit 0 - Comparison condition of AN000
     #[inline(always)]
-    pub fn cmplcha00(&mut self) -> CMPLCHA00_W<ADCMPLR0_SPEC> {
+    pub fn cmplcha00(&mut self) -> CMPLCHA00_W<'_, ADCMPLR0_SPEC> {
         CMPLCHA00_W::new(self, 0)
     }
     ///Bit 1 - Comparison condition of AN001
     #[inline(always)]
-    pub fn cmplcha01(&mut self) -> CMPLCHA01_W<ADCMPLR0_SPEC> {
+    pub fn cmplcha01(&mut self) -> CMPLCHA01_W<'_, ADCMPLR0_SPEC> {
         CMPLCHA01_W::new(self, 1)
     }
     ///Bit 2 - Comparison condition of AN002
     #[inline(always)]
-    pub fn cmplcha02(&mut self) -> CMPLCHA02_W<ADCMPLR0_SPEC> {
+    pub fn cmplcha02(&mut self) -> CMPLCHA02_W<'_, ADCMPLR0_SPEC> {
         CMPLCHA02_W::new(self, 2)
     }
     ///Bit 3 - Comparison condition of AN003
     #[inline(always)]
-    pub fn cmplcha03(&mut self) -> CMPLCHA03_W<ADCMPLR0_SPEC> {
+    pub fn cmplcha03(&mut self) -> CMPLCHA03_W<'_, ADCMPLR0_SPEC> {
         CMPLCHA03_W::new(self, 3)
     }
     ///Bit 4 - Comparison condition of AN004
     #[inline(always)]
-    pub fn cmplcha04(&mut self) -> CMPLCHA04_W<ADCMPLR0_SPEC> {
+    pub fn cmplcha04(&mut self) -> CMPLCHA04_W<'_, ADCMPLR0_SPEC> {
         CMPLCHA04_W::new(self, 4)
     }
     ///Bit 5 - Comparison condition of AN005
     #[inline(always)]
-    pub fn cmplcha05(&mut self) -> CMPLCHA05_W<ADCMPLR0_SPEC> {
+    pub fn cmplcha05(&mut self) -> CMPLCHA05_W<'_, ADCMPLR0_SPEC> {
         CMPLCHA05_W::new(self, 5)
     }
     ///Bit 6 - Comparison condition of AN006
     #[inline(always)]
-    pub fn cmplcha06(&mut self) -> CMPLCHA06_W<ADCMPLR0_SPEC> {
+    pub fn cmplcha06(&mut self) -> CMPLCHA06_W<'_, ADCMPLR0_SPEC> {
         CMPLCHA06_W::new(self, 6)
     }
     ///Bit 7 - Comparison condition of AN007
     #[inline(always)]
-    pub fn cmplcha07(&mut self) -> CMPLCHA07_W<ADCMPLR0_SPEC> {
+    pub fn cmplcha07(&mut self) -> CMPLCHA07_W<'_, ADCMPLR0_SPEC> {
         CMPLCHA07_W::new(self, 7)
     }
 }

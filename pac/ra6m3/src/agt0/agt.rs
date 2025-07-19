@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - 16bit counter and reload registerNOTE : When 1 is written to the TSTOP bit in the AGTCRn register, the 16-bit counter is forcibly stopped and set to FFFFH.
     #[inline(always)]
-    pub fn agt(&mut self) -> AGT_W<AGT_SPEC> {
+    pub fn agt(&mut self) -> AGT_W<'_, AGT_SPEC> {
         AGT_W::new(self, 0)
     }
 }

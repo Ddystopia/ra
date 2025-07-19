@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - Sampling time setting
     #[inline(always)]
-    pub fn sst(&mut self) -> SST_W<ADSSTR_SPEC> {
+    pub fn sst(&mut self) -> SST_W<'_, ADSSTR_SPEC> {
         SST_W::new(self, 0)
     }
 }

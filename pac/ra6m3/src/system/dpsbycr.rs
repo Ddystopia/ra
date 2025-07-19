@@ -220,17 +220,17 @@ impl R {
 impl W {
     ///Bits 0:1 - Power-Supply Control
     #[inline(always)]
-    pub fn deepcut(&mut self) -> DEEPCUT_W<DPSBYCR_SPEC> {
+    pub fn deepcut(&mut self) -> DEEPCUT_W<'_, DPSBYCR_SPEC> {
         DEEPCUT_W::new(self, 0)
     }
     ///Bit 6 - I/O Port Retention
     #[inline(always)]
-    pub fn iokeep(&mut self) -> IOKEEP_W<DPSBYCR_SPEC> {
+    pub fn iokeep(&mut self) -> IOKEEP_W<'_, DPSBYCR_SPEC> {
         IOKEEP_W::new(self, 6)
     }
     ///Bit 7 - Deep Software Standby
     #[inline(always)]
-    pub fn dpsby(&mut self) -> DPSBY_W<DPSBYCR_SPEC> {
+    pub fn dpsby(&mut self) -> DPSBY_W<'_, DPSBYCR_SPEC> {
         DPSBY_W::new(self, 7)
     }
 }

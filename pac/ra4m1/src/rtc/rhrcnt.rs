@@ -85,17 +85,17 @@ impl R {
 impl W {
     ///Bits 0:3 - 1-Hour Count Counts from 0 to 9 once per hour. When a carry is generated, 1 is added to the tens place.
     #[inline(always)]
-    pub fn hr1(&mut self) -> HR1_W<RHRCNT_SPEC> {
+    pub fn hr1(&mut self) -> HR1_W<'_, RHRCNT_SPEC> {
         HR1_W::new(self, 0)
     }
     ///Bits 4:5 - 10-Hour Count Counts from 0 to 2 once per carry from the ones place.
     #[inline(always)]
-    pub fn hr10(&mut self) -> HR10_W<RHRCNT_SPEC> {
+    pub fn hr10(&mut self) -> HR10_W<'_, RHRCNT_SPEC> {
         HR10_W::new(self, 4)
     }
     ///Bit 6 - Time Counter Setting for a.m./p.m.
     #[inline(always)]
-    pub fn pm(&mut self) -> PM_W<RHRCNT_SPEC> {
+    pub fn pm(&mut self) -> PM_W<'_, RHRCNT_SPEC> {
         PM_W::new(self, 6)
     }
 }

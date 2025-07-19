@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - BCLK Pin Output Select
     #[inline(always)]
-    pub fn bclkdiv(&mut self) -> BCLKDIV_W<BCKCR_SPEC> {
+    pub fn bclkdiv(&mut self) -> BCLKDIV_W<'_, BCKCR_SPEC> {
         BCLKDIV_W::new(self, 0)
     }
 }

@@ -227,12 +227,12 @@ impl R {
 impl W {
     ///Bit 8 - DP Interrupt Enable Clear
     #[inline(always)]
-    pub fn dpinte(&mut self) -> DPINTE_W<DPUSR2R_SPEC> {
+    pub fn dpinte(&mut self) -> DPINTE_W<'_, DPUSR2R_SPEC> {
         DPINTE_W::new(self, 8)
     }
     ///Bit 9 - DM Interrupt Enable Clear
     #[inline(always)]
-    pub fn dminte(&mut self) -> DMINTE_W<DPUSR2R_SPEC> {
+    pub fn dminte(&mut self) -> DMINTE_W<'_, DPUSR2R_SPEC> {
         DMINTE_W::new(self, 9)
     }
 }

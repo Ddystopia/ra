@@ -100,7 +100,7 @@ impl R {
 impl W {
     ///Bits 0:1 - ECC Operating Mode Select
     #[inline(always)]
-    pub fn eccmod(&mut self) -> ECCMOD_W<ECCMODE_SPEC> {
+    pub fn eccmod(&mut self) -> ECCMOD_W<'_, ECCMODE_SPEC> {
         ECCMOD_W::new(self, 0)
     }
 }

@@ -333,7 +333,7 @@ impl R {
 impl W {
     ///Bits 0:5 - LCD clock (LCDCL)
     #[inline(always)]
-    pub fn lcdc(&mut self) -> LCDC_W<LCDC0_SPEC> {
+    pub fn lcdc(&mut self) -> LCDC_W<'_, LCDC0_SPEC> {
         LCDC_W::new(self, 0)
     }
 }

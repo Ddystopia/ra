@@ -316,17 +316,17 @@ impl R {
 impl W {
     ///Bits 0:2 - AGT operating mode select
     #[inline(always)]
-    pub fn tmod(&mut self) -> TMOD_W<AGTMR1_SPEC> {
+    pub fn tmod(&mut self) -> TMOD_W<'_, AGTMR1_SPEC> {
         TMOD_W::new(self, 0)
     }
     ///Bit 3 - AGTIO edge polarity select
     #[inline(always)]
-    pub fn tedgpl(&mut self) -> TEDGPL_W<AGTMR1_SPEC> {
+    pub fn tedgpl(&mut self) -> TEDGPL_W<'_, AGTMR1_SPEC> {
         TEDGPL_W::new(self, 3)
     }
     ///Bits 4:6 - AGT count source select
     #[inline(always)]
-    pub fn tck(&mut self) -> TCK_W<AGTMR1_SPEC> {
+    pub fn tck(&mut self) -> TCK_W<'_, AGTMR1_SPEC> {
         TCK_W::new(self, 4)
     }
 }

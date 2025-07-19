@@ -25,12 +25,12 @@ impl R {
 impl W {
     ///Bits 0:7 - grandmasterPriority2 Field Value SettingThese bits are used to set the value of the grandmasterPriority2 fields of Announce messages.
     #[inline(always)]
-    pub fn gmpr2(&mut self) -> GMPR2_W<GMPR_SPEC> {
+    pub fn gmpr2(&mut self) -> GMPR2_W<'_, GMPR_SPEC> {
         GMPR2_W::new(self, 0)
     }
     ///Bits 16:23 - grandmasterPriority1 Field Value SettingThese bits are used to set the value of the grandmasterPriority1 fields of Announce messages.
     #[inline(always)]
-    pub fn gmpr1(&mut self) -> GMPR1_W<GMPR_SPEC> {
+    pub fn gmpr1(&mut self) -> GMPR1_W<'_, GMPR_SPEC> {
         GMPR1_W::new(self, 16)
     }
 }

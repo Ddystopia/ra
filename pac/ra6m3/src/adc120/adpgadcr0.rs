@@ -559,37 +559,37 @@ impl R {
 impl W {
     ///Bits 0:1 - P000 Differential Input Gain SettingNOTE: When these bits are used, set {P000DEN, P000GEN} to 11b.
     #[inline(always)]
-    pub fn p000dg(&mut self) -> P000DG_W<ADPGADCR0_SPEC> {
+    pub fn p000dg(&mut self) -> P000DG_W<'_, ADPGADCR0_SPEC> {
         P000DG_W::new(self, 0)
     }
     ///Bit 3 - P000 Differential Input Enable
     #[inline(always)]
-    pub fn p000den(&mut self) -> P000DEN_W<ADPGADCR0_SPEC> {
+    pub fn p000den(&mut self) -> P000DEN_W<'_, ADPGADCR0_SPEC> {
         P000DEN_W::new(self, 3)
     }
     ///Bits 4:5 - P001 Differential Input Gain SettingNOTE: When these bits are used, set {P001DEN, P001GEN} to 11b.
     #[inline(always)]
-    pub fn p001dg(&mut self) -> P001DG_W<ADPGADCR0_SPEC> {
+    pub fn p001dg(&mut self) -> P001DG_W<'_, ADPGADCR0_SPEC> {
         P001DG_W::new(self, 4)
     }
     ///Bit 7 - P001 Differential Input Enable
     #[inline(always)]
-    pub fn p001den(&mut self) -> P001DEN_W<ADPGADCR0_SPEC> {
+    pub fn p001den(&mut self) -> P001DEN_W<'_, ADPGADCR0_SPEC> {
         P001DEN_W::new(self, 7)
     }
     ///Bits 8:9 - P002 Differential Input Gain SettingNOTE: When these bits are used, set {P002DEN, P002GEN} to 11b.
     #[inline(always)]
-    pub fn p002dg(&mut self) -> P002DG_W<ADPGADCR0_SPEC> {
+    pub fn p002dg(&mut self) -> P002DG_W<'_, ADPGADCR0_SPEC> {
         P002DG_W::new(self, 8)
     }
     ///Bit 11 - P002 Differential Input Enable
     #[inline(always)]
-    pub fn p002den(&mut self) -> P002DEN_W<ADPGADCR0_SPEC> {
+    pub fn p002den(&mut self) -> P002DEN_W<'_, ADPGADCR0_SPEC> {
         P002DEN_W::new(self, 11)
     }
     ///Bits 12:13 - P003 Differential Input Gain SettingNOTE: When these bits are used, set {P003DEN, P003GEN} to 11b.
     #[inline(always)]
-    pub fn p003dg(&mut self) -> P003DG_W<ADPGADCR0_SPEC> {
+    pub fn p003dg(&mut self) -> P003DG_W<'_, ADPGADCR0_SPEC> {
         P003DG_W::new(self, 12)
     }
 }

@@ -74,7 +74,7 @@ impl R {
 impl W {
     ///Bits 0:9 - BEMP Interrupt Enable for Each Pipe
     #[inline(always)]
-    pub fn pipebempe(&mut self) -> PIPEBEMPE_W<BEMPENB_SPEC> {
+    pub fn pipebempe(&mut self) -> PIPEBEMPE_W<'_, BEMPENB_SPEC> {
         PIPEBEMPE_W::new(self, 0)
     }
 }

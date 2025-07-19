@@ -282,22 +282,22 @@ impl R {
 impl W {
     ///Bit 0 - USB Single End Receiver Control
     #[inline(always)]
-    pub fn srpc0(&mut self) -> SRPC0_W<DPUSR0R_SPEC> {
+    pub fn srpc0(&mut self) -> SRPC0_W<'_, DPUSR0R_SPEC> {
         SRPC0_W::new(self, 0)
     }
     ///Bit 1 - DP Pull-Up Resistor Control
     #[inline(always)]
-    pub fn rpue0(&mut self) -> RPUE0_W<DPUSR0R_SPEC> {
+    pub fn rpue0(&mut self) -> RPUE0_W<'_, DPUSR0R_SPEC> {
         RPUE0_W::new(self, 1)
     }
     ///Bit 3 - D+/D- Pull-Down Resistor Control
     #[inline(always)]
-    pub fn drpd0(&mut self) -> DRPD0_W<DPUSR0R_SPEC> {
+    pub fn drpd0(&mut self) -> DRPD0_W<'_, DPUSR0R_SPEC> {
         DRPD0_W::new(self, 3)
     }
     ///Bit 4 - USB Transceiver Output Fix
     #[inline(always)]
-    pub fn fixphy0(&mut self) -> FIXPHY0_W<DPUSR0R_SPEC> {
+    pub fn fixphy0(&mut self) -> FIXPHY0_W<'_, DPUSR0R_SPEC> {
         FIXPHY0_W::new(self, 4)
     }
 }

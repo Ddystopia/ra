@@ -350,27 +350,27 @@ impl R {
 impl W {
     ///Bit 0 - Reception Complete Flag
     #[inline(always)]
-    pub fn newdata(&mut self) -> NEWDATA_W<MCTL_RX_SPEC> {
+    pub fn newdata(&mut self) -> NEWDATA_W<'_, MCTL_RX_SPEC> {
         NEWDATA_W::new(self, 0)
     }
     ///Bit 2 - Message Lost Flag(Receive mailbox setting enabled)
     #[inline(always)]
-    pub fn msglost(&mut self) -> MSGLOST_W<MCTL_RX_SPEC> {
+    pub fn msglost(&mut self) -> MSGLOST_W<'_, MCTL_RX_SPEC> {
         MSGLOST_W::new(self, 2)
     }
     ///Bit 4 - One-Shot Enable
     #[inline(always)]
-    pub fn oneshot(&mut self) -> ONESHOT_W<MCTL_RX_SPEC> {
+    pub fn oneshot(&mut self) -> ONESHOT_W<'_, MCTL_RX_SPEC> {
         ONESHOT_W::new(self, 4)
     }
     ///Bit 6 - Receive Mailbox Request
     #[inline(always)]
-    pub fn recreq(&mut self) -> RECREQ_W<MCTL_RX_SPEC> {
+    pub fn recreq(&mut self) -> RECREQ_W<'_, MCTL_RX_SPEC> {
         RECREQ_W::new(self, 6)
     }
     ///Bit 7 - Transmit Mailbox Request
     #[inline(always)]
-    pub fn trmreq(&mut self) -> TRMREQ_W<MCTL_RX_SPEC> {
+    pub fn trmreq(&mut self) -> TRMREQ_W<'_, MCTL_RX_SPEC> {
         TRMREQ_W::new(self, 7)
     }
 }

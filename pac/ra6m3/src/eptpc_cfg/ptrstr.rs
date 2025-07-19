@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - EPTPC Software Reset
     #[inline(always)]
-    pub fn reset(&mut self) -> RESET_W<PTRSTR_SPEC> {
+    pub fn reset(&mut self) -> RESET_W<'_, PTRSTR_SPEC> {
         RESET_W::new(self, 0)
     }
 }

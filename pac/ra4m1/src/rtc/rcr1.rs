@@ -430,27 +430,27 @@ impl R {
 impl W {
     ///Bit 0 - Alarm Interrupt Enable
     #[inline(always)]
-    pub fn aie(&mut self) -> AIE_W<RCR1_SPEC> {
+    pub fn aie(&mut self) -> AIE_W<'_, RCR1_SPEC> {
         AIE_W::new(self, 0)
     }
     ///Bit 1 - Carry Interrupt Enable
     #[inline(always)]
-    pub fn cie(&mut self) -> CIE_W<RCR1_SPEC> {
+    pub fn cie(&mut self) -> CIE_W<'_, RCR1_SPEC> {
         CIE_W::new(self, 1)
     }
     ///Bit 2 - Periodic Interrupt Enable
     #[inline(always)]
-    pub fn pie(&mut self) -> PIE_W<RCR1_SPEC> {
+    pub fn pie(&mut self) -> PIE_W<'_, RCR1_SPEC> {
         PIE_W::new(self, 2)
     }
     ///Bit 3 - RTCOUT Output Select
     #[inline(always)]
-    pub fn rtcos(&mut self) -> RTCOS_W<RCR1_SPEC> {
+    pub fn rtcos(&mut self) -> RTCOS_W<'_, RCR1_SPEC> {
         RTCOS_W::new(self, 3)
     }
     ///Bits 4:7 - Periodic Interrupt Select
     #[inline(always)]
-    pub fn pes(&mut self) -> PES_W<RCR1_SPEC> {
+    pub fn pes(&mut self) -> PES_W<'_, RCR1_SPEC> {
         PES_W::new(self, 4)
     }
 }

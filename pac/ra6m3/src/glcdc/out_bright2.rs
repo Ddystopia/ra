@@ -25,12 +25,12 @@ impl R {
 impl W {
     ///Bits 0:9 - Brightness (DC) adjustment of R signalUnsigned; 10 bits; +512 with offset; integer
     #[inline(always)]
-    pub fn brtr(&mut self) -> BRTR_W<OUT_BRIGHT2_SPEC> {
+    pub fn brtr(&mut self) -> BRTR_W<'_, OUT_BRIGHT2_SPEC> {
         BRTR_W::new(self, 0)
     }
     ///Bits 16:25 - Brightness (DC) adjustment of B signalUnsigned; 10 bits; +512 with offset; integer
     #[inline(always)]
-    pub fn brtb(&mut self) -> BRTB_W<OUT_BRIGHT2_SPEC> {
+    pub fn brtb(&mut self) -> BRTB_W<'_, OUT_BRIGHT2_SPEC> {
         BRTB_W::new(self, 16)
     }
 }

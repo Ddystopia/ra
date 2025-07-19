@@ -74,7 +74,7 @@ impl R {
 impl W {
     ///Bits 0:15 - Pmn Output Data
     #[inline(always)]
-    pub fn podr(&mut self) -> PODR_W<PODR_SPEC> {
+    pub fn podr(&mut self) -> PODR_W<'_, PODR_SPEC> {
         PODR_W::new(self, 0)
     }
 }

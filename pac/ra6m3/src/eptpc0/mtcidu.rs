@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - These bits hold the setting for the higher-order 32 bits of the clock-ID of the master clock.
     #[inline(always)]
-    pub fn mtcidu(&mut self) -> MTCIDU_W<MTCIDU_SPEC> {
+    pub fn mtcidu(&mut self) -> MTCIDU_W<'_, MTCIDU_SPEC> {
         MTCIDU_W::new(self, 0)
     }
 }

@@ -106,12 +106,12 @@ impl R {
 impl W {
     ///Bit 0 - Register Write Control
     #[inline(always)]
-    pub fn eccprcr2(&mut self) -> ECCPRCR2_W<ECCPRCR2_SPEC> {
+    pub fn eccprcr2(&mut self) -> ECCPRCR2_W<'_, ECCPRCR2_SPEC> {
         ECCPRCR2_W::new(self, 0)
     }
     ///Bits 1:7 - Write Key Code
     #[inline(always)]
-    pub fn kw2(&mut self) -> KW2_W<ECCPRCR2_SPEC> {
+    pub fn kw2(&mut self) -> KW2_W<'_, ECCPRCR2_SPEC> {
         KW2_W::new(self, 1)
     }
 }

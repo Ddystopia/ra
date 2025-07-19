@@ -615,32 +615,32 @@ impl R {
 impl W {
     ///Bits 0:1 - Response PIDThese bits specify the response type for the next transaction of the relevant pipe.
     #[inline(always)]
-    pub fn pid(&mut self) -> PID_W<PIPECTR_SPEC> {
+    pub fn pid(&mut self) -> PID_W<'_, PIPECTR_SPEC> {
         PID_W::new(self, 0)
     }
     ///Bit 7 - Toggle Bit SetThis bit is set to 1 when the expected value of the sequence toggle bit for the next transaction of the relevant pipe is set for DATA1
     #[inline(always)]
-    pub fn sqset(&mut self) -> SQSET_W<PIPECTR_SPEC> {
+    pub fn sqset(&mut self) -> SQSET_W<'_, PIPECTR_SPEC> {
         SQSET_W::new(self, 7)
     }
     ///Bit 8 - Toggle Bit ClearThis bit is set to 1 when the expected value of the sequence toggle bit for the next transaction of the relevant pipe is cleared to DATA0
     #[inline(always)]
-    pub fn sqclr(&mut self) -> SQCLR_W<PIPECTR_SPEC> {
+    pub fn sqclr(&mut self) -> SQCLR_W<'_, PIPECTR_SPEC> {
         SQCLR_W::new(self, 8)
     }
     ///Bit 9 - Auto Buffer Clear ModeThis bit enables or disables auto buffer clear mode for the relevant pipe
     #[inline(always)]
-    pub fn aclrm(&mut self) -> ACLRM_W<PIPECTR_SPEC> {
+    pub fn aclrm(&mut self) -> ACLRM_W<'_, PIPECTR_SPEC> {
         ACLRM_W::new(self, 9)
     }
     ///Bit 10 - Auto Response ModeThis bit enables or disables auto response mode for the relevant pipe.
     #[inline(always)]
-    pub fn atrepm(&mut self) -> ATREPM_W<PIPECTR_SPEC> {
+    pub fn atrepm(&mut self) -> ATREPM_W<'_, PIPECTR_SPEC> {
         ATREPM_W::new(self, 10)
     }
     ///Bit 13 - CSPLIT Status ClearSet this bit to 1 when clearing the CSSTS bit of the relevant pipe
     #[inline(always)]
-    pub fn csclr(&mut self) -> CSCLR_W<PIPECTR_SPEC> {
+    pub fn csclr(&mut self) -> CSCLR_W<'_, PIPECTR_SPEC> {
         CSCLR_W::new(self, 13)
     }
 }

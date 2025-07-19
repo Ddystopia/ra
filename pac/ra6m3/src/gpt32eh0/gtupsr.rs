@@ -1447,122 +1447,122 @@ impl R {
 impl W {
     ///Bit 0 - GTETRGA Pin Rising Input Source Counter Count Up Enable
     #[inline(always)]
-    pub fn usgtrgar(&mut self) -> USGTRGAR_W<GTUPSR_SPEC> {
+    pub fn usgtrgar(&mut self) -> USGTRGAR_W<'_, GTUPSR_SPEC> {
         USGTRGAR_W::new(self, 0)
     }
     ///Bit 1 - GTETRGA Pin Falling Input Source Counter Count Up Enable
     #[inline(always)]
-    pub fn usgtrgaf(&mut self) -> USGTRGAF_W<GTUPSR_SPEC> {
+    pub fn usgtrgaf(&mut self) -> USGTRGAF_W<'_, GTUPSR_SPEC> {
         USGTRGAF_W::new(self, 1)
     }
     ///Bit 2 - GTETRGB Pin Rising Input Source Counter Count Up Enable
     #[inline(always)]
-    pub fn usgtrgbr(&mut self) -> USGTRGBR_W<GTUPSR_SPEC> {
+    pub fn usgtrgbr(&mut self) -> USGTRGBR_W<'_, GTUPSR_SPEC> {
         USGTRGBR_W::new(self, 2)
     }
     ///Bit 3 - GTETRGB Pin Falling Input Source Counter Count Up Enable
     #[inline(always)]
-    pub fn usgtrgbf(&mut self) -> USGTRGBF_W<GTUPSR_SPEC> {
+    pub fn usgtrgbf(&mut self) -> USGTRGBF_W<'_, GTUPSR_SPEC> {
         USGTRGBF_W::new(self, 3)
     }
     ///Bit 4 - GTETRGC Pin Rising Input Source Counter Count Up Enable
     #[inline(always)]
-    pub fn usgtrgcr(&mut self) -> USGTRGCR_W<GTUPSR_SPEC> {
+    pub fn usgtrgcr(&mut self) -> USGTRGCR_W<'_, GTUPSR_SPEC> {
         USGTRGCR_W::new(self, 4)
     }
     ///Bit 5 - GTETRGC Pin Falling Input Source Counter Count Up Enable
     #[inline(always)]
-    pub fn usgtrgcf(&mut self) -> USGTRGCF_W<GTUPSR_SPEC> {
+    pub fn usgtrgcf(&mut self) -> USGTRGCF_W<'_, GTUPSR_SPEC> {
         USGTRGCF_W::new(self, 5)
     }
     ///Bit 6 - GTETRGD Pin Rising Input Source Counter Count Up Enable
     #[inline(always)]
-    pub fn usgtrgdr(&mut self) -> USGTRGDR_W<GTUPSR_SPEC> {
+    pub fn usgtrgdr(&mut self) -> USGTRGDR_W<'_, GTUPSR_SPEC> {
         USGTRGDR_W::new(self, 6)
     }
     ///Bit 7 - GTETRGD Pin Falling Input Source Counter Count Up Enable
     #[inline(always)]
-    pub fn usgtrgdf(&mut self) -> USGTRGDF_W<GTUPSR_SPEC> {
+    pub fn usgtrgdf(&mut self) -> USGTRGDF_W<'_, GTUPSR_SPEC> {
         USGTRGDF_W::new(self, 7)
     }
     ///Bit 8 - GTIOCA Pin Rising Input during GTIOCB Value Low Source Counter Count Up Enable
     #[inline(always)]
-    pub fn uscarbl(&mut self) -> USCARBL_W<GTUPSR_SPEC> {
+    pub fn uscarbl(&mut self) -> USCARBL_W<'_, GTUPSR_SPEC> {
         USCARBL_W::new(self, 8)
     }
     ///Bit 9 - GTIOCA Pin Rising Input during GTIOCB Value High Source Counter Count Up Enable
     #[inline(always)]
-    pub fn uscarbh(&mut self) -> USCARBH_W<GTUPSR_SPEC> {
+    pub fn uscarbh(&mut self) -> USCARBH_W<'_, GTUPSR_SPEC> {
         USCARBH_W::new(self, 9)
     }
     ///Bit 10 - GTIOCA Pin Falling Input during GTIOCB Value Low Source Counter Count Up Enable
     #[inline(always)]
-    pub fn uscafbl(&mut self) -> USCAFBL_W<GTUPSR_SPEC> {
+    pub fn uscafbl(&mut self) -> USCAFBL_W<'_, GTUPSR_SPEC> {
         USCAFBL_W::new(self, 10)
     }
     ///Bit 11 - GTIOCA Pin Falling Input during GTIOCB Value High Source Counter Count Up Enable
     #[inline(always)]
-    pub fn uscafbh(&mut self) -> USCAFBH_W<GTUPSR_SPEC> {
+    pub fn uscafbh(&mut self) -> USCAFBH_W<'_, GTUPSR_SPEC> {
         USCAFBH_W::new(self, 11)
     }
     ///Bit 12 - GTIOCB Pin Rising Input during GTIOCA Value Low Source Counter Count Up Enable
     #[inline(always)]
-    pub fn uscbral(&mut self) -> USCBRAL_W<GTUPSR_SPEC> {
+    pub fn uscbral(&mut self) -> USCBRAL_W<'_, GTUPSR_SPEC> {
         USCBRAL_W::new(self, 12)
     }
     ///Bit 13 - GTIOCB Pin Rising Input during GTIOCA Value High Source Counter Count Up Enable
     #[inline(always)]
-    pub fn uscbrah(&mut self) -> USCBRAH_W<GTUPSR_SPEC> {
+    pub fn uscbrah(&mut self) -> USCBRAH_W<'_, GTUPSR_SPEC> {
         USCBRAH_W::new(self, 13)
     }
     ///Bit 14 - GTIOCB Pin Falling Input during GTIOCA Value Low Source Counter Count Up Enable
     #[inline(always)]
-    pub fn uscbfal(&mut self) -> USCBFAL_W<GTUPSR_SPEC> {
+    pub fn uscbfal(&mut self) -> USCBFAL_W<'_, GTUPSR_SPEC> {
         USCBFAL_W::new(self, 14)
     }
     ///Bit 15 - GTIOCB Pin Falling Input during GTIOCA Value High Source Counter Count Up Enable
     #[inline(always)]
-    pub fn uscbfah(&mut self) -> USCBFAH_W<GTUPSR_SPEC> {
+    pub fn uscbfah(&mut self) -> USCBFAH_W<'_, GTUPSR_SPEC> {
         USCBFAH_W::new(self, 15)
     }
     ///Bit 16 - ELC_GPTA Event Source Counter Count Up Enable
     #[inline(always)]
-    pub fn uselca(&mut self) -> USELCA_W<GTUPSR_SPEC> {
+    pub fn uselca(&mut self) -> USELCA_W<'_, GTUPSR_SPEC> {
         USELCA_W::new(self, 16)
     }
     ///Bit 17 - ELC_GPTB Event Source Counter Count Up Enable
     #[inline(always)]
-    pub fn uselcb(&mut self) -> USELCB_W<GTUPSR_SPEC> {
+    pub fn uselcb(&mut self) -> USELCB_W<'_, GTUPSR_SPEC> {
         USELCB_W::new(self, 17)
     }
     ///Bit 18 - ELC_GPTC Event Source Counter Count Up Enable
     #[inline(always)]
-    pub fn uselcc(&mut self) -> USELCC_W<GTUPSR_SPEC> {
+    pub fn uselcc(&mut self) -> USELCC_W<'_, GTUPSR_SPEC> {
         USELCC_W::new(self, 18)
     }
     ///Bit 19 - ELC_GPTD Event Source Counter Count Up Enable
     #[inline(always)]
-    pub fn uselcd(&mut self) -> USELCD_W<GTUPSR_SPEC> {
+    pub fn uselcd(&mut self) -> USELCD_W<'_, GTUPSR_SPEC> {
         USELCD_W::new(self, 19)
     }
     ///Bit 20 - ELC_GPTE Event Source Counter Count Up Enable
     #[inline(always)]
-    pub fn uselce(&mut self) -> USELCE_W<GTUPSR_SPEC> {
+    pub fn uselce(&mut self) -> USELCE_W<'_, GTUPSR_SPEC> {
         USELCE_W::new(self, 20)
     }
     ///Bit 21 - ELC_GPTF Event Source Counter Count Up Enable
     #[inline(always)]
-    pub fn uselcf(&mut self) -> USELCF_W<GTUPSR_SPEC> {
+    pub fn uselcf(&mut self) -> USELCF_W<'_, GTUPSR_SPEC> {
         USELCF_W::new(self, 21)
     }
     ///Bit 22 - ELC_GPTG Event Source Counter Count Up Enable
     #[inline(always)]
-    pub fn uselcg(&mut self) -> USELCG_W<GTUPSR_SPEC> {
+    pub fn uselcg(&mut self) -> USELCG_W<'_, GTUPSR_SPEC> {
         USELCG_W::new(self, 22)
     }
     ///Bit 23 - ELC_GPTH Event Source Counter Count Up Enable
     #[inline(always)]
-    pub fn uselch(&mut self) -> USELCH_W<GTUPSR_SPEC> {
+    pub fn uselch(&mut self) -> USELCH_W<'_, GTUPSR_SPEC> {
         USELCH_W::new(self, 23)
     }
 }

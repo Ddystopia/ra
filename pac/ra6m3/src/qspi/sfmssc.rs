@@ -376,17 +376,17 @@ impl R {
 impl W {
     ///Bits 0:3 - Selection of a minimum high-level width of the QSSL signal
     #[inline(always)]
-    pub fn sfmsw(&mut self) -> SFMSW_W<SFMSSC_SPEC> {
+    pub fn sfmsw(&mut self) -> SFMSW_W<'_, SFMSSC_SPEC> {
         SFMSW_W::new(self, 0)
     }
     ///Bit 4 - QSSL signal release timing selection
     #[inline(always)]
-    pub fn sfmshd(&mut self) -> SFMSHD_W<SFMSSC_SPEC> {
+    pub fn sfmshd(&mut self) -> SFMSHD_W<'_, SFMSSC_SPEC> {
         SFMSHD_W::new(self, 4)
     }
     ///Bit 5 - QSSL signal output timing selection
     #[inline(always)]
-    pub fn sfmsld(&mut self) -> SFMSLD_W<SFMSSC_SPEC> {
+    pub fn sfmsld(&mut self) -> SFMSLD_W<'_, SFMSSC_SPEC> {
         SFMSLD_W::new(self, 5)
     }
 }

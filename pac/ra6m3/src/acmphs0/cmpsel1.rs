@@ -125,7 +125,7 @@ impl R {
 impl W {
     ///Bits 0:3 - Reference voltage selection
     #[inline(always)]
-    pub fn crvs(&mut self) -> CRVS_W<CMPSEL1_SPEC> {
+    pub fn crvs(&mut self) -> CRVS_W<'_, CMPSEL1_SPEC> {
         CRVS_W::new(self, 0)
     }
 }

@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Negative-Phase Waveform Setting
     #[inline(always)]
-    pub fn tde(&mut self) -> TDE_W<GTDTCR_SPEC> {
+    pub fn tde(&mut self) -> TDE_W<'_, GTDTCR_SPEC> {
         TDE_W::new(self, 0)
     }
 }

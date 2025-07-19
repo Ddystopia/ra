@@ -187,17 +187,17 @@ impl R {
 impl W {
     ///Bit 0 - Specified line detection control
     #[inline(always)]
-    pub fn vposdtc(&mut self) -> VPOSDTC_W<SYSCNT_DTCTEN_SPEC> {
+    pub fn vposdtc(&mut self) -> VPOSDTC_W<'_, SYSCNT_DTCTEN_SPEC> {
         VPOSDTC_W::new(self, 0)
     }
     ///Bit 1 - Graphics 1 underflow detection control
     #[inline(always)]
-    pub fn l1undfdtc(&mut self) -> L1UNDFDTC_W<SYSCNT_DTCTEN_SPEC> {
+    pub fn l1undfdtc(&mut self) -> L1UNDFDTC_W<'_, SYSCNT_DTCTEN_SPEC> {
         L1UNDFDTC_W::new(self, 1)
     }
     ///Bit 2 - Graphics 2 underflow detection control
     #[inline(always)]
-    pub fn l2undfdtc(&mut self) -> L2UNDFDTC_W<SYSCNT_DTCTEN_SPEC> {
+    pub fn l2undfdtc(&mut self) -> L2UNDFDTC_W<'_, SYSCNT_DTCTEN_SPEC> {
         L2UNDFDTC_W::new(self, 2)
     }
 }

@@ -313,27 +313,27 @@ impl R {
 impl W {
     ///Bit 0 - Data Compare Match Flag
     #[inline(always)]
-    pub fn dcmf(&mut self) -> DCMF_W<DCCR_SPEC> {
+    pub fn dcmf(&mut self) -> DCMF_W<'_, DCCR_SPEC> {
         DCMF_W::new(self, 0)
     }
     ///Bit 3 - Data Compare Match Parity Error Flag
     #[inline(always)]
-    pub fn dper(&mut self) -> DPER_W<DCCR_SPEC> {
+    pub fn dper(&mut self) -> DPER_W<'_, DCCR_SPEC> {
         DPER_W::new(self, 3)
     }
     ///Bit 4 - Data Compare Match Framing Error Flag
     #[inline(always)]
-    pub fn dfer(&mut self) -> DFER_W<DCCR_SPEC> {
+    pub fn dfer(&mut self) -> DFER_W<'_, DCCR_SPEC> {
         DFER_W::new(self, 4)
     }
     ///Bit 6 - ID frame select (Valid only in asynchronous mode(including multi-processor)
     #[inline(always)]
-    pub fn idsel(&mut self) -> IDSEL_W<DCCR_SPEC> {
+    pub fn idsel(&mut self) -> IDSEL_W<'_, DCCR_SPEC> {
         IDSEL_W::new(self, 6)
     }
     ///Bit 7 - Data Compare Match Enable (Valid only in asynchronous mode(including multi-processor)
     #[inline(always)]
-    pub fn dcme(&mut self) -> DCME_W<DCCR_SPEC> {
+    pub fn dcme(&mut self) -> DCME_W<'_, DCCR_SPEC> {
         DCME_W::new(self, 7)
     }
 }

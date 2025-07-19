@@ -73,7 +73,7 @@ impl R {
 impl W {
     ///Bits 0:2 - These bits represent the ratio of the CPU clock period to the Flash memory access time.
     #[inline(always)]
-    pub fn flwt(&mut self) -> FLWT_W<FLWT_SPEC> {
+    pub fn flwt(&mut self) -> FLWT_W<'_, FLWT_SPEC> {
         FLWT_W::new(self, 0)
     }
 }

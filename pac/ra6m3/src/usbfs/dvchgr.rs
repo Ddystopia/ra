@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 15 - Device State Change
     #[inline(always)]
-    pub fn dvchg(&mut self) -> DVCHG_W<DVCHGR_SPEC> {
+    pub fn dvchg(&mut self) -> DVCHG_W<'_, DVCHGR_SPEC> {
         DVCHG_W::new(self, 15)
     }
 }

@@ -700,47 +700,47 @@ impl R {
 impl W {
     ///Bits 0:2 - Output Sampling Rate
     #[inline(always)]
-    pub fn ofs(&mut self) -> OFS_W<SRCCTRL_SPEC> {
+    pub fn ofs(&mut self) -> OFS_W<'_, SRCCTRL_SPEC> {
         OFS_W::new(self, 0)
     }
     ///Bits 4:7 - Input Sampling Rate
     #[inline(always)]
-    pub fn ifs(&mut self) -> IFS_W<SRCCTRL_SPEC> {
+    pub fn ifs(&mut self) -> IFS_W<'_, SRCCTRL_SPEC> {
         IFS_W::new(self, 4)
     }
     ///Bit 8 - Internal Work Memory Clear
     #[inline(always)]
-    pub fn cl(&mut self) -> CL_W<SRCCTRL_SPEC> {
+    pub fn cl(&mut self) -> CL_W<'_, SRCCTRL_SPEC> {
         CL_W::new(self, 8)
     }
     ///Bit 9 - Internal Work Memory Flush
     #[inline(always)]
-    pub fn fl(&mut self) -> FL_W<SRCCTRL_SPEC> {
+    pub fn fl(&mut self) -> FL_W<'_, SRCCTRL_SPEC> {
         FL_W::new(self, 9)
     }
     ///Bit 10 - Output Data FIFO Overwrite Interrupt Enable
     #[inline(always)]
-    pub fn oven(&mut self) -> OVEN_W<SRCCTRL_SPEC> {
+    pub fn oven(&mut self) -> OVEN_W<'_, SRCCTRL_SPEC> {
         OVEN_W::new(self, 10)
     }
     ///Bit 11 - Output Data FIFO Underflow Interrupt Enable
     #[inline(always)]
-    pub fn uden(&mut self) -> UDEN_W<SRCCTRL_SPEC> {
+    pub fn uden(&mut self) -> UDEN_W<'_, SRCCTRL_SPEC> {
         UDEN_W::new(self, 11)
     }
     ///Bit 12 - Module Enable
     #[inline(always)]
-    pub fn srcen(&mut self) -> SRCEN_W<SRCCTRL_SPEC> {
+    pub fn srcen(&mut self) -> SRCEN_W<'_, SRCCTRL_SPEC> {
         SRCEN_W::new(self, 12)
     }
     ///Bit 13 - Conversion End Interrupt Enable
     #[inline(always)]
-    pub fn ceen(&mut self) -> CEEN_W<SRCCTRL_SPEC> {
+    pub fn ceen(&mut self) -> CEEN_W<'_, SRCCTRL_SPEC> {
         CEEN_W::new(self, 13)
     }
     ///Bit 15 - Filter Coefficient Table Access Enable
     #[inline(always)]
-    pub fn ficrae(&mut self) -> FICRAE_W<SRCCTRL_SPEC> {
+    pub fn ficrae(&mut self) -> FICRAE_W<'_, SRCCTRL_SPEC> {
         FICRAE_W::new(self, 15)
     }
 }

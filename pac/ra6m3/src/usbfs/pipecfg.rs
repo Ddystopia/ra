@@ -349,32 +349,32 @@ impl R {
 impl W {
     ///Bits 0:3 - Endpoint NumberThese bits specify the endpoint number for the selected pipe.Setting 0000b means unused pipe.
     #[inline(always)]
-    pub fn epnum(&mut self) -> EPNUM_W<PIPECFG_SPEC> {
+    pub fn epnum(&mut self) -> EPNUM_W<'_, PIPECFG_SPEC> {
         EPNUM_W::new(self, 0)
     }
     ///Bit 4 - Transfer Direction
     #[inline(always)]
-    pub fn dir(&mut self) -> DIR_W<PIPECFG_SPEC> {
+    pub fn dir(&mut self) -> DIR_W<'_, PIPECFG_SPEC> {
         DIR_W::new(self, 4)
     }
     ///Bit 7 - Pipe Disabled at End of Transfer
     #[inline(always)]
-    pub fn shtnak(&mut self) -> SHTNAK_W<PIPECFG_SPEC> {
+    pub fn shtnak(&mut self) -> SHTNAK_W<'_, PIPECFG_SPEC> {
         SHTNAK_W::new(self, 7)
     }
     ///Bit 9 - Double Buffer Mode
     #[inline(always)]
-    pub fn dblb(&mut self) -> DBLB_W<PIPECFG_SPEC> {
+    pub fn dblb(&mut self) -> DBLB_W<'_, PIPECFG_SPEC> {
         DBLB_W::new(self, 9)
     }
     ///Bit 10 - BRDY Interrupt Operation Specification
     #[inline(always)]
-    pub fn bfre(&mut self) -> BFRE_W<PIPECFG_SPEC> {
+    pub fn bfre(&mut self) -> BFRE_W<'_, PIPECFG_SPEC> {
         BFRE_W::new(self, 10)
     }
     ///Bits 14:15 - Transfer Type
     #[inline(always)]
-    pub fn type_(&mut self) -> TYPE_W<PIPECFG_SPEC> {
+    pub fn type_(&mut self) -> TYPE_W<'_, PIPECFG_SPEC> {
         TYPE_W::new(self, 14)
     }
 }

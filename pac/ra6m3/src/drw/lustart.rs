@@ -5,7 +5,7 @@ pub type LUSTART_W<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
 impl W {
     ///Bits 0:31 - U limiter start value
     #[inline(always)]
-    pub fn lustart(&mut self) -> LUSTART_W<LUSTART_SPEC> {
+    pub fn lustart(&mut self) -> LUSTART_W<'_, LUSTART_SPEC> {
         LUSTART_W::new(self, 0)
     }
 }

@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:28 - These bits set the width at high level of the pulse signal from the timer in nanoseconds. Set a value that is equivalent to at least two cycles of the STCA clock.
     #[inline(always)]
-    pub fn tmplsr(&mut self) -> TMPLSR_W<TMPLSR_SPEC> {
+    pub fn tmplsr(&mut self) -> TMPLSR_W<'_, TMPLSR_SPEC> {
         TMPLSR_W::new(self, 0)
     }
 }

@@ -440,27 +440,27 @@ impl R {
 impl W {
     ///Bit 0 - Output Data FIFO Full Interrupt Request Flag
     #[inline(always)]
-    pub fn oint(&mut self) -> OINT_W<SRCSTAT_SPEC> {
+    pub fn oint(&mut self) -> OINT_W<'_, SRCSTAT_SPEC> {
         OINT_W::new(self, 0)
     }
     ///Bit 1 - Input Data FIFO Empty Interrupt Request Flag
     #[inline(always)]
-    pub fn iint(&mut self) -> IINT_W<SRCSTAT_SPEC> {
+    pub fn iint(&mut self) -> IINT_W<'_, SRCSTAT_SPEC> {
         IINT_W::new(self, 1)
     }
     ///Bit 2 - Output Data FIFO Overwrite Interrupt Request Flag
     #[inline(always)]
-    pub fn ovf(&mut self) -> OVF_W<SRCSTAT_SPEC> {
+    pub fn ovf(&mut self) -> OVF_W<'_, SRCSTAT_SPEC> {
         OVF_W::new(self, 2)
     }
     ///Bit 3 - Output FIFO Underflow Interrupt Request Flag
     #[inline(always)]
-    pub fn udf(&mut self) -> UDF_W<SRCSTAT_SPEC> {
+    pub fn udf(&mut self) -> UDF_W<'_, SRCSTAT_SPEC> {
         UDF_W::new(self, 3)
     }
     ///Bit 5 - Conversion End Flag
     #[inline(always)]
-    pub fn cef(&mut self) -> CEF_W<SRCSTAT_SPEC> {
+    pub fn cef(&mut self) -> CEF_W<'_, SRCSTAT_SPEC> {
         CEF_W::new(self, 5)
     }
 }

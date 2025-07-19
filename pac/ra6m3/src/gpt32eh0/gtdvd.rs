@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Dead Time Value Register D
     #[inline(always)]
-    pub fn gtdvd(&mut self) -> GTDVD_W<GTDVD_SPEC> {
+    pub fn gtdvd(&mut self) -> GTDVD_W<'_, GTDVD_SPEC> {
         GTDVD_W::new(self, 0)
     }
 }

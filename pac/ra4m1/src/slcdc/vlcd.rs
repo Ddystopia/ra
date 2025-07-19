@@ -268,7 +268,7 @@ impl R {
 impl W {
     ///Bits 0:4 - Reference Voltage(Contrast Adjustment) Select
     #[inline(always)]
-    pub fn vlcd(&mut self) -> VLCD_W<VLCD_SPEC> {
+    pub fn vlcd(&mut self) -> VLCD_W<'_, VLCD_SPEC> {
         VLCD_W::new(self, 0)
     }
 }

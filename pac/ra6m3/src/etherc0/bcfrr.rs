@@ -73,7 +73,7 @@ impl R {
 impl W {
     ///Bits 0:15 - Broadcast Frame Continuous Receive Count Setting
     #[inline(always)]
-    pub fn bcf(&mut self) -> BCF_W<BCFRR_SPEC> {
+    pub fn bcf(&mut self) -> BCF_W<'_, BCFRR_SPEC> {
         BCF_W::new(self, 0)
     }
 }

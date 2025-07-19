@@ -25,12 +25,12 @@ impl R {
 impl W {
     ///Bits 0:15 - Input Port Timestamp Latency SettingThese bits hold the setting for the time stamp latency (ns) for the input ports.
     #[inline(always)]
-    pub fn egp(&mut self) -> EGP_W<TSLATR_SPEC> {
+    pub fn egp(&mut self) -> EGP_W<'_, TSLATR_SPEC> {
         EGP_W::new(self, 0)
     }
     ///Bits 16:31 - Output Port Timestamp Latency SettingThese bits hold the setting for the time stamp latency (ns) for the output ports.
     #[inline(always)]
-    pub fn ingp(&mut self) -> INGP_W<TSLATR_SPEC> {
+    pub fn ingp(&mut self) -> INGP_W<'_, TSLATR_SPEC> {
         INGP_W::new(self, 16)
     }
 }

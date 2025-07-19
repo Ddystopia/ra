@@ -5,7 +5,7 @@ pub type ORIGIN_W<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
 impl W {
     ///Bits 0:31 - Address of the first pixel in framebuffer
     #[inline(always)]
-    pub fn origin(&mut self) -> ORIGIN_W<ORIGIN_SPEC> {
+    pub fn origin(&mut self) -> ORIGIN_W<'_, ORIGIN_SPEC> {
         ORIGIN_W::new(self, 0)
     }
 }

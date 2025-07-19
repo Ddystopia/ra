@@ -146,12 +146,12 @@ impl R {
 impl W {
     ///Bits 4:5 - Arbitration MethodSpecify the priority between groups
     #[inline(always)]
-    pub fn arbmet(&mut self) -> ARBMET_W<BUSSCNT_SPEC> {
+    pub fn arbmet(&mut self) -> ARBMET_W<'_, BUSSCNT_SPEC> {
         ARBMET_W::new(self, 4)
     }
     ///Bit 8 - Early Write ResponseWhether the next write request is accepted or not until a response for the write transaction comes back.
     #[inline(always)]
-    pub fn ewres(&mut self) -> EWRES_W<BUSSCNT_SPEC> {
+    pub fn ewres(&mut self) -> EWRES_W<'_, BUSSCNT_SPEC> {
         EWRES_W::new(self, 8)
     }
 }

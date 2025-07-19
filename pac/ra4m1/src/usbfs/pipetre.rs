@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 8 - Transaction Counter Clear
     #[inline(always)]
-    pub fn trclr(&mut self) -> TRCLR_W<PIPETRE_SPEC> {
+    pub fn trclr(&mut self) -> TRCLR_W<'_, PIPETRE_SPEC> {
         TRCLR_W::new(self, 8)
     }
     ///Bit 9 - Transaction Counter Enable
     #[inline(always)]
-    pub fn trenb(&mut self) -> TRENB_W<PIPETRE_SPEC> {
+    pub fn trenb(&mut self) -> TRENB_W<'_, PIPETRE_SPEC> {
         TRENB_W::new(self, 9)
     }
 }

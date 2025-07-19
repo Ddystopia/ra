@@ -398,22 +398,22 @@ impl R {
 impl W {
     ///Bit 0 - Reference Signal Select
     #[inline(always)]
-    pub fn rps(&mut self) -> RPS_W<CACR2_SPEC> {
+    pub fn rps(&mut self) -> RPS_W<'_, CACR2_SPEC> {
         RPS_W::new(self, 0)
     }
     ///Bits 1:3 - Measurement Reference Clock Select
     #[inline(always)]
-    pub fn rscs(&mut self) -> RSCS_W<CACR2_SPEC> {
+    pub fn rscs(&mut self) -> RSCS_W<'_, CACR2_SPEC> {
         RSCS_W::new(self, 1)
     }
     ///Bits 4:5 - Measurement Reference Clock Frequency Division Ratio Select
     #[inline(always)]
-    pub fn rcds(&mut self) -> RCDS_W<CACR2_SPEC> {
+    pub fn rcds(&mut self) -> RCDS_W<'_, CACR2_SPEC> {
         RCDS_W::new(self, 4)
     }
     ///Bits 6:7 - Digital Filter Selection
     #[inline(always)]
-    pub fn dfs(&mut self) -> DFS_W<CACR2_SPEC> {
+    pub fn dfs(&mut self) -> DFS_W<'_, CACR2_SPEC> {
         DFS_W::new(self, 6)
     }
 }

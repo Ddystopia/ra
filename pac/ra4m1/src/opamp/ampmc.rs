@@ -307,27 +307,27 @@ impl R {
 impl W {
     ///Bit 0 - Operational amplifier precharge control status
     #[inline(always)]
-    pub fn amppc0(&mut self) -> AMPPC0_W<AMPMC_SPEC> {
+    pub fn amppc0(&mut self) -> AMPPC0_W<'_, AMPMC_SPEC> {
         AMPPC0_W::new(self, 0)
     }
     ///Bit 1 - Operational amplifier precharge control status
     #[inline(always)]
-    pub fn amppc1(&mut self) -> AMPPC1_W<AMPMC_SPEC> {
+    pub fn amppc1(&mut self) -> AMPPC1_W<'_, AMPMC_SPEC> {
         AMPPC1_W::new(self, 1)
     }
     ///Bit 2 - Operational amplifier precharge control status
     #[inline(always)]
-    pub fn amppc2(&mut self) -> AMPPC2_W<AMPMC_SPEC> {
+    pub fn amppc2(&mut self) -> AMPPC2_W<'_, AMPMC_SPEC> {
         AMPPC2_W::new(self, 2)
     }
     ///Bit 3 - Operational amplifier precharge control status
     #[inline(always)]
-    pub fn amppc3(&mut self) -> AMPPC3_W<AMPMC_SPEC> {
+    pub fn amppc3(&mut self) -> AMPPC3_W<'_, AMPMC_SPEC> {
         AMPPC3_W::new(self, 3)
     }
     ///Bit 7 - Operation mode selection
     #[inline(always)]
-    pub fn ampsp(&mut self) -> AMPSP_W<AMPMC_SPEC> {
+    pub fn ampsp(&mut self) -> AMPSP_W<'_, AMPMC_SPEC> {
         AMPSP_W::new(self, 7)
     }
 }

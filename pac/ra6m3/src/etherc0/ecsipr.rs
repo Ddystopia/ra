@@ -307,27 +307,27 @@ impl R {
 impl W {
     ///Bit 0 - False Carrier Detect Interrupt Enable
     #[inline(always)]
-    pub fn icdip(&mut self) -> ICDIP_W<ECSIPR_SPEC> {
+    pub fn icdip(&mut self) -> ICDIP_W<'_, ECSIPR_SPEC> {
         ICDIP_W::new(self, 0)
     }
     ///Bit 1 - Magic Packet Detect Interrupt Enable
     #[inline(always)]
-    pub fn mpdip(&mut self) -> MPDIP_W<ECSIPR_SPEC> {
+    pub fn mpdip(&mut self) -> MPDIP_W<'_, ECSIPR_SPEC> {
         MPDIP_W::new(self, 1)
     }
     ///Bit 2 - LINK Signal Change Interrupt Enable
     #[inline(always)]
-    pub fn lchngip(&mut self) -> LCHNGIP_W<ECSIPR_SPEC> {
+    pub fn lchngip(&mut self) -> LCHNGIP_W<'_, ECSIPR_SPEC> {
         LCHNGIP_W::new(self, 2)
     }
     ///Bit 4 - PAUSE Frame Retransmit Over Interrupt Enable
     #[inline(always)]
-    pub fn psrtoip(&mut self) -> PSRTOIP_W<ECSIPR_SPEC> {
+    pub fn psrtoip(&mut self) -> PSRTOIP_W<'_, ECSIPR_SPEC> {
         PSRTOIP_W::new(self, 4)
     }
     ///Bit 5 - Continuous Broadcast Frame Reception Interrupt Enable
     #[inline(always)]
-    pub fn bfsipr(&mut self) -> BFSIPR_W<ECSIPR_SPEC> {
+    pub fn bfsipr(&mut self) -> BFSIPR_W<'_, ECSIPR_SPEC> {
         BFSIPR_W::new(self, 5)
     }
 }

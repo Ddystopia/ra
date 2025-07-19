@@ -191,12 +191,12 @@ impl R {
 impl W {
     ///Bits 0:2 - ACMPLP0 Input(IVCMP0) Selection
     #[inline(always)]
-    pub fn cmpsel20(&mut self) -> CMPSEL20_W<COMPSEL0_SPEC> {
+    pub fn cmpsel20(&mut self) -> CMPSEL20_W<'_, COMPSEL0_SPEC> {
         CMPSEL20_W::new(self, 0)
     }
     ///Bits 4:6 - ACMPLP1 Input (IVCMP1) Selection
     #[inline(always)]
-    pub fn cmpsel64(&mut self) -> CMPSEL64_W<COMPSEL0_SPEC> {
+    pub fn cmpsel64(&mut self) -> CMPSEL64_W<'_, COMPSEL0_SPEC> {
         CMPSEL64_W::new(self, 4)
     }
 }

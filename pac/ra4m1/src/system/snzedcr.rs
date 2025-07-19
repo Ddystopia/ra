@@ -367,32 +367,32 @@ impl R {
 impl W {
     ///Bit 0 - AGT1 Underflow Snooze End Enable
     #[inline(always)]
-    pub fn agtunfed(&mut self) -> AGTUNFED_W<SNZEDCR_SPEC> {
+    pub fn agtunfed(&mut self) -> AGTUNFED_W<'_, SNZEDCR_SPEC> {
         AGTUNFED_W::new(self, 0)
     }
     ///Bit 1 - Last DTC Transmission Completion Snooze End Enable
     #[inline(always)]
-    pub fn dtczred(&mut self) -> DTCZRED_W<SNZEDCR_SPEC> {
+    pub fn dtczred(&mut self) -> DTCZRED_W<'_, SNZEDCR_SPEC> {
         DTCZRED_W::new(self, 1)
     }
     ///Bit 2 - Not Last DTC Transmission Completion Snooze End Enable
     #[inline(always)]
-    pub fn dtcnzred(&mut self) -> DTCNZRED_W<SNZEDCR_SPEC> {
+    pub fn dtcnzred(&mut self) -> DTCNZRED_W<'_, SNZEDCR_SPEC> {
         DTCNZRED_W::new(self, 2)
     }
     ///Bit 3 - ADC140 Compare Match Snooze End Enable
     #[inline(always)]
-    pub fn ad0mated(&mut self) -> AD0MATED_W<SNZEDCR_SPEC> {
+    pub fn ad0mated(&mut self) -> AD0MATED_W<'_, SNZEDCR_SPEC> {
         AD0MATED_W::new(self, 3)
     }
     ///Bit 4 - ADC140 Compare Mismatch Snooze End Enable
     #[inline(always)]
-    pub fn ad0umted(&mut self) -> AD0UMTED_W<SNZEDCR_SPEC> {
+    pub fn ad0umted(&mut self) -> AD0UMTED_W<'_, SNZEDCR_SPEC> {
         AD0UMTED_W::new(self, 4)
     }
     ///Bit 7 - SCI0 Address Mismatch Snooze End Enable
     #[inline(always)]
-    pub fn sci0umted(&mut self) -> SCI0UMTED_W<SNZEDCR_SPEC> {
+    pub fn sci0umted(&mut self) -> SCI0UMTED_W<'_, SNZEDCR_SPEC> {
         SCI0UMTED_W::new(self, 7)
     }
 }

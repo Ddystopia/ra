@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - Calculation input Data ( Case of CRC-8, CRC-16 or CRC-CCITT )
     #[inline(always)]
-    pub fn crcdir_by(&mut self) -> CRCDIR_BY_W<CRCDIR_BY_SPEC> {
+    pub fn crcdir_by(&mut self) -> CRCDIR_BY_W<'_, CRCDIR_BY_SPEC> {
         CRCDIR_BY_W::new(self, 0)
     }
 }

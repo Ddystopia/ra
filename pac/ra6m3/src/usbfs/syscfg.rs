@@ -307,27 +307,27 @@ impl R {
 impl W {
     ///Bit 0 - USB Operation Enable
     #[inline(always)]
-    pub fn usbe(&mut self) -> USBE_W<SYSCFG_SPEC> {
+    pub fn usbe(&mut self) -> USBE_W<'_, SYSCFG_SPEC> {
         USBE_W::new(self, 0)
     }
     ///Bit 4 - D+ Line Resistor Control
     #[inline(always)]
-    pub fn dprpu(&mut self) -> DPRPU_W<SYSCFG_SPEC> {
+    pub fn dprpu(&mut self) -> DPRPU_W<'_, SYSCFG_SPEC> {
         DPRPU_W::new(self, 4)
     }
     ///Bit 5 - D+/D- Line Resistor Control
     #[inline(always)]
-    pub fn drpd(&mut self) -> DRPD_W<SYSCFG_SPEC> {
+    pub fn drpd(&mut self) -> DRPD_W<'_, SYSCFG_SPEC> {
         DRPD_W::new(self, 5)
     }
     ///Bit 6 - Controller Function Select
     #[inline(always)]
-    pub fn dcfm(&mut self) -> DCFM_W<SYSCFG_SPEC> {
+    pub fn dcfm(&mut self) -> DCFM_W<'_, SYSCFG_SPEC> {
         DCFM_W::new(self, 6)
     }
     ///Bit 10 - USB Clock Enable
     #[inline(always)]
-    pub fn scke(&mut self) -> SCKE_W<SYSCFG_SPEC> {
+    pub fn scke(&mut self) -> SCKE_W<'_, SYSCFG_SPEC> {
         SCKE_W::new(self, 10)
     }
 }

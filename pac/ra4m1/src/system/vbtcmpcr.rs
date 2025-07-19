@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - VBATT pin low voltage detect circuit output enable
     #[inline(always)]
-    pub fn vbtcmpe(&mut self) -> VBTCMPE_W<VBTCMPCR_SPEC> {
+    pub fn vbtcmpe(&mut self) -> VBTCMPE_W<'_, VBTCMPCR_SPEC> {
         VBTCMPE_W::new(self, 0)
     }
 }

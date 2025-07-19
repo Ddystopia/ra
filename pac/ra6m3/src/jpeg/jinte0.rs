@@ -247,22 +247,22 @@ impl R {
 impl W {
     ///Bit 3 - This bit enables an interrupt to be generated when it has been determined that the image size and the subsampling setting of the compressed data can be read through analyzing the data.
     #[inline(always)]
-    pub fn int3(&mut self) -> INT3_W<JINTE0_SPEC> {
+    pub fn int3(&mut self) -> INT3_W<'_, JINTE0_SPEC> {
         INT3_W::new(self, 3)
     }
     ///Bit 5 - This bit enables an interrupt to be generated when the final number of MCU data in the Huffman-coding segment is not correct in decompression. When this bit is not set to enable interrupt generation, an error code is not returned.
     #[inline(always)]
-    pub fn int5(&mut self) -> INT5_W<JINTE0_SPEC> {
+    pub fn int5(&mut self) -> INT5_W<'_, JINTE0_SPEC> {
         INT5_W::new(self, 5)
     }
     ///Bit 6 - This bit enables an interrupt to be generated when the total number of data in the Huffman-coding segment is not correct in decompression. When this bit is not set to enable interrupt generation, an error code is not returned.
     #[inline(always)]
-    pub fn int6(&mut self) -> INT6_W<JINTE0_SPEC> {
+    pub fn int6(&mut self) -> INT6_W<'_, JINTE0_SPEC> {
         INT6_W::new(self, 6)
     }
     ///Bit 7 - This bit enables an interrupt to be generated when the number of data in the restart interval of the Huffman-coding segment is not correct in decompression.When this bit is not set to enable interrupt generation, an error code is not returned.
     #[inline(always)]
-    pub fn int7(&mut self) -> INT7_W<JINTE0_SPEC> {
+    pub fn int7(&mut self) -> INT7_W<'_, JINTE0_SPEC> {
         INT7_W::new(self, 7)
     }
 }

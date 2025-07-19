@@ -317,27 +317,27 @@ impl R {
 impl W {
     ///Bit 0 - VBATWIO0 Wakeup Trigger Flag
     #[inline(always)]
-    pub fn vch0f(&mut self) -> VCH0F_W<VBTWFR_SPEC> {
+    pub fn vch0f(&mut self) -> VCH0F_W<'_, VBTWFR_SPEC> {
         VCH0F_W::new(self, 0)
     }
     ///Bit 1 - VBATWIO1 Wakeup Trigger Flag
     #[inline(always)]
-    pub fn vch1f(&mut self) -> VCH1F_W<VBTWFR_SPEC> {
+    pub fn vch1f(&mut self) -> VCH1F_W<'_, VBTWFR_SPEC> {
         VCH1F_W::new(self, 1)
     }
     ///Bit 2 - VBATWIO2 Wakeup Trigger Flag
     #[inline(always)]
-    pub fn vch2f(&mut self) -> VCH2F_W<VBTWFR_SPEC> {
+    pub fn vch2f(&mut self) -> VCH2F_W<'_, VBTWFR_SPEC> {
         VCH2F_W::new(self, 2)
     }
     ///Bit 3 - VBATT RTC-Interval Wakeup Trigger Flag
     #[inline(always)]
-    pub fn vrtcif(&mut self) -> VRTCIF_W<VBTWFR_SPEC> {
+    pub fn vrtcif(&mut self) -> VRTCIF_W<'_, VBTWFR_SPEC> {
         VRTCIF_W::new(self, 3)
     }
     ///Bit 4 - VBATT RTC-Alarm Wakeup Trigger Flag
     #[inline(always)]
-    pub fn vrtcaf(&mut self) -> VRTCAF_W<VBTWFR_SPEC> {
+    pub fn vrtcaf(&mut self) -> VRTCAF_W<'_, VBTWFR_SPEC> {
         VRTCAF_W::new(self, 4)
     }
 }

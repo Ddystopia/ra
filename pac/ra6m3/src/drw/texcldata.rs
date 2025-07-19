@@ -5,7 +5,7 @@ pub type CLDATA_W<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
 impl W {
     ///Bits 0:31 - Texture CLUT data for Indexed texture format
     #[inline(always)]
-    pub fn cldata(&mut self) -> CLDATA_W<TEXCLDATA_SPEC> {
+    pub fn cldata(&mut self) -> CLDATA_W<'_, TEXCLDATA_SPEC> {
         CLDATA_W::new(self, 0)
     }
 }

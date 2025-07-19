@@ -69,7 +69,7 @@ impl R {
 impl W {
     ///Bit 0 - Control of output control module register value reflection to internal operations.The register values to be reflected to the internal operations at the assertion of the vertical synchronization signal (VS).
     #[inline(always)]
-    pub fn ven(&mut self) -> VEN_W<OUT_VLATCH_SPEC> {
+    pub fn ven(&mut self) -> VEN_W<'_, OUT_VLATCH_SPEC> {
         VEN_W::new(self, 0)
     }
 }

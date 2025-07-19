@@ -390,22 +390,22 @@ impl R {
 impl W {
     ///Bits 0:2 - Bit Counter
     #[inline(always)]
-    pub fn bc(&mut self) -> BC_W<ICMR1_SPEC> {
+    pub fn bc(&mut self) -> BC_W<'_, ICMR1_SPEC> {
         BC_W::new(self, 0)
     }
     ///Bit 3 - BC Write Protect(This bit is read as 1.)
     #[inline(always)]
-    pub fn bcwp(&mut self) -> BCWP_W<ICMR1_SPEC> {
+    pub fn bcwp(&mut self) -> BCWP_W<'_, ICMR1_SPEC> {
         BCWP_W::new(self, 3)
     }
     ///Bits 4:6 - Internal Reference Clock (fIIC) Selection ( fIIC = PCLKB / 2^CKS )
     #[inline(always)]
-    pub fn cks(&mut self) -> CKS_W<ICMR1_SPEC> {
+    pub fn cks(&mut self) -> CKS_W<'_, ICMR1_SPEC> {
         CKS_W::new(self, 4)
     }
     ///Bit 7 - MST/TRS Write Protect
     #[inline(always)]
-    pub fn mtwp(&mut self) -> MTWP_W<ICMR1_SPEC> {
+    pub fn mtwp(&mut self) -> MTWP_W<'_, ICMR1_SPEC> {
         MTWP_W::new(self, 7)
     }
 }

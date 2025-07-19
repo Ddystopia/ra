@@ -110,7 +110,7 @@ impl R {
 impl W {
     ///Bit 0 - SP_main monitor enable
     #[inline(always)]
-    pub fn enable(&mut self) -> ENABLE_W<MSPMPUCTL_SPEC> {
+    pub fn enable(&mut self) -> ENABLE_W<'_, MSPMPUCTL_SPEC> {
         ENABLE_W::new(self, 0)
     }
 }

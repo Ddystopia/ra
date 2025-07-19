@@ -25,12 +25,12 @@ impl R {
 impl W {
     ///Bits 0:3 - 1-Second Count Counts from 0 to 9 every second. When a carry is generated, 1 is added to the tens place.
     #[inline(always)]
-    pub fn sec1(&mut self) -> SEC1_W<RSECCNT_SPEC> {
+    pub fn sec1(&mut self) -> SEC1_W<'_, RSECCNT_SPEC> {
         SEC1_W::new(self, 0)
     }
     ///Bits 4:6 - 10-Second Count Counts from 0 to 5 for 60-second counting.
     #[inline(always)]
-    pub fn sec10(&mut self) -> SEC10_W<RSECCNT_SPEC> {
+    pub fn sec10(&mut self) -> SEC10_W<'_, RSECCNT_SPEC> {
         SEC10_W::new(self, 4)
     }
 }

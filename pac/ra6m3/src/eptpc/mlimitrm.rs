@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - These bits hold the setting for the middle-order 32 bits of the limit for the negative gradient.
     #[inline(always)]
-    pub fn mlimitrm(&mut self) -> MLIMITRM_W<MLIMITRM_SPEC> {
+    pub fn mlimitrm(&mut self) -> MLIMITRM_W<'_, MLIMITRM_SPEC> {
         MLIMITRM_W::new(self, 0)
     }
 }

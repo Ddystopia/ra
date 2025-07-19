@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - Automatic PAUSE Time SettingThese bits set the value of the pause_time parameter for a PAUSE frame that is automatically transmitted. Transmission is not performed until the set value multiplied by 512 bit time has elapsed.
     #[inline(always)]
-    pub fn ap(&mut self) -> AP_W<APR_SPEC> {
+    pub fn ap(&mut self) -> AP_W<'_, APR_SPEC> {
         AP_W::new(self, 0)
     }
 }

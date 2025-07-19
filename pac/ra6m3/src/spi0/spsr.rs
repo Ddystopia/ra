@@ -422,32 +422,32 @@ impl R {
 impl W {
     ///Bit 0 - Overrun Error Flag
     #[inline(always)]
-    pub fn ovrf(&mut self) -> OVRF_W<SPSR_SPEC> {
+    pub fn ovrf(&mut self) -> OVRF_W<'_, SPSR_SPEC> {
         OVRF_W::new(self, 0)
     }
     ///Bit 2 - Mode Fault Error Flag
     #[inline(always)]
-    pub fn modf(&mut self) -> MODF_W<SPSR_SPEC> {
+    pub fn modf(&mut self) -> MODF_W<'_, SPSR_SPEC> {
         MODF_W::new(self, 2)
     }
     ///Bit 3 - Parity Error Flag
     #[inline(always)]
-    pub fn perf(&mut self) -> PERF_W<SPSR_SPEC> {
+    pub fn perf(&mut self) -> PERF_W<'_, SPSR_SPEC> {
         PERF_W::new(self, 3)
     }
     ///Bit 4 - Underrun Error Flag(When MODF is 0, This bit is invalid.)
     #[inline(always)]
-    pub fn udrf(&mut self) -> UDRF_W<SPSR_SPEC> {
+    pub fn udrf(&mut self) -> UDRF_W<'_, SPSR_SPEC> {
         UDRF_W::new(self, 4)
     }
     ///Bit 5 - SPI Transmit Buffer Empty Flag
     #[inline(always)]
-    pub fn sptef(&mut self) -> SPTEF_W<SPSR_SPEC> {
+    pub fn sptef(&mut self) -> SPTEF_W<'_, SPSR_SPEC> {
         SPTEF_W::new(self, 5)
     }
     ///Bit 7 - SPI Receive Buffer Full Flag
     #[inline(always)]
-    pub fn sprf(&mut self) -> SPRF_W<SPSR_SPEC> {
+    pub fn sprf(&mut self) -> SPRF_W<'_, SPSR_SPEC> {
         SPRF_W::new(self, 7)
     }
 }

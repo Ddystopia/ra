@@ -110,7 +110,7 @@ impl R {
 impl W {
     ///Bit 0 - Selecting ON/OFF of the Flash Memory Operation
     #[inline(always)]
-    pub fn flstop(&mut self) -> FLSTOP_W<FLSTOP_SPEC> {
+    pub fn flstop(&mut self) -> FLSTOP_W<'_, FLSTOP_SPEC> {
         FLSTOP_W::new(self, 0)
     }
 }

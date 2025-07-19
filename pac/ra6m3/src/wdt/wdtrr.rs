@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - WDTRR is an 8-bit register that refreshes the down-counter of the WDT.
     #[inline(always)]
-    pub fn wdtrr(&mut self) -> WDTRR_W<WDTRR_SPEC> {
+    pub fn wdtrr(&mut self) -> WDTRR_W<'_, WDTRR_SPEC> {
         WDTRR_W::new(self, 0)
     }
 }

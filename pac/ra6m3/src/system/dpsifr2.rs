@@ -317,27 +317,27 @@ impl R {
 impl W {
     ///Bit 0 - LVD1 Deep Standby Cancel Flag
     #[inline(always)]
-    pub fn dlvd1if(&mut self) -> DLVD1IF_W<DPSIFR2_SPEC> {
+    pub fn dlvd1if(&mut self) -> DLVD1IF_W<'_, DPSIFR2_SPEC> {
         DLVD1IF_W::new(self, 0)
     }
     ///Bit 1 - LVD2 Deep Standby Cancel Flag
     #[inline(always)]
-    pub fn dlvd2if(&mut self) -> DLVD2IF_W<DPSIFR2_SPEC> {
+    pub fn dlvd2if(&mut self) -> DLVD2IF_W<'_, DPSIFR2_SPEC> {
         DLVD2IF_W::new(self, 1)
     }
     ///Bit 2 - RTC Interval interrupt Deep Standby Cancel Flag
     #[inline(always)]
-    pub fn dtrtciif(&mut self) -> DTRTCIIF_W<DPSIFR2_SPEC> {
+    pub fn dtrtciif(&mut self) -> DTRTCIIF_W<'_, DPSIFR2_SPEC> {
         DTRTCIIF_W::new(self, 2)
     }
     ///Bit 3 - RTC Alarm interrupt Deep Standby Cancel Flag
     #[inline(always)]
-    pub fn drtcaif(&mut self) -> DRTCAIF_W<DPSIFR2_SPEC> {
+    pub fn drtcaif(&mut self) -> DRTCAIF_W<'_, DPSIFR2_SPEC> {
         DRTCAIF_W::new(self, 3)
     }
     ///Bit 4 - NMI Pin Deep Standby Cancel Flag
     #[inline(always)]
-    pub fn dnmif(&mut self) -> DNMIF_W<DPSIFR2_SPEC> {
+    pub fn dnmif(&mut self) -> DNMIF_W<'_, DPSIFR2_SPEC> {
         DNMIF_W::new(self, 4)
     }
 }

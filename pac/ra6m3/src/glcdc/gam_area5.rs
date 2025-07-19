@@ -34,17 +34,17 @@ impl R {
 impl W {
     ///Bits 0:9 - Start threshold of area 15Unsigned 10-bit integer
     #[inline(always)]
-    pub fn th15(&mut self) -> TH15_W<GAM_AREA5_SPEC> {
+    pub fn th15(&mut self) -> TH15_W<'_, GAM_AREA5_SPEC> {
         TH15_W::new(self, 0)
     }
     ///Bits 10:19 - Start threshold of area 14Unsigned 10-bit integer
     #[inline(always)]
-    pub fn th14(&mut self) -> TH14_W<GAM_AREA5_SPEC> {
+    pub fn th14(&mut self) -> TH14_W<'_, GAM_AREA5_SPEC> {
         TH14_W::new(self, 10)
     }
     ///Bits 20:29 - Start threshold of area 13Unsigned 10-bit integer
     #[inline(always)]
-    pub fn th13(&mut self) -> TH13_W<GAM_AREA5_SPEC> {
+    pub fn th13(&mut self) -> TH13_W<'_, GAM_AREA5_SPEC> {
         TH13_W::new(self, 20)
     }
 }

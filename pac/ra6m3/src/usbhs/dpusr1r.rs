@@ -316,17 +316,17 @@ impl R {
 impl W {
     ///Bit 4 - OVRCURA Interrupt Enable Clear
     #[inline(always)]
-    pub fn dovcahe(&mut self) -> DOVCAHE_W<DPUSR1R_SPEC> {
+    pub fn dovcahe(&mut self) -> DOVCAHE_W<'_, DPUSR1R_SPEC> {
         DOVCAHE_W::new(self, 4)
     }
     ///Bit 5 - OVRCURB Interrupt Enable Clear
     #[inline(always)]
-    pub fn dovcbhe(&mut self) -> DOVCBHE_W<DPUSR1R_SPEC> {
+    pub fn dovcbhe(&mut self) -> DOVCBHE_W<'_, DPUSR1R_SPEC> {
         DOVCBHE_W::new(self, 5)
     }
     ///Bit 7 - VBUS Interrupt Enable/Clear
     #[inline(always)]
-    pub fn dvbstshe(&mut self) -> DVBSTSHE_W<DPUSR1R_SPEC> {
+    pub fn dvbstshe(&mut self) -> DVBSTSHE_W<'_, DPUSR1R_SPEC> {
         DVBSTSHE_W::new(self, 7)
     }
 }

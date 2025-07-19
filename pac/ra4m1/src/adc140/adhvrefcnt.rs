@@ -227,17 +227,17 @@ impl R {
 impl W {
     ///Bits 0:1 - High-Potential Reference Voltage Select
     #[inline(always)]
-    pub fn hvsel(&mut self) -> HVSEL_W<ADHVREFCNT_SPEC> {
+    pub fn hvsel(&mut self) -> HVSEL_W<'_, ADHVREFCNT_SPEC> {
         HVSEL_W::new(self, 0)
     }
     ///Bits 2:4 - Low-Potential Reference Voltage Select
     #[inline(always)]
-    pub fn lvsel(&mut self) -> LVSEL_W<ADHVREFCNT_SPEC> {
+    pub fn lvsel(&mut self) -> LVSEL_W<'_, ADHVREFCNT_SPEC> {
         LVSEL_W::new(self, 2)
     }
     ///Bit 7 - Sleep
     #[inline(always)]
-    pub fn adslp(&mut self) -> ADSLP_W<ADHVREFCNT_SPEC> {
+    pub fn adslp(&mut self) -> ADSLP_W<'_, ADHVREFCNT_SPEC> {
         ADSLP_W::new(self, 7)
     }
 }

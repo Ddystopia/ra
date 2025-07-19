@@ -73,7 +73,7 @@ impl R {
 impl W {
     ///Bits 0:7 - Event selection to DMAC Start request
     #[inline(always)]
-    pub fn dels(&mut self) -> DELS_W<DELSR_SPEC> {
+    pub fn dels(&mut self) -> DELS_W<'_, DELSR_SPEC> {
         DELS_W::new(self, 0)
     }
 }

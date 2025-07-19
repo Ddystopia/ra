@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:9 - Brightness (DC) adjustment of G signalUnsigned; 10 bits; +512 with offset; integer
     #[inline(always)]
-    pub fn brtg(&mut self) -> BRTG_W<OUT_BRIGHT1_SPEC> {
+    pub fn brtg(&mut self) -> BRTG_W<'_, OUT_BRIGHT1_SPEC> {
         BRTG_W::new(self, 0)
     }
 }

@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:14 - Mode Register SettingWriting to these bits: Mode register set command is issued.
     #[inline(always)]
-    pub fn mr(&mut self) -> MR_W<SDMOD_SPEC> {
+    pub fn mr(&mut self) -> MR_W<'_, SDMOD_SPEC> {
         MR_W::new(self, 0)
     }
 }

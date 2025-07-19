@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - A/D Converter Start Request Timing Register B
     #[inline(always)]
-    pub fn gtadtrb(&mut self) -> GTADTRB_W<GTADTRB_SPEC> {
+    pub fn gtadtrb(&mut self) -> GTADTRB_W<'_, GTADTRB_SPEC> {
         GTADTRB_W::new(self, 0)
     }
 }

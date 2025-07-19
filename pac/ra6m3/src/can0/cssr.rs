@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - When the value for the channel search is input, the channel number is output to MSSR.
     #[inline(always)]
-    pub fn cssr(&mut self) -> CSSR_W<CSSR_SPEC> {
+    pub fn cssr(&mut self) -> CSSR_W<'_, CSSR_SPEC> {
         CSSR_W::new(self, 0)
     }
 }

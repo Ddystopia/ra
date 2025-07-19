@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 4 - D/A Operation Enable 0
     #[inline(always)]
-    pub fn dace0(&mut self) -> DACE0_W<DAM_SPEC> {
+    pub fn dace0(&mut self) -> DACE0_W<'_, DAM_SPEC> {
         DACE0_W::new(self, 4)
     }
     ///Bit 5 - D/A Operation Enable 1
     #[inline(always)]
-    pub fn dace1(&mut self) -> DACE1_W<DAM_SPEC> {
+    pub fn dace1(&mut self) -> DACE1_W<'_, DAM_SPEC> {
         DACE1_W::new(self, 5)
     }
 }

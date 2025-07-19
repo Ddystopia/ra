@@ -25,12 +25,12 @@ impl R {
 impl W {
     ///Bits 0:3 - 1-Minute Count Counts from 0 to 9 every minute. When a carry is generated, 1 is added to the tens place.
     #[inline(always)]
-    pub fn min1(&mut self) -> MIN1_W<RMINCNT_SPEC> {
+    pub fn min1(&mut self) -> MIN1_W<'_, RMINCNT_SPEC> {
         MIN1_W::new(self, 0)
     }
     ///Bits 4:6 - 10-Minute Count Counts from 0 to 5 for 60-minute counting.
     #[inline(always)]
-    pub fn min10(&mut self) -> MIN10_W<RMINCNT_SPEC> {
+    pub fn min10(&mut self) -> MIN10_W<'_, RMINCNT_SPEC> {
         MIN10_W::new(self, 4)
     }
 }

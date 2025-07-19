@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - SDRAM Self-Refresh Enable
     #[inline(always)]
-    pub fn sfen(&mut self) -> SFEN_W<SDSELF_SPEC> {
+    pub fn sfen(&mut self) -> SFEN_W<'_, SDSELF_SPEC> {
         SFEN_W::new(self, 0)
     }
 }

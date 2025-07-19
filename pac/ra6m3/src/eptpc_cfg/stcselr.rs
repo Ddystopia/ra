@@ -217,12 +217,12 @@ impl R {
 impl W {
     ///Bits 0:2 - PCLKA Clock Frequency Division
     #[inline(always)]
-    pub fn sclkdiv(&mut self) -> SCLKDIV_W<STCSELR_SPEC> {
+    pub fn sclkdiv(&mut self) -> SCLKDIV_W<'_, STCSELR_SPEC> {
         SCLKDIV_W::new(self, 0)
     }
     ///Bits 8:10 - STCA Clock Select
     #[inline(always)]
-    pub fn sclksel(&mut self) -> SCLKSEL_W<STCSELR_SPEC> {
+    pub fn sclksel(&mut self) -> SCLKSEL_W<'_, STCSELR_SPEC> {
         SCLKSEL_W::new(self, 8)
     }
 }

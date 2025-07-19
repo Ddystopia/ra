@@ -1267,107 +1267,107 @@ impl R {
 impl W {
     ///Bit 0 - GTETRGA Pin Rising Input Source Counter Start Enable
     #[inline(always)]
-    pub fn ssgtrgar(&mut self) -> SSGTRGAR_W<GTSSR_SPEC> {
+    pub fn ssgtrgar(&mut self) -> SSGTRGAR_W<'_, GTSSR_SPEC> {
         SSGTRGAR_W::new(self, 0)
     }
     ///Bit 1 - GTETRGA Pin Falling Input Source Counter Start Enable
     #[inline(always)]
-    pub fn ssgtrgaf(&mut self) -> SSGTRGAF_W<GTSSR_SPEC> {
+    pub fn ssgtrgaf(&mut self) -> SSGTRGAF_W<'_, GTSSR_SPEC> {
         SSGTRGAF_W::new(self, 1)
     }
     ///Bit 2 - GTETRGB Pin Rising Input Source Counter Start Enable
     #[inline(always)]
-    pub fn ssgtrgbr(&mut self) -> SSGTRGBR_W<GTSSR_SPEC> {
+    pub fn ssgtrgbr(&mut self) -> SSGTRGBR_W<'_, GTSSR_SPEC> {
         SSGTRGBR_W::new(self, 2)
     }
     ///Bit 3 - GTETRGB Pin Falling Input Source Counter Start Enable
     #[inline(always)]
-    pub fn ssgtrgbf(&mut self) -> SSGTRGBF_W<GTSSR_SPEC> {
+    pub fn ssgtrgbf(&mut self) -> SSGTRGBF_W<'_, GTSSR_SPEC> {
         SSGTRGBF_W::new(self, 3)
     }
     ///Bit 8 - GTIOCA Pin Rising Input during GTIOCB Value Low Source Counter Start Enable
     #[inline(always)]
-    pub fn sscarbl(&mut self) -> SSCARBL_W<GTSSR_SPEC> {
+    pub fn sscarbl(&mut self) -> SSCARBL_W<'_, GTSSR_SPEC> {
         SSCARBL_W::new(self, 8)
     }
     ///Bit 9 - GTIOCA Pin Rising Input during GTIOCB Value High Source Counter Start Enable
     #[inline(always)]
-    pub fn sscarbh(&mut self) -> SSCARBH_W<GTSSR_SPEC> {
+    pub fn sscarbh(&mut self) -> SSCARBH_W<'_, GTSSR_SPEC> {
         SSCARBH_W::new(self, 9)
     }
     ///Bit 10 - GTIOCA Pin Falling Input during GTIOCB Value Low Source Counter Start Enable
     #[inline(always)]
-    pub fn sscafbl(&mut self) -> SSCAFBL_W<GTSSR_SPEC> {
+    pub fn sscafbl(&mut self) -> SSCAFBL_W<'_, GTSSR_SPEC> {
         SSCAFBL_W::new(self, 10)
     }
     ///Bit 11 - GTIOCA Pin Falling Input during GTIOCB Value High Source Counter Start Enable
     #[inline(always)]
-    pub fn sscafbh(&mut self) -> SSCAFBH_W<GTSSR_SPEC> {
+    pub fn sscafbh(&mut self) -> SSCAFBH_W<'_, GTSSR_SPEC> {
         SSCAFBH_W::new(self, 11)
     }
     ///Bit 12 - GTIOCB Pin Rising Input during GTIOCA Value Low Source Counter Start Enable
     #[inline(always)]
-    pub fn sscbral(&mut self) -> SSCBRAL_W<GTSSR_SPEC> {
+    pub fn sscbral(&mut self) -> SSCBRAL_W<'_, GTSSR_SPEC> {
         SSCBRAL_W::new(self, 12)
     }
     ///Bit 13 - GTIOCB Pin Rising Input during GTIOCA Value High Source Counter Start Enable
     #[inline(always)]
-    pub fn sscbrah(&mut self) -> SSCBRAH_W<GTSSR_SPEC> {
+    pub fn sscbrah(&mut self) -> SSCBRAH_W<'_, GTSSR_SPEC> {
         SSCBRAH_W::new(self, 13)
     }
     ///Bit 14 - GTIOCB Pin Falling Input during GTIOCA Value Low Source Counter Start Enable
     #[inline(always)]
-    pub fn sscbfal(&mut self) -> SSCBFAL_W<GTSSR_SPEC> {
+    pub fn sscbfal(&mut self) -> SSCBFAL_W<'_, GTSSR_SPEC> {
         SSCBFAL_W::new(self, 14)
     }
     ///Bit 15 - GTIOCB Pin Falling Input during GTIOCA Value High Source Counter Start Enable
     #[inline(always)]
-    pub fn sscbfah(&mut self) -> SSCBFAH_W<GTSSR_SPEC> {
+    pub fn sscbfah(&mut self) -> SSCBFAH_W<'_, GTSSR_SPEC> {
         SSCBFAH_W::new(self, 15)
     }
     ///Bit 16 - ELC_GPTA Event Source Counter Start Enable
     #[inline(always)]
-    pub fn sselca(&mut self) -> SSELCA_W<GTSSR_SPEC> {
+    pub fn sselca(&mut self) -> SSELCA_W<'_, GTSSR_SPEC> {
         SSELCA_W::new(self, 16)
     }
     ///Bit 17 - ELC_GPTB Event Source Counter Start Enable
     #[inline(always)]
-    pub fn sselcb(&mut self) -> SSELCB_W<GTSSR_SPEC> {
+    pub fn sselcb(&mut self) -> SSELCB_W<'_, GTSSR_SPEC> {
         SSELCB_W::new(self, 17)
     }
     ///Bit 18 - ELC_GPTC Event Source Counter Start Enable
     #[inline(always)]
-    pub fn sselcc(&mut self) -> SSELCC_W<GTSSR_SPEC> {
+    pub fn sselcc(&mut self) -> SSELCC_W<'_, GTSSR_SPEC> {
         SSELCC_W::new(self, 18)
     }
     ///Bit 19 - ELC_GPTD Event Source Counter Start Enable
     #[inline(always)]
-    pub fn sselcd(&mut self) -> SSELCD_W<GTSSR_SPEC> {
+    pub fn sselcd(&mut self) -> SSELCD_W<'_, GTSSR_SPEC> {
         SSELCD_W::new(self, 19)
     }
     ///Bit 20 - ELC_GPTE Event Source Counter Start Enable
     #[inline(always)]
-    pub fn sselce(&mut self) -> SSELCE_W<GTSSR_SPEC> {
+    pub fn sselce(&mut self) -> SSELCE_W<'_, GTSSR_SPEC> {
         SSELCE_W::new(self, 20)
     }
     ///Bit 21 - ELC_GPTF Event Source Counter Start Enable
     #[inline(always)]
-    pub fn sselcf(&mut self) -> SSELCF_W<GTSSR_SPEC> {
+    pub fn sselcf(&mut self) -> SSELCF_W<'_, GTSSR_SPEC> {
         SSELCF_W::new(self, 21)
     }
     ///Bit 22 - ELC_GPTG Event Source Counter Start Enable
     #[inline(always)]
-    pub fn sselcg(&mut self) -> SSELCG_W<GTSSR_SPEC> {
+    pub fn sselcg(&mut self) -> SSELCG_W<'_, GTSSR_SPEC> {
         SSELCG_W::new(self, 22)
     }
     ///Bit 23 - ELCH Event Source Counter Start Enable
     #[inline(always)]
-    pub fn sselch(&mut self) -> SSELCH_W<GTSSR_SPEC> {
+    pub fn sselch(&mut self) -> SSELCH_W<'_, GTSSR_SPEC> {
         SSELCH_W::new(self, 23)
     }
     ///Bit 31 - Software Source Counter Start Enable
     #[inline(always)]
-    pub fn cstrt(&mut self) -> CSTRT_W<GTSSR_SPEC> {
+    pub fn cstrt(&mut self) -> CSTRT_W<'_, GTSSR_SPEC> {
         CSTRT_W::new(self, 31)
     }
 }

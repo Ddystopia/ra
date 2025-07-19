@@ -132,7 +132,7 @@ impl R {
 impl W {
     ///Bit 0 - L1 Transition Request
     #[inline(always)]
-    pub fn l1req(&mut self) -> L1REQ_W<HL1CTRL1_SPEC> {
+    pub fn l1req(&mut self) -> L1REQ_W<'_, HL1CTRL1_SPEC> {
         L1REQ_W::new(self, 0)
     }
 }

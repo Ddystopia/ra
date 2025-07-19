@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - The ADCMPDR1 register sets the reference data when the compare window A function is used. ADCMPDR1 sets the upper-side level of window A..
     #[inline(always)]
-    pub fn adcmpdr1(&mut self) -> ADCMPDR1_W<ADCMPDR1_SPEC> {
+    pub fn adcmpdr1(&mut self) -> ADCMPDR1_W<'_, ADCMPDR1_SPEC> {
         ADCMPDR1_W::new(self, 0)
     }
 }

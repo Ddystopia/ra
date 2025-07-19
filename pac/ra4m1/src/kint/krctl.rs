@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 0 - Detection Edge Selection (KRF0 to KRF7)
     #[inline(always)]
-    pub fn kreg(&mut self) -> KREG_W<KRCTL_SPEC> {
+    pub fn kreg(&mut self) -> KREG_W<'_, KRCTL_SPEC> {
         KREG_W::new(self, 0)
     }
     ///Bit 7 - Usage of Key Interrupt Flags(KR0 to KR7)
     #[inline(always)]
-    pub fn krmd(&mut self) -> KRMD_W<KRCTL_SPEC> {
+    pub fn krmd(&mut self) -> KRMD_W<'_, KRCTL_SPEC> {
         KRMD_W::new(self, 7)
     }
 }

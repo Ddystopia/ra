@@ -25,12 +25,12 @@ impl R {
 impl W {
     ///Bits 0:15 - Lower bits of transfer count
     #[inline(always)]
-    pub fn dmcral(&mut self) -> DMCRAL_W<DMCRA_SPEC> {
+    pub fn dmcral(&mut self) -> DMCRAL_W<'_, DMCRA_SPEC> {
         DMCRAL_W::new(self, 0)
     }
     ///Bits 16:25 - Upper bits of transfer count
     #[inline(always)]
-    pub fn dmcrah(&mut self) -> DMCRAH_W<DMCRA_SPEC> {
+    pub fn dmcrah(&mut self) -> DMCRAH_W<'_, DMCRA_SPEC> {
         DMCRAH_W::new(self, 16)
     }
 }

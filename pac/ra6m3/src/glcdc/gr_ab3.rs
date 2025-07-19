@@ -113,12 +113,12 @@ impl R {
 impl W {
     ///Bits 0:10 - Horizontal width of graphics image area.
     #[inline(always)]
-    pub fn grchw(&mut self) -> GRCHW_W<GR_AB3_SPEC> {
+    pub fn grchw(&mut self) -> GRCHW_W<'_, GR_AB3_SPEC> {
         GRCHW_W::new(self, 0)
     }
     ///Bits 16:26 - Horizontal start position of graphics image area.
     #[inline(always)]
-    pub fn grchs(&mut self) -> GRCHS_W<GR_AB3_SPEC> {
+    pub fn grchs(&mut self) -> GRCHS_W<'_, GR_AB3_SPEC> {
         GRCHS_W::new(self, 16)
     }
 }

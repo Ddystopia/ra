@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - FCACHE Enable
     #[inline(always)]
-    pub fn fcacheen(&mut self) -> FCACHEEN_W<FCACHEE_SPEC> {
+    pub fn fcacheen(&mut self) -> FCACHEEN_W<'_, FCACHEE_SPEC> {
         FCACHEEN_W::new(self, 0)
     }
 }

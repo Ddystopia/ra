@@ -9,17 +9,17 @@ pub type COLKEYR_W<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl W {
     ///Bits 0:7 - Blue channel of color key
     #[inline(always)]
-    pub fn colkeyb(&mut self) -> COLKEYB_W<COLKEY_SPEC> {
+    pub fn colkeyb(&mut self) -> COLKEYB_W<'_, COLKEY_SPEC> {
         COLKEYB_W::new(self, 0)
     }
     ///Bits 8:15 - Green channel of color key
     #[inline(always)]
-    pub fn colkeyg(&mut self) -> COLKEYG_W<COLKEY_SPEC> {
+    pub fn colkeyg(&mut self) -> COLKEYG_W<'_, COLKEY_SPEC> {
         COLKEYG_W::new(self, 8)
     }
     ///Bits 16:23 - Red channel of color key
     #[inline(always)]
-    pub fn colkeyr(&mut self) -> COLKEYR_W<COLKEY_SPEC> {
+    pub fn colkeyr(&mut self) -> COLKEYR_W<'_, COLKEY_SPEC> {
         COLKEYR_W::new(self, 16)
     }
 }

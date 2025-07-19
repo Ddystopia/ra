@@ -86,7 +86,7 @@ impl R {
 impl W {
     ///Bits 4:5 - Arbitration Method Specify the priority between groups
     #[inline(always)]
-    pub fn arbmet(&mut self) -> ARBMET_W<BUSSCNTFBU_SPEC> {
+    pub fn arbmet(&mut self) -> ARBMET_W<'_, BUSSCNTFBU_SPEC> {
         ARBMET_W::new(self, 4)
     }
 }

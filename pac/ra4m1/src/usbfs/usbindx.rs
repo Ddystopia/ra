@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - Index These bits store the USB request wIndex value.
     #[inline(always)]
-    pub fn windex(&mut self) -> WINDEX_W<USBINDX_SPEC> {
+    pub fn windex(&mut self) -> WINDEX_W<'_, USBINDX_SPEC> {
         WINDEX_W::new(self, 0)
     }
 }

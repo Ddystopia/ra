@@ -907,77 +907,77 @@ impl R {
 impl W {
     ///Bit 0 - AN000 Select
     #[inline(always)]
-    pub fn ansb00(&mut self) -> ANSB00_W<ADANSB0_SPEC> {
+    pub fn ansb00(&mut self) -> ANSB00_W<'_, ADANSB0_SPEC> {
         ANSB00_W::new(self, 0)
     }
     ///Bit 1 - AN001 Select
     #[inline(always)]
-    pub fn ansb01(&mut self) -> ANSB01_W<ADANSB0_SPEC> {
+    pub fn ansb01(&mut self) -> ANSB01_W<'_, ADANSB0_SPEC> {
         ANSB01_W::new(self, 1)
     }
     ///Bit 2 - AN002 Select
     #[inline(always)]
-    pub fn ansb02(&mut self) -> ANSB02_W<ADANSB0_SPEC> {
+    pub fn ansb02(&mut self) -> ANSB02_W<'_, ADANSB0_SPEC> {
         ANSB02_W::new(self, 2)
     }
     ///Bit 3 - AN003 Select
     #[inline(always)]
-    pub fn ansb03(&mut self) -> ANSB03_W<ADANSB0_SPEC> {
+    pub fn ansb03(&mut self) -> ANSB03_W<'_, ADANSB0_SPEC> {
         ANSB03_W::new(self, 3)
     }
     ///Bit 4 - AN004 Select
     #[inline(always)]
-    pub fn ansb04(&mut self) -> ANSB04_W<ADANSB0_SPEC> {
+    pub fn ansb04(&mut self) -> ANSB04_W<'_, ADANSB0_SPEC> {
         ANSB04_W::new(self, 4)
     }
     ///Bit 5 - AN005 Select
     #[inline(always)]
-    pub fn ansb05(&mut self) -> ANSB05_W<ADANSB0_SPEC> {
+    pub fn ansb05(&mut self) -> ANSB05_W<'_, ADANSB0_SPEC> {
         ANSB05_W::new(self, 5)
     }
     ///Bit 6 - AN006 Select
     #[inline(always)]
-    pub fn ansb06(&mut self) -> ANSB06_W<ADANSB0_SPEC> {
+    pub fn ansb06(&mut self) -> ANSB06_W<'_, ADANSB0_SPEC> {
         ANSB06_W::new(self, 6)
     }
     ///Bit 7 - AN007 Select
     #[inline(always)]
-    pub fn ansb07(&mut self) -> ANSB07_W<ADANSB0_SPEC> {
+    pub fn ansb07(&mut self) -> ANSB07_W<'_, ADANSB0_SPEC> {
         ANSB07_W::new(self, 7)
     }
     ///Bit 8 - AN008 Select
     #[inline(always)]
-    pub fn ansb08(&mut self) -> ANSB08_W<ADANSB0_SPEC> {
+    pub fn ansb08(&mut self) -> ANSB08_W<'_, ADANSB0_SPEC> {
         ANSB08_W::new(self, 8)
     }
     ///Bit 9 - AN009 Select
     #[inline(always)]
-    pub fn ansb09(&mut self) -> ANSB09_W<ADANSB0_SPEC> {
+    pub fn ansb09(&mut self) -> ANSB09_W<'_, ADANSB0_SPEC> {
         ANSB09_W::new(self, 9)
     }
     ///Bit 10 - AN010 Select
     #[inline(always)]
-    pub fn ansb10(&mut self) -> ANSB10_W<ADANSB0_SPEC> {
+    pub fn ansb10(&mut self) -> ANSB10_W<'_, ADANSB0_SPEC> {
         ANSB10_W::new(self, 10)
     }
     ///Bit 11 - AN011 Select
     #[inline(always)]
-    pub fn ansb11(&mut self) -> ANSB11_W<ADANSB0_SPEC> {
+    pub fn ansb11(&mut self) -> ANSB11_W<'_, ADANSB0_SPEC> {
         ANSB11_W::new(self, 11)
     }
     ///Bit 12 - AN012 Select
     #[inline(always)]
-    pub fn ansb12(&mut self) -> ANSB12_W<ADANSB0_SPEC> {
+    pub fn ansb12(&mut self) -> ANSB12_W<'_, ADANSB0_SPEC> {
         ANSB12_W::new(self, 12)
     }
     ///Bit 13 - AN013 Select
     #[inline(always)]
-    pub fn ansb13(&mut self) -> ANSB13_W<ADANSB0_SPEC> {
+    pub fn ansb13(&mut self) -> ANSB13_W<'_, ADANSB0_SPEC> {
         ANSB13_W::new(self, 13)
     }
     ///Bit 14 - AN014 Select
     #[inline(always)]
-    pub fn ansb14(&mut self) -> ANSB14_W<ADANSB0_SPEC> {
+    pub fn ansb14(&mut self) -> ANSB14_W<'_, ADANSB0_SPEC> {
         ANSB14_W::new(self, 14)
     }
 }

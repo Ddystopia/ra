@@ -487,42 +487,42 @@ impl R {
 impl W {
     ///Bit 0 - Start
     #[inline(always)]
-    pub fn start(&mut self) -> START_W<RCR2_SPEC> {
+    pub fn start(&mut self) -> START_W<'_, RCR2_SPEC> {
         START_W::new(self, 0)
     }
     ///Bit 1 - RTC Software Reset
     #[inline(always)]
-    pub fn reset(&mut self) -> RESET_W<RCR2_SPEC> {
+    pub fn reset(&mut self) -> RESET_W<'_, RCR2_SPEC> {
         RESET_W::new(self, 1)
     }
     ///Bit 2 - 30-Second Adjustment
     #[inline(always)]
-    pub fn adj30(&mut self) -> ADJ30_W<RCR2_SPEC> {
+    pub fn adj30(&mut self) -> ADJ30_W<'_, RCR2_SPEC> {
         ADJ30_W::new(self, 2)
     }
     ///Bit 3 - RTCOUT Output Enable
     #[inline(always)]
-    pub fn rtcoe(&mut self) -> RTCOE_W<RCR2_SPEC> {
+    pub fn rtcoe(&mut self) -> RTCOE_W<'_, RCR2_SPEC> {
         RTCOE_W::new(self, 3)
     }
     ///Bit 4 - Automatic Adjustment Enable (When the LOCO clock is selected, the setting of this bit is disabled.)
     #[inline(always)]
-    pub fn aadje(&mut self) -> AADJE_W<RCR2_SPEC> {
+    pub fn aadje(&mut self) -> AADJE_W<'_, RCR2_SPEC> {
         AADJE_W::new(self, 4)
     }
     ///Bit 5 - Automatic Adjustment Period Select (When the LOCO clock is selected, the setting of this bit is disabled.)
     #[inline(always)]
-    pub fn aadjp(&mut self) -> AADJP_W<RCR2_SPEC> {
+    pub fn aadjp(&mut self) -> AADJP_W<'_, RCR2_SPEC> {
         AADJP_W::new(self, 5)
     }
     ///Bit 6 - Hours Mode
     #[inline(always)]
-    pub fn hr24(&mut self) -> HR24_W<RCR2_SPEC> {
+    pub fn hr24(&mut self) -> HR24_W<'_, RCR2_SPEC> {
         HR24_W::new(self, 6)
     }
     ///Bit 7 - Count Mode Select
     #[inline(always)]
-    pub fn cntmd(&mut self) -> CNTMD_W<RCR2_SPEC> {
+    pub fn cntmd(&mut self) -> CNTMD_W<'_, RCR2_SPEC> {
         CNTMD_W::new(self, 7)
     }
 }

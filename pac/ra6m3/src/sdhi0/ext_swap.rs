@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 6 - SD_BUF0 Swap Write
     #[inline(always)]
-    pub fn bwswp(&mut self) -> BWSWP_W<EXT_SWAP_SPEC> {
+    pub fn bwswp(&mut self) -> BWSWP_W<'_, EXT_SWAP_SPEC> {
         BWSWP_W::new(self, 6)
     }
     ///Bit 7 - SD_BUF0 Swap Read
     #[inline(always)]
-    pub fn brswp(&mut self) -> BRSWP_W<EXT_SWAP_SPEC> {
+    pub fn brswp(&mut self) -> BRSWP_W<'_, EXT_SWAP_SPEC> {
         BRSWP_W::new(self, 7)
     }
 }

@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - Sampling Time Setting (temperature sensor output)
     #[inline(always)]
-    pub fn sst(&mut self) -> SST_W<ADSSTRT_SPEC> {
+    pub fn sst(&mut self) -> SST_W<'_, ADSSTRT_SPEC> {
         SST_W::new(self, 0)
     }
 }

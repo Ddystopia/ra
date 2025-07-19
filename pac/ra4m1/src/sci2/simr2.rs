@@ -187,17 +187,17 @@ impl R {
 impl W {
     ///Bit 0 - I2C Interrupt Mode Select
     #[inline(always)]
-    pub fn iicintm(&mut self) -> IICINTM_W<SIMR2_SPEC> {
+    pub fn iicintm(&mut self) -> IICINTM_W<'_, SIMR2_SPEC> {
         IICINTM_W::new(self, 0)
     }
     ///Bit 1 - Clock Synchronization
     #[inline(always)]
-    pub fn iiccsc(&mut self) -> IICCSC_W<SIMR2_SPEC> {
+    pub fn iiccsc(&mut self) -> IICCSC_W<'_, SIMR2_SPEC> {
         IICCSC_W::new(self, 1)
     }
     ///Bit 5 - ACK Transmission Data
     #[inline(always)]
-    pub fn iicackt(&mut self) -> IICACKT_W<SIMR2_SPEC> {
+    pub fn iicackt(&mut self) -> IICACKT_W<'_, SIMR2_SPEC> {
         IICACKT_W::new(self, 5)
     }
 }

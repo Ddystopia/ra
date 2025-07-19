@@ -129,17 +129,17 @@ impl R {
 impl W {
     ///Bit 0 - Master Group enable
     #[inline(always)]
-    pub fn enable(&mut self) -> ENABLE_W<MMPUCTLA_SPEC> {
+    pub fn enable(&mut self) -> ENABLE_W<'_, MMPUCTLA_SPEC> {
         ENABLE_W::new(self, 0)
     }
     ///Bit 1 - Operation after detection
     #[inline(always)]
-    pub fn oad(&mut self) -> OAD_W<MMPUCTLA_SPEC> {
+    pub fn oad(&mut self) -> OAD_W<'_, MMPUCTLA_SPEC> {
         OAD_W::new(self, 1)
     }
     ///Bits 8:15 - Key Code These bits are used to enable or disable writing of the OAD and ENABLE bit.
     #[inline(always)]
-    pub fn key(&mut self) -> KEY_W<MMPUCTLA_SPEC> {
+    pub fn key(&mut self) -> KEY_W<'_, MMPUCTLA_SPEC> {
         KEY_W::new(self, 8)
     }
 }

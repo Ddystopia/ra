@@ -5,7 +5,7 @@ pub type TDATL_W<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl W {
     ///Bits 0:7 - Serial transmit data(b7-b0) (Valid only in asynchronous mode(including multi-processor) or clock synchronous mode, and FIFO selected)
     #[inline(always)]
-    pub fn tdatl(&mut self) -> TDATL_W<FTDRL_SPEC> {
+    pub fn tdatl(&mut self) -> TDATL_W<'_, FTDRL_SPEC> {
         TDATL_W::new(self, 0)
     }
 }

@@ -367,32 +367,32 @@ impl R {
 impl W {
     ///Bit 3 - LCD_TCON3 Output Phase Control
     #[inline(always)]
-    pub fn tcon3edge(&mut self) -> TCON3EDGE_W<OUT_CLKPHASE_SPEC> {
+    pub fn tcon3edge(&mut self) -> TCON3EDGE_W<'_, OUT_CLKPHASE_SPEC> {
         TCON3EDGE_W::new(self, 3)
     }
     ///Bit 4 - LCD_TCON2 Output Phase Control
     #[inline(always)]
-    pub fn tcon2edge(&mut self) -> TCON2EDGE_W<OUT_CLKPHASE_SPEC> {
+    pub fn tcon2edge(&mut self) -> TCON2EDGE_W<'_, OUT_CLKPHASE_SPEC> {
         TCON2EDGE_W::new(self, 4)
     }
     ///Bit 5 - LCD_TCON1 Output Phase Control
     #[inline(always)]
-    pub fn tcon1edge(&mut self) -> TCON1EDGE_W<OUT_CLKPHASE_SPEC> {
+    pub fn tcon1edge(&mut self) -> TCON1EDGE_W<'_, OUT_CLKPHASE_SPEC> {
         TCON1EDGE_W::new(self, 5)
     }
     ///Bit 6 - LCD_TCON0 Output Phase Control
     #[inline(always)]
-    pub fn tcon0edge(&mut self) -> TCON0EDGE_W<OUT_CLKPHASE_SPEC> {
+    pub fn tcon0edge(&mut self) -> TCON0EDGE_W<'_, OUT_CLKPHASE_SPEC> {
         TCON0EDGE_W::new(self, 6)
     }
     ///Bit 8 - LCD_DATA Output Phase Control
     #[inline(always)]
-    pub fn lcdedge(&mut self) -> LCDEDGE_W<OUT_CLKPHASE_SPEC> {
+    pub fn lcdedge(&mut self) -> LCDEDGE_W<'_, OUT_CLKPHASE_SPEC> {
         LCDEDGE_W::new(self, 8)
     }
     ///Bit 12 - Correction control
     #[inline(always)]
-    pub fn frontgam(&mut self) -> FRONTGAM_W<OUT_CLKPHASE_SPEC> {
+    pub fn frontgam(&mut self) -> FRONTGAM_W<'_, OUT_CLKPHASE_SPEC> {
         FRONTGAM_W::new(self, 12)
     }
 }

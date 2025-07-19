@@ -386,12 +386,12 @@ impl R {
 impl W {
     ///Bits 0:6 - Maximum Packet Size These bits set the maximum amount of data (maximum packet size) in payloads for the DCP.
     #[inline(always)]
-    pub fn mxps(&mut self) -> MXPS_W<DCPMAXP_SPEC> {
+    pub fn mxps(&mut self) -> MXPS_W<'_, DCPMAXP_SPEC> {
         MXPS_W::new(self, 0)
     }
     ///Bits 12:15 - Device Select
     #[inline(always)]
-    pub fn devsel(&mut self) -> DEVSEL_W<DCPMAXP_SPEC> {
+    pub fn devsel(&mut self) -> DEVSEL_W<'_, DCPMAXP_SPEC> {
         DEVSEL_W::new(self, 12)
     }
 }

@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - The BCNT2AER register is a readable/writable register for setting the alarm enable corresponding to 32-bit binary counter b23 to b16.
     #[inline(always)]
-    pub fn enb(&mut self) -> ENB_W<BCNT2AER_SPEC> {
+    pub fn enb(&mut self) -> ENB_W<'_, BCNT2AER_SPEC> {
         ENB_W::new(self, 0)
     }
 }

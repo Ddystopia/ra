@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 7 - Resume Return Mode Setting
     #[inline(always)]
-    pub fn hwupm(&mut self) -> HWUPM_W<LPCTRL_SPEC> {
+    pub fn hwupm(&mut self) -> HWUPM_W<'_, LPCTRL_SPEC> {
         HWUPM_W::new(self, 7)
     }
 }

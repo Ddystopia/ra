@@ -5,7 +5,7 @@ pub type SSIFTDR_W<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
 impl W {
     ///Bits 0:31 - Transmit FIFO Data
     #[inline(always)]
-    pub fn ssiftdr(&mut self) -> SSIFTDR_W<SSIFTDR_SPEC> {
+    pub fn ssiftdr(&mut self) -> SSIFTDR_W<'_, SSIFTDR_SPEC> {
         SSIFTDR_W::new(self, 0)
     }
 }

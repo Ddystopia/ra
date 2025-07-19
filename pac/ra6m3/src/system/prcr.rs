@@ -226,22 +226,22 @@ impl R {
 impl W {
     ///Bit 0 - Enables writing to the registers related to the clock generation circuit.
     #[inline(always)]
-    pub fn prc0(&mut self) -> PRC0_W<PRCR_SPEC> {
+    pub fn prc0(&mut self) -> PRC0_W<'_, PRCR_SPEC> {
         PRC0_W::new(self, 0)
     }
     ///Bit 1 - Enables writing to the registers related to the operating modes, the low power consumption modes and the battery backup function.
     #[inline(always)]
-    pub fn prc1(&mut self) -> PRC1_W<PRCR_SPEC> {
+    pub fn prc1(&mut self) -> PRC1_W<'_, PRCR_SPEC> {
         PRC1_W::new(self, 1)
     }
     ///Bit 3 - Enables writing to the registers related to the LVD.
     #[inline(always)]
-    pub fn prc3(&mut self) -> PRC3_W<PRCR_SPEC> {
+    pub fn prc3(&mut self) -> PRC3_W<'_, PRCR_SPEC> {
         PRC3_W::new(self, 3)
     }
     ///Bits 8:15 - PRKEY Key Code
     #[inline(always)]
-    pub fn prkey(&mut self) -> PRKEY_W<PRCR_SPEC> {
+    pub fn prkey(&mut self) -> PRKEY_W<'_, PRCR_SPEC> {
         PRKEY_W::new(self, 8)
     }
 }

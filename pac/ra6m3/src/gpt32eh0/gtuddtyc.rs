@@ -553,42 +553,42 @@ impl R {
 impl W {
     ///Bit 0 - Count Direction Setting
     #[inline(always)]
-    pub fn ud(&mut self) -> UD_W<GTUDDTYC_SPEC> {
+    pub fn ud(&mut self) -> UD_W<'_, GTUDDTYC_SPEC> {
         UD_W::new(self, 0)
     }
     ///Bit 1 - Forcible Count Direction Setting
     #[inline(always)]
-    pub fn udf(&mut self) -> UDF_W<GTUDDTYC_SPEC> {
+    pub fn udf(&mut self) -> UDF_W<'_, GTUDDTYC_SPEC> {
         UDF_W::new(self, 1)
     }
     ///Bits 16:17 - GTIOCA Output Duty Setting
     #[inline(always)]
-    pub fn oadty(&mut self) -> OADTY_W<GTUDDTYC_SPEC> {
+    pub fn oadty(&mut self) -> OADTY_W<'_, GTUDDTYC_SPEC> {
         OADTY_W::new(self, 16)
     }
     ///Bit 18 - Forcible GTIOCA Output Duty Setting
     #[inline(always)]
-    pub fn oadtyf(&mut self) -> OADTYF_W<GTUDDTYC_SPEC> {
+    pub fn oadtyf(&mut self) -> OADTYF_W<'_, GTUDDTYC_SPEC> {
         OADTYF_W::new(self, 18)
     }
     ///Bit 19 - GTIOCA Output Value Selecting after Releasing 0 percent/100 percent Duty Setting
     #[inline(always)]
-    pub fn oadtyr(&mut self) -> OADTYR_W<GTUDDTYC_SPEC> {
+    pub fn oadtyr(&mut self) -> OADTYR_W<'_, GTUDDTYC_SPEC> {
         OADTYR_W::new(self, 19)
     }
     ///Bits 24:25 - GTIOCB Output Duty Setting
     #[inline(always)]
-    pub fn obdty(&mut self) -> OBDTY_W<GTUDDTYC_SPEC> {
+    pub fn obdty(&mut self) -> OBDTY_W<'_, GTUDDTYC_SPEC> {
         OBDTY_W::new(self, 24)
     }
     ///Bit 26 - Forcible GTIOCB Output Duty Setting
     #[inline(always)]
-    pub fn obdtyf(&mut self) -> OBDTYF_W<GTUDDTYC_SPEC> {
+    pub fn obdtyf(&mut self) -> OBDTYF_W<'_, GTUDDTYC_SPEC> {
         OBDTYF_W::new(self, 26)
     }
     ///Bit 27 - GTIOCB Output Value Selecting after Releasing 0 percent/100 percent Duty Setting
     #[inline(always)]
-    pub fn obdtyr(&mut self) -> OBDTYR_W<GTUDDTYC_SPEC> {
+    pub fn obdtyr(&mut self) -> OBDTYR_W<'_, GTUDDTYC_SPEC> {
         OBDTYR_W::new(self, 27)
     }
 }

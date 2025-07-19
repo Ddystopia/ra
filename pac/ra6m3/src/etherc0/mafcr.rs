@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Multicast Address Frame Receive Counter RegisterThe MAFCR register is a counter indicating the number of times a frame where the multicast address is set has been received.
     #[inline(always)]
-    pub fn mafcr(&mut self) -> MAFCR_W<MAFCR_SPEC> {
+    pub fn mafcr(&mut self) -> MAFCR_W<'_, MAFCR_SPEC> {
         MAFCR_W::new(self, 0)
     }
 }

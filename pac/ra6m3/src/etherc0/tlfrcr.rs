@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Too-Long Frame Receive Counter RegisterThe TLFRCR register is a counter indicating the number of times a long frame that is longer than the RFLR register value has been received.
     #[inline(always)]
-    pub fn tlfrcr(&mut self) -> TLFRCR_W<TLFRCR_SPEC> {
+    pub fn tlfrcr(&mut self) -> TLFRCR_W<'_, TLFRCR_SPEC> {
         TLFRCR_W::new(self, 0)
     }
 }

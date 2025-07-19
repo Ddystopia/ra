@@ -113,12 +113,12 @@ impl R {
 impl W {
     ///Bits 0:10 - Vertical width of rectangular area alpha blending image area.
     #[inline(always)]
-    pub fn arcvw(&mut self) -> ARCVW_W<GR_AB4_SPEC> {
+    pub fn arcvw(&mut self) -> ARCVW_W<'_, GR_AB4_SPEC> {
         ARCVW_W::new(self, 0)
     }
     ///Bits 16:26 - Vertical start position of rectangular area alpha blending image area
     #[inline(always)]
-    pub fn arcvs(&mut self) -> ARCVS_W<GR_AB4_SPEC> {
+    pub fn arcvs(&mut self) -> ARCVS_W<'_, GR_AB4_SPEC> {
         ARCVS_W::new(self, 16)
     }
 }

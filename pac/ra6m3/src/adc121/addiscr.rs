@@ -146,12 +146,12 @@ impl R {
 impl W {
     ///Bits 0:3 - The charging time
     #[inline(always)]
-    pub fn adndis(&mut self) -> ADNDIS_W<ADDISCR_SPEC> {
+    pub fn adndis(&mut self) -> ADNDIS_W<'_, ADDISCR_SPEC> {
         ADNDIS_W::new(self, 0)
     }
     ///Bit 4 - Selection of Precharge or Discharge
     #[inline(always)]
-    pub fn charge(&mut self) -> CHARGE_W<ADDISCR_SPEC> {
+    pub fn charge(&mut self) -> CHARGE_W<'_, ADDISCR_SPEC> {
         CHARGE_W::new(self, 4)
     }
 }

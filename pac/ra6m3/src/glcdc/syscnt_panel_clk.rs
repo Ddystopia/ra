@@ -203,22 +203,22 @@ impl R {
 impl W {
     ///Bits 0:5 - Clock division ratio setting controlRefer toTable 2.7.1 for details about setting value.Note: Settings that are not listed in table 2.7.1 are prohibited.
     #[inline(always)]
-    pub fn dcdr(&mut self) -> DCDR_W<SYSCNT_PANEL_CLK_SPEC> {
+    pub fn dcdr(&mut self) -> DCDR_W<'_, SYSCNT_PANEL_CLK_SPEC> {
         DCDR_W::new(self, 0)
     }
     ///Bit 6 - Panel clock output enable controlNote: Before changing the PIXSEL,CLKSEL or DCDR bit, this bit must be set to 0.
     #[inline(always)]
-    pub fn clken(&mut self) -> CLKEN_W<SYSCNT_PANEL_CLK_SPEC> {
+    pub fn clken(&mut self) -> CLKEN_W<'_, SYSCNT_PANEL_CLK_SPEC> {
         CLKEN_W::new(self, 6)
     }
     ///Bit 8 - Panel clock supply source select
     #[inline(always)]
-    pub fn clksel(&mut self) -> CLKSEL_W<SYSCNT_PANEL_CLK_SPEC> {
+    pub fn clksel(&mut self) -> CLKSEL_W<'_, SYSCNT_PANEL_CLK_SPEC> {
         CLKSEL_W::new(self, 8)
     }
     ///Bit 12 - Pixel clock select control.Must be set to the same value as OUT_SET.FRQSEL\[1\].
     #[inline(always)]
-    pub fn pixsel(&mut self) -> PIXSEL_W<SYSCNT_PANEL_CLK_SPEC> {
+    pub fn pixsel(&mut self) -> PIXSEL_W<'_, SYSCNT_PANEL_CLK_SPEC> {
         PIXSEL_W::new(self, 12)
     }
 }

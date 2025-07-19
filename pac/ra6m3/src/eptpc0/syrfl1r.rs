@@ -907,77 +907,77 @@ impl R {
 impl W {
     ///Bit 0 - Announce Message Processing
     #[inline(always)]
-    pub fn ance0(&mut self) -> ANCE0_W<SYRFL1R_SPEC> {
+    pub fn ance0(&mut self) -> ANCE0_W<'_, SYRFL1R_SPEC> {
         ANCE0_W::new(self, 0)
     }
     ///Bit 4 - Sync Message Processing
     #[inline(always)]
-    pub fn sync0(&mut self) -> SYNC0_W<SYRFL1R_SPEC> {
+    pub fn sync0(&mut self) -> SYNC0_W<'_, SYRFL1R_SPEC> {
         SYNC0_W::new(self, 4)
     }
     ///Bit 6 - Sync Message Processing
     #[inline(always)]
-    pub fn sync2(&mut self) -> SYNC2_W<SYRFL1R_SPEC> {
+    pub fn sync2(&mut self) -> SYNC2_W<'_, SYRFL1R_SPEC> {
         SYNC2_W::new(self, 6)
     }
     ///Bit 8 - Follow_Up Message Processing
     #[inline(always)]
-    pub fn fup0(&mut self) -> FUP0_W<SYRFL1R_SPEC> {
+    pub fn fup0(&mut self) -> FUP0_W<'_, SYRFL1R_SPEC> {
         FUP0_W::new(self, 8)
     }
     ///Bit 10 - Follow_Up Message Processing
     #[inline(always)]
-    pub fn fup2(&mut self) -> FUP2_W<SYRFL1R_SPEC> {
+    pub fn fup2(&mut self) -> FUP2_W<'_, SYRFL1R_SPEC> {
         FUP2_W::new(self, 10)
     }
     ///Bit 12 - Delay_Req Message Processing
     #[inline(always)]
-    pub fn drq0(&mut self) -> DRQ0_W<SYRFL1R_SPEC> {
+    pub fn drq0(&mut self) -> DRQ0_W<'_, SYRFL1R_SPEC> {
         DRQ0_W::new(self, 12)
     }
     ///Bit 14 - Delay_Req Message Processing
     #[inline(always)]
-    pub fn drq2(&mut self) -> DRQ2_W<SYRFL1R_SPEC> {
+    pub fn drq2(&mut self) -> DRQ2_W<'_, SYRFL1R_SPEC> {
         DRQ2_W::new(self, 14)
     }
     ///Bit 16 - Delay_Resp Message Processing
     #[inline(always)]
-    pub fn drp0(&mut self) -> DRP0_W<SYRFL1R_SPEC> {
+    pub fn drp0(&mut self) -> DRP0_W<'_, SYRFL1R_SPEC> {
         DRP0_W::new(self, 16)
     }
     ///Bit 18 - Delay_Resp Message Processing
     #[inline(always)]
-    pub fn drp2(&mut self) -> DRP2_W<SYRFL1R_SPEC> {
+    pub fn drp2(&mut self) -> DRP2_W<'_, SYRFL1R_SPEC> {
         DRP2_W::new(self, 18)
     }
     ///Bit 20 - Pdelay_Req Message Processing
     #[inline(always)]
-    pub fn pdrq0(&mut self) -> PDRQ0_W<SYRFL1R_SPEC> {
+    pub fn pdrq0(&mut self) -> PDRQ0_W<'_, SYRFL1R_SPEC> {
         PDRQ0_W::new(self, 20)
     }
     ///Bit 22 - Pdelay_Req Message Processing
     #[inline(always)]
-    pub fn pdrq2(&mut self) -> PDRQ2_W<SYRFL1R_SPEC> {
+    pub fn pdrq2(&mut self) -> PDRQ2_W<'_, SYRFL1R_SPEC> {
         PDRQ2_W::new(self, 22)
     }
     ///Bit 24 - Pdelay_Resp Message Processing
     #[inline(always)]
-    pub fn pdrp0(&mut self) -> PDRP0_W<SYRFL1R_SPEC> {
+    pub fn pdrp0(&mut self) -> PDRP0_W<'_, SYRFL1R_SPEC> {
         PDRP0_W::new(self, 24)
     }
     ///Bit 26 - Pdelay_Resp Message Processing
     #[inline(always)]
-    pub fn pdrp2(&mut self) -> PDRP2_W<SYRFL1R_SPEC> {
+    pub fn pdrp2(&mut self) -> PDRP2_W<'_, SYRFL1R_SPEC> {
         PDRP2_W::new(self, 26)
     }
     ///Bit 28 - Pdelay_Resp_Follow_Up Message Processing
     #[inline(always)]
-    pub fn pdfup0(&mut self) -> PDFUP0_W<SYRFL1R_SPEC> {
+    pub fn pdfup0(&mut self) -> PDFUP0_W<'_, SYRFL1R_SPEC> {
         PDFUP0_W::new(self, 28)
     }
     ///Bit 30 - Pdelay_Resp_Follow_Up Message Processing
     #[inline(always)]
-    pub fn pdfup2(&mut self) -> PDFUP2_W<SYRFL1R_SPEC> {
+    pub fn pdfup2(&mut self) -> PDFUP2_W<'_, SYRFL1R_SPEC> {
         PDFUP2_W::new(self, 30)
     }
 }

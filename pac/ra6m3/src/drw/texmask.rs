@@ -7,12 +7,12 @@ pub type TEXVMASK_W<'a, REG> = crate::FieldWriter<'a, REG, 21, u32>;
 impl W {
     ///Bits 0:10 - U maskSet TEXUMASK\[10:0\] = texture_width -1In texture wrapping mode (CONTROL2.TEXTURECLAMPX = 0): texture_width must be a power of 2.In texture clamping mode (CONTROL2.TEXTURECLAMPX = 1):all widths up to 2048 are allowed.
     #[inline(always)]
-    pub fn texumask(&mut self) -> TEXUMASK_W<TEXMASK_SPEC> {
+    pub fn texumask(&mut self) -> TEXUMASK_W<'_, TEXMASK_SPEC> {
         TEXUMASK_W::new(self, 0)
     }
     ///Bits 11:31 - V maskSet TEXVMASK\[20:0\] = TEXPITCH * (texture_height - 1).In texture wrapping mode (CONTROL2.TEXTURECLAMPY = 0): texture_height must be a power of 2In texture clamping mode (CONTROL2.TEXTURECLAMPY = 1):all heights up to 1024 are allowed.
     #[inline(always)]
-    pub fn texvmask(&mut self) -> TEXVMASK_W<TEXMASK_SPEC> {
+    pub fn texvmask(&mut self) -> TEXVMASK_W<'_, TEXMASK_SPEC> {
         TEXVMASK_W::new(self, 11)
     }
 }

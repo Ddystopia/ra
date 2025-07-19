@@ -91,17 +91,17 @@ impl R {
 impl W {
     ///Bits 0:3 - Initialization Auto-Refresh Interval (ARFI+3 cycles )
     #[inline(always)]
-    pub fn arfi(&mut self) -> ARFI_W<SDIR_SPEC> {
+    pub fn arfi(&mut self) -> ARFI_W<'_, SDIR_SPEC> {
         ARFI_W::new(self, 0)
     }
     ///Bits 4:7 - Initialization Auto-Refresh Count
     #[inline(always)]
-    pub fn arfc(&mut self) -> ARFC_W<SDIR_SPEC> {
+    pub fn arfc(&mut self) -> ARFC_W<'_, SDIR_SPEC> {
         ARFC_W::new(self, 4)
     }
     ///Bits 8:10 - Initialization Precharge Cycle Count (PRC+3 cycles)
     #[inline(always)]
-    pub fn prc(&mut self) -> PRC_W<SDIR_SPEC> {
+    pub fn prc(&mut self) -> PRC_W<'_, SDIR_SPEC> {
         PRC_W::new(self, 8)
     }
 }

@@ -5,7 +5,7 @@ pub type TEXPITCH_W<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
 impl W {
     ///Bits 0:31 - Texels per texture linevalid range: 0 to 2048
     #[inline(always)]
-    pub fn texpitch(&mut self) -> TEXPITCH_W<TEXPITCH_SPEC> {
+    pub fn texpitch(&mut self) -> TEXPITCH_W<'_, TEXPITCH_SPEC> {
         TEXPITCH_W::new(self, 0)
     }
 }

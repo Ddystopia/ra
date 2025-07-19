@@ -5,7 +5,7 @@ pub type SSIFTDR_W<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
 impl W {
     ///Bits 0:31 - SSIFTDR is a write-only FIFO register consisting of eight stages of 32-bit registers for storing data to be serially transmitted. NOTE: that when the SSIFTDR register is full of data (32 bytes), the next data cannot be written to it. If writing is attempted, it will be ignored and an overflow occurs.
     #[inline(always)]
-    pub fn ssiftdr(&mut self) -> SSIFTDR_W<SSIFTDR_SPEC> {
+    pub fn ssiftdr(&mut self) -> SSIFTDR_W<'_, SSIFTDR_SPEC> {
         SSIFTDR_W::new(self, 0)
     }
 }

@@ -76,12 +76,12 @@ impl R {
 impl W {
     ///Bit 0 - Stop- When STP is set to 1 during multiple block transfer, CMD12 is issued to halt the transfer through the SD host interface.However, if a command sequence is halted because of a communications error or timeout, CMD12 is not issued. Although continued buffer access is possible even after STP has been set to 1, the buffer access error bit (ERR5 or ERR4) in SD_INFO2 will be set accordingly.- When STP has been set to 1 during transfer for single block write, the access end flag is set when SD_BUF becomes empty, and CMD12 is not issued. If SD_BUF does contain data, the access end flag is set on completion of reception of the busy state without CMD12 having been issued.- When STP has been set to 1 during transfer for single block read, the access end flag is set immediately after setting of the STP bit and CMD12 is not issued.- When STP is set to 1 during reception of the busy state after an R1b response, the access end flag is set on completion of reception of the busy state without CMD12 having been issued.- When STP is set to 1 after a command sequence has been completed, CMD12 is not issued and the access end flag is not set.- Set STP to 1 after the response end flag has been set.- Set STP to 0 after the response end flag has been set.
     #[inline(always)]
-    pub fn stp(&mut self) -> STP_W<SD_STOP_SPEC> {
+    pub fn stp(&mut self) -> STP_W<'_, SD_STOP_SPEC> {
         STP_W::new(self, 0)
     }
     ///Bit 8 - Block Count EnableSet SEC to 1 at multiple block transfer.When SD_CMD is set as follows to start the command sequence while SEC is set to 1, CMD12 is automatically issued to stop multi-block transfer with the number of blocks which is set to SD_SECCNT.1. CMD18 or CMD25 in normal mode (SD_CMD\[10:8\] = 000)2. SD_CMD\[15:13\] = 001 in extended mode (CMD12 is automatically issued, multiple block transfer)When the command sequence is halted because of a communications error or timeout, CMD12 is not automatically issued.NOTE: Do not change the value of this bit when the CBSY bit in SD_INFO2 is set to 1.
     #[inline(always)]
-    pub fn sec(&mut self) -> SEC_W<SD_STOP_SPEC> {
+    pub fn sec(&mut self) -> SEC_W<'_, SD_STOP_SPEC> {
         SEC_W::new(self, 8)
     }
 }

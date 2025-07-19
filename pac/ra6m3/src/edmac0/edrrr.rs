@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Receive Request
     #[inline(always)]
-    pub fn rr(&mut self) -> RR_W<EDRRR_SPEC> {
+    pub fn rr(&mut self) -> RR_W<'_, EDRRR_SPEC> {
         RR_W::new(self, 0)
     }
 }

@@ -283,22 +283,22 @@ impl R {
 impl W {
     ///Bits 0:3 - LPM Token DeviceAddressThese bits specify the value to be set in the ADDR field of LPM token.
     #[inline(always)]
-    pub fn l1addr(&mut self) -> L1ADDR_W<HL1CTRL2_SPEC> {
+    pub fn l1addr(&mut self) -> L1ADDR_W<'_, HL1CTRL2_SPEC> {
         L1ADDR_W::new(self, 0)
     }
     ///Bits 8:11 - LPM Token HIRD
     #[inline(always)]
-    pub fn hird(&mut self) -> HIRD_W<HL1CTRL2_SPEC> {
+    pub fn hird(&mut self) -> HIRD_W<'_, HL1CTRL2_SPEC> {
         HIRD_W::new(self, 8)
     }
     ///Bit 12 - LPM Token L1 RemoteWake EnableThese bits specify the value to be set in the RWE field of LPM token.
     #[inline(always)]
-    pub fn l1rwe(&mut self) -> L1RWE_W<HL1CTRL2_SPEC> {
+    pub fn l1rwe(&mut self) -> L1RWE_W<'_, HL1CTRL2_SPEC> {
         L1RWE_W::new(self, 12)
     }
     ///Bit 15 - BESL & Alternate HIRDThis bit selects the K-State drive period at the time of L1 Resume.
     #[inline(always)]
-    pub fn besl(&mut self) -> BESL_W<HL1CTRL2_SPEC> {
+    pub fn besl(&mut self) -> BESL_W<'_, HL1CTRL2_SPEC> {
         BESL_W::new(self, 15)
     }
 }

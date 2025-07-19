@@ -1207,102 +1207,102 @@ impl R {
 impl W {
     ///Bit 0 - GTETRGA Pin Rising Input Source Counter Count Down Enable
     #[inline(always)]
-    pub fn dsgtrgar(&mut self) -> DSGTRGAR_W<GTDNSR_SPEC> {
+    pub fn dsgtrgar(&mut self) -> DSGTRGAR_W<'_, GTDNSR_SPEC> {
         DSGTRGAR_W::new(self, 0)
     }
     ///Bit 1 - GTETRGA Pin Falling Input Source Counter Count Down Enable
     #[inline(always)]
-    pub fn dsgtrgaf(&mut self) -> DSGTRGAF_W<GTDNSR_SPEC> {
+    pub fn dsgtrgaf(&mut self) -> DSGTRGAF_W<'_, GTDNSR_SPEC> {
         DSGTRGAF_W::new(self, 1)
     }
     ///Bit 2 - GTETRGB Pin Rising Input Source Counter Count Down Enable
     #[inline(always)]
-    pub fn dsgtrgbr(&mut self) -> DSGTRGBR_W<GTDNSR_SPEC> {
+    pub fn dsgtrgbr(&mut self) -> DSGTRGBR_W<'_, GTDNSR_SPEC> {
         DSGTRGBR_W::new(self, 2)
     }
     ///Bit 3 - GTETRGB Pin Falling Input Source Counter Count Down Enable
     #[inline(always)]
-    pub fn dsgtrgbf(&mut self) -> DSGTRGBF_W<GTDNSR_SPEC> {
+    pub fn dsgtrgbf(&mut self) -> DSGTRGBF_W<'_, GTDNSR_SPEC> {
         DSGTRGBF_W::new(self, 3)
     }
     ///Bit 8 - GTIOCA Pin Rising Input during GTIOCB Value Low Source Counter Count Down Enable
     #[inline(always)]
-    pub fn dscarbl(&mut self) -> DSCARBL_W<GTDNSR_SPEC> {
+    pub fn dscarbl(&mut self) -> DSCARBL_W<'_, GTDNSR_SPEC> {
         DSCARBL_W::new(self, 8)
     }
     ///Bit 9 - GTIOCA Pin Rising Input during GTIOCB Value High Source Counter Count Down Enable
     #[inline(always)]
-    pub fn dscarbh(&mut self) -> DSCARBH_W<GTDNSR_SPEC> {
+    pub fn dscarbh(&mut self) -> DSCARBH_W<'_, GTDNSR_SPEC> {
         DSCARBH_W::new(self, 9)
     }
     ///Bit 10 - GTIOCA Pin Falling Input during GTIOCB Value Low Source Counter Count Down Enable
     #[inline(always)]
-    pub fn dscafbl(&mut self) -> DSCAFBL_W<GTDNSR_SPEC> {
+    pub fn dscafbl(&mut self) -> DSCAFBL_W<'_, GTDNSR_SPEC> {
         DSCAFBL_W::new(self, 10)
     }
     ///Bit 11 - GTIOCA Pin Falling Input during GTIOCB Value High Source Counter Count Down Enable
     #[inline(always)]
-    pub fn dscafbh(&mut self) -> DSCAFBH_W<GTDNSR_SPEC> {
+    pub fn dscafbh(&mut self) -> DSCAFBH_W<'_, GTDNSR_SPEC> {
         DSCAFBH_W::new(self, 11)
     }
     ///Bit 12 - GTIOCB Pin Rising Input during GTIOCA Value Low Source Counter Count Down Enable
     #[inline(always)]
-    pub fn dscbral(&mut self) -> DSCBRAL_W<GTDNSR_SPEC> {
+    pub fn dscbral(&mut self) -> DSCBRAL_W<'_, GTDNSR_SPEC> {
         DSCBRAL_W::new(self, 12)
     }
     ///Bit 13 - GTIOCB Pin Rising Input during GTIOCA Value High Source Counter Count Down Enable
     #[inline(always)]
-    pub fn dscbrah(&mut self) -> DSCBRAH_W<GTDNSR_SPEC> {
+    pub fn dscbrah(&mut self) -> DSCBRAH_W<'_, GTDNSR_SPEC> {
         DSCBRAH_W::new(self, 13)
     }
     ///Bit 14 - GTIOCB Pin Falling Input during GTIOCA Value Low Source Counter Count Down Enable
     #[inline(always)]
-    pub fn dscbfal(&mut self) -> DSCBFAL_W<GTDNSR_SPEC> {
+    pub fn dscbfal(&mut self) -> DSCBFAL_W<'_, GTDNSR_SPEC> {
         DSCBFAL_W::new(self, 14)
     }
     ///Bit 15 - GTIOCB Pin Falling Input during GTIOCA Value High Source Counter Count Down Enable
     #[inline(always)]
-    pub fn dscbfah(&mut self) -> DSCBFAH_W<GTDNSR_SPEC> {
+    pub fn dscbfah(&mut self) -> DSCBFAH_W<'_, GTDNSR_SPEC> {
         DSCBFAH_W::new(self, 15)
     }
     ///Bit 16 - ELC_GPTA Event Source Counter Count Down Enable
     #[inline(always)]
-    pub fn dselca(&mut self) -> DSELCA_W<GTDNSR_SPEC> {
+    pub fn dselca(&mut self) -> DSELCA_W<'_, GTDNSR_SPEC> {
         DSELCA_W::new(self, 16)
     }
     ///Bit 17 - ELC_GPTB Event Source Counter Count Down Enable
     #[inline(always)]
-    pub fn dselcb(&mut self) -> DSELCB_W<GTDNSR_SPEC> {
+    pub fn dselcb(&mut self) -> DSELCB_W<'_, GTDNSR_SPEC> {
         DSELCB_W::new(self, 17)
     }
     ///Bit 18 - ELC_GPTC Event Source Counter Count Down Enable
     #[inline(always)]
-    pub fn dselcc(&mut self) -> DSELCC_W<GTDNSR_SPEC> {
+    pub fn dselcc(&mut self) -> DSELCC_W<'_, GTDNSR_SPEC> {
         DSELCC_W::new(self, 18)
     }
     ///Bit 19 - ELC_GPTD Event Source Counter Count Down Enable
     #[inline(always)]
-    pub fn dselcd(&mut self) -> DSELCD_W<GTDNSR_SPEC> {
+    pub fn dselcd(&mut self) -> DSELCD_W<'_, GTDNSR_SPEC> {
         DSELCD_W::new(self, 19)
     }
     ///Bit 20 - ELC_GPTE Event Source Counter Count Down Enable
     #[inline(always)]
-    pub fn dselce(&mut self) -> DSELCE_W<GTDNSR_SPEC> {
+    pub fn dselce(&mut self) -> DSELCE_W<'_, GTDNSR_SPEC> {
         DSELCE_W::new(self, 20)
     }
     ///Bit 21 - ELC_GPTF Event Source Counter Count Down Enable
     #[inline(always)]
-    pub fn dselcf(&mut self) -> DSELCF_W<GTDNSR_SPEC> {
+    pub fn dselcf(&mut self) -> DSELCF_W<'_, GTDNSR_SPEC> {
         DSELCF_W::new(self, 21)
     }
     ///Bit 22 - ELC_GPTG Event Source Counter Count Down Enable
     #[inline(always)]
-    pub fn dselcg(&mut self) -> DSELCG_W<GTDNSR_SPEC> {
+    pub fn dselcg(&mut self) -> DSELCG_W<'_, GTDNSR_SPEC> {
         DSELCG_W::new(self, 22)
     }
     ///Bit 23 - ELC_GPTH Event Source Counter Count Down Enable
     #[inline(always)]
-    pub fn dselch(&mut self) -> DSELCH_W<GTDNSR_SPEC> {
+    pub fn dselch(&mut self) -> DSELCH_W<'_, GTDNSR_SPEC> {
         DSELCH_W::new(self, 23)
     }
 }

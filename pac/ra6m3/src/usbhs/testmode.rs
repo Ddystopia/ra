@@ -243,7 +243,7 @@ impl R {
 impl W {
     ///Bits 0:3 - Test Mode
     #[inline(always)]
-    pub fn utst(&mut self) -> UTST_W<TESTMODE_SPEC> {
+    pub fn utst(&mut self) -> UTST_W<'_, TESTMODE_SPEC> {
         UTST_W::new(self, 0)
     }
 }

@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Argument RegisterSet command format\[39:8\] (argument)
     #[inline(always)]
-    pub fn sd_arg(&mut self) -> SD_ARG_W<SD_ARG_SPEC> {
+    pub fn sd_arg(&mut self) -> SD_ARG_W<'_, SD_ARG_SPEC> {
         SD_ARG_W::new(self, 0)
     }
 }

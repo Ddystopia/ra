@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Calculation input Data (Case of CRC-32, CRC-32C )
     #[inline(always)]
-    pub fn crcdir(&mut self) -> CRCDIR_W<CRCDIR_SPEC> {
+    pub fn crcdir(&mut self) -> CRCDIR_W<'_, CRCDIR_SPEC> {
         CRCDIR_W::new(self, 0)
     }
 }

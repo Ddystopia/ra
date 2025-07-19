@@ -487,42 +487,42 @@ impl R {
 impl W {
     ///Bit 0 - PWM Delay Generation Circuit bypass for channel 0
     #[inline(always)]
-    pub fn dlybs0(&mut self) -> DLYBS0_W<GTDLYCR2_SPEC> {
+    pub fn dlybs0(&mut self) -> DLYBS0_W<'_, GTDLYCR2_SPEC> {
         DLYBS0_W::new(self, 0)
     }
     ///Bit 1 - PWM Delay Generation Circuit bypass for channel 1
     #[inline(always)]
-    pub fn dlybs1(&mut self) -> DLYBS1_W<GTDLYCR2_SPEC> {
+    pub fn dlybs1(&mut self) -> DLYBS1_W<'_, GTDLYCR2_SPEC> {
         DLYBS1_W::new(self, 1)
     }
     ///Bit 2 - PWM Delay Generation Circuit bypass for channel 2
     #[inline(always)]
-    pub fn dlybs2(&mut self) -> DLYBS2_W<GTDLYCR2_SPEC> {
+    pub fn dlybs2(&mut self) -> DLYBS2_W<'_, GTDLYCR2_SPEC> {
         DLYBS2_W::new(self, 2)
     }
     ///Bit 3 - PWM Delay Generation Circuit bypass for channel 3
     #[inline(always)]
-    pub fn dlybs3(&mut self) -> DLYBS3_W<GTDLYCR2_SPEC> {
+    pub fn dlybs3(&mut self) -> DLYBS3_W<'_, GTDLYCR2_SPEC> {
         DLYBS3_W::new(self, 3)
     }
     ///Bit 8 - PWM Delay Generation Circuit enable for channel 0
     #[inline(always)]
-    pub fn dlyen0(&mut self) -> DLYEN0_W<GTDLYCR2_SPEC> {
+    pub fn dlyen0(&mut self) -> DLYEN0_W<'_, GTDLYCR2_SPEC> {
         DLYEN0_W::new(self, 8)
     }
     ///Bit 9 - PWM Delay Generation Circuit enable for channel 1
     #[inline(always)]
-    pub fn dlyen1(&mut self) -> DLYEN1_W<GTDLYCR2_SPEC> {
+    pub fn dlyen1(&mut self) -> DLYEN1_W<'_, GTDLYCR2_SPEC> {
         DLYEN1_W::new(self, 9)
     }
     ///Bit 10 - PWM Delay Generation Circuit enable for channel 2
     #[inline(always)]
-    pub fn dlyen2(&mut self) -> DLYEN2_W<GTDLYCR2_SPEC> {
+    pub fn dlyen2(&mut self) -> DLYEN2_W<'_, GTDLYCR2_SPEC> {
         DLYEN2_W::new(self, 10)
     }
     ///Bit 11 - PWM Delay Generation Circuit enable for channel 3
     #[inline(always)]
-    pub fn dlyen3(&mut self) -> DLYEN3_W<GTDLYCR2_SPEC> {
+    pub fn dlyen3(&mut self) -> DLYEN3_W<'_, GTDLYCR2_SPEC> {
         DLYEN3_W::new(self, 11)
     }
 }

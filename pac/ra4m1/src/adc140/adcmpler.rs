@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 0 - Compare Window A Temperature Sensor Output Comparison Condition Select
     #[inline(always)]
-    pub fn cmpltsa(&mut self) -> CMPLTSA_W<ADCMPLER_SPEC> {
+    pub fn cmpltsa(&mut self) -> CMPLTSA_W<'_, ADCMPLER_SPEC> {
         CMPLTSA_W::new(self, 0)
     }
     ///Bit 1 - Compare Window A Internal Reference Voltage Comparison Condition Select
     #[inline(always)]
-    pub fn cmploca(&mut self) -> CMPLOCA_W<ADCMPLER_SPEC> {
+    pub fn cmploca(&mut self) -> CMPLOCA_W<'_, ADCMPLER_SPEC> {
         CMPLOCA_W::new(self, 1)
     }
 }

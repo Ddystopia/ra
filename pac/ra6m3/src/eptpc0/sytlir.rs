@@ -34,17 +34,17 @@ impl R {
 impl W {
     ///Bits 0:7 - Announce Message Transmission Interval SettingThese bits set the interval for the transmission of Announce messages.
     #[inline(always)]
-    pub fn ance(&mut self) -> ANCE_W<SYTLIR_SPEC> {
+    pub fn ance(&mut self) -> ANCE_W<'_, SYTLIR_SPEC> {
         ANCE_W::new(self, 0)
     }
     ///Bits 8:15 - Sync Message Transmission Interval SettingThese bits set the interval for the transmission of Sync messages. The setting is also placed in the logMessageInterval field of transmitted Sync messages.
     #[inline(always)]
-    pub fn sync(&mut self) -> SYNC_W<SYTLIR_SPEC> {
+    pub fn sync(&mut self) -> SYNC_W<'_, SYTLIR_SPEC> {
         SYNC_W::new(self, 8)
     }
     ///Bits 16:23 - Delay_Req Transmission Interval Average Value/ Pdelay_Req Transmission Interval SettingThe bits set the average interval for the transmission of Delay_Req messages and the interval for the transmission of Pdelay_Req messages.The setting is also placed in the logMessageInterval field of Delay_Resp messages.
     #[inline(always)]
-    pub fn dreq(&mut self) -> DREQ_W<SYTLIR_SPEC> {
+    pub fn dreq(&mut self) -> DREQ_W<'_, SYTLIR_SPEC> {
         DREQ_W::new(self, 16)
     }
 }

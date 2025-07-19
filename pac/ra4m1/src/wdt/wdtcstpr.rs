@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 7 - Sleep-Mode Count Stop Control
     #[inline(always)]
-    pub fn slcstp(&mut self) -> SLCSTP_W<WDTCSTPR_SPEC> {
+    pub fn slcstp(&mut self) -> SLCSTP_W<'_, WDTCSTPR_SPEC> {
         SLCSTP_W::new(self, 7)
     }
 }

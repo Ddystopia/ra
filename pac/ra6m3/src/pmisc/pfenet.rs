@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 4 - Ethernet Mode Setting ch0
     #[inline(always)]
-    pub fn phymode0(&mut self) -> PHYMODE0_W<PFENET_SPEC> {
+    pub fn phymode0(&mut self) -> PHYMODE0_W<'_, PFENET_SPEC> {
         PHYMODE0_W::new(self, 4)
     }
 }

@@ -187,17 +187,17 @@ impl R {
 impl W {
     ///Bit 0 - Group A priority control setting bit.Note: When the PGS bit is to be set to 1, the ADCSR.ADCS\[1:0\] bits must be set to 01b (group scan mode). If the bits are set to any other values, proper operation is not guaranteed.
     #[inline(always)]
-    pub fn pgs(&mut self) -> PGS_W<ADGSPCR_SPEC> {
+    pub fn pgs(&mut self) -> PGS_W<'_, ADGSPCR_SPEC> {
         PGS_W::new(self, 0)
     }
     ///Bit 1 - Group B Restart Setting(Enabled only when PGS = 1. Reserved when PGS = 0.)
     #[inline(always)]
-    pub fn gbrscn(&mut self) -> GBRSCN_W<ADGSPCR_SPEC> {
+    pub fn gbrscn(&mut self) -> GBRSCN_W<'_, ADGSPCR_SPEC> {
         GBRSCN_W::new(self, 1)
     }
     ///Bit 15 - Group B Single Scan Continuous Start(Enabled only when PGS = 1. Reserved when PGS = 0.)Note: When the GBRP bit has been set to 1, single scan is performed continuously for group B regardless of the setting of the GBRSCN bit.
     #[inline(always)]
-    pub fn gbrp(&mut self) -> GBRP_W<ADGSPCR_SPEC> {
+    pub fn gbrp(&mut self) -> GBRP_W<'_, ADGSPCR_SPEC> {
         GBRP_W::new(self, 15)
     }
 }

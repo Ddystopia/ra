@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Received Alignment Error Frame Counter RegisterThe RFCR register is a counter indicating the number of times a frame has been received with the alignment error (frame is not an integral number of octets).
     #[inline(always)]
-    pub fn rfcr(&mut self) -> RFCR_W<RFCR_SPEC> {
+    pub fn rfcr(&mut self) -> RFCR_W<'_, RFCR_SPEC> {
         RFCR_W::new(self, 0)
     }
 }

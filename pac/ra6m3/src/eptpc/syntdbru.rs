@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - These bits hold the setting for the higher-order 32 bits of the threshold for detection of synchronization.
     #[inline(always)]
-    pub fn syntdbru(&mut self) -> SYNTDBRU_W<SYNTDBRU_SPEC> {
+    pub fn syntdbru(&mut self) -> SYNTDBRU_W<'_, SYNTDBRU_SPEC> {
         SYNTDBRU_W::new(self, 0)
     }
 }

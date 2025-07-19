@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Address where the region starts, for use in region determination. NOTE: The low-order 2 bits are fixed to 0.
     #[inline(always)]
-    pub fn mmpusa(&mut self) -> MMPUSA_W<MMPUSA_SPEC> {
+    pub fn mmpusa(&mut self) -> MMPUSA_W<'_, MMPUSA_SPEC> {
         MMPUSA_W::new(self, 0)
     }
 }

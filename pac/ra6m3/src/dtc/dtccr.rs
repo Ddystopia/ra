@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 4 - DTC Transfer Information Read Skip Enable.
     #[inline(always)]
-    pub fn rrs(&mut self) -> RRS_W<DTCCR_SPEC> {
+    pub fn rrs(&mut self) -> RRS_W<'_, DTCCR_SPEC> {
         RRS_W::new(self, 4)
     }
 }

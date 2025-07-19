@@ -187,17 +187,17 @@ impl R {
 impl W {
     ///Bit 0 - Region enable
     #[inline(always)]
-    pub fn enable(&mut self) -> ENABLE_W<MMPUACB_SPEC> {
+    pub fn enable(&mut self) -> ENABLE_W<'_, MMPUACB_SPEC> {
         ENABLE_W::new(self, 0)
     }
     ///Bit 1 - Read protection
     #[inline(always)]
-    pub fn rp(&mut self) -> RP_W<MMPUACB_SPEC> {
+    pub fn rp(&mut self) -> RP_W<'_, MMPUACB_SPEC> {
         RP_W::new(self, 1)
     }
     ///Bit 2 - Write protection
     #[inline(always)]
-    pub fn wp(&mut self) -> WP_W<MMPUACB_SPEC> {
+    pub fn wp(&mut self) -> WP_W<'_, MMPUACB_SPEC> {
         WP_W::new(self, 2)
     }
 }

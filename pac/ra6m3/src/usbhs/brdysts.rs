@@ -74,7 +74,7 @@ impl R {
 impl W {
     ///Bits 0:9 - BRDY Interrupt Status for Each Pipe
     #[inline(always)]
-    pub fn pipebrdy(&mut self) -> PIPEBRDY_W<BRDYSTS_SPEC> {
+    pub fn pipebrdy(&mut self) -> PIPEBRDY_W<'_, BRDYSTS_SPEC> {
         PIPEBRDY_W::new(self, 0)
     }
 }

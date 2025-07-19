@@ -307,27 +307,27 @@ impl R {
 impl W {
     ///Bit 8 - alternateMasterFlag
     #[inline(always)]
-    pub fn flag8(&mut self) -> FLAG8_W<DYRPFR_SPEC> {
+    pub fn flag8(&mut self) -> FLAG8_W<'_, DYRPFR_SPEC> {
         FLAG8_W::new(self, 8)
     }
     ///Bit 9 - woStepFlag
     #[inline(always)]
-    pub fn flag9(&mut self) -> FLAG9_W<DYRPFR_SPEC> {
+    pub fn flag9(&mut self) -> FLAG9_W<'_, DYRPFR_SPEC> {
         FLAG9_W::new(self, 9)
     }
     ///Bit 10 - unicastFlag
     #[inline(always)]
-    pub fn flag10(&mut self) -> FLAG10_W<DYRPFR_SPEC> {
+    pub fn flag10(&mut self) -> FLAG10_W<'_, DYRPFR_SPEC> {
         FLAG10_W::new(self, 10)
     }
     ///Bit 13 - PTP profile Specific 1
     #[inline(always)]
-    pub fn flag13(&mut self) -> FLAG13_W<DYRPFR_SPEC> {
+    pub fn flag13(&mut self) -> FLAG13_W<'_, DYRPFR_SPEC> {
         FLAG13_W::new(self, 13)
     }
     ///Bit 14 - PTP profile Specific 2
     #[inline(always)]
-    pub fn flag14(&mut self) -> FLAG14_W<DYRPFR_SPEC> {
+    pub fn flag14(&mut self) -> FLAG14_W<'_, DYRPFR_SPEC> {
         FLAG14_W::new(self, 14)
     }
 }

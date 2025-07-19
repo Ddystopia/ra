@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - Frequency Comparison Value(b15-b0) To generate the operating clock from the main clock, this bit sets the comparison value of the 128-Hz clock cycle.
     #[inline(always)]
-    pub fn rfc(&mut self) -> RFC_W<RFRL_SPEC> {
+    pub fn rfc(&mut self) -> RFC_W<'_, RFRL_SPEC> {
         RFC_W::new(self, 0)
     }
 }

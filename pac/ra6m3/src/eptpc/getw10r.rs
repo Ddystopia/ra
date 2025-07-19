@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Worst 10 Acquisition Directive
     #[inline(always)]
-    pub fn gw10(&mut self) -> GW10_W<GETW10R_SPEC> {
+    pub fn gw10(&mut self) -> GW10_W<'_, GETW10R_SPEC> {
         GW10_W::new(self, 0)
     }
 }

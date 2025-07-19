@@ -453,32 +453,32 @@ impl R {
 impl W {
     ///Bit 2 - SDA Output Control/Monitor
     #[inline(always)]
-    pub fn sdao(&mut self) -> SDAO_W<ICCR1_SPEC> {
+    pub fn sdao(&mut self) -> SDAO_W<'_, ICCR1_SPEC> {
         SDAO_W::new(self, 2)
     }
     ///Bit 3 - SCL Output Control/Monitor
     #[inline(always)]
-    pub fn sclo(&mut self) -> SCLO_W<ICCR1_SPEC> {
+    pub fn sclo(&mut self) -> SCLO_W<'_, ICCR1_SPEC> {
         SCLO_W::new(self, 3)
     }
     ///Bit 4 - SCLO/SDAO Write Protect
     #[inline(always)]
-    pub fn sowp(&mut self) -> SOWP_W<ICCR1_SPEC> {
+    pub fn sowp(&mut self) -> SOWP_W<'_, ICCR1_SPEC> {
         SOWP_W::new(self, 4)
     }
     ///Bit 5 - Extra SCL Clock Cycle Output
     #[inline(always)]
-    pub fn clo(&mut self) -> CLO_W<ICCR1_SPEC> {
+    pub fn clo(&mut self) -> CLO_W<'_, ICCR1_SPEC> {
         CLO_W::new(self, 5)
     }
     ///Bit 6 - I2C Bus Interface Internal Reset Note:If an internal reset is initiated using the IICRST bit for a bus hang-up occurred during communication with the master device in slave mode, the states may become different between the slave device and the master device (due to the difference in the bit counter information).
     #[inline(always)]
-    pub fn iicrst(&mut self) -> IICRST_W<ICCR1_SPEC> {
+    pub fn iicrst(&mut self) -> IICRST_W<'_, ICCR1_SPEC> {
         IICRST_W::new(self, 6)
     }
     ///Bit 7 - I2C Bus Interface Enable
     #[inline(always)]
-    pub fn ice(&mut self) -> ICE_W<ICCR1_SPEC> {
+    pub fn ice(&mut self) -> ICE_W<'_, ICCR1_SPEC> {
         ICE_W::new(self, 7)
     }
 }

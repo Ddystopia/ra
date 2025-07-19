@@ -367,32 +367,32 @@ impl R {
 impl W {
     ///Bit 0 - Pulse Output Timer 0 Select
     #[inline(always)]
-    pub fn iptsel0(&mut self) -> IPTSEL0_W<IPTSELR_SPEC> {
+    pub fn iptsel0(&mut self) -> IPTSEL0_W<'_, IPTSELR_SPEC> {
         IPTSEL0_W::new(self, 0)
     }
     ///Bit 1 - Pulse Output Timer 1 Select
     #[inline(always)]
-    pub fn iptsel1(&mut self) -> IPTSEL1_W<IPTSELR_SPEC> {
+    pub fn iptsel1(&mut self) -> IPTSEL1_W<'_, IPTSELR_SPEC> {
         IPTSEL1_W::new(self, 1)
     }
     ///Bit 2 - Pulse Output Timer 2 Select
     #[inline(always)]
-    pub fn iptsel2(&mut self) -> IPTSEL2_W<IPTSELR_SPEC> {
+    pub fn iptsel2(&mut self) -> IPTSEL2_W<'_, IPTSELR_SPEC> {
         IPTSEL2_W::new(self, 2)
     }
     ///Bit 3 - Pulse Output Timer 3 Select
     #[inline(always)]
-    pub fn iptsel3(&mut self) -> IPTSEL3_W<IPTSELR_SPEC> {
+    pub fn iptsel3(&mut self) -> IPTSEL3_W<'_, IPTSELR_SPEC> {
         IPTSEL3_W::new(self, 3)
     }
     ///Bit 4 - Pulse Output Timer 4 Select
     #[inline(always)]
-    pub fn iptsel4(&mut self) -> IPTSEL4_W<IPTSELR_SPEC> {
+    pub fn iptsel4(&mut self) -> IPTSEL4_W<'_, IPTSELR_SPEC> {
         IPTSEL4_W::new(self, 4)
     }
     ///Bit 5 - Pulse Output Timer 5 Select
     #[inline(always)]
-    pub fn iptsel5(&mut self) -> IPTSEL5_W<IPTSELR_SPEC> {
+    pub fn iptsel5(&mut self) -> IPTSEL5_W<'_, IPTSELR_SPEC> {
         IPTSEL5_W::new(self, 5)
     }
 }

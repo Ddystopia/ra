@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - These bits hold the setting for the higher-order 16 bits of the asymmetric delay value.
     #[inline(always)]
-    pub fn dasymru(&mut self) -> DASYMRU_W<DASYMRU_SPEC> {
+    pub fn dasymru(&mut self) -> DASYMRU_W<'_, DASYMRU_SPEC> {
         DASYMRU_W::new(self, 0)
     }
 }

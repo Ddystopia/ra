@@ -484,37 +484,37 @@ impl R {
 impl W {
     ///Bit 0 - Timeout Detection Flag
     #[inline(always)]
-    pub fn tmof(&mut self) -> TMOF_W<ICSR2_SPEC> {
+    pub fn tmof(&mut self) -> TMOF_W<'_, ICSR2_SPEC> {
         TMOF_W::new(self, 0)
     }
     ///Bit 1 - Arbitration-Lost Flag
     #[inline(always)]
-    pub fn al(&mut self) -> AL_W<ICSR2_SPEC> {
+    pub fn al(&mut self) -> AL_W<'_, ICSR2_SPEC> {
         AL_W::new(self, 1)
     }
     ///Bit 2 - Start Condition Detection Flag
     #[inline(always)]
-    pub fn start(&mut self) -> START_W<ICSR2_SPEC> {
+    pub fn start(&mut self) -> START_W<'_, ICSR2_SPEC> {
         START_W::new(self, 2)
     }
     ///Bit 3 - Stop Condition Detection Flag
     #[inline(always)]
-    pub fn stop(&mut self) -> STOP_W<ICSR2_SPEC> {
+    pub fn stop(&mut self) -> STOP_W<'_, ICSR2_SPEC> {
         STOP_W::new(self, 3)
     }
     ///Bit 4 - NACK Detection Flag
     #[inline(always)]
-    pub fn nackf(&mut self) -> NACKF_W<ICSR2_SPEC> {
+    pub fn nackf(&mut self) -> NACKF_W<'_, ICSR2_SPEC> {
         NACKF_W::new(self, 4)
     }
     ///Bit 5 - Receive Data Full Flag
     #[inline(always)]
-    pub fn rdrf(&mut self) -> RDRF_W<ICSR2_SPEC> {
+    pub fn rdrf(&mut self) -> RDRF_W<'_, ICSR2_SPEC> {
         RDRF_W::new(self, 5)
     }
     ///Bit 6 - Transmit End Flag
     #[inline(always)]
-    pub fn tend(&mut self) -> TEND_W<ICSR2_SPEC> {
+    pub fn tend(&mut self) -> TEND_W<'_, ICSR2_SPEC> {
         TEND_W::new(self, 6)
     }
 }

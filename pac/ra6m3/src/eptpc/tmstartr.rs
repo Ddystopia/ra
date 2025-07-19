@@ -367,32 +367,32 @@ impl R {
 impl W {
     ///Bit 0 - Pulse Output Timer 0 Start
     #[inline(always)]
-    pub fn en0(&mut self) -> EN0_W<TMSTARTR_SPEC> {
+    pub fn en0(&mut self) -> EN0_W<'_, TMSTARTR_SPEC> {
         EN0_W::new(self, 0)
     }
     ///Bit 1 - Pulse Output Timer 1 Start
     #[inline(always)]
-    pub fn en1(&mut self) -> EN1_W<TMSTARTR_SPEC> {
+    pub fn en1(&mut self) -> EN1_W<'_, TMSTARTR_SPEC> {
         EN1_W::new(self, 1)
     }
     ///Bit 2 - Pulse Output Timer 2 Start
     #[inline(always)]
-    pub fn en2(&mut self) -> EN2_W<TMSTARTR_SPEC> {
+    pub fn en2(&mut self) -> EN2_W<'_, TMSTARTR_SPEC> {
         EN2_W::new(self, 2)
     }
     ///Bit 3 - Pulse Output Timer 3 Start
     #[inline(always)]
-    pub fn en3(&mut self) -> EN3_W<TMSTARTR_SPEC> {
+    pub fn en3(&mut self) -> EN3_W<'_, TMSTARTR_SPEC> {
         EN3_W::new(self, 3)
     }
     ///Bit 4 - Pulse Output Timer 4 Start
     #[inline(always)]
-    pub fn en4(&mut self) -> EN4_W<TMSTARTR_SPEC> {
+    pub fn en4(&mut self) -> EN4_W<'_, TMSTARTR_SPEC> {
         EN4_W::new(self, 4)
     }
     ///Bit 5 - Pulse Output Timer 5 Start
     #[inline(always)]
-    pub fn en5(&mut self) -> EN5_W<TMSTARTR_SPEC> {
+    pub fn en5(&mut self) -> EN5_W<'_, TMSTARTR_SPEC> {
         EN5_W::new(self, 5)
     }
 }

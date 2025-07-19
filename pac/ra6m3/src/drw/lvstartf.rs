@@ -5,7 +5,7 @@ pub type LVSTARTF_W<'a, REG> = crate::FieldWriter<'a, REG, 16, u16>;
 impl W {
     ///Bits 0:15 - V limiter start value fractional part
     #[inline(always)]
-    pub fn lvstartf(&mut self) -> LVSTARTF_W<LVSTARTF_SPEC> {
+    pub fn lvstartf(&mut self) -> LVSTARTF_W<'_, LVSTARTF_SPEC> {
         LVSTARTF_W::new(self, 0)
     }
 }

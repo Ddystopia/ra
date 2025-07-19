@@ -100,7 +100,7 @@ impl R {
 impl W {
     ///Bits 0:1 - STCA Clock Frequency
     #[inline(always)]
-    pub fn stcf(&mut self) -> STCF_W<STCFR_SPEC> {
+    pub fn stcf(&mut self) -> STCF_W<'_, STCFR_SPEC> {
         STCF_W::new(self, 0)
     }
 }

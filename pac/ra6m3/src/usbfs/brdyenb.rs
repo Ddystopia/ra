@@ -607,52 +607,52 @@ impl R {
 impl W {
     ///Bit 0 - BRDY Interrupt Enable for PIPE0
     #[inline(always)]
-    pub fn pipe0brdye(&mut self) -> PIPE0BRDYE_W<BRDYENB_SPEC> {
+    pub fn pipe0brdye(&mut self) -> PIPE0BRDYE_W<'_, BRDYENB_SPEC> {
         PIPE0BRDYE_W::new(self, 0)
     }
     ///Bit 1 - BRDY Interrupt Enable for PIPE1
     #[inline(always)]
-    pub fn pipe1brdye(&mut self) -> PIPE1BRDYE_W<BRDYENB_SPEC> {
+    pub fn pipe1brdye(&mut self) -> PIPE1BRDYE_W<'_, BRDYENB_SPEC> {
         PIPE1BRDYE_W::new(self, 1)
     }
     ///Bit 2 - BRDY Interrupt Enable for PIPE2
     #[inline(always)]
-    pub fn pipe2brdye(&mut self) -> PIPE2BRDYE_W<BRDYENB_SPEC> {
+    pub fn pipe2brdye(&mut self) -> PIPE2BRDYE_W<'_, BRDYENB_SPEC> {
         PIPE2BRDYE_W::new(self, 2)
     }
     ///Bit 3 - BRDY Interrupt Enable for PIPE3
     #[inline(always)]
-    pub fn pipe3brdye(&mut self) -> PIPE3BRDYE_W<BRDYENB_SPEC> {
+    pub fn pipe3brdye(&mut self) -> PIPE3BRDYE_W<'_, BRDYENB_SPEC> {
         PIPE3BRDYE_W::new(self, 3)
     }
     ///Bit 4 - BRDY Interrupt Enable for PIPE4
     #[inline(always)]
-    pub fn pipe4brdye(&mut self) -> PIPE4BRDYE_W<BRDYENB_SPEC> {
+    pub fn pipe4brdye(&mut self) -> PIPE4BRDYE_W<'_, BRDYENB_SPEC> {
         PIPE4BRDYE_W::new(self, 4)
     }
     ///Bit 5 - BRDY Interrupt Enable for PIPE5
     #[inline(always)]
-    pub fn pipe5brdye(&mut self) -> PIPE5BRDYE_W<BRDYENB_SPEC> {
+    pub fn pipe5brdye(&mut self) -> PIPE5BRDYE_W<'_, BRDYENB_SPEC> {
         PIPE5BRDYE_W::new(self, 5)
     }
     ///Bit 6 - BRDY Interrupt Enable for PIPE6
     #[inline(always)]
-    pub fn pipe6brdye(&mut self) -> PIPE6BRDYE_W<BRDYENB_SPEC> {
+    pub fn pipe6brdye(&mut self) -> PIPE6BRDYE_W<'_, BRDYENB_SPEC> {
         PIPE6BRDYE_W::new(self, 6)
     }
     ///Bit 7 - BRDY Interrupt Enable for PIPE7
     #[inline(always)]
-    pub fn pipe7brdye(&mut self) -> PIPE7BRDYE_W<BRDYENB_SPEC> {
+    pub fn pipe7brdye(&mut self) -> PIPE7BRDYE_W<'_, BRDYENB_SPEC> {
         PIPE7BRDYE_W::new(self, 7)
     }
     ///Bit 8 - BRDY Interrupt Enable for PIPE8
     #[inline(always)]
-    pub fn pipe8brdye(&mut self) -> PIPE8BRDYE_W<BRDYENB_SPEC> {
+    pub fn pipe8brdye(&mut self) -> PIPE8BRDYE_W<'_, BRDYENB_SPEC> {
         PIPE8BRDYE_W::new(self, 8)
     }
     ///Bit 9 - BRDY Interrupt Enable for PIPE9
     #[inline(always)]
-    pub fn pipe9brdye(&mut self) -> PIPE9BRDYE_W<BRDYENB_SPEC> {
+    pub fn pipe9brdye(&mut self) -> PIPE9BRDYE_W<'_, BRDYENB_SPEC> {
         PIPE9BRDYE_W::new(self, 9)
     }
 }

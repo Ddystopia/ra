@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - Calculation output Data (Case of CRC-16 or CRC-CCITT )
     #[inline(always)]
-    pub fn crcdor_ha(&mut self) -> CRCDOR_HA_W<CRCDOR_HA_SPEC> {
+    pub fn crcdor_ha(&mut self) -> CRCDOR_HA_W<'_, CRCDOR_HA_SPEC> {
         CRCDOR_HA_W::new(self, 0)
     }
 }

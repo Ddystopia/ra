@@ -627,52 +627,52 @@ impl R {
 impl W {
     ///Bit 0 - NRDY Interrupt Status for PIPE0
     #[inline(always)]
-    pub fn pipe0nrdy(&mut self) -> PIPE0NRDY_W<NRDYSTS_SPEC> {
+    pub fn pipe0nrdy(&mut self) -> PIPE0NRDY_W<'_, NRDYSTS_SPEC> {
         PIPE0NRDY_W::new(self, 0)
     }
     ///Bit 1 - NRDY Interrupt Status for PIPE1
     #[inline(always)]
-    pub fn pipe1nrdy(&mut self) -> PIPE1NRDY_W<NRDYSTS_SPEC> {
+    pub fn pipe1nrdy(&mut self) -> PIPE1NRDY_W<'_, NRDYSTS_SPEC> {
         PIPE1NRDY_W::new(self, 1)
     }
     ///Bit 2 - NRDY Interrupt Status for PIPE2
     #[inline(always)]
-    pub fn pipe2nrdy(&mut self) -> PIPE2NRDY_W<NRDYSTS_SPEC> {
+    pub fn pipe2nrdy(&mut self) -> PIPE2NRDY_W<'_, NRDYSTS_SPEC> {
         PIPE2NRDY_W::new(self, 2)
     }
     ///Bit 3 - NRDY Interrupt Status for PIPE3
     #[inline(always)]
-    pub fn pipe3nrdy(&mut self) -> PIPE3NRDY_W<NRDYSTS_SPEC> {
+    pub fn pipe3nrdy(&mut self) -> PIPE3NRDY_W<'_, NRDYSTS_SPEC> {
         PIPE3NRDY_W::new(self, 3)
     }
     ///Bit 4 - NRDY Interrupt Status for PIPE4
     #[inline(always)]
-    pub fn pipe4nrdy(&mut self) -> PIPE4NRDY_W<NRDYSTS_SPEC> {
+    pub fn pipe4nrdy(&mut self) -> PIPE4NRDY_W<'_, NRDYSTS_SPEC> {
         PIPE4NRDY_W::new(self, 4)
     }
     ///Bit 5 - NRDY Interrupt Status for PIPE5
     #[inline(always)]
-    pub fn pipe5nrdy(&mut self) -> PIPE5NRDY_W<NRDYSTS_SPEC> {
+    pub fn pipe5nrdy(&mut self) -> PIPE5NRDY_W<'_, NRDYSTS_SPEC> {
         PIPE5NRDY_W::new(self, 5)
     }
     ///Bit 6 - NRDY Interrupt Status for PIPE6
     #[inline(always)]
-    pub fn pipe6nrdy(&mut self) -> PIPE6NRDY_W<NRDYSTS_SPEC> {
+    pub fn pipe6nrdy(&mut self) -> PIPE6NRDY_W<'_, NRDYSTS_SPEC> {
         PIPE6NRDY_W::new(self, 6)
     }
     ///Bit 7 - NRDY Interrupt Status for PIPE7
     #[inline(always)]
-    pub fn pipe7nrdy(&mut self) -> PIPE7NRDY_W<NRDYSTS_SPEC> {
+    pub fn pipe7nrdy(&mut self) -> PIPE7NRDY_W<'_, NRDYSTS_SPEC> {
         PIPE7NRDY_W::new(self, 7)
     }
     ///Bit 8 - NRDY Interrupt Status for PIPE8
     #[inline(always)]
-    pub fn pipe8nrdy(&mut self) -> PIPE8NRDY_W<NRDYSTS_SPEC> {
+    pub fn pipe8nrdy(&mut self) -> PIPE8NRDY_W<'_, NRDYSTS_SPEC> {
         PIPE8NRDY_W::new(self, 8)
     }
     ///Bit 9 - NRDY Interrupt Status for PIPE9
     #[inline(always)]
-    pub fn pipe9nrdy(&mut self) -> PIPE9NRDY_W<NRDYSTS_SPEC> {
+    pub fn pipe9nrdy(&mut self) -> PIPE9NRDY_W<'_, NRDYSTS_SPEC> {
         PIPE9NRDY_W::new(self, 9)
     }
 }

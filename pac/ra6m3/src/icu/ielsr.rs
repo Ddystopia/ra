@@ -193,17 +193,17 @@ impl R {
 impl W {
     ///Bits 0:8 - Event selection to NVIC
     #[inline(always)]
-    pub fn iels(&mut self) -> IELS_W<IELSR_SPEC> {
+    pub fn iels(&mut self) -> IELS_W<'_, IELSR_SPEC> {
         IELS_W::new(self, 0)
     }
     ///Bit 16 - Interrupt Status Flag
     #[inline(always)]
-    pub fn ir(&mut self) -> IR_W<IELSR_SPEC> {
+    pub fn ir(&mut self) -> IR_W<'_, IELSR_SPEC> {
         IR_W::new(self, 16)
     }
     ///Bit 24 - DTC Activation Enable
     #[inline(always)]
-    pub fn dtce(&mut self) -> DTCE_W<IELSR_SPEC> {
+    pub fn dtce(&mut self) -> DTCE_W<'_, IELSR_SPEC> {
         DTCE_W::new(self, 24)
     }
 }

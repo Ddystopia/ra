@@ -25,12 +25,12 @@ impl R {
 impl W {
     ///Bits 0:11 - Vertical Capture Start Line PositionNumber of the line where capture is to start.
     #[inline(always)]
-    pub fn vst(&mut self) -> VST_W<VCR_SPEC> {
+    pub fn vst(&mut self) -> VST_W<'_, VCR_SPEC> {
         VST_W::new(self, 0)
     }
     ///Bits 16:27 - Vertical Capture Size Number of lines to be captured.
     #[inline(always)]
-    pub fn vsz(&mut self) -> VSZ_W<VCR_SPEC> {
+    pub fn vsz(&mut self) -> VSZ_W<'_, VCR_SPEC> {
         VSZ_W::new(self, 16)
     }
 }

@@ -248,22 +248,22 @@ impl R {
 impl W {
     ///Bit 0 - I/O polarity switch Function varies depending on the operating mode.
     #[inline(always)]
-    pub fn tedgsel(&mut self) -> TEDGSEL_W<AGTIOC_SPEC> {
+    pub fn tedgsel(&mut self) -> TEDGSEL_W<'_, AGTIOC_SPEC> {
         TEDGSEL_W::new(self, 0)
     }
     ///Bit 2 - AGTOn output enable
     #[inline(always)]
-    pub fn toe(&mut self) -> TOE_W<AGTIOC_SPEC> {
+    pub fn toe(&mut self) -> TOE_W<'_, AGTIOC_SPEC> {
         TOE_W::new(self, 2)
     }
     ///Bits 4:5 - Input filter
     #[inline(always)]
-    pub fn tipf(&mut self) -> TIPF_W<AGTIOC_SPEC> {
+    pub fn tipf(&mut self) -> TIPF_W<'_, AGTIOC_SPEC> {
         TIPF_W::new(self, 4)
     }
     ///Bits 6:7 - Count control
     #[inline(always)]
-    pub fn tiogt(&mut self) -> TIOGT_W<AGTIOC_SPEC> {
+    pub fn tiogt(&mut self) -> TIOGT_W<'_, AGTIOC_SPEC> {
         TIOGT_W::new(self, 6)
     }
 }

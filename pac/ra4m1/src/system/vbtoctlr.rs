@@ -367,32 +367,32 @@ impl R {
 impl W {
     ///Bit 0 - VBATT Wakeup I/O 0 Output Enable
     #[inline(always)]
-    pub fn vch0oen(&mut self) -> VCH0OEN_W<VBTOCTLR_SPEC> {
+    pub fn vch0oen(&mut self) -> VCH0OEN_W<'_, VBTOCTLR_SPEC> {
         VCH0OEN_W::new(self, 0)
     }
     ///Bit 1 - VBATT Wakeup I/O 1 Output Enable
     #[inline(always)]
-    pub fn vch1oen(&mut self) -> VCH1OEN_W<VBTOCTLR_SPEC> {
+    pub fn vch1oen(&mut self) -> VCH1OEN_W<'_, VBTOCTLR_SPEC> {
         VCH1OEN_W::new(self, 1)
     }
     ///Bit 2 - VBATT Wakeup I/O 2 Output Enable
     #[inline(always)]
-    pub fn vch2oen(&mut self) -> VCH2OEN_W<VBTOCTLR_SPEC> {
+    pub fn vch2oen(&mut self) -> VCH2OEN_W<'_, VBTOCTLR_SPEC> {
         VCH2OEN_W::new(self, 2)
     }
     ///Bit 3 - VBATT Wakeup I/O 0 Output Level Selection
     #[inline(always)]
-    pub fn vout0lsel(&mut self) -> VOUT0LSEL_W<VBTOCTLR_SPEC> {
+    pub fn vout0lsel(&mut self) -> VOUT0LSEL_W<'_, VBTOCTLR_SPEC> {
         VOUT0LSEL_W::new(self, 3)
     }
     ///Bit 4 - VBATT Wakeup I/O 1 Output Level Selection
     #[inline(always)]
-    pub fn vout1lsel(&mut self) -> VOUT1LSEL_W<VBTOCTLR_SPEC> {
+    pub fn vout1lsel(&mut self) -> VOUT1LSEL_W<'_, VBTOCTLR_SPEC> {
         VOUT1LSEL_W::new(self, 4)
     }
     ///Bit 5 - VBATT Wakeup I/O 2 Output Level Selection
     #[inline(always)]
-    pub fn vout2lsel(&mut self) -> VOUT2LSEL_W<VBTOCTLR_SPEC> {
+    pub fn vout2lsel(&mut self) -> VOUT2LSEL_W<'_, VBTOCTLR_SPEC> {
         VOUT2LSEL_W::new(self, 5)
     }
 }

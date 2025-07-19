@@ -487,42 +487,42 @@ impl R {
 impl W {
     ///Bit 0 - Timeout Interrupt Request Enable
     #[inline(always)]
-    pub fn tmoie(&mut self) -> TMOIE_W<ICIER_SPEC> {
+    pub fn tmoie(&mut self) -> TMOIE_W<'_, ICIER_SPEC> {
         TMOIE_W::new(self, 0)
     }
     ///Bit 1 - Arbitration-Lost Interrupt Request Enable
     #[inline(always)]
-    pub fn alie(&mut self) -> ALIE_W<ICIER_SPEC> {
+    pub fn alie(&mut self) -> ALIE_W<'_, ICIER_SPEC> {
         ALIE_W::new(self, 1)
     }
     ///Bit 2 - Start Condition Detection Interrupt Request Enable
     #[inline(always)]
-    pub fn stie(&mut self) -> STIE_W<ICIER_SPEC> {
+    pub fn stie(&mut self) -> STIE_W<'_, ICIER_SPEC> {
         STIE_W::new(self, 2)
     }
     ///Bit 3 - Stop Condition Detection Interrupt Request Enable
     #[inline(always)]
-    pub fn spie(&mut self) -> SPIE_W<ICIER_SPEC> {
+    pub fn spie(&mut self) -> SPIE_W<'_, ICIER_SPEC> {
         SPIE_W::new(self, 3)
     }
     ///Bit 4 - NACK Reception Interrupt Request Enable
     #[inline(always)]
-    pub fn nakie(&mut self) -> NAKIE_W<ICIER_SPEC> {
+    pub fn nakie(&mut self) -> NAKIE_W<'_, ICIER_SPEC> {
         NAKIE_W::new(self, 4)
     }
     ///Bit 5 - Receive Data Full Interrupt Request Enable
     #[inline(always)]
-    pub fn rie(&mut self) -> RIE_W<ICIER_SPEC> {
+    pub fn rie(&mut self) -> RIE_W<'_, ICIER_SPEC> {
         RIE_W::new(self, 5)
     }
     ///Bit 6 - Transmit End Interrupt Request Enable
     #[inline(always)]
-    pub fn teie(&mut self) -> TEIE_W<ICIER_SPEC> {
+    pub fn teie(&mut self) -> TEIE_W<'_, ICIER_SPEC> {
         TEIE_W::new(self, 6)
     }
     ///Bit 7 - Transmit Data Empty Interrupt Request Enable
     #[inline(always)]
-    pub fn tie(&mut self) -> TIE_W<ICIER_SPEC> {
+    pub fn tie(&mut self) -> TIE_W<'_, ICIER_SPEC> {
         TIE_W::new(self, 7)
     }
 }

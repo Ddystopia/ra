@@ -25,12 +25,12 @@ impl R {
 impl W {
     ///Bits 0:7 - timeSource Field SettingThese bits set the value of the timeSource fields of Announce messages.
     #[inline(always)]
-    pub fn tsrc(&mut self) -> TSRC_W<CUOTSR_SPEC> {
+    pub fn tsrc(&mut self) -> TSRC_W<'_, CUOTSR_SPEC> {
         TSRC_W::new(self, 0)
     }
     ///Bits 16:31 - currentUtcOffset Field SettingThese bits set the value of the currentUtcOffset fields of Announce messages.
     #[inline(always)]
-    pub fn cuto(&mut self) -> CUTO_W<CUOTSR_SPEC> {
+    pub fn cuto(&mut self) -> CUTO_W<'_, CUOTSR_SPEC> {
         CUTO_W::new(self, 16)
     }
 }

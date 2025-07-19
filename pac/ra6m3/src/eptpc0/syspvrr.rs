@@ -25,12 +25,12 @@ impl R {
 impl W {
     ///Bits 0:3 - versionPTP Field ValueThese bits are used to set the versionPTP field value of the PTP v2 header.When a message is received, this value is compared with the versionPTP field of the received frame.In generating messages, the value is used for the versionPTP field of the frame for transmission.Set these bits to 0010b (PTP v2).
     #[inline(always)]
-    pub fn ver(&mut self) -> VER_W<SYSPVRR_SPEC> {
+    pub fn ver(&mut self) -> VER_W<'_, SYSPVRR_SPEC> {
         VER_W::new(self, 0)
     }
     ///Bits 4:7 - transportSpecific Field ValueThese bits are used to set the transportSpecific field value of the PTP v2 header.When a message is received, this value is compared with the transportSpecific field of the received frame.In generating messages, the value is used for the transportSpecific field of the frame for transmission.Set these bits to 0000b (IEEE 1588).
     #[inline(always)]
-    pub fn trsp(&mut self) -> TRSP_W<SYSPVRR_SPEC> {
+    pub fn trsp(&mut self) -> TRSP_W<'_, SYSPVRR_SPEC> {
         TRSP_W::new(self, 4)
     }
 }

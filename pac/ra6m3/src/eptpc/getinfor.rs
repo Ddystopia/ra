@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Information Retention ControlNOTE: Once information fetching is directed, values of various statistical information read before completion of information fetching are not guaranteed.
     #[inline(always)]
-    pub fn info(&mut self) -> INFO_W<GETINFOR_SPEC> {
+    pub fn info(&mut self) -> INFO_W<'_, GETINFOR_SPEC> {
         INFO_W::new(self, 0)
     }
 }

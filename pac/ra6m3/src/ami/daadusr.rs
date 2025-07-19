@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 1 - A/D Unit 1 Select
     #[inline(always)]
-    pub fn amadsel1(&mut self) -> AMADSEL1_W<DAADUSR_SPEC> {
+    pub fn amadsel1(&mut self) -> AMADSEL1_W<'_, DAADUSR_SPEC> {
         AMADSEL1_W::new(self, 1)
     }
 }

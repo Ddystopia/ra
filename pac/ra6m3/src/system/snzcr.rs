@@ -187,17 +187,17 @@ impl R {
 impl W {
     ///Bit 0 - RXD0 Snooze Request Enable NOTE: Do not set to 1 other than in asynchronous mode.
     #[inline(always)]
-    pub fn rxdreqen(&mut self) -> RXDREQEN_W<SNZCR_SPEC> {
+    pub fn rxdreqen(&mut self) -> RXDREQEN_W<'_, SNZCR_SPEC> {
         RXDREQEN_W::new(self, 0)
     }
     ///Bit 1 - DTC Enable in Snooze Mode
     #[inline(always)]
-    pub fn snzdtcen(&mut self) -> SNZDTCEN_W<SNZCR_SPEC> {
+    pub fn snzdtcen(&mut self) -> SNZDTCEN_W<'_, SNZCR_SPEC> {
         SNZDTCEN_W::new(self, 1)
     }
     ///Bit 7 - Snooze Mode Enable
     #[inline(always)]
-    pub fn snze(&mut self) -> SNZE_W<SNZCR_SPEC> {
+    pub fn snze(&mut self) -> SNZE_W<'_, SNZCR_SPEC> {
         SNZE_W::new(self, 7)
     }
 }

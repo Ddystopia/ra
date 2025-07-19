@@ -692,47 +692,47 @@ impl R {
 impl W {
     ///Bits 0:3 - BD\[3\]: GTDV Buffer Operation DisableBD\[2\]: GTADTR Buffer Operation DisableBD\[1\]: GTPR Buffer Operation DisableBD\[0\]: GTCCR Buffer Operation Disable
     #[inline(always)]
-    pub fn bd(&mut self) -> BD_W<GTBER_SPEC> {
+    pub fn bd(&mut self) -> BD_W<'_, GTBER_SPEC> {
         BD_W::new(self, 0)
     }
     ///Bits 16:17 - GTCCRA Buffer Operation
     #[inline(always)]
-    pub fn ccra(&mut self) -> CCRA_W<GTBER_SPEC> {
+    pub fn ccra(&mut self) -> CCRA_W<'_, GTBER_SPEC> {
         CCRA_W::new(self, 16)
     }
     ///Bits 18:19 - GTCCRB Buffer Operation
     #[inline(always)]
-    pub fn ccrb(&mut self) -> CCRB_W<GTBER_SPEC> {
+    pub fn ccrb(&mut self) -> CCRB_W<'_, GTBER_SPEC> {
         CCRB_W::new(self, 18)
     }
     ///Bits 20:21 - GTPR Buffer Operation
     #[inline(always)]
-    pub fn pr(&mut self) -> PR_W<GTBER_SPEC> {
+    pub fn pr(&mut self) -> PR_W<'_, GTBER_SPEC> {
         PR_W::new(self, 20)
     }
     ///Bit 22 - GTCCRA and GTCCRB Forcible Buffer OperationThis bit is read as 0.
     #[inline(always)]
-    pub fn ccrswt(&mut self) -> CCRSWT_W<GTBER_SPEC> {
+    pub fn ccrswt(&mut self) -> CCRSWT_W<'_, GTBER_SPEC> {
         CCRSWT_W::new(self, 22)
     }
     ///Bits 24:25 - GTADTRA Buffer Transfer Timing Select in the Triangle wavesNOTE: In the Saw waves, values other than 0 0: Transfer at an underflow (in down-counting) or overflow (in up-counting) is performed.
     #[inline(always)]
-    pub fn adtta(&mut self) -> ADTTA_W<GTBER_SPEC> {
+    pub fn adtta(&mut self) -> ADTTA_W<'_, GTBER_SPEC> {
         ADTTA_W::new(self, 24)
     }
     ///Bit 26 - GTADTRA Double Buffer Operation
     #[inline(always)]
-    pub fn adtda(&mut self) -> ADTDA_W<GTBER_SPEC> {
+    pub fn adtda(&mut self) -> ADTDA_W<'_, GTBER_SPEC> {
         ADTDA_W::new(self, 26)
     }
     ///Bits 28:29 - GTADTRB Buffer Transfer Timing Select in the Triangle wavesNOTE: In the Saw waves, values other than 0 0: Transfer at an underflow (in down-counting) or overflow (in up-counting) is performed.
     #[inline(always)]
-    pub fn adttb(&mut self) -> ADTTB_W<GTBER_SPEC> {
+    pub fn adttb(&mut self) -> ADTTB_W<'_, GTBER_SPEC> {
         ADTTB_W::new(self, 28)
     }
     ///Bit 30 - GTADTRB Double Buffer Operation
     #[inline(always)]
-    pub fn adtdb(&mut self) -> ADTDB_W<GTBER_SPEC> {
+    pub fn adtdb(&mut self) -> ADTDB_W<'_, GTBER_SPEC> {
         ADTDB_W::new(self, 30)
     }
 }

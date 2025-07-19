@@ -7,12 +7,12 @@ pub type SSD_W<'a, REG> = crate::FieldWriter<'a, REG, 16, u16>;
 impl W {
     ///Bits 0:15 - pitch of the framebuffer. A negative width can be used to render bottom-up instead of top-down
     #[inline(always)]
-    pub fn pitch(&mut self) -> PITCH_W<PITCH_SPEC> {
+    pub fn pitch(&mut self) -> PITCH_W<'_, PITCH_SPEC> {
         PITCH_W::new(self, 0)
     }
     ///Bits 16:31 - Spanstore delay
     #[inline(always)]
-    pub fn ssd(&mut self) -> SSD_W<PITCH_SPEC> {
+    pub fn ssd(&mut self) -> SSD_W<'_, PITCH_SPEC> {
         SSD_W::new(self, 16)
     }
 }

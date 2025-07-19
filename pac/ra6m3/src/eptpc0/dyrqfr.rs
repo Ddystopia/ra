@@ -187,17 +187,17 @@ impl R {
 impl W {
     ///Bit 10 - unicastFlag
     #[inline(always)]
-    pub fn flag10(&mut self) -> FLAG10_W<DYRQFR_SPEC> {
+    pub fn flag10(&mut self) -> FLAG10_W<'_, DYRQFR_SPEC> {
         FLAG10_W::new(self, 10)
     }
     ///Bit 13 - PTP profile Specific 1
     #[inline(always)]
-    pub fn flag13(&mut self) -> FLAG13_W<DYRQFR_SPEC> {
+    pub fn flag13(&mut self) -> FLAG13_W<'_, DYRQFR_SPEC> {
         FLAG13_W::new(self, 13)
     }
     ///Bit 14 - PTP profile Specific 2
     #[inline(always)]
-    pub fn flag14(&mut self) -> FLAG14_W<DYRQFR_SPEC> {
+    pub fn flag14(&mut self) -> FLAG14_W<'_, DYRQFR_SPEC> {
         FLAG14_W::new(self, 14)
     }
 }

@@ -307,27 +307,27 @@ impl R {
 impl W {
     ///Bit 0 - Smart Card Interface Mode Select
     #[inline(always)]
-    pub fn smif(&mut self) -> SMIF_W<SCMR_SPEC> {
+    pub fn smif(&mut self) -> SMIF_W<'_, SCMR_SPEC> {
         SMIF_W::new(self, 0)
     }
     ///Bit 2 - Transmitted/Received Data Invert Set this bit to 0 if operation is to be in simple I2C mode.
     #[inline(always)]
-    pub fn sinv(&mut self) -> SINV_W<SCMR_SPEC> {
+    pub fn sinv(&mut self) -> SINV_W<'_, SCMR_SPEC> {
         SINV_W::new(self, 2)
     }
     ///Bit 3 - Transmitted/Received Data Transfer Direction NOTE: The setting is invalid and a fixed data length of 8 bits is used in modes other than asynchronous mode. Set this bit to 1 if operation is to be in simple I2C mode.
     #[inline(always)]
-    pub fn sdir(&mut self) -> SDIR_W<SCMR_SPEC> {
+    pub fn sdir(&mut self) -> SDIR_W<'_, SCMR_SPEC> {
         SDIR_W::new(self, 3)
     }
     ///Bit 4 - Character Length 1 (Only valid in asynchronous mode)
     #[inline(always)]
-    pub fn chr1(&mut self) -> CHR1_W<SCMR_SPEC> {
+    pub fn chr1(&mut self) -> CHR1_W<'_, SCMR_SPEC> {
         CHR1_W::new(self, 4)
     }
     ///Bit 7 - Base Clock Pulse 2 Selects the number of base clock cycles in combination with the SMR.BCP\[1:0\] bits
     #[inline(always)]
-    pub fn bcp2(&mut self) -> BCP2_W<SCMR_SPEC> {
+    pub fn bcp2(&mut self) -> BCP2_W<'_, SCMR_SPEC> {
         BCP2_W::new(self, 7)
     }
 }

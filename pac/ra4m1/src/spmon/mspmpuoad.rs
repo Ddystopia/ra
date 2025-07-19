@@ -106,12 +106,12 @@ impl R {
 impl W {
     ///Bit 0 - Operation after detection
     #[inline(always)]
-    pub fn oad(&mut self) -> OAD_W<MSPMPUOAD_SPEC> {
+    pub fn oad(&mut self) -> OAD_W<'_, MSPMPUOAD_SPEC> {
         OAD_W::new(self, 0)
     }
     ///Bits 8:15 - Write Keyword The data written to these bits are not stored.
     #[inline(always)]
-    pub fn key(&mut self) -> KEY_W<MSPMPUOAD_SPEC> {
+    pub fn key(&mut self) -> KEY_W<'_, MSPMPUOAD_SPEC> {
         KEY_W::new(self, 8)
     }
 }

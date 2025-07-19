@@ -445,37 +445,37 @@ impl R {
 impl W {
     ///Bits 0:7 - Worst 10 Acquisition Time
     #[inline(always)]
-    pub fn wint(&mut self) -> WINT_W<STMR_SPEC> {
+    pub fn wint(&mut self) -> WINT_W<'_, STMR_SPEC> {
         WINT_W::new(self, 0)
     }
     ///Bit 13 - Time Synchronization Correction Mode
     #[inline(always)]
-    pub fn cmod(&mut self) -> CMOD_W<STMR_SPEC> {
+    pub fn cmod(&mut self) -> CMOD_W<'_, STMR_SPEC> {
         CMOD_W::new(self, 13)
     }
     ///Bit 15 - Worst 10 Acquisition Control Select
     #[inline(always)]
-    pub fn w10s(&mut self) -> W10S_W<STMR_SPEC> {
+    pub fn w10s(&mut self) -> W10S_W<'_, STMR_SPEC> {
         W10S_W::new(self, 15)
     }
     ///Bits 16:19 - Synchronized State Detection Threshold Setting
     #[inline(always)]
-    pub fn syth(&mut self) -> SYTH_W<STMR_SPEC> {
+    pub fn syth(&mut self) -> SYTH_W<'_, STMR_SPEC> {
         SYTH_W::new(self, 16)
     }
     ///Bits 20:23 - Synchronization Loss Detection Threshold Setting
     #[inline(always)]
-    pub fn dvth(&mut self) -> DVTH_W<STMR_SPEC> {
+    pub fn dvth(&mut self) -> DVTH_W<'_, STMR_SPEC> {
         DVTH_W::new(self, 20)
     }
     ///Bit 28 - Alarm Detection Enable 0
     #[inline(always)]
-    pub fn alen0(&mut self) -> ALEN0_W<STMR_SPEC> {
+    pub fn alen0(&mut self) -> ALEN0_W<'_, STMR_SPEC> {
         ALEN0_W::new(self, 28)
     }
     ///Bit 29 - Alarm Detection Enable 1
     #[inline(always)]
-    pub fn alen1(&mut self) -> ALEN1_W<STMR_SPEC> {
+    pub fn alen1(&mut self) -> ALEN1_W<'_, STMR_SPEC> {
         ALEN1_W::new(self, 29)
     }
 }

@@ -73,7 +73,7 @@ impl R {
 impl W {
     ///Bits 0:15 - Automatic PAUSE Frame Retransmit Setting
     #[inline(always)]
-    pub fn tpause(&mut self) -> TPAUSE_W<TPAUSER_SPEC> {
+    pub fn tpause(&mut self) -> TPAUSE_W<'_, TPAUSER_SPEC> {
         TPAUSE_W::new(self, 0)
     }
 }

@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 15 - Software Standby
     #[inline(always)]
-    pub fn ssby(&mut self) -> SSBY_W<SBYCR_SPEC> {
+    pub fn ssby(&mut self) -> SSBY_W<'_, SBYCR_SPEC> {
         SSBY_W::new(self, 15)
     }
 }

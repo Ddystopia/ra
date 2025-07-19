@@ -121,12 +121,12 @@ impl R {
 impl W {
     ///Bits 0:10 - Number of detection lines
     #[inline(always)]
-    pub fn line(&mut self) -> LINE_W<GR_CLUTINT_SPEC> {
+    pub fn line(&mut self) -> LINE_W<'_, GR_CLUTINT_SPEC> {
         LINE_W::new(self, 0)
     }
     ///Bit 16 - CLUT table control
     #[inline(always)]
-    pub fn sel(&mut self) -> SEL_W<GR_CLUTINT_SPEC> {
+    pub fn sel(&mut self) -> SEL_W<'_, GR_CLUTINT_SPEC> {
         SEL_W::new(self, 16)
     }
 }

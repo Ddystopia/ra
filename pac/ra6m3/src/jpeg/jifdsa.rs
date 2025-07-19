@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Input Coded Data Source AddressInput Coded Data Source Address (in 8-byte units) The lower three bits should be set to 0.
     #[inline(always)]
-    pub fn dsa(&mut self) -> DSA_W<JIFDSA_SPEC> {
+    pub fn dsa(&mut self) -> DSA_W<'_, JIFDSA_SPEC> {
         DSA_W::new(self, 0)
     }
 }

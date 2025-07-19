@@ -11,22 +11,22 @@ pub type COLOR2A_W<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl W {
     ///Bits 0:7 - Blue channel of color 2
     #[inline(always)]
-    pub fn color2b(&mut self) -> COLOR2B_W<COLOR2_SPEC> {
+    pub fn color2b(&mut self) -> COLOR2B_W<'_, COLOR2_SPEC> {
         COLOR2B_W::new(self, 0)
     }
     ///Bits 8:15 - Green channel of color 2
     #[inline(always)]
-    pub fn color2g(&mut self) -> COLOR2G_W<COLOR2_SPEC> {
+    pub fn color2g(&mut self) -> COLOR2G_W<'_, COLOR2_SPEC> {
         COLOR2G_W::new(self, 8)
     }
     ///Bits 16:23 - Red channel of color 2
     #[inline(always)]
-    pub fn color2r(&mut self) -> COLOR2R_W<COLOR2_SPEC> {
+    pub fn color2r(&mut self) -> COLOR2R_W<'_, COLOR2_SPEC> {
         COLOR2R_W::new(self, 16)
     }
     ///Bits 24:31 - Alpha channel of color 2(0x00: transparent. . . 0xFF: opaque)
     #[inline(always)]
-    pub fn color2a(&mut self) -> COLOR2A_W<COLOR2_SPEC> {
+    pub fn color2a(&mut self) -> COLOR2A_W<'_, COLOR2_SPEC> {
         COLOR2A_W::new(self, 24)
     }
 }

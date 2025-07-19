@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Compare Capture Register D
     #[inline(always)]
-    pub fn gtccrd(&mut self) -> GTCCRD_W<GTCCRD_SPEC> {
+    pub fn gtccrd(&mut self) -> GTCCRD_W<'_, GTCCRD_SPEC> {
         GTCCRD_W::new(self, 0)
     }
 }

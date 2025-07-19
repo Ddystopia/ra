@@ -69,12 +69,12 @@ impl R {
 impl W {
     ///Bits 0:7 - Frame rate for alpha blending in rectangular area.
     #[inline(always)]
-    pub fn arcrate(&mut self) -> ARCRATE_W<GR_AB6_SPEC> {
+    pub fn arcrate(&mut self) -> ARCRATE_W<'_, GR_AB6_SPEC> {
         ARCRATE_W::new(self, 0)
     }
     ///Bits 16:24 - Alpha coefficient for alpha blending in rectangular area (-255 to 255).\[8\]: Sign (0: addition, 1: subtraction)\[7:0\]: Variation (absolute value)
     #[inline(always)]
-    pub fn arccoef(&mut self) -> ARCCOEF_W<GR_AB6_SPEC> {
+    pub fn arccoef(&mut self) -> ARCCOEF_W<'_, GR_AB6_SPEC> {
         ARCCOEF_W::new(self, 16)
     }
 }

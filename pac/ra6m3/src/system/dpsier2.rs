@@ -307,27 +307,27 @@ impl R {
 impl W {
     ///Bit 0 - LVD1 Deep Standby Cancel Signal Enable
     #[inline(always)]
-    pub fn dlvd1ie(&mut self) -> DLVD1IE_W<DPSIER2_SPEC> {
+    pub fn dlvd1ie(&mut self) -> DLVD1IE_W<'_, DPSIER2_SPEC> {
         DLVD1IE_W::new(self, 0)
     }
     ///Bit 1 - LVD2 Deep Standby Cancel Signal Enable
     #[inline(always)]
-    pub fn dlvd2ie(&mut self) -> DLVD2IE_W<DPSIER2_SPEC> {
+    pub fn dlvd2ie(&mut self) -> DLVD2IE_W<'_, DPSIER2_SPEC> {
         DLVD2IE_W::new(self, 1)
     }
     ///Bit 2 - RTC Interval interrupt Deep Standby Cancel Signal Enable
     #[inline(always)]
-    pub fn dtrtciie(&mut self) -> DTRTCIIE_W<DPSIER2_SPEC> {
+    pub fn dtrtciie(&mut self) -> DTRTCIIE_W<'_, DPSIER2_SPEC> {
         DTRTCIIE_W::new(self, 2)
     }
     ///Bit 3 - RTC Alarm interrupt Deep Standby Cancel Signal Enable
     #[inline(always)]
-    pub fn drtcaie(&mut self) -> DRTCAIE_W<DPSIER2_SPEC> {
+    pub fn drtcaie(&mut self) -> DRTCAIE_W<'_, DPSIER2_SPEC> {
         DRTCAIE_W::new(self, 3)
     }
     ///Bit 4 - NMI Pin Enable
     #[inline(always)]
-    pub fn dnmie(&mut self) -> DNMIE_W<DPSIER2_SPEC> {
+    pub fn dnmie(&mut self) -> DNMIE_W<'_, DPSIER2_SPEC> {
         DNMIE_W::new(self, 4)
     }
 }

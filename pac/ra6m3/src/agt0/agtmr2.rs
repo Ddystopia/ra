@@ -212,12 +212,12 @@ impl R {
 impl W {
     ///Bits 0:2 - fsub/LOCO count source clock frequency division ratio select
     #[inline(always)]
-    pub fn cks(&mut self) -> CKS_W<AGTMR2_SPEC> {
+    pub fn cks(&mut self) -> CKS_W<'_, AGTMR2_SPEC> {
         CKS_W::new(self, 0)
     }
     ///Bit 7 - AGT Low Power Mode
     #[inline(always)]
-    pub fn lpm(&mut self) -> LPM_W<AGTMR2_SPEC> {
+    pub fn lpm(&mut self) -> LPM_W<'_, AGTMR2_SPEC> {
         LPM_W::new(self, 7)
     }
 }

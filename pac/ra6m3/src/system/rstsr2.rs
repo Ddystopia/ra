@@ -69,7 +69,7 @@ impl R {
 impl W {
     ///Bit 0 - Cold/Warm Start Determination Flag
     #[inline(always)]
-    pub fn cwsf(&mut self) -> CWSF_W<RSTSR2_SPEC> {
+    pub fn cwsf(&mut self) -> CWSF_W<'_, RSTSR2_SPEC> {
         CWSF_W::new(self, 0)
     }
 }

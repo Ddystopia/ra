@@ -253,17 +253,17 @@ impl R {
 impl W {
     ///Bits 0:1 - IRQ Detection Sense Select
     #[inline(always)]
-    pub fn irqmd(&mut self) -> IRQMD_W<IRQCR_SPEC> {
+    pub fn irqmd(&mut self) -> IRQMD_W<'_, IRQCR_SPEC> {
         IRQMD_W::new(self, 0)
     }
     ///Bits 4:5 - IRQ Digital Filter Sampling Clock Select
     #[inline(always)]
-    pub fn fclksel(&mut self) -> FCLKSEL_W<IRQCR_SPEC> {
+    pub fn fclksel(&mut self) -> FCLKSEL_W<'_, IRQCR_SPEC> {
         FCLKSEL_W::new(self, 4)
     }
     ///Bit 7 - IRQ Digital Filter Enable
     #[inline(always)]
-    pub fn flten(&mut self) -> FLTEN_W<IRQCR_SPEC> {
+    pub fn flten(&mut self) -> FLTEN_W<'_, IRQCR_SPEC> {
         FLTEN_W::new(self, 7)
     }
 }

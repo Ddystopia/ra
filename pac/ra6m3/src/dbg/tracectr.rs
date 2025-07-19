@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 31 - Enable bit for halt request by ETB full
     #[inline(always)]
-    pub fn enetbfull(&mut self) -> ENETBFULL_W<TRACECTR_SPEC> {
+    pub fn enetbfull(&mut self) -> ENETBFULL_W<'_, TRACECTR_SPEC> {
         ENETBFULL_W::new(self, 31)
     }
 }

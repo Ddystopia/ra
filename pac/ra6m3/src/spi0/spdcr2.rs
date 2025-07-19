@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Byte Swap Operating Mode Select
     #[inline(always)]
-    pub fn bysw(&mut self) -> BYSW_W<SPDCR2_SPEC> {
+    pub fn bysw(&mut self) -> BYSW_W<'_, SPDCR2_SPEC> {
         BYSW_W::new(self, 0)
     }
 }

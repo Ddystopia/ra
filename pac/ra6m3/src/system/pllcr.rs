@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - PLL Stop Control
     #[inline(always)]
-    pub fn pllstp(&mut self) -> PLLSTP_W<PLLCR_SPEC> {
+    pub fn pllstp(&mut self) -> PLLSTP_W<'_, PLLCR_SPEC> {
         PLLSTP_W::new(self, 0)
     }
 }

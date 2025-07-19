@@ -172,12 +172,12 @@ impl R {
 impl W {
     ///Bits 0:2 - Pixel FormatNOTE: Read-only in Decompression.
     #[inline(always)]
-    pub fn redu(&mut self) -> REDU_W<JCMOD_SPEC> {
+    pub fn redu(&mut self) -> REDU_W<'_, JCMOD_SPEC> {
         REDU_W::new(self, 0)
     }
     ///Bit 3 - Compression/Decompression Set Note: When changing between processing for compression and for decompression, be sure to reset this module in advance by setting the JCUSRST bit in the software reset control register 2 (SWRSTCR2) of the power-downmodes.
     #[inline(always)]
-    pub fn dsp(&mut self) -> DSP_W<JCMOD_SPEC> {
+    pub fn dsp(&mut self) -> DSP_W<'_, JCMOD_SPEC> {
         DSP_W::new(self, 3)
     }
 }

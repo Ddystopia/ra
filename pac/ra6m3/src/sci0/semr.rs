@@ -367,32 +367,32 @@ impl R {
 impl W {
     ///Bit 2 - Bit Modulation Enable
     #[inline(always)]
-    pub fn brme(&mut self) -> BRME_W<SEMR_SPEC> {
+    pub fn brme(&mut self) -> BRME_W<'_, SEMR_SPEC> {
         BRME_W::new(self, 2)
     }
     ///Bit 3 - Asynchronous Mode Extended Base Clock Select1(Valid only in asynchronous mode and SCR.CKE\[1\]=0)
     #[inline(always)]
-    pub fn abcse(&mut self) -> ABCSE_W<SEMR_SPEC> {
+    pub fn abcse(&mut self) -> ABCSE_W<'_, SEMR_SPEC> {
         ABCSE_W::new(self, 3)
     }
     ///Bit 4 - Asynchronous Mode Base Clock Select(Valid only in asynchronous mode)
     #[inline(always)]
-    pub fn abcs(&mut self) -> ABCS_W<SEMR_SPEC> {
+    pub fn abcs(&mut self) -> ABCS_W<'_, SEMR_SPEC> {
         ABCS_W::new(self, 4)
     }
     ///Bit 5 - Digital Noise Filter Function Enable(The NFEN bit should be 0 without simple I2C mode and asynchronous mode.)In asynchronous mode, for RXDn input only. In simple I2C mode, for RXDn/TxDn input.
     #[inline(always)]
-    pub fn nfen(&mut self) -> NFEN_W<SEMR_SPEC> {
+    pub fn nfen(&mut self) -> NFEN_W<'_, SEMR_SPEC> {
         NFEN_W::new(self, 5)
     }
     ///Bit 6 - Baud Rate Generator Double-Speed Mode Select(Only valid the CKE\[1\] bit in SCR is 0 in asynchronous mode).
     #[inline(always)]
-    pub fn bgdm(&mut self) -> BGDM_W<SEMR_SPEC> {
+    pub fn bgdm(&mut self) -> BGDM_W<'_, SEMR_SPEC> {
         BGDM_W::new(self, 6)
     }
     ///Bit 7 - Asynchronous Start Bit Edge Detection Select(Valid only in asynchronous mode)
     #[inline(always)]
-    pub fn rxdesel(&mut self) -> RXDESEL_W<SEMR_SPEC> {
+    pub fn rxdesel(&mut self) -> RXDESEL_W<'_, SEMR_SPEC> {
         RXDESEL_W::new(self, 7)
     }
 }

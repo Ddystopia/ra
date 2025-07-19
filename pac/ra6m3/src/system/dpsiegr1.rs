@@ -427,37 +427,37 @@ impl R {
 impl W {
     ///Bit 0 - IRQ8-DS Pin Edge Select
     #[inline(always)]
-    pub fn dirq8eg(&mut self) -> DIRQ8EG_W<DPSIEGR1_SPEC> {
+    pub fn dirq8eg(&mut self) -> DIRQ8EG_W<'_, DPSIEGR1_SPEC> {
         DIRQ8EG_W::new(self, 0)
     }
     ///Bit 1 - IRQ9-DS Pin Edge Select
     #[inline(always)]
-    pub fn dirq9eg(&mut self) -> DIRQ9EG_W<DPSIEGR1_SPEC> {
+    pub fn dirq9eg(&mut self) -> DIRQ9EG_W<'_, DPSIEGR1_SPEC> {
         DIRQ9EG_W::new(self, 1)
     }
     ///Bit 2 - IRQ10-DS Pin Edge Select
     #[inline(always)]
-    pub fn dirq10eg(&mut self) -> DIRQ10EG_W<DPSIEGR1_SPEC> {
+    pub fn dirq10eg(&mut self) -> DIRQ10EG_W<'_, DPSIEGR1_SPEC> {
         DIRQ10EG_W::new(self, 2)
     }
     ///Bit 3 - IRQ11-DS Pin Edge Select
     #[inline(always)]
-    pub fn dirq11eg(&mut self) -> DIRQ11EG_W<DPSIEGR1_SPEC> {
+    pub fn dirq11eg(&mut self) -> DIRQ11EG_W<'_, DPSIEGR1_SPEC> {
         DIRQ11EG_W::new(self, 3)
     }
     ///Bit 4 - IRQ12-DS Pin Edge Select
     #[inline(always)]
-    pub fn dirq12eg(&mut self) -> DIRQ12EG_W<DPSIEGR1_SPEC> {
+    pub fn dirq12eg(&mut self) -> DIRQ12EG_W<'_, DPSIEGR1_SPEC> {
         DIRQ12EG_W::new(self, 4)
     }
     ///Bit 5 - IRQ13-DS Pin Edge Select
     #[inline(always)]
-    pub fn dirq13eg(&mut self) -> DIRQ13EG_W<DPSIEGR1_SPEC> {
+    pub fn dirq13eg(&mut self) -> DIRQ13EG_W<'_, DPSIEGR1_SPEC> {
         DIRQ13EG_W::new(self, 5)
     }
     ///Bit 6 - IRQ14-DS Pin Edge Select
     #[inline(always)]
-    pub fn dirq14eg(&mut self) -> DIRQ14EG_W<DPSIEGR1_SPEC> {
+    pub fn dirq14eg(&mut self) -> DIRQ14EG_W<'_, DPSIEGR1_SPEC> {
         DIRQ14EG_W::new(self, 6)
     }
 }

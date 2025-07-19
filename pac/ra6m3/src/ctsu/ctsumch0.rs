@@ -60,7 +60,7 @@ impl R {
 impl W {
     ///Bits 0:4 - CTSU Measurement Channel 0.Note1: Writing to these bits is only enabled in self-capacitance single scan mode (CTSUCR1.CTSUMD\[1:0\] bits = 00b).Note2: If the value of CTSUMCH0 was set to b'11111 in mode other than self-capacitor single scan mode, the measurement is stopped.
     #[inline(always)]
-    pub fn ctsumch0(&mut self) -> CTSUMCH0_W<CTSUMCH0_SPEC> {
+    pub fn ctsumch0(&mut self) -> CTSUMCH0_W<'_, CTSUMCH0_SPEC> {
         CTSUMCH0_W::new(self, 0)
     }
 }

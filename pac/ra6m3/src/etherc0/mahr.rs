@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - MAC Address Upper Bit RegisterThe MAHR register sets the upper 32 bits (b47 to b16) of the 48-bit MAC address.
     #[inline(always)]
-    pub fn mahr(&mut self) -> MAHR_W<MAHR_SPEC> {
+    pub fn mahr(&mut self) -> MAHR_W<'_, MAHR_SPEC> {
         MAHR_W::new(self, 0)
     }
 }

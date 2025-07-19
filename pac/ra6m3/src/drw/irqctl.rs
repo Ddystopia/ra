@@ -201,32 +201,32 @@ where
 impl W {
     ///Bit 0 - ENUMIRQ interrupt mask enable
     #[inline(always)]
-    pub fn enumirqen(&mut self) -> ENUMIRQEN_W<IRQCTL_SPEC> {
+    pub fn enumirqen(&mut self) -> ENUMIRQEN_W<'_, IRQCTL_SPEC> {
         ENUMIRQEN_W::new(self, 0)
     }
     ///Bit 1 - DLISTIRQ interrupt mask enable
     #[inline(always)]
-    pub fn dlistirqen(&mut self) -> DLISTIRQEN_W<IRQCTL_SPEC> {
+    pub fn dlistirqen(&mut self) -> DLISTIRQEN_W<'_, IRQCTL_SPEC> {
         DLISTIRQEN_W::new(self, 1)
     }
     ///Bit 2 - Clear enumeration interrupt ENUMIRQ
     #[inline(always)]
-    pub fn enumirqclr(&mut self) -> ENUMIRQCLR_W<IRQCTL_SPEC> {
+    pub fn enumirqclr(&mut self) -> ENUMIRQCLR_W<'_, IRQCTL_SPEC> {
         ENUMIRQCLR_W::new(self, 2)
     }
     ///Bit 3 - Clear display list interrupt DLISTIRQ
     #[inline(always)]
-    pub fn dlistirqclr(&mut self) -> DLISTIRQCLR_W<IRQCTL_SPEC> {
+    pub fn dlistirqclr(&mut self) -> DLISTIRQCLR_W<'_, IRQCTL_SPEC> {
         DLISTIRQCLR_W::new(self, 3)
     }
     ///Bit 4 - BUSIRQ interrupt mask enable
     #[inline(always)]
-    pub fn busirqen(&mut self) -> BUSIRQEN_W<IRQCTL_SPEC> {
+    pub fn busirqen(&mut self) -> BUSIRQEN_W<'_, IRQCTL_SPEC> {
         BUSIRQEN_W::new(self, 4)
     }
     ///Bit 5 - Clear bus error interrupt BUSIRQ
     #[inline(always)]
-    pub fn busirqclr(&mut self) -> BUSIRQCLR_W<IRQCTL_SPEC> {
+    pub fn busirqclr(&mut self) -> BUSIRQCLR_W<'_, IRQCTL_SPEC> {
         BUSIRQCLR_W::new(self, 5)
     }
 }

@@ -160,12 +160,12 @@ impl R {
 impl W {
     ///Bit 0 - Operation Enable
     #[inline(always)]
-    pub fn exenb(&mut self) -> EXENB_W<SDCCR_SPEC> {
+    pub fn exenb(&mut self) -> EXENB_W<'_, SDCCR_SPEC> {
         EXENB_W::new(self, 0)
     }
     ///Bits 4:5 - SDRAM Bus Width Select
     #[inline(always)]
-    pub fn bsize(&mut self) -> BSIZE_W<SDCCR_SPEC> {
+    pub fn bsize(&mut self) -> BSIZE_W<'_, SDCCR_SPEC> {
         BSIZE_W::new(self, 4)
     }
 }

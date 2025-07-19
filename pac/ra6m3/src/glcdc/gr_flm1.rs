@@ -73,7 +73,7 @@ impl R {
 impl W {
     ///Bits 0:1 - Burst transfer control for graphics data (frame buffer data)access
     #[inline(always)]
-    pub fn bstmd(&mut self) -> BSTMD_W<GR_FLM1_SPEC> {
+    pub fn bstmd(&mut self) -> BSTMD_W<'_, GR_FLM1_SPEC> {
         BSTMD_W::new(self, 0)
     }
 }

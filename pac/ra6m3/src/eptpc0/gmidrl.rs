@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - These bits hold the setting for the lower-order 32 bits of the value of the grandmasterIdentity fields of Announce messages.
     #[inline(always)]
-    pub fn gmidrl(&mut self) -> GMIDRL_W<GMIDRL_SPEC> {
+    pub fn gmidrl(&mut self) -> GMIDRL_W<'_, GMIDRL_SPEC> {
         GMIDRL_W::new(self, 0)
     }
 }

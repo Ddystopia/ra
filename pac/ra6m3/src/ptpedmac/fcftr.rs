@@ -297,12 +297,12 @@ impl R {
 impl W {
     ///Bits 0:2 - Receive FIFO Data PAUSE Output Threshold(When (RFDO+1)x256-32 bytes of data is stored in the receive FIFO.)
     #[inline(always)]
-    pub fn rfdo(&mut self) -> RFDO_W<FCFTR_SPEC> {
+    pub fn rfdo(&mut self) -> RFDO_W<'_, FCFTR_SPEC> {
         RFDO_W::new(self, 0)
     }
     ///Bits 16:18 - Receive FIFO Frame PAUSE Output Threshold(When ((RFFO+1)x2) receive frames have been stored in the receive FIFO.)
     #[inline(always)]
-    pub fn rffo(&mut self) -> RFFO_W<FCFTR_SPEC> {
+    pub fn rffo(&mut self) -> RFFO_W<'_, FCFTR_SPEC> {
         RFFO_W::new(self, 16)
     }
 }

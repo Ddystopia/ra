@@ -113,12 +113,12 @@ impl R {
 impl W {
     ///Bits 0:10 - STVx1 second change timingSets the signal assertion width.
     #[inline(always)]
-    pub fn vw(&mut self) -> VW_W<TCON_STV1_SPEC> {
+    pub fn vw(&mut self) -> VW_W<'_, TCON_STV1_SPEC> {
         VW_W::new(self, 0)
     }
     ///Bits 16:26 - STVx1 first change timing
     #[inline(always)]
-    pub fn vs(&mut self) -> VS_W<TCON_STV1_SPEC> {
+    pub fn vs(&mut self) -> VS_W<'_, TCON_STV1_SPEC> {
         VS_W::new(self, 16)
     }
 }

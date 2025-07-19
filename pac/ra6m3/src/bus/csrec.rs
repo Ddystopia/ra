@@ -139,12 +139,12 @@ impl R {
 impl W {
     ///Bits 0:3 - Read Recovery
     #[inline(always)]
-    pub fn rrcv(&mut self) -> RRCV_W<CSREC_SPEC> {
+    pub fn rrcv(&mut self) -> RRCV_W<'_, CSREC_SPEC> {
         RRCV_W::new(self, 0)
     }
     ///Bits 8:11 - Write Recovery
     #[inline(always)]
-    pub fn wrcv(&mut self) -> WRCV_W<CSREC_SPEC> {
+    pub fn wrcv(&mut self) -> WRCV_W<'_, CSREC_SPEC> {
         WRCV_W::new(self, 8)
     }
 }

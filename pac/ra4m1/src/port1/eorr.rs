@@ -74,7 +74,7 @@ impl R {
 impl W {
     ///Bits 0:15 - Pmn Event Output Reset
     #[inline(always)]
-    pub fn eorr(&mut self) -> EORR_W<EORR_SPEC> {
+    pub fn eorr(&mut self) -> EORR_W<'_, EORR_SPEC> {
         EORR_W::new(self, 0)
     }
 }

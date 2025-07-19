@@ -166,17 +166,17 @@ impl R {
 impl W {
     ///Bit 0 - Master Group enable
     #[inline(always)]
-    pub fn oad(&mut self) -> OAD_W<SMPUCTL_SPEC> {
+    pub fn oad(&mut self) -> OAD_W<'_, SMPUCTL_SPEC> {
         OAD_W::new(self, 0)
     }
     ///Bit 1 - Protection of register
     #[inline(always)]
-    pub fn protect(&mut self) -> PROTECT_W<SMPUCTL_SPEC> {
+    pub fn protect(&mut self) -> PROTECT_W<'_, SMPUCTL_SPEC> {
         PROTECT_W::new(self, 1)
     }
     ///Bits 8:15 - Key Code This bit is used to enable or disable rewriting of the PROTECT and OAD bit.
     #[inline(always)]
-    pub fn key(&mut self) -> KEY_W<SMPUCTL_SPEC> {
+    pub fn key(&mut self) -> KEY_W<'_, SMPUCTL_SPEC> {
         KEY_W::new(self, 8)
     }
 }

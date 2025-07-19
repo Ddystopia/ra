@@ -211,22 +211,22 @@ impl R {
 impl W {
     ///Bits 0:4 - Destination Address Extended Repeat Area Specifies the extended repeat area on the destination address. For details on the settings.
     #[inline(always)]
-    pub fn dara(&mut self) -> DARA_W<DMAMD_SPEC> {
+    pub fn dara(&mut self) -> DARA_W<'_, DMAMD_SPEC> {
         DARA_W::new(self, 0)
     }
     ///Bits 6:7 - Destination Address Update Mode
     #[inline(always)]
-    pub fn dm(&mut self) -> DM_W<DMAMD_SPEC> {
+    pub fn dm(&mut self) -> DM_W<'_, DMAMD_SPEC> {
         DM_W::new(self, 6)
     }
     ///Bits 8:12 - Source Address Extended Repeat Area Specifies the extended repeat area on the source address. For details on the settings.
     #[inline(always)]
-    pub fn sara(&mut self) -> SARA_W<DMAMD_SPEC> {
+    pub fn sara(&mut self) -> SARA_W<'_, DMAMD_SPEC> {
         SARA_W::new(self, 8)
     }
     ///Bits 14:15 - Source Address Update Mode
     #[inline(always)]
-    pub fn sm(&mut self) -> SM_W<DMAMD_SPEC> {
+    pub fn sm(&mut self) -> SM_W<'_, DMAMD_SPEC> {
         SM_W::new(self, 14)
     }
 }

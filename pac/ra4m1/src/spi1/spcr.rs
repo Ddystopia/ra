@@ -487,42 +487,42 @@ impl R {
 impl W {
     ///Bit 0 - SPI Mode Select
     #[inline(always)]
-    pub fn spms(&mut self) -> SPMS_W<SPCR_SPEC> {
+    pub fn spms(&mut self) -> SPMS_W<'_, SPCR_SPEC> {
         SPMS_W::new(self, 0)
     }
     ///Bit 1 - Communications Operating Mode Select
     #[inline(always)]
-    pub fn txmd(&mut self) -> TXMD_W<SPCR_SPEC> {
+    pub fn txmd(&mut self) -> TXMD_W<'_, SPCR_SPEC> {
         TXMD_W::new(self, 1)
     }
     ///Bit 2 - Mode Fault Error Detection Enable
     #[inline(always)]
-    pub fn modfen(&mut self) -> MODFEN_W<SPCR_SPEC> {
+    pub fn modfen(&mut self) -> MODFEN_W<'_, SPCR_SPEC> {
         MODFEN_W::new(self, 2)
     }
     ///Bit 3 - SPI Master/Slave Mode Select
     #[inline(always)]
-    pub fn mstr(&mut self) -> MSTR_W<SPCR_SPEC> {
+    pub fn mstr(&mut self) -> MSTR_W<'_, SPCR_SPEC> {
         MSTR_W::new(self, 3)
     }
     ///Bit 4 - SPI Error Interrupt Enable
     #[inline(always)]
-    pub fn speie(&mut self) -> SPEIE_W<SPCR_SPEC> {
+    pub fn speie(&mut self) -> SPEIE_W<'_, SPCR_SPEC> {
         SPEIE_W::new(self, 4)
     }
     ///Bit 5 - Transmit Buffer Empty Interrupt Enable
     #[inline(always)]
-    pub fn sptie(&mut self) -> SPTIE_W<SPCR_SPEC> {
+    pub fn sptie(&mut self) -> SPTIE_W<'_, SPCR_SPEC> {
         SPTIE_W::new(self, 5)
     }
     ///Bit 6 - SPI Function Enable
     #[inline(always)]
-    pub fn spe(&mut self) -> SPE_W<SPCR_SPEC> {
+    pub fn spe(&mut self) -> SPE_W<'_, SPCR_SPEC> {
         SPE_W::new(self, 6)
     }
     ///Bit 7 - SPI Receive Buffer Full Interrupt Enable
     #[inline(always)]
-    pub fn sprie(&mut self) -> SPRIE_W<SPCR_SPEC> {
+    pub fn sprie(&mut self) -> SPRIE_W<'_, SPCR_SPEC> {
         SPRIE_W::new(self, 7)
     }
 }

@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 0 - Oscillation Stop Detection Interrupt Enable
     #[inline(always)]
-    pub fn ostdie(&mut self) -> OSTDIE_W<OSTDCR_SPEC> {
+    pub fn ostdie(&mut self) -> OSTDIE_W<'_, OSTDCR_SPEC> {
         OSTDIE_W::new(self, 0)
     }
     ///Bit 7 - Oscillation Stop Detection Function Enable
     #[inline(always)]
-    pub fn ostde(&mut self) -> OSTDE_W<OSTDCR_SPEC> {
+    pub fn ostde(&mut self) -> OSTDE_W<'_, OSTDCR_SPEC> {
         OSTDE_W::new(self, 7)
     }
 }

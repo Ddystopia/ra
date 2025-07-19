@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Output Protection Function Temporary Release
     #[inline(always)]
-    pub fn sotr(&mut self) -> SOTR_W<GTSOTR_SPEC> {
+    pub fn sotr(&mut self) -> SOTR_W<'_, GTSOTR_SPEC> {
         SOTR_W::new(self, 0)
     }
 }

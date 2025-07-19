@@ -113,12 +113,12 @@ impl R {
 impl W {
     ///Bits 0:10 - Background plane horizontall valid pixel width on the basis of pixel clock (PXCLK)Note: When serial RGB is selected as the output format for the output control block, add two to the horizontal enable signal width and set the resulting value to this field.
     #[inline(always)]
-    pub fn hw(&mut self) -> HW_W<BG_HSIZE_SPEC> {
+    pub fn hw(&mut self) -> HW_W<'_, BG_HSIZE_SPEC> {
         HW_W::new(self, 0)
     }
     ///Bits 16:26 - Background plane horizontal valid pixel start position on the basis of pixel clock (PXCLK).
     #[inline(always)]
-    pub fn hp(&mut self) -> HP_W<BG_HSIZE_SPEC> {
+    pub fn hp(&mut self) -> HP_W<'_, BG_HSIZE_SPEC> {
         HP_W::new(self, 16)
     }
 }

@@ -5,7 +5,7 @@ pub type PATTERN_W<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl W {
     ///Bits 0:7 - Bitmap of the pattern
     #[inline(always)]
-    pub fn pattern(&mut self) -> PATTERN_W<PATTERN_SPEC> {
+    pub fn pattern(&mut self) -> PATTERN_W<'_, PATTERN_SPEC> {
         PATTERN_W::new(self, 0)
     }
 }

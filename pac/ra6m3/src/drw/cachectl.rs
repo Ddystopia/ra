@@ -135,22 +135,22 @@ where
 impl W {
     ///Bit 0 - Framebuffer cache enable
     #[inline(always)]
-    pub fn cenablefx(&mut self) -> CENABLEFX_W<CACHECTL_SPEC> {
+    pub fn cenablefx(&mut self) -> CENABLEFX_W<'_, CACHECTL_SPEC> {
         CENABLEFX_W::new(self, 0)
     }
     ///Bit 1 - Flush framebuffer cache
     #[inline(always)]
-    pub fn cflushfx(&mut self) -> CFLUSHFX_W<CACHECTL_SPEC> {
+    pub fn cflushfx(&mut self) -> CFLUSHFX_W<'_, CACHECTL_SPEC> {
         CFLUSHFX_W::new(self, 1)
     }
     ///Bit 2 - Texture cache enable
     #[inline(always)]
-    pub fn cenabletx(&mut self) -> CENABLETX_W<CACHECTL_SPEC> {
+    pub fn cenabletx(&mut self) -> CENABLETX_W<'_, CACHECTL_SPEC> {
         CENABLETX_W::new(self, 2)
     }
     ///Bit 3 - Flush texture cache
     #[inline(always)]
-    pub fn cflushtx(&mut self) -> CFLUSHTX_W<CACHECTL_SPEC> {
+    pub fn cflushtx(&mut self) -> CFLUSHTX_W<'_, CACHECTL_SPEC> {
         CFLUSHTX_W::new(self, 3)
     }
 }

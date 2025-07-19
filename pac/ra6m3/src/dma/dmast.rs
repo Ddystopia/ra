@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - DMAC Operation Enable
     #[inline(always)]
-    pub fn dmst(&mut self) -> DMST_W<DMAST_SPEC> {
+    pub fn dmst(&mut self) -> DMST_W<'_, DMAST_SPEC> {
         DMST_W::new(self, 0)
     }
 }

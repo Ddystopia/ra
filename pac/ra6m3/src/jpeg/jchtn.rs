@@ -367,32 +367,32 @@ impl R {
 impl W {
     ///Bit 0 - Huffman table number (DC) for the first color component NOTE: Read-only in Decompression.
     #[inline(always)]
-    pub fn htd1(&mut self) -> HTD1_W<JCHTN_SPEC> {
+    pub fn htd1(&mut self) -> HTD1_W<'_, JCHTN_SPEC> {
         HTD1_W::new(self, 0)
     }
     ///Bit 1 - Huffman table number (AC) for the first color componentNOTE: Read-only in Decompression.
     #[inline(always)]
-    pub fn hta1(&mut self) -> HTA1_W<JCHTN_SPEC> {
+    pub fn hta1(&mut self) -> HTA1_W<'_, JCHTN_SPEC> {
         HTA1_W::new(self, 1)
     }
     ///Bit 2 - Huffman table number (DC) for the second color component NOTE: Read-only in Decompression.
     #[inline(always)]
-    pub fn htd2(&mut self) -> HTD2_W<JCHTN_SPEC> {
+    pub fn htd2(&mut self) -> HTD2_W<'_, JCHTN_SPEC> {
         HTD2_W::new(self, 2)
     }
     ///Bit 3 - Huffman table number (AC) for the second color componentNOTE: Read-only in Decompression.
     #[inline(always)]
-    pub fn hta2(&mut self) -> HTA2_W<JCHTN_SPEC> {
+    pub fn hta2(&mut self) -> HTA2_W<'_, JCHTN_SPEC> {
         HTA2_W::new(self, 3)
     }
     ///Bit 4 - Huffman table number (DC) for the third color component NOTE: Read-only in Decompression.
     #[inline(always)]
-    pub fn htd3(&mut self) -> HTD3_W<JCHTN_SPEC> {
+    pub fn htd3(&mut self) -> HTD3_W<'_, JCHTN_SPEC> {
         HTD3_W::new(self, 4)
     }
     ///Bit 5 - Huffman table number (AC) for the third color componentNOTE: Read-only in Decompression.
     #[inline(always)]
-    pub fn hta3(&mut self) -> HTA3_W<JCHTN_SPEC> {
+    pub fn hta3(&mut self) -> HTA3_W<'_, JCHTN_SPEC> {
         HTA3_W::new(self, 5)
     }
 }

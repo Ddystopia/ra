@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - The start address of the transmit descriptor list is set. Set the start address according to the descriptor length selected by the EDMR.DL\[1:0\] bits.16-byte boundary: Lower 4 bits = 0000b32-byte boundary: Lower 5 bits = 00000b64-byte boundary: Lower 6 bits = 000000b
     #[inline(always)]
-    pub fn tdlar(&mut self) -> TDLAR_W<TDLAR_SPEC> {
+    pub fn tdlar(&mut self) -> TDLAR_W<'_, TDLAR_SPEC> {
         TDLAR_W::new(self, 0)
     }
 }

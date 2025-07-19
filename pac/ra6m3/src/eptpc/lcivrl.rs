@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - These bits hold the setting for the fractional portion of the initial value of the local timer counter in nanoseconds.
     #[inline(always)]
-    pub fn lcivrl(&mut self) -> LCIVRL_W<LCIVRL_SPEC> {
+    pub fn lcivrl(&mut self) -> LCIVRL_W<'_, LCIVRL_SPEC> {
         LCIVRL_W::new(self, 0)
     }
 }

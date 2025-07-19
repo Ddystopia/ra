@@ -187,17 +187,17 @@ impl R {
 impl W {
     ///Bit 0 - Interrupt request signal GLCDC_VPOS enable control.
     #[inline(always)]
-    pub fn vposinten(&mut self) -> VPOSINTEN_W<SYSCNT_INTEN_SPEC> {
+    pub fn vposinten(&mut self) -> VPOSINTEN_W<'_, SYSCNT_INTEN_SPEC> {
         VPOSINTEN_W::new(self, 0)
     }
     ///Bit 1 - Interrupt request signal GLCDC_L1UNDF enable control.
     #[inline(always)]
-    pub fn l1undfinten(&mut self) -> L1UNDFINTEN_W<SYSCNT_INTEN_SPEC> {
+    pub fn l1undfinten(&mut self) -> L1UNDFINTEN_W<'_, SYSCNT_INTEN_SPEC> {
         L1UNDFINTEN_W::new(self, 1)
     }
     ///Bit 2 - Interrupt request signal GLCDC_L2UNDF enable control.
     #[inline(always)]
-    pub fn l2undfinten(&mut self) -> L2UNDFINTEN_W<SYSCNT_INTEN_SPEC> {
+    pub fn l2undfinten(&mut self) -> L2UNDFINTEN_W<'_, SYSCNT_INTEN_SPEC> {
         L2UNDFINTEN_W::new(self, 2)
     }
 }

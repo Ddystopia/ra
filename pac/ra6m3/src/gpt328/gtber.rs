@@ -425,32 +425,32 @@ impl R {
 impl W {
     ///Bit 0 - GTCCR Buffer Operation Disable
     #[inline(always)]
-    pub fn bd2(&mut self) -> BD2_W<GTBER_SPEC> {
+    pub fn bd2(&mut self) -> BD2_W<'_, GTBER_SPEC> {
         BD2_W::new(self, 0)
     }
     ///Bit 1 - GTPR Buffer Operation Disable
     #[inline(always)]
-    pub fn bd1(&mut self) -> BD1_W<GTBER_SPEC> {
+    pub fn bd1(&mut self) -> BD1_W<'_, GTBER_SPEC> {
         BD1_W::new(self, 1)
     }
     ///Bits 16:17 - GTCCRA Buffer Operation
     #[inline(always)]
-    pub fn ccra(&mut self) -> CCRA_W<GTBER_SPEC> {
+    pub fn ccra(&mut self) -> CCRA_W<'_, GTBER_SPEC> {
         CCRA_W::new(self, 16)
     }
     ///Bits 18:19 - GTCCRB Buffer Operation
     #[inline(always)]
-    pub fn ccrb(&mut self) -> CCRB_W<GTBER_SPEC> {
+    pub fn ccrb(&mut self) -> CCRB_W<'_, GTBER_SPEC> {
         CCRB_W::new(self, 18)
     }
     ///Bits 20:21 - GTPR Buffer Operation
     #[inline(always)]
-    pub fn pr(&mut self) -> PR_W<GTBER_SPEC> {
+    pub fn pr(&mut self) -> PR_W<'_, GTBER_SPEC> {
         PR_W::new(self, 20)
     }
     ///Bit 22 - GTCCRA and GTCCRB Forcible Buffer OperationThis bit is read as 0.
     #[inline(always)]
-    pub fn ccrswt(&mut self) -> CCRSWT_W<GTBER_SPEC> {
+    pub fn ccrswt(&mut self) -> CCRSWT_W<'_, GTBER_SPEC> {
         CCRSWT_W::new(self, 22)
     }
 }

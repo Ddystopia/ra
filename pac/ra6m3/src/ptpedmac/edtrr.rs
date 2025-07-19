@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Transmit Request (The read value is 0.)
     #[inline(always)]
-    pub fn tr(&mut self) -> TR_W<EDTRR_SPEC> {
+    pub fn tr(&mut self) -> TR_W<'_, EDTRR_SPEC> {
         TR_W::new(self, 0)
     }
 }

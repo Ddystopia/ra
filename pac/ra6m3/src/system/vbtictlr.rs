@@ -187,17 +187,17 @@ impl R {
 impl W {
     ///Bit 0 - RTCIC0 Input Enable
     #[inline(always)]
-    pub fn vch0inen(&mut self) -> VCH0INEN_W<VBTICTLR_SPEC> {
+    pub fn vch0inen(&mut self) -> VCH0INEN_W<'_, VBTICTLR_SPEC> {
         VCH0INEN_W::new(self, 0)
     }
     ///Bit 1 - RTCIC1 Input Enable
     #[inline(always)]
-    pub fn vch1inen(&mut self) -> VCH1INEN_W<VBTICTLR_SPEC> {
+    pub fn vch1inen(&mut self) -> VCH1INEN_W<'_, VBTICTLR_SPEC> {
         VCH1INEN_W::new(self, 1)
     }
     ///Bit 2 - RTCIC2 Input Enable
     #[inline(always)]
-    pub fn vch2inen(&mut self) -> VCH2INEN_W<VBTICTLR_SPEC> {
+    pub fn vch2inen(&mut self) -> VCH2INEN_W<'_, VBTICTLR_SPEC> {
         VCH2INEN_W::new(self, 2)
     }
 }

@@ -256,7 +256,7 @@ impl R {
 impl W {
     ///Bits 0:3 - Error Code (See tables )Identify the type of the error which has occurred in the compressed data analysis for decompression.
     #[inline(always)]
-    pub fn err(&mut self) -> ERR_W<JCDERR_SPEC> {
+    pub fn err(&mut self) -> ERR_W<'_, JCDERR_SPEC> {
         ERR_W::new(self, 0)
     }
 }

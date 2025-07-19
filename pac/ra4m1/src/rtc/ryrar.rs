@@ -25,12 +25,12 @@ impl R {
 impl W {
     ///Bits 0:3 - 1 Year Value for the ones place of years
     #[inline(always)]
-    pub fn yr1(&mut self) -> YR1_W<RYRAR_SPEC> {
+    pub fn yr1(&mut self) -> YR1_W<'_, RYRAR_SPEC> {
         YR1_W::new(self, 0)
     }
     ///Bits 4:7 - 10 Years Value for the tens place of years
     #[inline(always)]
-    pub fn yr10(&mut self) -> YR10_W<RYRAR_SPEC> {
+    pub fn yr10(&mut self) -> YR10_W<'_, RYRAR_SPEC> {
         YR10_W::new(self, 4)
     }
 }

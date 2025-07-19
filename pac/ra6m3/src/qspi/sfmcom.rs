@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - Port for direct communication with the SPI bus.Input/output to and from this port is converted to an SPI bus cycle. This port is accessible in the direct communication mode (DCOM=1) only.Access to this port is ignored in the ROM access mode.
     #[inline(always)]
-    pub fn sfmd(&mut self) -> SFMD_W<SFMCOM_SPEC> {
+    pub fn sfmd(&mut self) -> SFMD_W<'_, SFMCOM_SPEC> {
         SFMD_W::new(self, 0)
     }
 }

@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 2:31 - Region end address register Address where the region starts, for use in region determination.NOTE: Range: 0x1FF00003-0x200FFFFF The low-order 2 bits are fixed to 1.
     #[inline(always)]
-    pub fn mspmpuea(&mut self) -> MSPMPUEA_W<MSPMPUEA_SPEC> {
+    pub fn mspmpuea(&mut self) -> MSPMPUEA_W<'_, MSPMPUEA_SPEC> {
         MSPMPUEA_W::new(self, 2)
     }
 }

@@ -376,32 +376,32 @@ impl R {
 impl W {
     ///Bit 0 - This bit should be 0 in smart card interface mode.
     #[inline(always)]
-    pub fn mpbt(&mut self) -> MPBT_W<SSR_SMCI_SPEC> {
+    pub fn mpbt(&mut self) -> MPBT_W<'_, SSR_SMCI_SPEC> {
         MPBT_W::new(self, 0)
     }
     ///Bit 3 - Parity Error Flag
     #[inline(always)]
-    pub fn per(&mut self) -> PER_W<SSR_SMCI_SPEC> {
+    pub fn per(&mut self) -> PER_W<'_, SSR_SMCI_SPEC> {
         PER_W::new(self, 3)
     }
     ///Bit 4 - Error Signal Status Flag
     #[inline(always)]
-    pub fn ers(&mut self) -> ERS_W<SSR_SMCI_SPEC> {
+    pub fn ers(&mut self) -> ERS_W<'_, SSR_SMCI_SPEC> {
         ERS_W::new(self, 4)
     }
     ///Bit 5 - Overrun Error Flag
     #[inline(always)]
-    pub fn orer(&mut self) -> ORER_W<SSR_SMCI_SPEC> {
+    pub fn orer(&mut self) -> ORER_W<'_, SSR_SMCI_SPEC> {
         ORER_W::new(self, 5)
     }
     ///Bit 6 - Receive Data Full Flag
     #[inline(always)]
-    pub fn rdrf(&mut self) -> RDRF_W<SSR_SMCI_SPEC> {
+    pub fn rdrf(&mut self) -> RDRF_W<'_, SSR_SMCI_SPEC> {
         RDRF_W::new(self, 6)
     }
     ///Bit 7 - Transmit Data Empty Flag
     #[inline(always)]
-    pub fn tdre(&mut self) -> TDRE_W<SSR_SMCI_SPEC> {
+    pub fn tdre(&mut self) -> TDRE_W<'_, SSR_SMCI_SPEC> {
         TDRE_W::new(self, 7)
     }
 }

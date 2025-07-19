@@ -220,17 +220,17 @@ impl R {
 impl W {
     ///Bits 4:5 - Main Clock Oscillator Drive Capability 0 Switching
     #[inline(always)]
-    pub fn modrv0(&mut self) -> MODRV0_W<MOMCR_SPEC> {
+    pub fn modrv0(&mut self) -> MODRV0_W<'_, MOMCR_SPEC> {
         MODRV0_W::new(self, 4)
     }
     ///Bit 6 - Main Clock Oscillator Switching
     #[inline(always)]
-    pub fn mosel(&mut self) -> MOSEL_W<MOMCR_SPEC> {
+    pub fn mosel(&mut self) -> MOSEL_W<'_, MOMCR_SPEC> {
         MOSEL_W::new(self, 6)
     }
     ///Bit 7 - Main Clock Oscillator Drive Capability Auto Switching Enable
     #[inline(always)]
-    pub fn autodrven(&mut self) -> AUTODRVEN_W<MOMCR_SPEC> {
+    pub fn autodrven(&mut self) -> AUTODRVEN_W<'_, MOMCR_SPEC> {
         AUTODRVEN_W::new(self, 7)
     }
 }

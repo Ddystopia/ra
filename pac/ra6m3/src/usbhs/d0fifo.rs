@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - FIFO Port Read receive data from the FIFO buffer or write transmit data to the FIFO buffer by accessing these bits.
     #[inline(always)]
-    pub fn fifoport(&mut self) -> FIFOPORT_W<D0FIFO_SPEC> {
+    pub fn fifoport(&mut self) -> FIFOPORT_W<'_, D0FIFO_SPEC> {
         FIFOPORT_W::new(self, 0)
     }
 }

@@ -206,17 +206,17 @@ impl R {
 impl W {
     ///Bits 24:25 - Output Disable Source Select
     #[inline(always)]
-    pub fn grp(&mut self) -> GRP_W<GTINTAD_SPEC> {
+    pub fn grp(&mut self) -> GRP_W<'_, GTINTAD_SPEC> {
         GRP_W::new(self, 24)
     }
     ///Bit 29 - Same Time Output Level High Disable Request Enable
     #[inline(always)]
-    pub fn grpabh(&mut self) -> GRPABH_W<GTINTAD_SPEC> {
+    pub fn grpabh(&mut self) -> GRPABH_W<'_, GTINTAD_SPEC> {
         GRPABH_W::new(self, 29)
     }
     ///Bit 30 - Same Time Output Level Low Disable Request Enable
     #[inline(always)]
-    pub fn grpabl(&mut self) -> GRPABL_W<GTINTAD_SPEC> {
+    pub fn grpabl(&mut self) -> GRPABL_W<'_, GTINTAD_SPEC> {
         GRPABL_W::new(self, 30)
     }
 }

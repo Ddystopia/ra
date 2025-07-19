@@ -85,17 +85,17 @@ impl R {
 impl W {
     ///Bits 0:3 - 1 Day Value for the ones place of days
     #[inline(always)]
-    pub fn date1(&mut self) -> DATE1_W<RDAYAR_SPEC> {
+    pub fn date1(&mut self) -> DATE1_W<'_, RDAYAR_SPEC> {
         DATE1_W::new(self, 0)
     }
     ///Bits 4:5 - 10 Days Value for the tens place of days
     #[inline(always)]
-    pub fn date10(&mut self) -> DATE10_W<RDAYAR_SPEC> {
+    pub fn date10(&mut self) -> DATE10_W<'_, RDAYAR_SPEC> {
         DATE10_W::new(self, 4)
     }
     ///Bit 7 - Compare enable
     #[inline(always)]
-    pub fn enb(&mut self) -> ENB_W<RDAYAR_SPEC> {
+    pub fn enb(&mut self) -> ENB_W<'_, RDAYAR_SPEC> {
         ENB_W::new(self, 7)
     }
 }

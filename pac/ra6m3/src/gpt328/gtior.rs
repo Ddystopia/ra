@@ -1773,72 +1773,72 @@ impl R {
 impl W {
     ///Bits 0:4 - GTIOCA Pin Function Select
     #[inline(always)]
-    pub fn gtioa(&mut self) -> GTIOA_W<GTIOR_SPEC> {
+    pub fn gtioa(&mut self) -> GTIOA_W<'_, GTIOR_SPEC> {
         GTIOA_W::new(self, 0)
     }
     ///Bit 6 - GTIOCA Pin Output Value Setting at the Count Stop
     #[inline(always)]
-    pub fn oadflt(&mut self) -> OADFLT_W<GTIOR_SPEC> {
+    pub fn oadflt(&mut self) -> OADFLT_W<'_, GTIOR_SPEC> {
         OADFLT_W::new(self, 6)
     }
     ///Bit 7 - GTIOCA Pin Output Setting at the Start/Stop Count
     #[inline(always)]
-    pub fn oahld(&mut self) -> OAHLD_W<GTIOR_SPEC> {
+    pub fn oahld(&mut self) -> OAHLD_W<'_, GTIOR_SPEC> {
         OAHLD_W::new(self, 7)
     }
     ///Bit 8 - GTIOCA Pin Output Enable
     #[inline(always)]
-    pub fn oae(&mut self) -> OAE_W<GTIOR_SPEC> {
+    pub fn oae(&mut self) -> OAE_W<'_, GTIOR_SPEC> {
         OAE_W::new(self, 8)
     }
     ///Bits 9:10 - GTIOCA Pin Disable Value Setting
     #[inline(always)]
-    pub fn oadf(&mut self) -> OADF_W<GTIOR_SPEC> {
+    pub fn oadf(&mut self) -> OADF_W<'_, GTIOR_SPEC> {
         OADF_W::new(self, 9)
     }
     ///Bit 13 - Noise Filter A Enable
     #[inline(always)]
-    pub fn nfaen(&mut self) -> NFAEN_W<GTIOR_SPEC> {
+    pub fn nfaen(&mut self) -> NFAEN_W<'_, GTIOR_SPEC> {
         NFAEN_W::new(self, 13)
     }
     ///Bits 14:15 - Noise Filter A Sampling Clock Select
     #[inline(always)]
-    pub fn nfcsa(&mut self) -> NFCSA_W<GTIOR_SPEC> {
+    pub fn nfcsa(&mut self) -> NFCSA_W<'_, GTIOR_SPEC> {
         NFCSA_W::new(self, 14)
     }
     ///Bits 16:20 - GTIOCB Pin Function Select
     #[inline(always)]
-    pub fn gtiob(&mut self) -> GTIOB_W<GTIOR_SPEC> {
+    pub fn gtiob(&mut self) -> GTIOB_W<'_, GTIOR_SPEC> {
         GTIOB_W::new(self, 16)
     }
     ///Bit 22 - GTIOCB Pin Output Value Setting at the Count Stop
     #[inline(always)]
-    pub fn obdflt(&mut self) -> OBDFLT_W<GTIOR_SPEC> {
+    pub fn obdflt(&mut self) -> OBDFLT_W<'_, GTIOR_SPEC> {
         OBDFLT_W::new(self, 22)
     }
     ///Bit 23 - GTIOCB Pin Output Setting at the Start/Stop Count
     #[inline(always)]
-    pub fn obhld(&mut self) -> OBHLD_W<GTIOR_SPEC> {
+    pub fn obhld(&mut self) -> OBHLD_W<'_, GTIOR_SPEC> {
         OBHLD_W::new(self, 23)
     }
     ///Bit 24 - GTIOCB Pin Output Enable
     #[inline(always)]
-    pub fn obe(&mut self) -> OBE_W<GTIOR_SPEC> {
+    pub fn obe(&mut self) -> OBE_W<'_, GTIOR_SPEC> {
         OBE_W::new(self, 24)
     }
     ///Bits 25:26 - GTIOCB Pin Disable Value Setting
     #[inline(always)]
-    pub fn obdf(&mut self) -> OBDF_W<GTIOR_SPEC> {
+    pub fn obdf(&mut self) -> OBDF_W<'_, GTIOR_SPEC> {
         OBDF_W::new(self, 25)
     }
     ///Bit 29 - Noise Filter B Enable
     #[inline(always)]
-    pub fn nfben(&mut self) -> NFBEN_W<GTIOR_SPEC> {
+    pub fn nfben(&mut self) -> NFBEN_W<'_, GTIOR_SPEC> {
         NFBEN_W::new(self, 29)
     }
     ///Bits 30:31 - Noise Filter B Sampling Clock Select
     #[inline(always)]
-    pub fn nfcsb(&mut self) -> NFCSB_W<GTIOR_SPEC> {
+    pub fn nfcsb(&mut self) -> NFCSB_W<'_, GTIOR_SPEC> {
         NFCSB_W::new(self, 30)
     }
 }

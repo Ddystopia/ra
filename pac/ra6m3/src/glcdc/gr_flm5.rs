@@ -113,12 +113,12 @@ impl R {
 impl W {
     ///Bits 0:15 - Number of data transfer times per line for accessing graphics data (frame buffer data), where one transfer is defined as 16-beat burst access (64-byte boundary)
     #[inline(always)]
-    pub fn datanum(&mut self) -> DATANUM_W<GR_FLM5_SPEC> {
+    pub fn datanum(&mut self) -> DATANUM_W<'_, GR_FLM5_SPEC> {
         DATANUM_W::new(self, 0)
     }
     ///Bits 16:26 - Number of lines per frame for accessing graphics data (frame buffer data).
     #[inline(always)]
-    pub fn lnnum(&mut self) -> LNNUM_W<GR_FLM5_SPEC> {
+    pub fn lnnum(&mut self) -> LNNUM_W<'_, GR_FLM5_SPEC> {
         LNNUM_W::new(self, 16)
     }
 }

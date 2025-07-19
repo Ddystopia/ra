@@ -847,72 +847,72 @@ impl R {
 impl W {
     ///Bit 0 - ELIPPR.CYCP0 Bit Automatic Clearing
     #[inline(always)]
-    pub fn cycp0(&mut self) -> CYCP0_W<ELIPACR_SPEC> {
+    pub fn cycp0(&mut self) -> CYCP0_W<'_, ELIPACR_SPEC> {
         CYCP0_W::new(self, 0)
     }
     ///Bit 1 - ELIPPR.CYCP1 Bit Automatic Clearing
     #[inline(always)]
-    pub fn cycp1(&mut self) -> CYCP1_W<ELIPACR_SPEC> {
+    pub fn cycp1(&mut self) -> CYCP1_W<'_, ELIPACR_SPEC> {
         CYCP1_W::new(self, 1)
     }
     ///Bit 2 - ELIPPR.CYCP2 Bit Automatic Clearing
     #[inline(always)]
-    pub fn cycp2(&mut self) -> CYCP2_W<ELIPACR_SPEC> {
+    pub fn cycp2(&mut self) -> CYCP2_W<'_, ELIPACR_SPEC> {
         CYCP2_W::new(self, 2)
     }
     ///Bit 3 - ELIPPR.CYCP3 Bit Automatic Clearing
     #[inline(always)]
-    pub fn cycp3(&mut self) -> CYCP3_W<ELIPACR_SPEC> {
+    pub fn cycp3(&mut self) -> CYCP3_W<'_, ELIPACR_SPEC> {
         CYCP3_W::new(self, 3)
     }
     ///Bit 4 - ELIPPR.CYCP4 Bit Automatic Clearing
     #[inline(always)]
-    pub fn cycp4(&mut self) -> CYCP4_W<ELIPACR_SPEC> {
+    pub fn cycp4(&mut self) -> CYCP4_W<'_, ELIPACR_SPEC> {
         CYCP4_W::new(self, 4)
     }
     ///Bit 5 - ELIPPR.CYCP5 Bit Automatic Clearing
     #[inline(always)]
-    pub fn cycp5(&mut self) -> CYCP5_W<ELIPACR_SPEC> {
+    pub fn cycp5(&mut self) -> CYCP5_W<'_, ELIPACR_SPEC> {
         CYCP5_W::new(self, 5)
     }
     ///Bit 8 - ELIPPR.CYCN0 Bit Automatic Clearing
     #[inline(always)]
-    pub fn cycn0(&mut self) -> CYCN0_W<ELIPACR_SPEC> {
+    pub fn cycn0(&mut self) -> CYCN0_W<'_, ELIPACR_SPEC> {
         CYCN0_W::new(self, 8)
     }
     ///Bit 9 - ELIPPR.CYCN1 Bit Automatic Clearing
     #[inline(always)]
-    pub fn cycn1(&mut self) -> CYCN1_W<ELIPACR_SPEC> {
+    pub fn cycn1(&mut self) -> CYCN1_W<'_, ELIPACR_SPEC> {
         CYCN1_W::new(self, 9)
     }
     ///Bit 10 - ELIPPR.CYCN2 Bit Automatic Clearing
     #[inline(always)]
-    pub fn cycn2(&mut self) -> CYCN2_W<ELIPACR_SPEC> {
+    pub fn cycn2(&mut self) -> CYCN2_W<'_, ELIPACR_SPEC> {
         CYCN2_W::new(self, 10)
     }
     ///Bit 11 - ELIPPR.CYCN3 Bit Automatic Clearing
     #[inline(always)]
-    pub fn cycn3(&mut self) -> CYCN3_W<ELIPACR_SPEC> {
+    pub fn cycn3(&mut self) -> CYCN3_W<'_, ELIPACR_SPEC> {
         CYCN3_W::new(self, 11)
     }
     ///Bit 12 - ELIPPR.CYCN4 Bit Automatic Clearing
     #[inline(always)]
-    pub fn cycn4(&mut self) -> CYCN4_W<ELIPACR_SPEC> {
+    pub fn cycn4(&mut self) -> CYCN4_W<'_, ELIPACR_SPEC> {
         CYCN4_W::new(self, 12)
     }
     ///Bit 13 - ELIPPR.CYCN5 Bit Automatic Clearing
     #[inline(always)]
-    pub fn cycn5(&mut self) -> CYCN5_W<ELIPACR_SPEC> {
+    pub fn cycn5(&mut self) -> CYCN5_W<'_, ELIPACR_SPEC> {
         CYCN5_W::new(self, 13)
     }
     ///Bit 16 - ELIPPR.PLSP Bit Automatic Clearing
     #[inline(always)]
-    pub fn plsp(&mut self) -> PLSP_W<ELIPACR_SPEC> {
+    pub fn plsp(&mut self) -> PLSP_W<'_, ELIPACR_SPEC> {
         PLSP_W::new(self, 16)
     }
     ///Bit 24 - ELIPPR.PLSN Bit Automatic Clearing
     #[inline(always)]
-    pub fn plsn(&mut self) -> PLSN_W<ELIPACR_SPEC> {
+    pub fn plsn(&mut self) -> PLSN_W<'_, ELIPACR_SPEC> {
         PLSN_W::new(self, 24)
     }
 }

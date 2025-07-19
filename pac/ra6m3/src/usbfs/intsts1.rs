@@ -441,37 +441,37 @@ impl R {
 impl W {
     ///Bit 4 - Setup Transaction Normal Response Interrupt Status
     #[inline(always)]
-    pub fn sack(&mut self) -> SACK_W<INTSTS1_SPEC> {
+    pub fn sack(&mut self) -> SACK_W<'_, INTSTS1_SPEC> {
         SACK_W::new(self, 4)
     }
     ///Bit 5 - Setup Transaction Error Interrupt Status
     #[inline(always)]
-    pub fn sign(&mut self) -> SIGN_W<INTSTS1_SPEC> {
+    pub fn sign(&mut self) -> SIGN_W<'_, INTSTS1_SPEC> {
         SIGN_W::new(self, 5)
     }
     ///Bit 6 - EOF Error Detection Interrupt Status
     #[inline(always)]
-    pub fn eoferr(&mut self) -> EOFERR_W<INTSTS1_SPEC> {
+    pub fn eoferr(&mut self) -> EOFERR_W<'_, INTSTS1_SPEC> {
         EOFERR_W::new(self, 6)
     }
     ///Bit 11 - ATTCH Interrupt Status
     #[inline(always)]
-    pub fn attch(&mut self) -> ATTCH_W<INTSTS1_SPEC> {
+    pub fn attch(&mut self) -> ATTCH_W<'_, INTSTS1_SPEC> {
         ATTCH_W::new(self, 11)
     }
     ///Bit 12 - USB Disconnection Detection Interrupt Status
     #[inline(always)]
-    pub fn dtch(&mut self) -> DTCH_W<INTSTS1_SPEC> {
+    pub fn dtch(&mut self) -> DTCH_W<'_, INTSTS1_SPEC> {
         DTCH_W::new(self, 12)
     }
     ///Bit 14 - USB Bus Change Interrupt Status
     #[inline(always)]
-    pub fn bchg(&mut self) -> BCHG_W<INTSTS1_SPEC> {
+    pub fn bchg(&mut self) -> BCHG_W<'_, INTSTS1_SPEC> {
         BCHG_W::new(self, 14)
     }
     ///Bit 15 - Overcurrent Input Change Interrupt Status
     #[inline(always)]
-    pub fn ovrcr(&mut self) -> OVRCR_W<INTSTS1_SPEC> {
+    pub fn ovrcr(&mut self) -> OVRCR_W<'_, INTSTS1_SPEC> {
         OVRCR_W::new(self, 15)
     }
 }

@@ -877,32 +877,32 @@ impl R {
 impl W {
     ///Bits 0:2 - Peripheral Module Clock D (PCLKD) Select
     #[inline(always)]
-    pub fn pckd(&mut self) -> PCKD_W<SCKDIVCR_SPEC> {
+    pub fn pckd(&mut self) -> PCKD_W<'_, SCKDIVCR_SPEC> {
         PCKD_W::new(self, 0)
     }
     ///Bits 4:6 - Peripheral Module Clock C (PCLKC) Select
     #[inline(always)]
-    pub fn pckc(&mut self) -> PCKC_W<SCKDIVCR_SPEC> {
+    pub fn pckc(&mut self) -> PCKC_W<'_, SCKDIVCR_SPEC> {
         PCKC_W::new(self, 4)
     }
     ///Bits 8:10 - Peripheral Module Clock B (PCLKB) Select
     #[inline(always)]
-    pub fn pckb(&mut self) -> PCKB_W<SCKDIVCR_SPEC> {
+    pub fn pckb(&mut self) -> PCKB_W<'_, SCKDIVCR_SPEC> {
         PCKB_W::new(self, 8)
     }
     ///Bits 12:14 - Peripheral Module Clock A (PCLKA) Select
     #[inline(always)]
-    pub fn pcka(&mut self) -> PCKA_W<SCKDIVCR_SPEC> {
+    pub fn pcka(&mut self) -> PCKA_W<'_, SCKDIVCR_SPEC> {
         PCKA_W::new(self, 12)
     }
     ///Bits 24:26 - System Clock (ICLK) Select
     #[inline(always)]
-    pub fn ick(&mut self) -> ICK_W<SCKDIVCR_SPEC> {
+    pub fn ick(&mut self) -> ICK_W<'_, SCKDIVCR_SPEC> {
         ICK_W::new(self, 24)
     }
     ///Bits 28:30 - Flash IF Clock (FCLK) Select
     #[inline(always)]
-    pub fn fck(&mut self) -> FCK_W<SCKDIVCR_SPEC> {
+    pub fn fck(&mut self) -> FCK_W<'_, SCKDIVCR_SPEC> {
         FCK_W::new(self, 28)
     }
 }

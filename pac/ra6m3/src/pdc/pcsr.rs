@@ -403,27 +403,27 @@ impl R {
 impl W {
     ///Bit 2 - Frame End Flag
     #[inline(always)]
-    pub fn fef(&mut self) -> FEF_W<PCSR_SPEC> {
+    pub fn fef(&mut self) -> FEF_W<'_, PCSR_SPEC> {
         FEF_W::new(self, 2)
     }
     ///Bit 3 - Overrun Flag
     #[inline(always)]
-    pub fn ovrf(&mut self) -> OVRF_W<PCSR_SPEC> {
+    pub fn ovrf(&mut self) -> OVRF_W<'_, PCSR_SPEC> {
         OVRF_W::new(self, 3)
     }
     ///Bit 4 - Underrun Flag
     #[inline(always)]
-    pub fn udrf(&mut self) -> UDRF_W<PCSR_SPEC> {
+    pub fn udrf(&mut self) -> UDRF_W<'_, PCSR_SPEC> {
         UDRF_W::new(self, 4)
     }
     ///Bit 5 - Vertical Line Number Setting Error Flag
     #[inline(always)]
-    pub fn verf(&mut self) -> VERF_W<PCSR_SPEC> {
+    pub fn verf(&mut self) -> VERF_W<'_, PCSR_SPEC> {
         VERF_W::new(self, 5)
     }
     ///Bit 6 - Horizontal Byte Number Setting Error Flag
     #[inline(always)]
-    pub fn herf(&mut self) -> HERF_W<PCSR_SPEC> {
+    pub fn herf(&mut self) -> HERF_W<'_, PCSR_SPEC> {
         HERF_W::new(self, 6)
     }
 }

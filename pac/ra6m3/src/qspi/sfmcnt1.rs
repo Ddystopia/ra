@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 26:31 - BANK Switching AddressWhen accessing from 0x6000_0000 to 0x63FF_FFFF, Addres bus is Set QSPI_EXT\[5:0\] to high-order 6bits of SHADDR\[31:0\]NOTE: Setting 6'h3F is prihibited.
     #[inline(always)]
-    pub fn qspi_ext(&mut self) -> QSPI_EXT_W<SFMCNT1_SPEC> {
+    pub fn qspi_ext(&mut self) -> QSPI_EXT_W<'_, SFMCNT1_SPEC> {
         QSPI_EXT_W::new(self, 26)
     }
 }

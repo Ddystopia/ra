@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - USB Clock Source Select
     #[inline(always)]
-    pub fn usbclksel(&mut self) -> USBCLKSEL_W<USBCKCR_SPEC> {
+    pub fn usbclksel(&mut self) -> USBCLKSEL_W<'_, USBCKCR_SPEC> {
         USBCLKSEL_W::new(self, 0)
     }
 }

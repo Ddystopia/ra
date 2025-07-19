@@ -1327,112 +1327,112 @@ impl R {
 impl W {
     ///Bit 0 - Snooze Request Enable 0 Enable IRQ0 pin snooze request
     #[inline(always)]
-    pub fn snzreqen0(&mut self) -> SNZREQEN0_W<SNZREQCR_SPEC> {
+    pub fn snzreqen0(&mut self) -> SNZREQEN0_W<'_, SNZREQCR_SPEC> {
         SNZREQEN0_W::new(self, 0)
     }
     ///Bit 1 - Snooze Request Enable 1 Enable IRQ1 pin snooze request
     #[inline(always)]
-    pub fn snzreqen1(&mut self) -> SNZREQEN1_W<SNZREQCR_SPEC> {
+    pub fn snzreqen1(&mut self) -> SNZREQEN1_W<'_, SNZREQCR_SPEC> {
         SNZREQEN1_W::new(self, 1)
     }
     ///Bit 2 - Snooze Request Enable 2 Enable IRQ2 pin snooze request
     #[inline(always)]
-    pub fn snzreqen2(&mut self) -> SNZREQEN2_W<SNZREQCR_SPEC> {
+    pub fn snzreqen2(&mut self) -> SNZREQEN2_W<'_, SNZREQCR_SPEC> {
         SNZREQEN2_W::new(self, 2)
     }
     ///Bit 3 - Snooze Request Enable 3 Enable IRQ3 pin snooze request
     #[inline(always)]
-    pub fn snzreqen3(&mut self) -> SNZREQEN3_W<SNZREQCR_SPEC> {
+    pub fn snzreqen3(&mut self) -> SNZREQEN3_W<'_, SNZREQCR_SPEC> {
         SNZREQEN3_W::new(self, 3)
     }
     ///Bit 4 - Snooze Request Enable 4 Enable IRQ4 pin snooze request
     #[inline(always)]
-    pub fn snzreqen4(&mut self) -> SNZREQEN4_W<SNZREQCR_SPEC> {
+    pub fn snzreqen4(&mut self) -> SNZREQEN4_W<'_, SNZREQCR_SPEC> {
         SNZREQEN4_W::new(self, 4)
     }
     ///Bit 5 - Snooze Request Enable 5 Enable IRQ5 pin snooze request
     #[inline(always)]
-    pub fn snzreqen5(&mut self) -> SNZREQEN5_W<SNZREQCR_SPEC> {
+    pub fn snzreqen5(&mut self) -> SNZREQEN5_W<'_, SNZREQCR_SPEC> {
         SNZREQEN5_W::new(self, 5)
     }
     ///Bit 6 - Snooze Request Enable 6 Enable IRQ6 pin snooze request
     #[inline(always)]
-    pub fn snzreqen6(&mut self) -> SNZREQEN6_W<SNZREQCR_SPEC> {
+    pub fn snzreqen6(&mut self) -> SNZREQEN6_W<'_, SNZREQCR_SPEC> {
         SNZREQEN6_W::new(self, 6)
     }
     ///Bit 7 - Snooze Request Enable 7 Enable IRQ7 pin snooze request
     #[inline(always)]
-    pub fn snzreqen7(&mut self) -> SNZREQEN7_W<SNZREQCR_SPEC> {
+    pub fn snzreqen7(&mut self) -> SNZREQEN7_W<'_, SNZREQCR_SPEC> {
         SNZREQEN7_W::new(self, 7)
     }
     ///Bit 8 - Snooze Request Enable 8 Enable IRQ8 pin snooze request
     #[inline(always)]
-    pub fn snzreqen8(&mut self) -> SNZREQEN8_W<SNZREQCR_SPEC> {
+    pub fn snzreqen8(&mut self) -> SNZREQEN8_W<'_, SNZREQCR_SPEC> {
         SNZREQEN8_W::new(self, 8)
     }
     ///Bit 9 - Snooze Request Enable 9 Enable IRQ9 pin snooze request
     #[inline(always)]
-    pub fn snzreqen9(&mut self) -> SNZREQEN9_W<SNZREQCR_SPEC> {
+    pub fn snzreqen9(&mut self) -> SNZREQEN9_W<'_, SNZREQCR_SPEC> {
         SNZREQEN9_W::new(self, 9)
     }
     ///Bit 10 - Snooze Request Enable 10 Enable IRQ10 pin snooze request
     #[inline(always)]
-    pub fn snzreqen10(&mut self) -> SNZREQEN10_W<SNZREQCR_SPEC> {
+    pub fn snzreqen10(&mut self) -> SNZREQEN10_W<'_, SNZREQCR_SPEC> {
         SNZREQEN10_W::new(self, 10)
     }
     ///Bit 11 - Snooze Request Enable 11 Enable IRQ11 pin snooze request
     #[inline(always)]
-    pub fn snzreqen11(&mut self) -> SNZREQEN11_W<SNZREQCR_SPEC> {
+    pub fn snzreqen11(&mut self) -> SNZREQEN11_W<'_, SNZREQCR_SPEC> {
         SNZREQEN11_W::new(self, 11)
     }
     ///Bit 12 - Snooze Request Enable 12 Enable IRQ12 pin snooze request
     #[inline(always)]
-    pub fn snzreqen12(&mut self) -> SNZREQEN12_W<SNZREQCR_SPEC> {
+    pub fn snzreqen12(&mut self) -> SNZREQEN12_W<'_, SNZREQCR_SPEC> {
         SNZREQEN12_W::new(self, 12)
     }
     ///Bit 14 - Snooze Request Enable 14 Enable IRQ14 pin snooze request
     #[inline(always)]
-    pub fn snzreqen14(&mut self) -> SNZREQEN14_W<SNZREQCR_SPEC> {
+    pub fn snzreqen14(&mut self) -> SNZREQEN14_W<'_, SNZREQCR_SPEC> {
         SNZREQEN14_W::new(self, 14)
     }
     ///Bit 15 - Snooze Request Enable 15 Enable IRQ15 pin snooze request
     #[inline(always)]
-    pub fn snzreqen15(&mut self) -> SNZREQEN15_W<SNZREQCR_SPEC> {
+    pub fn snzreqen15(&mut self) -> SNZREQEN15_W<'_, SNZREQCR_SPEC> {
         SNZREQEN15_W::new(self, 15)
     }
     ///Bit 17 - Snooze Request Enable 17 Enable KINT snooze request
     #[inline(always)]
-    pub fn snzreqen17(&mut self) -> SNZREQEN17_W<SNZREQCR_SPEC> {
+    pub fn snzreqen17(&mut self) -> SNZREQEN17_W<'_, SNZREQCR_SPEC> {
         SNZREQEN17_W::new(self, 17)
     }
     ///Bit 23 - Snooze Request Enable 23 Enable RTC alarm snooze request
     #[inline(always)]
-    pub fn snzreqen23(&mut self) -> SNZREQEN23_W<SNZREQCR_SPEC> {
+    pub fn snzreqen23(&mut self) -> SNZREQEN23_W<'_, SNZREQCR_SPEC> {
         SNZREQEN23_W::new(self, 23)
     }
     ///Bit 24 - Snooze Request Enable 24 Enable RTC alarm snooze request
     #[inline(always)]
-    pub fn snzreqen24(&mut self) -> SNZREQEN24_W<SNZREQCR_SPEC> {
+    pub fn snzreqen24(&mut self) -> SNZREQEN24_W<'_, SNZREQCR_SPEC> {
         SNZREQEN24_W::new(self, 24)
     }
     ///Bit 25 - Snooze Request Enable 25 Enable RTC period snooze request
     #[inline(always)]
-    pub fn snzreqen25(&mut self) -> SNZREQEN25_W<SNZREQCR_SPEC> {
+    pub fn snzreqen25(&mut self) -> SNZREQEN25_W<'_, SNZREQCR_SPEC> {
         SNZREQEN25_W::new(self, 25)
     }
     ///Bit 28 - Snooze Request Enable 28 Enable AGT1 underflow snooze request
     #[inline(always)]
-    pub fn snzreqen28(&mut self) -> SNZREQEN28_W<SNZREQCR_SPEC> {
+    pub fn snzreqen28(&mut self) -> SNZREQEN28_W<'_, SNZREQCR_SPEC> {
         SNZREQEN28_W::new(self, 28)
     }
     ///Bit 29 - Snooze Request Enable 29 Enable AGT1 compare match A snooze request
     #[inline(always)]
-    pub fn snzreqen29(&mut self) -> SNZREQEN29_W<SNZREQCR_SPEC> {
+    pub fn snzreqen29(&mut self) -> SNZREQEN29_W<'_, SNZREQCR_SPEC> {
         SNZREQEN29_W::new(self, 29)
     }
     ///Bit 30 - Snooze Request Enable 30 Enable AGT1 compare match B snooze request
     #[inline(always)]
-    pub fn snzreqen30(&mut self) -> SNZREQEN30_W<SNZREQCR_SPEC> {
+    pub fn snzreqen30(&mut self) -> SNZREQEN30_W<'_, SNZREQCR_SPEC> {
         SNZREQEN30_W::new(self, 30)
     }
 }

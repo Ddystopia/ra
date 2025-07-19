@@ -727,62 +727,62 @@ impl R {
 impl W {
     ///Bit 0 - A through amplifier is enable for PGA P000
     #[inline(always)]
-    pub fn p000sel0(&mut self) -> P000SEL0_W<ADPGACR_SPEC> {
+    pub fn p000sel0(&mut self) -> P000SEL0_W<'_, ADPGACR_SPEC> {
         P000SEL0_W::new(self, 0)
     }
     ///Bit 1 - The amplifier passing is enable for PGA P000
     #[inline(always)]
-    pub fn p000sel1(&mut self) -> P000SEL1_W<ADPGACR_SPEC> {
+    pub fn p000sel1(&mut self) -> P000SEL1_W<'_, ADPGACR_SPEC> {
         P000SEL1_W::new(self, 1)
     }
     ///Bit 2 - Amplifier enable bit for PGA P000
     #[inline(always)]
-    pub fn p000enamp(&mut self) -> P000ENAMP_W<ADPGACR_SPEC> {
+    pub fn p000enamp(&mut self) -> P000ENAMP_W<'_, ADPGACR_SPEC> {
         P000ENAMP_W::new(self, 2)
     }
     ///Bit 3 - PGA P000 gain setting and enable bit
     #[inline(always)]
-    pub fn p000gen(&mut self) -> P000GEN_W<ADPGACR_SPEC> {
+    pub fn p000gen(&mut self) -> P000GEN_W<'_, ADPGACR_SPEC> {
         P000GEN_W::new(self, 3)
     }
     ///Bit 4 - A through amplifier is enable for PGA P001
     #[inline(always)]
-    pub fn p001sel0(&mut self) -> P001SEL0_W<ADPGACR_SPEC> {
+    pub fn p001sel0(&mut self) -> P001SEL0_W<'_, ADPGACR_SPEC> {
         P001SEL0_W::new(self, 4)
     }
     ///Bit 5 - The amplifier passing is enable for PGA P001
     #[inline(always)]
-    pub fn p001sel1(&mut self) -> P001SEL1_W<ADPGACR_SPEC> {
+    pub fn p001sel1(&mut self) -> P001SEL1_W<'_, ADPGACR_SPEC> {
         P001SEL1_W::new(self, 5)
     }
     ///Bit 6 - Amplifier enable bit for PGA P001
     #[inline(always)]
-    pub fn p001enamp(&mut self) -> P001ENAMP_W<ADPGACR_SPEC> {
+    pub fn p001enamp(&mut self) -> P001ENAMP_W<'_, ADPGACR_SPEC> {
         P001ENAMP_W::new(self, 6)
     }
     ///Bit 7 - PGA P001 gain setting and enable bit
     #[inline(always)]
-    pub fn p001gen(&mut self) -> P001GEN_W<ADPGACR_SPEC> {
+    pub fn p001gen(&mut self) -> P001GEN_W<'_, ADPGACR_SPEC> {
         P001GEN_W::new(self, 7)
     }
     ///Bit 8 - A through amplifier is enable for PGA P002
     #[inline(always)]
-    pub fn p002sel0(&mut self) -> P002SEL0_W<ADPGACR_SPEC> {
+    pub fn p002sel0(&mut self) -> P002SEL0_W<'_, ADPGACR_SPEC> {
         P002SEL0_W::new(self, 8)
     }
     ///Bit 9 - The amplifier passing is enable for PGA P002
     #[inline(always)]
-    pub fn p002sel1(&mut self) -> P002SEL1_W<ADPGACR_SPEC> {
+    pub fn p002sel1(&mut self) -> P002SEL1_W<'_, ADPGACR_SPEC> {
         P002SEL1_W::new(self, 9)
     }
     ///Bit 10 - Amplifier enable bit for PGA P002
     #[inline(always)]
-    pub fn p002enamp(&mut self) -> P002ENAMP_W<ADPGACR_SPEC> {
+    pub fn p002enamp(&mut self) -> P002ENAMP_W<'_, ADPGACR_SPEC> {
         P002ENAMP_W::new(self, 10)
     }
     ///Bit 11 - PGA P002 gain setting and enable bit
     #[inline(always)]
-    pub fn p002gen(&mut self) -> P002GEN_W<ADPGACR_SPEC> {
+    pub fn p002gen(&mut self) -> P002GEN_W<'_, ADPGACR_SPEC> {
         P002GEN_W::new(self, 11)
     }
 }

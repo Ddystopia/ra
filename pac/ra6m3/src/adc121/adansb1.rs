@@ -247,22 +247,22 @@ impl R {
 impl W {
     ///Bit 0 - AN116 Select
     #[inline(always)]
-    pub fn ansb16(&mut self) -> ANSB16_W<ADANSB1_SPEC> {
+    pub fn ansb16(&mut self) -> ANSB16_W<'_, ADANSB1_SPEC> {
         ANSB16_W::new(self, 0)
     }
     ///Bit 1 - AN117 Select
     #[inline(always)]
-    pub fn ansb17(&mut self) -> ANSB17_W<ADANSB1_SPEC> {
+    pub fn ansb17(&mut self) -> ANSB17_W<'_, ADANSB1_SPEC> {
         ANSB17_W::new(self, 1)
     }
     ///Bit 2 - AN118 Select
     #[inline(always)]
-    pub fn ansb18(&mut self) -> ANSB18_W<ADANSB1_SPEC> {
+    pub fn ansb18(&mut self) -> ANSB18_W<'_, ADANSB1_SPEC> {
         ANSB18_W::new(self, 2)
     }
     ///Bit 3 - AN119 Select
     #[inline(always)]
-    pub fn ansb19(&mut self) -> ANSB19_W<ADANSB1_SPEC> {
+    pub fn ansb19(&mut self) -> ANSB19_W<'_, ADANSB1_SPEC> {
         ANSB19_W::new(self, 3)
     }
 }

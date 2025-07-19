@@ -100,7 +100,7 @@ impl R {
 impl W {
     ///Bits 0:1 - ELC trigger selection Do not change the value of the AMPTRS register after setting the AMPTRM register.
     #[inline(always)]
-    pub fn amptrs(&mut self) -> AMPTRS_W<AMPTRS_SPEC> {
+    pub fn amptrs(&mut self) -> AMPTRS_W<'_, AMPTRS_SPEC> {
         AMPTRS_W::new(self, 0)
     }
 }

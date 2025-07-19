@@ -427,37 +427,37 @@ impl R {
 impl W {
     ///Bit 0 - AN100 Select
     #[inline(always)]
-    pub fn ansb00(&mut self) -> ANSB00_W<ADANSB0_SPEC> {
+    pub fn ansb00(&mut self) -> ANSB00_W<'_, ADANSB0_SPEC> {
         ANSB00_W::new(self, 0)
     }
     ///Bit 1 - AN101 Select
     #[inline(always)]
-    pub fn ansb01(&mut self) -> ANSB01_W<ADANSB0_SPEC> {
+    pub fn ansb01(&mut self) -> ANSB01_W<'_, ADANSB0_SPEC> {
         ANSB01_W::new(self, 1)
     }
     ///Bit 2 - AN102 Select
     #[inline(always)]
-    pub fn ansb02(&mut self) -> ANSB02_W<ADANSB0_SPEC> {
+    pub fn ansb02(&mut self) -> ANSB02_W<'_, ADANSB0_SPEC> {
         ANSB02_W::new(self, 2)
     }
     ///Bit 3 - AN103 Select
     #[inline(always)]
-    pub fn ansb03(&mut self) -> ANSB03_W<ADANSB0_SPEC> {
+    pub fn ansb03(&mut self) -> ANSB03_W<'_, ADANSB0_SPEC> {
         ANSB03_W::new(self, 3)
     }
     ///Bit 5 - AN105 Select
     #[inline(always)]
-    pub fn ansb05(&mut self) -> ANSB05_W<ADANSB0_SPEC> {
+    pub fn ansb05(&mut self) -> ANSB05_W<'_, ADANSB0_SPEC> {
         ANSB05_W::new(self, 5)
     }
     ///Bit 6 - AN106 Select
     #[inline(always)]
-    pub fn ansb06(&mut self) -> ANSB06_W<ADANSB0_SPEC> {
+    pub fn ansb06(&mut self) -> ANSB06_W<'_, ADANSB0_SPEC> {
         ANSB06_W::new(self, 6)
     }
     ///Bit 7 - AN107 Select
     #[inline(always)]
-    pub fn ansb07(&mut self) -> ANSB07_W<ADANSB0_SPEC> {
+    pub fn ansb07(&mut self) -> ANSB07_W<'_, ADANSB0_SPEC> {
         ANSB07_W::new(self, 7)
     }
 }

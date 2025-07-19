@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 0 - VBATT Pin Low Voltage Detect Interrupt Enable bit
     #[inline(always)]
-    pub fn vbtlvdie(&mut self) -> VBTLVDIE_W<VBTLVDICR_SPEC> {
+    pub fn vbtlvdie(&mut self) -> VBTLVDIE_W<'_, VBTLVDICR_SPEC> {
         VBTLVDIE_W::new(self, 0)
     }
     ///Bit 1 - Pin Low Voltage Detect Interrupt Select bit
     #[inline(always)]
-    pub fn vbtlvdisel(&mut self) -> VBTLVDISEL_W<VBTLVDICR_SPEC> {
+    pub fn vbtlvdisel(&mut self) -> VBTLVDISEL_W<'_, VBTLVDICR_SPEC> {
         VBTLVDISEL_W::new(self, 1)
     }
 }

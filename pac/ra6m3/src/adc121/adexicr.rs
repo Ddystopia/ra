@@ -367,32 +367,32 @@ impl R {
 impl W {
     ///Bit 0 - Temperature Sensor Output A/D converted Value Addition/Average Mode Select
     #[inline(always)]
-    pub fn tssad(&mut self) -> TSSAD_W<ADEXICR_SPEC> {
+    pub fn tssad(&mut self) -> TSSAD_W<'_, ADEXICR_SPEC> {
         TSSAD_W::new(self, 0)
     }
     ///Bit 1 - Internal Reference Voltage A/D converted Value Addition/Average Mode Select
     #[inline(always)]
-    pub fn ocsad(&mut self) -> OCSAD_W<ADEXICR_SPEC> {
+    pub fn ocsad(&mut self) -> OCSAD_W<'_, ADEXICR_SPEC> {
         OCSAD_W::new(self, 1)
     }
     ///Bit 8 - Temperature Sensor Output A/D Conversion Select
     #[inline(always)]
-    pub fn tssa(&mut self) -> TSSA_W<ADEXICR_SPEC> {
+    pub fn tssa(&mut self) -> TSSA_W<'_, ADEXICR_SPEC> {
         TSSA_W::new(self, 8)
     }
     ///Bit 9 - Internal Reference Voltage A/D Conversion Select
     #[inline(always)]
-    pub fn ocsa(&mut self) -> OCSA_W<ADEXICR_SPEC> {
+    pub fn ocsa(&mut self) -> OCSA_W<'_, ADEXICR_SPEC> {
         OCSA_W::new(self, 9)
     }
     ///Bit 10 - Temperature Sensor Output A/D Conversion Select for Group B
     #[inline(always)]
-    pub fn tssb(&mut self) -> TSSB_W<ADEXICR_SPEC> {
+    pub fn tssb(&mut self) -> TSSB_W<'_, ADEXICR_SPEC> {
         TSSB_W::new(self, 10)
     }
     ///Bit 11 - Internal Reference Voltage A/D Conversion Select for Group B
     #[inline(always)]
-    pub fn ocsb(&mut self) -> OCSB_W<ADEXICR_SPEC> {
+    pub fn ocsb(&mut self) -> OCSB_W<'_, ADEXICR_SPEC> {
         OCSB_W::new(self, 11)
     }
 }

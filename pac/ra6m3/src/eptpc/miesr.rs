@@ -465,32 +465,32 @@ impl R {
 impl W {
     ///Bit 16 - Pulse Output Timer 0 Rising Edge Detection Flag
     #[inline(always)]
-    pub fn cyc0(&mut self) -> CYC0_W<MIESR_SPEC> {
+    pub fn cyc0(&mut self) -> CYC0_W<'_, MIESR_SPEC> {
         CYC0_W::new(self, 16)
     }
     ///Bit 17 - Pulse Output Timer 1 Rising Edge Detection Flag
     #[inline(always)]
-    pub fn cyc1(&mut self) -> CYC1_W<MIESR_SPEC> {
+    pub fn cyc1(&mut self) -> CYC1_W<'_, MIESR_SPEC> {
         CYC1_W::new(self, 17)
     }
     ///Bit 18 - Pulse Output Timer 2 Rising Edge Detection Flag
     #[inline(always)]
-    pub fn cyc2(&mut self) -> CYC2_W<MIESR_SPEC> {
+    pub fn cyc2(&mut self) -> CYC2_W<'_, MIESR_SPEC> {
         CYC2_W::new(self, 18)
     }
     ///Bit 19 - Pulse Output Timer 3 Rising Edge Detection Flag
     #[inline(always)]
-    pub fn cyc3(&mut self) -> CYC3_W<MIESR_SPEC> {
+    pub fn cyc3(&mut self) -> CYC3_W<'_, MIESR_SPEC> {
         CYC3_W::new(self, 19)
     }
     ///Bit 20 - Pulse Output Timer 4 Rising Edge Detection Flag
     #[inline(always)]
-    pub fn cyc4(&mut self) -> CYC4_W<MIESR_SPEC> {
+    pub fn cyc4(&mut self) -> CYC4_W<'_, MIESR_SPEC> {
         CYC4_W::new(self, 20)
     }
     ///Bit 21 - Pulse Output Timer 5 Rising Edge Detection Flag
     #[inline(always)]
-    pub fn cyc5(&mut self) -> CYC5_W<MIESR_SPEC> {
+    pub fn cyc5(&mut self) -> CYC5_W<'_, MIESR_SPEC> {
         CYC5_W::new(self, 21)
     }
 }

@@ -160,12 +160,12 @@ impl R {
 impl W {
     ///Bits 0:1 - AGTIO pin select
     #[inline(always)]
-    pub fn sel(&mut self) -> SEL_W<AGTIOSEL_SPEC> {
+    pub fn sel(&mut self) -> SEL_W<'_, AGTIOSEL_SPEC> {
         SEL_W::new(self, 0)
     }
     ///Bit 4 - AGTIO input enable
     #[inline(always)]
-    pub fn ties(&mut self) -> TIES_W<AGTIOSEL_SPEC> {
+    pub fn ties(&mut self) -> TIES_W<'_, AGTIOSEL_SPEC> {
         TIES_W::new(self, 4)
     }
 }

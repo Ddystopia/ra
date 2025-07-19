@@ -138,7 +138,7 @@ impl R {
 impl W {
     ///Bits 0:2 - Clock Source Select Selecting the system clock source faster than 32MHz(system clock source > 32MHz ) is prohibit when SCKDIVCR.ICK\[2:0\] bits select the division-by-1 and MEMWAIT.MEMWAIT =0.
     #[inline(always)]
-    pub fn cksel(&mut self) -> CKSEL_W<SCKSCR_SPEC> {
+    pub fn cksel(&mut self) -> CKSEL_W<'_, SCKSCR_SPEC> {
         CKSEL_W::new(self, 0)
     }
 }

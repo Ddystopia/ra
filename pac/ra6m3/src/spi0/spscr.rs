@@ -152,7 +152,7 @@ impl R {
 impl W {
     ///Bits 0:2 - RSPI Sequence Length SpecificationThe order in which the SPCMD0 to SPCMD07 registers are to be referenced is changed in accordance with the sequence length that is set in these bits. The relationship among the setting of these bits, sequence length, and SPCMD0 to SPCMD7 registers referenced by the RSPI is shown above. However, the RSPI in slave mode always references SPCMD0.
     #[inline(always)]
-    pub fn spsln(&mut self) -> SPSLN_W<SPSCR_SPEC> {
+    pub fn spsln(&mut self) -> SPSLN_W<'_, SPSCR_SPEC> {
         SPSLN_W::new(self, 0)
     }
 }

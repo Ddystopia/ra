@@ -391,32 +391,32 @@ impl R {
 impl W {
     ///Bit 0 - AGT count start
     #[inline(always)]
-    pub fn tstart(&mut self) -> TSTART_W<AGTCR_SPEC> {
+    pub fn tstart(&mut self) -> TSTART_W<'_, AGTCR_SPEC> {
         TSTART_W::new(self, 0)
     }
     ///Bit 2 - AGT count forced stop
     #[inline(always)]
-    pub fn tstop(&mut self) -> TSTOP_W<AGTCR_SPEC> {
+    pub fn tstop(&mut self) -> TSTOP_W<'_, AGTCR_SPEC> {
         TSTOP_W::new(self, 2)
     }
     ///Bit 4 - Active edge judgement flag
     #[inline(always)]
-    pub fn tedgf(&mut self) -> TEDGF_W<AGTCR_SPEC> {
+    pub fn tedgf(&mut self) -> TEDGF_W<'_, AGTCR_SPEC> {
         TEDGF_W::new(self, 4)
     }
     ///Bit 5 - AGT underflow flag
     #[inline(always)]
-    pub fn tundf(&mut self) -> TUNDF_W<AGTCR_SPEC> {
+    pub fn tundf(&mut self) -> TUNDF_W<'_, AGTCR_SPEC> {
         TUNDF_W::new(self, 5)
     }
     ///Bit 6 - AGT compare match A flag
     #[inline(always)]
-    pub fn tcmaf(&mut self) -> TCMAF_W<AGTCR_SPEC> {
+    pub fn tcmaf(&mut self) -> TCMAF_W<'_, AGTCR_SPEC> {
         TCMAF_W::new(self, 6)
     }
     ///Bit 7 - AGT compare match B flag
     #[inline(always)]
-    pub fn tcmbf(&mut self) -> TCMBF_W<AGTCR_SPEC> {
+    pub fn tcmbf(&mut self) -> TCMBF_W<'_, AGTCR_SPEC> {
         TCMBF_W::new(self, 7)
     }
 }

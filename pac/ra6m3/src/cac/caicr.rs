@@ -286,32 +286,32 @@ impl R {
 impl W {
     ///Bit 0 - Frequency Error Interrupt Request Enable
     #[inline(always)]
-    pub fn ferrie(&mut self) -> FERRIE_W<CAICR_SPEC> {
+    pub fn ferrie(&mut self) -> FERRIE_W<'_, CAICR_SPEC> {
         FERRIE_W::new(self, 0)
     }
     ///Bit 1 - Measurement End Interrupt Request Enable
     #[inline(always)]
-    pub fn mendie(&mut self) -> MENDIE_W<CAICR_SPEC> {
+    pub fn mendie(&mut self) -> MENDIE_W<'_, CAICR_SPEC> {
         MENDIE_W::new(self, 1)
     }
     ///Bit 2 - Overflow Interrupt Request Enable
     #[inline(always)]
-    pub fn ovfie(&mut self) -> OVFIE_W<CAICR_SPEC> {
+    pub fn ovfie(&mut self) -> OVFIE_W<'_, CAICR_SPEC> {
         OVFIE_W::new(self, 2)
     }
     ///Bit 4 - FERRF Clear
     #[inline(always)]
-    pub fn ferrfcl(&mut self) -> FERRFCL_W<CAICR_SPEC> {
+    pub fn ferrfcl(&mut self) -> FERRFCL_W<'_, CAICR_SPEC> {
         FERRFCL_W::new(self, 4)
     }
     ///Bit 5 - MENDF Clear
     #[inline(always)]
-    pub fn mendfcl(&mut self) -> MENDFCL_W<CAICR_SPEC> {
+    pub fn mendfcl(&mut self) -> MENDFCL_W<'_, CAICR_SPEC> {
         MENDFCL_W::new(self, 5)
     }
     ///Bit 6 - OVFF Clear
     #[inline(always)]
-    pub fn ovffcl(&mut self) -> OVFFCL_W<CAICR_SPEC> {
+    pub fn ovffcl(&mut self) -> OVFFCL_W<'_, CAICR_SPEC> {
         OVFFCL_W::new(self, 6)
     }
 }

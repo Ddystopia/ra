@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Too-Short Frame Receive Counter RegisterThe TSFRCR register is a counter indicating the number of times a short frame that is shorter than 64 bytes has been received.
     #[inline(always)]
-    pub fn tsfrcr(&mut self) -> TSFRCR_W<TSFRCR_SPEC> {
+    pub fn tsfrcr(&mut self) -> TSFRCR_W<'_, TSFRCR_SPEC> {
         TSFRCR_W::new(self, 0)
     }
 }

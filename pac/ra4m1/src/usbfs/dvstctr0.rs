@@ -559,42 +559,42 @@ impl R {
 impl W {
     ///Bit 4 - USB Bus Enable
     #[inline(always)]
-    pub fn uact(&mut self) -> UACT_W<DVSTCTR0_SPEC> {
+    pub fn uact(&mut self) -> UACT_W<'_, DVSTCTR0_SPEC> {
         UACT_W::new(self, 4)
     }
     ///Bit 5 - Resume Output
     #[inline(always)]
-    pub fn resume(&mut self) -> RESUME_W<DVSTCTR0_SPEC> {
+    pub fn resume(&mut self) -> RESUME_W<'_, DVSTCTR0_SPEC> {
         RESUME_W::new(self, 5)
     }
     ///Bit 6 - USB Bus Reset Output
     #[inline(always)]
-    pub fn usbrst(&mut self) -> USBRST_W<DVSTCTR0_SPEC> {
+    pub fn usbrst(&mut self) -> USBRST_W<'_, DVSTCTR0_SPEC> {
         USBRST_W::new(self, 6)
     }
     ///Bit 7 - Wakeup Detection Enable
     #[inline(always)]
-    pub fn rwupe(&mut self) -> RWUPE_W<DVSTCTR0_SPEC> {
+    pub fn rwupe(&mut self) -> RWUPE_W<'_, DVSTCTR0_SPEC> {
         RWUPE_W::new(self, 7)
     }
     ///Bit 8 - Wakeup Output
     #[inline(always)]
-    pub fn wkup(&mut self) -> WKUP_W<DVSTCTR0_SPEC> {
+    pub fn wkup(&mut self) -> WKUP_W<'_, DVSTCTR0_SPEC> {
         WKUP_W::new(self, 8)
     }
     ///Bit 9 - USB_VBUSEN Output Pin Control
     #[inline(always)]
-    pub fn vbusen(&mut self) -> VBUSEN_W<DVSTCTR0_SPEC> {
+    pub fn vbusen(&mut self) -> VBUSEN_W<'_, DVSTCTR0_SPEC> {
         VBUSEN_W::new(self, 9)
     }
     ///Bit 10 - USB_EXICEN Output Pin Control
     #[inline(always)]
-    pub fn exicen(&mut self) -> EXICEN_W<DVSTCTR0_SPEC> {
+    pub fn exicen(&mut self) -> EXICEN_W<'_, DVSTCTR0_SPEC> {
         EXICEN_W::new(self, 10)
     }
     ///Bit 11 - Host Negotiation Protocol (HNP) Control This bit is used when switching from device B to device A while in OTG mode. If the HNPBTOA bit is 1, the internal function control keeps the suspended state until the HNP processing ends even though SYSCFG.DPRPU = 0 or SYSCFG.DCFM = 1 is set.
     #[inline(always)]
-    pub fn hnpbtoa(&mut self) -> HNPBTOA_W<DVSTCTR0_SPEC> {
+    pub fn hnpbtoa(&mut self) -> HNPBTOA_W<'_, DVSTCTR0_SPEC> {
         HNPBTOA_W::new(self, 11)
     }
 }

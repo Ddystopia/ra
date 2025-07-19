@@ -1747,147 +1747,147 @@ impl R {
 impl W {
     ///Bit 0 - IRQ0 interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn irqwupen0(&mut self) -> IRQWUPEN0_W<WUPEN_SPEC> {
+    pub fn irqwupen0(&mut self) -> IRQWUPEN0_W<'_, WUPEN_SPEC> {
         IRQWUPEN0_W::new(self, 0)
     }
     ///Bit 1 - IRQ1 interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn irqwupen1(&mut self) -> IRQWUPEN1_W<WUPEN_SPEC> {
+    pub fn irqwupen1(&mut self) -> IRQWUPEN1_W<'_, WUPEN_SPEC> {
         IRQWUPEN1_W::new(self, 1)
     }
     ///Bit 2 - IRQ2 interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn irqwupen2(&mut self) -> IRQWUPEN2_W<WUPEN_SPEC> {
+    pub fn irqwupen2(&mut self) -> IRQWUPEN2_W<'_, WUPEN_SPEC> {
         IRQWUPEN2_W::new(self, 2)
     }
     ///Bit 3 - IRQ3 interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn irqwupen3(&mut self) -> IRQWUPEN3_W<WUPEN_SPEC> {
+    pub fn irqwupen3(&mut self) -> IRQWUPEN3_W<'_, WUPEN_SPEC> {
         IRQWUPEN3_W::new(self, 3)
     }
     ///Bit 4 - IRQ4 interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn irqwupen4(&mut self) -> IRQWUPEN4_W<WUPEN_SPEC> {
+    pub fn irqwupen4(&mut self) -> IRQWUPEN4_W<'_, WUPEN_SPEC> {
         IRQWUPEN4_W::new(self, 4)
     }
     ///Bit 5 - IRQ5 interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn irqwupen5(&mut self) -> IRQWUPEN5_W<WUPEN_SPEC> {
+    pub fn irqwupen5(&mut self) -> IRQWUPEN5_W<'_, WUPEN_SPEC> {
         IRQWUPEN5_W::new(self, 5)
     }
     ///Bit 6 - IRQ6 interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn irqwupen6(&mut self) -> IRQWUPEN6_W<WUPEN_SPEC> {
+    pub fn irqwupen6(&mut self) -> IRQWUPEN6_W<'_, WUPEN_SPEC> {
         IRQWUPEN6_W::new(self, 6)
     }
     ///Bit 7 - IRQ7 interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn irqwupen7(&mut self) -> IRQWUPEN7_W<WUPEN_SPEC> {
+    pub fn irqwupen7(&mut self) -> IRQWUPEN7_W<'_, WUPEN_SPEC> {
         IRQWUPEN7_W::new(self, 7)
     }
     ///Bit 8 - IRQ8 interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn irqwupen8(&mut self) -> IRQWUPEN8_W<WUPEN_SPEC> {
+    pub fn irqwupen8(&mut self) -> IRQWUPEN8_W<'_, WUPEN_SPEC> {
         IRQWUPEN8_W::new(self, 8)
     }
     ///Bit 9 - IRQ9 interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn irqwupen9(&mut self) -> IRQWUPEN9_W<WUPEN_SPEC> {
+    pub fn irqwupen9(&mut self) -> IRQWUPEN9_W<'_, WUPEN_SPEC> {
         IRQWUPEN9_W::new(self, 9)
     }
     ///Bit 10 - IRQ10 interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn irqwupen10(&mut self) -> IRQWUPEN10_W<WUPEN_SPEC> {
+    pub fn irqwupen10(&mut self) -> IRQWUPEN10_W<'_, WUPEN_SPEC> {
         IRQWUPEN10_W::new(self, 10)
     }
     ///Bit 11 - IRQ11 interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn irqwupen11(&mut self) -> IRQWUPEN11_W<WUPEN_SPEC> {
+    pub fn irqwupen11(&mut self) -> IRQWUPEN11_W<'_, WUPEN_SPEC> {
         IRQWUPEN11_W::new(self, 11)
     }
     ///Bit 12 - IRQ12 interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn irqwupen12(&mut self) -> IRQWUPEN12_W<WUPEN_SPEC> {
+    pub fn irqwupen12(&mut self) -> IRQWUPEN12_W<'_, WUPEN_SPEC> {
         IRQWUPEN12_W::new(self, 12)
     }
     ///Bit 13 - IRQ13 interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn irqwupen13(&mut self) -> IRQWUPEN13_W<WUPEN_SPEC> {
+    pub fn irqwupen13(&mut self) -> IRQWUPEN13_W<'_, WUPEN_SPEC> {
         IRQWUPEN13_W::new(self, 13)
     }
     ///Bit 14 - IRQ14 interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn irqwupen14(&mut self) -> IRQWUPEN14_W<WUPEN_SPEC> {
+    pub fn irqwupen14(&mut self) -> IRQWUPEN14_W<'_, WUPEN_SPEC> {
         IRQWUPEN14_W::new(self, 14)
     }
     ///Bit 15 - IRQ15 interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn irqwupen15(&mut self) -> IRQWUPEN15_W<WUPEN_SPEC> {
+    pub fn irqwupen15(&mut self) -> IRQWUPEN15_W<'_, WUPEN_SPEC> {
         IRQWUPEN15_W::new(self, 15)
     }
     ///Bit 16 - IWDT interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn iwdtwupen(&mut self) -> IWDTWUPEN_W<WUPEN_SPEC> {
+    pub fn iwdtwupen(&mut self) -> IWDTWUPEN_W<'_, WUPEN_SPEC> {
         IWDTWUPEN_W::new(self, 16)
     }
     ///Bit 17 - Key interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn keywupen(&mut self) -> KEYWUPEN_W<WUPEN_SPEC> {
+    pub fn keywupen(&mut self) -> KEYWUPEN_W<'_, WUPEN_SPEC> {
         KEYWUPEN_W::new(self, 17)
     }
     ///Bit 18 - LVD1 interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn lvd1wupen(&mut self) -> LVD1WUPEN_W<WUPEN_SPEC> {
+    pub fn lvd1wupen(&mut self) -> LVD1WUPEN_W<'_, WUPEN_SPEC> {
         LVD1WUPEN_W::new(self, 18)
     }
     ///Bit 19 - LVD2 interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn lvd2wupen(&mut self) -> LVD2WUPEN_W<WUPEN_SPEC> {
+    pub fn lvd2wupen(&mut self) -> LVD2WUPEN_W<'_, WUPEN_SPEC> {
         LVD2WUPEN_W::new(self, 19)
     }
     ///Bit 22 - ACMPHS0 interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn acmphs0wupen(&mut self) -> ACMPHS0WUPEN_W<WUPEN_SPEC> {
+    pub fn acmphs0wupen(&mut self) -> ACMPHS0WUPEN_W<'_, WUPEN_SPEC> {
         ACMPHS0WUPEN_W::new(self, 22)
     }
     ///Bit 24 - RTC alarm interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn rtcalmwupen(&mut self) -> RTCALMWUPEN_W<WUPEN_SPEC> {
+    pub fn rtcalmwupen(&mut self) -> RTCALMWUPEN_W<'_, WUPEN_SPEC> {
         RTCALMWUPEN_W::new(self, 24)
     }
     ///Bit 25 - RCT period interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn rtcprdwupen(&mut self) -> RTCPRDWUPEN_W<WUPEN_SPEC> {
+    pub fn rtcprdwupen(&mut self) -> RTCPRDWUPEN_W<'_, WUPEN_SPEC> {
         RTCPRDWUPEN_W::new(self, 25)
     }
     ///Bit 26 - USBHS interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn usbhswupen(&mut self) -> USBHSWUPEN_W<WUPEN_SPEC> {
+    pub fn usbhswupen(&mut self) -> USBHSWUPEN_W<'_, WUPEN_SPEC> {
         USBHSWUPEN_W::new(self, 26)
     }
     ///Bit 27 - USBFS interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn usbfswupen(&mut self) -> USBFSWUPEN_W<WUPEN_SPEC> {
+    pub fn usbfswupen(&mut self) -> USBFSWUPEN_W<'_, WUPEN_SPEC> {
         USBFSWUPEN_W::new(self, 27)
     }
     ///Bit 28 - AGT1 underflow interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn agt1udwupen(&mut self) -> AGT1UDWUPEN_W<WUPEN_SPEC> {
+    pub fn agt1udwupen(&mut self) -> AGT1UDWUPEN_W<'_, WUPEN_SPEC> {
         AGT1UDWUPEN_W::new(self, 28)
     }
     ///Bit 29 - AGT1 compare match A interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn agt1cawupen(&mut self) -> AGT1CAWUPEN_W<WUPEN_SPEC> {
+    pub fn agt1cawupen(&mut self) -> AGT1CAWUPEN_W<'_, WUPEN_SPEC> {
         AGT1CAWUPEN_W::new(self, 29)
     }
     ///Bit 30 - AGT1 compare match B interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn agt1cbwupen(&mut self) -> AGT1CBWUPEN_W<WUPEN_SPEC> {
+    pub fn agt1cbwupen(&mut self) -> AGT1CBWUPEN_W<'_, WUPEN_SPEC> {
         AGT1CBWUPEN_W::new(self, 30)
     }
     ///Bit 31 - IIC0 address match interrupt S/W standby returns enable bit
     #[inline(always)]
-    pub fn iic0wupen(&mut self) -> IIC0WUPEN_W<WUPEN_SPEC> {
+    pub fn iic0wupen(&mut self) -> IIC0WUPEN_W<'_, WUPEN_SPEC> {
         IIC0WUPEN_W::new(self, 31)
     }
 }

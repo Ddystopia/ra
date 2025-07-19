@@ -433,32 +433,32 @@ impl R {
 impl W {
     ///Bits 0:1 - Clock Select
     #[inline(always)]
-    pub fn cks(&mut self) -> CKS_W<SMR_SMCI_SPEC> {
+    pub fn cks(&mut self) -> CKS_W<'_, SMR_SMCI_SPEC> {
         CKS_W::new(self, 0)
     }
     ///Bits 2:3 - Stop Bit Length(Valid only in asynchronous mode)
     #[inline(always)]
-    pub fn bcp(&mut self) -> BCP_W<SMR_SMCI_SPEC> {
+    pub fn bcp(&mut self) -> BCP_W<'_, SMR_SMCI_SPEC> {
         BCP_W::new(self, 2)
     }
     ///Bit 4 - Parity Mode (Valid only when the PE bit is 1)
     #[inline(always)]
-    pub fn pm(&mut self) -> PM_W<SMR_SMCI_SPEC> {
+    pub fn pm(&mut self) -> PM_W<'_, SMR_SMCI_SPEC> {
         PM_W::new(self, 4)
     }
     ///Bit 5 - Parity Enable(Valid only in asynchronous mode)
     #[inline(always)]
-    pub fn pe(&mut self) -> PE_W<SMR_SMCI_SPEC> {
+    pub fn pe(&mut self) -> PE_W<'_, SMR_SMCI_SPEC> {
         PE_W::new(self, 5)
     }
     ///Bit 6 - Block Transfer Mode
     #[inline(always)]
-    pub fn blk(&mut self) -> BLK_W<SMR_SMCI_SPEC> {
+    pub fn blk(&mut self) -> BLK_W<'_, SMR_SMCI_SPEC> {
         BLK_W::new(self, 6)
     }
     ///Bit 7 - GSM Mode
     #[inline(always)]
-    pub fn gm(&mut self) -> GM_W<SMR_SMCI_SPEC> {
+    pub fn gm(&mut self) -> GM_W<'_, SMR_SMCI_SPEC> {
         GM_W::new(self, 7)
     }
 }

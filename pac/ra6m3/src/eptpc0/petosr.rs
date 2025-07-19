@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - PTP Event Message TOS Field Value SettingThese bits hold the setting for the value of the TOS field within the IPv4 headers of PTP event messages.
     #[inline(always)]
-    pub fn evto(&mut self) -> EVTO_W<PETOSR_SPEC> {
+    pub fn evto(&mut self) -> EVTO_W<'_, PETOSR_SPEC> {
         EVTO_W::new(self, 0)
     }
 }

@@ -487,42 +487,42 @@ impl R {
 impl W {
     ///Bit 0 - Stuff Error Flag
     #[inline(always)]
-    pub fn sef(&mut self) -> SEF_W<ECSR_SPEC> {
+    pub fn sef(&mut self) -> SEF_W<'_, ECSR_SPEC> {
         SEF_W::new(self, 0)
     }
     ///Bit 1 - Form Error Flag
     #[inline(always)]
-    pub fn fef(&mut self) -> FEF_W<ECSR_SPEC> {
+    pub fn fef(&mut self) -> FEF_W<'_, ECSR_SPEC> {
         FEF_W::new(self, 1)
     }
     ///Bit 2 - ACK Error Flag
     #[inline(always)]
-    pub fn aef(&mut self) -> AEF_W<ECSR_SPEC> {
+    pub fn aef(&mut self) -> AEF_W<'_, ECSR_SPEC> {
         AEF_W::new(self, 2)
     }
     ///Bit 3 - CRC Error Flag
     #[inline(always)]
-    pub fn cef(&mut self) -> CEF_W<ECSR_SPEC> {
+    pub fn cef(&mut self) -> CEF_W<'_, ECSR_SPEC> {
         CEF_W::new(self, 3)
     }
     ///Bit 4 - Bit Error (recessive) Flag
     #[inline(always)]
-    pub fn be1f(&mut self) -> BE1F_W<ECSR_SPEC> {
+    pub fn be1f(&mut self) -> BE1F_W<'_, ECSR_SPEC> {
         BE1F_W::new(self, 4)
     }
     ///Bit 5 - Bit Error (dominant) Flag
     #[inline(always)]
-    pub fn be0f(&mut self) -> BE0F_W<ECSR_SPEC> {
+    pub fn be0f(&mut self) -> BE0F_W<'_, ECSR_SPEC> {
         BE0F_W::new(self, 5)
     }
     ///Bit 6 - ACK Delimiter Error Flag
     #[inline(always)]
-    pub fn adef(&mut self) -> ADEF_W<ECSR_SPEC> {
+    pub fn adef(&mut self) -> ADEF_W<'_, ECSR_SPEC> {
         ADEF_W::new(self, 6)
     }
     ///Bit 7 - Error Display Mode Select
     #[inline(always)]
-    pub fn edpm(&mut self) -> EDPM_W<ECSR_SPEC> {
+    pub fn edpm(&mut self) -> EDPM_W<'_, ECSR_SPEC> {
         EDPM_W::new(self, 7)
     }
 }

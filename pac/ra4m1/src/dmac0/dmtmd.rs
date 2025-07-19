@@ -379,22 +379,22 @@ impl R {
 impl W {
     ///Bits 0:1 - Transfer Request Source Select
     #[inline(always)]
-    pub fn dctg(&mut self) -> DCTG_W<DMTMD_SPEC> {
+    pub fn dctg(&mut self) -> DCTG_W<'_, DMTMD_SPEC> {
         DCTG_W::new(self, 0)
     }
     ///Bits 8:9 - Transfer Data Size Select
     #[inline(always)]
-    pub fn sz(&mut self) -> SZ_W<DMTMD_SPEC> {
+    pub fn sz(&mut self) -> SZ_W<'_, DMTMD_SPEC> {
         SZ_W::new(self, 8)
     }
     ///Bits 12:13 - Repeat Area Select
     #[inline(always)]
-    pub fn dts(&mut self) -> DTS_W<DMTMD_SPEC> {
+    pub fn dts(&mut self) -> DTS_W<'_, DMTMD_SPEC> {
         DTS_W::new(self, 12)
     }
     ///Bits 14:15 - Transfer Mode Select
     #[inline(always)]
-    pub fn md(&mut self) -> MD_W<DMTMD_SPEC> {
+    pub fn md(&mut self) -> MD_W<'_, DMTMD_SPEC> {
         MD_W::new(self, 14)
     }
 }

@@ -307,27 +307,27 @@ impl R {
 impl W {
     ///Bit 1 - ACMPLP0 VCOUT Pin Output Enable
     #[inline(always)]
-    pub fn c0oe(&mut self) -> C0OE_W<COMPOCR_SPEC> {
+    pub fn c0oe(&mut self) -> C0OE_W<'_, COMPOCR_SPEC> {
         C0OE_W::new(self, 1)
     }
     ///Bit 2 - ACMPLP0 VCOUT Output Polarity Selection
     #[inline(always)]
-    pub fn c0op(&mut self) -> C0OP_W<COMPOCR_SPEC> {
+    pub fn c0op(&mut self) -> C0OP_W<'_, COMPOCR_SPEC> {
         C0OP_W::new(self, 2)
     }
     ///Bit 5 - ACMPLP1 VCOUT Pin Output Enable
     #[inline(always)]
-    pub fn c1oe(&mut self) -> C1OE_W<COMPOCR_SPEC> {
+    pub fn c1oe(&mut self) -> C1OE_W<'_, COMPOCR_SPEC> {
         C1OE_W::new(self, 5)
     }
     ///Bit 6 - ACMPLP1 VCOUT Output Polarity Selection
     #[inline(always)]
-    pub fn c1op(&mut self) -> C1OP_W<COMPOCR_SPEC> {
+    pub fn c1op(&mut self) -> C1OP_W<'_, COMPOCR_SPEC> {
         C1OP_W::new(self, 6)
     }
     ///Bit 7 - ACMPLP0/ACMPLP1 Speed Selection
     #[inline(always)]
-    pub fn spdmd(&mut self) -> SPDMD_W<COMPOCR_SPEC> {
+    pub fn spdmd(&mut self) -> SPDMD_W<'_, COMPOCR_SPEC> {
         SPDMD_W::new(self, 7)
     }
 }

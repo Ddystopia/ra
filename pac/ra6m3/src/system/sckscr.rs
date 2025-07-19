@@ -138,7 +138,7 @@ impl R {
 impl W {
     ///Bits 0:2 - Clock Source Select
     #[inline(always)]
-    pub fn cksel(&mut self) -> CKSEL_W<SCKSCR_SPEC> {
+    pub fn cksel(&mut self) -> CKSEL_W<'_, SCKSCR_SPEC> {
         CKSEL_W::new(self, 0)
     }
 }

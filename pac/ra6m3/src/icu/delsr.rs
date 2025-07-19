@@ -133,12 +133,12 @@ impl R {
 impl W {
     ///Bits 0:8 - DMAC Event Link Select
     #[inline(always)]
-    pub fn dels(&mut self) -> DELS_W<DELSR_SPEC> {
+    pub fn dels(&mut self) -> DELS_W<'_, DELSR_SPEC> {
         DELS_W::new(self, 0)
     }
     ///Bit 16 - Interrupt Status Flag for DMAC
     #[inline(always)]
-    pub fn ir(&mut self) -> IR_W<DELSR_SPEC> {
+    pub fn ir(&mut self) -> IR_W<'_, DELSR_SPEC> {
         IR_W::new(self, 16)
     }
 }

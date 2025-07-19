@@ -220,17 +220,17 @@ impl R {
 impl W {
     ///Bits 0:1 - Input FIFO Data Triggering Number
     #[inline(always)]
-    pub fn iftrg(&mut self) -> IFTRG_W<SRCIDCTRL_SPEC> {
+    pub fn iftrg(&mut self) -> IFTRG_W<'_, SRCIDCTRL_SPEC> {
         IFTRG_W::new(self, 0)
     }
     ///Bit 8 - Input FIFO Empty Interrupt Enable
     #[inline(always)]
-    pub fn ien(&mut self) -> IEN_W<SRCIDCTRL_SPEC> {
+    pub fn ien(&mut self) -> IEN_W<'_, SRCIDCTRL_SPEC> {
         IEN_W::new(self, 8)
     }
     ///Bit 9 - Input Data Endian
     #[inline(always)]
-    pub fn ied(&mut self) -> IED_W<SRCIDCTRL_SPEC> {
+    pub fn ied(&mut self) -> IED_W<'_, SRCIDCTRL_SPEC> {
         IED_W::new(self, 9)
     }
 }

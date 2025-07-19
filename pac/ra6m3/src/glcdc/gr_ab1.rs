@@ -280,22 +280,22 @@ impl R {
 impl W {
     ///Bits 0:1 - Graphics display plane control.
     #[inline(always)]
-    pub fn dispsel(&mut self) -> DISPSEL_W<GR_AB1_SPEC> {
+    pub fn dispsel(&mut self) -> DISPSEL_W<'_, GR_AB1_SPEC> {
         DISPSEL_W::new(self, 0)
     }
     ///Bit 4 - Graphics image area border display control.
     #[inline(always)]
-    pub fn grcdispon(&mut self) -> GRCDISPON_W<GR_AB1_SPEC> {
+    pub fn grcdispon(&mut self) -> GRCDISPON_W<'_, GR_AB1_SPEC> {
         GRCDISPON_W::new(self, 4)
     }
     ///Bit 8 - Image area border display control for rectangular area alpha blending.
     #[inline(always)]
-    pub fn arcdispon(&mut self) -> ARCDISPON_W<GR_AB1_SPEC> {
+    pub fn arcdispon(&mut self) -> ARCDISPON_W<'_, GR_AB1_SPEC> {
         ARCDISPON_W::new(self, 8)
     }
     ///Bit 12 - Rectangular area alpha blending control.
     #[inline(always)]
-    pub fn arcon(&mut self) -> ARCON_W<GR_AB1_SPEC> {
+    pub fn arcon(&mut self) -> ARCON_W<'_, GR_AB1_SPEC> {
         ARCON_W::new(self, 12)
     }
 }

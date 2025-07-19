@@ -5,7 +5,7 @@ pub type LBAND_W<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
 impl W {
     ///Bits 0:31 - Limiter m band width parameter
     #[inline(always)]
-    pub fn lband(&mut self) -> LBAND_W<LBAND_SPEC> {
+    pub fn lband(&mut self) -> LBAND_W<'_, LBAND_SPEC> {
         LBAND_W::new(self, 0)
     }
 }

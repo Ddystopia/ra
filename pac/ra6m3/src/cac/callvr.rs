@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - CALLVR is a 16-bit readable/writable register that stores the lower-limit value of the frequency.
     #[inline(always)]
-    pub fn callvr(&mut self) -> CALLVR_W<CALLVR_SPEC> {
+    pub fn callvr(&mut self) -> CALLVR_W<'_, CALLVR_SPEC> {
         CALLVR_W::new(self, 0)
     }
 }

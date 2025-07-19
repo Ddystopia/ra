@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 7 - DADRm Format Select
     #[inline(always)]
-    pub fn dpsel(&mut self) -> DPSEL_W<DADPR_SPEC> {
+    pub fn dpsel(&mut self) -> DPSEL_W<'_, DADPR_SPEC> {
         DPSEL_W::new(self, 7)
     }
 }

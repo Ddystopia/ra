@@ -607,52 +607,52 @@ impl R {
 impl W {
     ///Bit 0 - PDDETINT Detection Interrupt Enable
     #[inline(always)]
-    pub fn pddetinte(&mut self) -> PDDETINTE_W<INTENB1_SPEC> {
+    pub fn pddetinte(&mut self) -> PDDETINTE_W<'_, INTENB1_SPEC> {
         PDDETINTE_W::new(self, 0)
     }
     ///Bit 4 - Setup Transaction Normal Response Interrupt Enable
     #[inline(always)]
-    pub fn sacke(&mut self) -> SACKE_W<INTENB1_SPEC> {
+    pub fn sacke(&mut self) -> SACKE_W<'_, INTENB1_SPEC> {
         SACKE_W::new(self, 4)
     }
     ///Bit 5 - Setup Transaction Error Interrupt Enable
     #[inline(always)]
-    pub fn signe(&mut self) -> SIGNE_W<INTENB1_SPEC> {
+    pub fn signe(&mut self) -> SIGNE_W<'_, INTENB1_SPEC> {
         SIGNE_W::new(self, 5)
     }
     ///Bit 6 - EOF Error Detection Interrupt Enable
     #[inline(always)]
-    pub fn eoferre(&mut self) -> EOFERRE_W<INTENB1_SPEC> {
+    pub fn eoferre(&mut self) -> EOFERRE_W<'_, INTENB1_SPEC> {
         EOFERRE_W::new(self, 6)
     }
     ///Bit 8 - LPM Transaction End Interrupt Enable
     #[inline(always)]
-    pub fn lpmende(&mut self) -> LPMENDE_W<INTENB1_SPEC> {
+    pub fn lpmende(&mut self) -> LPMENDE_W<'_, INTENB1_SPEC> {
         LPMENDE_W::new(self, 8)
     }
     ///Bit 9 - L1 Resume End Interrupt Enable
     #[inline(always)]
-    pub fn l1rsmende(&mut self) -> L1RSMENDE_W<INTENB1_SPEC> {
+    pub fn l1rsmende(&mut self) -> L1RSMENDE_W<'_, INTENB1_SPEC> {
         L1RSMENDE_W::new(self, 9)
     }
     ///Bit 11 - Connection Detection Interrupt Enable
     #[inline(always)]
-    pub fn attche(&mut self) -> ATTCHE_W<INTENB1_SPEC> {
+    pub fn attche(&mut self) -> ATTCHE_W<'_, INTENB1_SPEC> {
         ATTCHE_W::new(self, 11)
     }
     ///Bit 12 - Disconnection Detection Interrupt Enable
     #[inline(always)]
-    pub fn dtche(&mut self) -> DTCHE_W<INTENB1_SPEC> {
+    pub fn dtche(&mut self) -> DTCHE_W<'_, INTENB1_SPEC> {
         DTCHE_W::new(self, 12)
     }
     ///Bit 14 - USB Bus Change Interrupt Enable
     #[inline(always)]
-    pub fn bchge(&mut self) -> BCHGE_W<INTENB1_SPEC> {
+    pub fn bchge(&mut self) -> BCHGE_W<'_, INTENB1_SPEC> {
         BCHGE_W::new(self, 14)
     }
     ///Bit 15 - OVRCRE Interrupt Enable
     #[inline(always)]
-    pub fn ovrcre(&mut self) -> OVRCRE_W<INTENB1_SPEC> {
+    pub fn ovrcre(&mut self) -> OVRCRE_W<'_, INTENB1_SPEC> {
         OVRCRE_W::new(self, 15)
     }
 }

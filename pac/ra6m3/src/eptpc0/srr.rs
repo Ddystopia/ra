@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - stepsRemoved Field Value SettingThese bits set the value of the stepsRemoved fields of Announce messages.
     #[inline(always)]
-    pub fn srmv(&mut self) -> SRMV_W<SRR_SPEC> {
+    pub fn srmv(&mut self) -> SRMV_W<'_, SRR_SPEC> {
         SRMV_W::new(self, 0)
     }
 }

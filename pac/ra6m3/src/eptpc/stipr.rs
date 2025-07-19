@@ -247,22 +247,22 @@ impl R {
 impl W {
     ///Bit 0 - SYNC Status Notification Enable
     #[inline(always)]
-    pub fn sync(&mut self) -> SYNC_W<STIPR_SPEC> {
+    pub fn sync(&mut self) -> SYNC_W<'_, STIPR_SPEC> {
         SYNC_W::new(self, 0)
     }
     ///Bit 1 - SYNCOUT Status Notification Enable
     #[inline(always)]
-    pub fn syncout(&mut self) -> SYNCOUT_W<STIPR_SPEC> {
+    pub fn syncout(&mut self) -> SYNCOUT_W<'_, STIPR_SPEC> {
         SYNCOUT_W::new(self, 1)
     }
     ///Bit 3 - SYNTOUT Status Notification Enable
     #[inline(always)]
-    pub fn syntout(&mut self) -> SYNTOUT_W<STIPR_SPEC> {
+    pub fn syntout(&mut self) -> SYNTOUT_W<'_, STIPR_SPEC> {
         SYNTOUT_W::new(self, 3)
     }
     ///Bit 4 - W10D Status Notification Enable
     #[inline(always)]
-    pub fn w10d(&mut self) -> W10D_W<STIPR_SPEC> {
+    pub fn w10d(&mut self) -> W10D_W<'_, STIPR_SPEC> {
         W10D_W::new(self, 4)
     }
 }

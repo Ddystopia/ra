@@ -69,7 +69,7 @@ impl R {
 impl W {
     ///Bit 0 - ECC 1-Bit Error Status
     #[inline(always)]
-    pub fn ecc1err(&mut self) -> ECC1ERR_W<ECC1STS_SPEC> {
+    pub fn ecc1err(&mut self) -> ECC1ERR_W<'_, ECC1STS_SPEC> {
         ECC1ERR_W::new(self, 0)
     }
 }

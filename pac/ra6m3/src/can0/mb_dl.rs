@@ -164,7 +164,7 @@ impl R {
 impl W {
     ///Bits 0:3 - Data Length Code
     #[inline(always)]
-    pub fn dlc(&mut self) -> DLC_W<MB_DL_SPEC> {
+    pub fn dlc(&mut self) -> DLC_W<'_, MB_DL_SPEC> {
         DLC_W::new(self, 0)
     }
 }

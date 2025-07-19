@@ -513,37 +513,37 @@ impl R {
 impl W {
     ///Bit 0 - D- Pin Pull-Down Control
     #[inline(always)]
-    pub fn rpdme0(&mut self) -> RPDME0_W<USBBCCTRL0_SPEC> {
+    pub fn rpdme0(&mut self) -> RPDME0_W<'_, USBBCCTRL0_SPEC> {
         RPDME0_W::new(self, 0)
     }
     ///Bit 1 - D+ Pin IDPSRC Output Control
     #[inline(always)]
-    pub fn idpsrce0(&mut self) -> IDPSRCE0_W<USBBCCTRL0_SPEC> {
+    pub fn idpsrce0(&mut self) -> IDPSRCE0_W<'_, USBBCCTRL0_SPEC> {
         IDPSRCE0_W::new(self, 1)
     }
     ///Bit 2 - D- Pin 0.6 V Input Detection (Comparator and Sink) Control
     #[inline(always)]
-    pub fn idmsinke0(&mut self) -> IDMSINKE0_W<USBBCCTRL0_SPEC> {
+    pub fn idmsinke0(&mut self) -> IDMSINKE0_W<'_, USBBCCTRL0_SPEC> {
         IDMSINKE0_W::new(self, 2)
     }
     ///Bit 3 - D+ Pin VDPSRC (0.6 V) Output Control
     #[inline(always)]
-    pub fn vdpsrce0(&mut self) -> VDPSRCE0_W<USBBCCTRL0_SPEC> {
+    pub fn vdpsrce0(&mut self) -> VDPSRCE0_W<'_, USBBCCTRL0_SPEC> {
         VDPSRCE0_W::new(self, 3)
     }
     ///Bit 4 - D+ Pin 0.6 V Input Detection (Comparator and Sink) Control
     #[inline(always)]
-    pub fn idpsinke0(&mut self) -> IDPSINKE0_W<USBBCCTRL0_SPEC> {
+    pub fn idpsinke0(&mut self) -> IDPSINKE0_W<'_, USBBCCTRL0_SPEC> {
         IDPSINKE0_W::new(self, 4)
     }
     ///Bit 5 - D- Pin VDMSRC (0.6 V) Output Control
     #[inline(always)]
-    pub fn vdmsrce0(&mut self) -> VDMSRCE0_W<USBBCCTRL0_SPEC> {
+    pub fn vdmsrce0(&mut self) -> VDMSRCE0_W<'_, USBBCCTRL0_SPEC> {
         VDMSRCE0_W::new(self, 5)
     }
     ///Bit 7 - BC (Battery Charger) Function Ch0 General Enable Control
     #[inline(always)]
-    pub fn batchge0(&mut self) -> BATCHGE0_W<USBBCCTRL0_SPEC> {
+    pub fn batchge0(&mut self) -> BATCHGE0_W<'_, USBBCCTRL0_SPEC> {
         BATCHGE0_W::new(self, 7)
     }
 }

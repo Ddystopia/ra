@@ -487,42 +487,42 @@ impl R {
 impl W {
     ///Bit 0 - Bus Error Interrupt Enable
     #[inline(always)]
-    pub fn beie(&mut self) -> BEIE_W<EIER_SPEC> {
+    pub fn beie(&mut self) -> BEIE_W<'_, EIER_SPEC> {
         BEIE_W::new(self, 0)
     }
     ///Bit 1 - Error-Warning Interrupt Enable
     #[inline(always)]
-    pub fn ewie(&mut self) -> EWIE_W<EIER_SPEC> {
+    pub fn ewie(&mut self) -> EWIE_W<'_, EIER_SPEC> {
         EWIE_W::new(self, 1)
     }
     ///Bit 2 - Error-Passive Interrupt Enable
     #[inline(always)]
-    pub fn epie(&mut self) -> EPIE_W<EIER_SPEC> {
+    pub fn epie(&mut self) -> EPIE_W<'_, EIER_SPEC> {
         EPIE_W::new(self, 2)
     }
     ///Bit 3 - Bus-Off Entry Interrupt Enable
     #[inline(always)]
-    pub fn boeie(&mut self) -> BOEIE_W<EIER_SPEC> {
+    pub fn boeie(&mut self) -> BOEIE_W<'_, EIER_SPEC> {
         BOEIE_W::new(self, 3)
     }
     ///Bit 4 - Bus-Off Recovery Interrupt Enable
     #[inline(always)]
-    pub fn borie(&mut self) -> BORIE_W<EIER_SPEC> {
+    pub fn borie(&mut self) -> BORIE_W<'_, EIER_SPEC> {
         BORIE_W::new(self, 4)
     }
     ///Bit 5 - Overrun Interrupt Enable
     #[inline(always)]
-    pub fn orie(&mut self) -> ORIE_W<EIER_SPEC> {
+    pub fn orie(&mut self) -> ORIE_W<'_, EIER_SPEC> {
         ORIE_W::new(self, 5)
     }
     ///Bit 6 - Overload Frame Transmit Interrupt Enable
     #[inline(always)]
-    pub fn olie(&mut self) -> OLIE_W<EIER_SPEC> {
+    pub fn olie(&mut self) -> OLIE_W<'_, EIER_SPEC> {
         OLIE_W::new(self, 6)
     }
     ///Bit 7 - Bus Lock Interrupt Enable
     #[inline(always)]
-    pub fn blie(&mut self) -> BLIE_W<EIER_SPEC> {
+    pub fn blie(&mut self) -> BLIE_W<'_, EIER_SPEC> {
         BLIE_W::new(self, 7)
     }
 }

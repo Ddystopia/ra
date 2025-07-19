@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Count Source Select
     #[inline(always)]
-    pub fn rcksel(&mut self) -> RCKSEL_W<RCR4_SPEC> {
+    pub fn rcksel(&mut self) -> RCKSEL_W<'_, RCR4_SPEC> {
         RCKSEL_W::new(self, 0)
     }
 }

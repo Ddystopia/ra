@@ -427,37 +427,37 @@ impl R {
 impl W {
     ///Bit 0 - IRQ8-DS Pin Enable
     #[inline(always)]
-    pub fn dirq8e(&mut self) -> DIRQ8E_W<DPSIER1_SPEC> {
+    pub fn dirq8e(&mut self) -> DIRQ8E_W<'_, DPSIER1_SPEC> {
         DIRQ8E_W::new(self, 0)
     }
     ///Bit 1 - IRQ9-DS Pin Enable
     #[inline(always)]
-    pub fn dirq9e(&mut self) -> DIRQ9E_W<DPSIER1_SPEC> {
+    pub fn dirq9e(&mut self) -> DIRQ9E_W<'_, DPSIER1_SPEC> {
         DIRQ9E_W::new(self, 1)
     }
     ///Bit 2 - IRQ10-DS Pin Enable
     #[inline(always)]
-    pub fn dirq10e(&mut self) -> DIRQ10E_W<DPSIER1_SPEC> {
+    pub fn dirq10e(&mut self) -> DIRQ10E_W<'_, DPSIER1_SPEC> {
         DIRQ10E_W::new(self, 2)
     }
     ///Bit 3 - IRQ11-DS Pin Enable
     #[inline(always)]
-    pub fn dirq11e(&mut self) -> DIRQ11E_W<DPSIER1_SPEC> {
+    pub fn dirq11e(&mut self) -> DIRQ11E_W<'_, DPSIER1_SPEC> {
         DIRQ11E_W::new(self, 3)
     }
     ///Bit 4 - IRQ12-DS Pin Enable
     #[inline(always)]
-    pub fn dirq12e(&mut self) -> DIRQ12E_W<DPSIER1_SPEC> {
+    pub fn dirq12e(&mut self) -> DIRQ12E_W<'_, DPSIER1_SPEC> {
         DIRQ12E_W::new(self, 4)
     }
     ///Bit 5 - IRQ13-DS Pin Enable
     #[inline(always)]
-    pub fn dirq13e(&mut self) -> DIRQ13E_W<DPSIER1_SPEC> {
+    pub fn dirq13e(&mut self) -> DIRQ13E_W<'_, DPSIER1_SPEC> {
         DIRQ13E_W::new(self, 5)
     }
     ///Bit 6 - IRQ14-DS Pin Enable
     #[inline(always)]
-    pub fn dirq14e(&mut self) -> DIRQ14E_W<DPSIER1_SPEC> {
+    pub fn dirq14e(&mut self) -> DIRQ14E_W<'_, DPSIER1_SPEC> {
         DIRQ14E_W::new(self, 6)
     }
 }

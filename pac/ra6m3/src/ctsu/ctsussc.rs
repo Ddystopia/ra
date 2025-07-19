@@ -256,7 +256,7 @@ impl R {
 impl W {
     ///Bits 8:11 - CTSU Spectrum Diffusion Frequency Division Setting
     #[inline(always)]
-    pub fn ctsussdiv(&mut self) -> CTSUSSDIV_W<CTSUSSC_SPEC> {
+    pub fn ctsussdiv(&mut self) -> CTSUSSDIV_W<'_, CTSUSSC_SPEC> {
         CTSUSSDIV_W::new(self, 8)
     }
 }

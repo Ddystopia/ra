@@ -367,32 +367,32 @@ impl R {
 impl W {
     ///Bit 0 - Response End Interrupt Request Mask
     #[inline(always)]
-    pub fn rspendm(&mut self) -> RSPENDM_W<SD_INFO1_MASK_SPEC> {
+    pub fn rspendm(&mut self) -> RSPENDM_W<'_, SD_INFO1_MASK_SPEC> {
         RSPENDM_W::new(self, 0)
     }
     ///Bit 2 - Access End Interrupt Request Mask
     #[inline(always)]
-    pub fn acendm(&mut self) -> ACENDM_W<SD_INFO1_MASK_SPEC> {
+    pub fn acendm(&mut self) -> ACENDM_W<'_, SD_INFO1_MASK_SPEC> {
         ACENDM_W::new(self, 2)
     }
     ///Bit 3 - SDnCD card Removal Interrupt Request Mask
     #[inline(always)]
-    pub fn sdcdrmm(&mut self) -> SDCDRMM_W<SD_INFO1_MASK_SPEC> {
+    pub fn sdcdrmm(&mut self) -> SDCDRMM_W<'_, SD_INFO1_MASK_SPEC> {
         SDCDRMM_W::new(self, 3)
     }
     ///Bit 4 - SDnCD card Insertion Interrupt Request Mask
     #[inline(always)]
-    pub fn sdcdinm(&mut self) -> SDCDINM_W<SD_INFO1_MASK_SPEC> {
+    pub fn sdcdinm(&mut self) -> SDCDINM_W<'_, SD_INFO1_MASK_SPEC> {
         SDCDINM_W::new(self, 4)
     }
     ///Bit 8 - SDnDAT3 Card Removal Interrupt Request Mask
     #[inline(always)]
-    pub fn sdd3rmm(&mut self) -> SDD3RMM_W<SD_INFO1_MASK_SPEC> {
+    pub fn sdd3rmm(&mut self) -> SDD3RMM_W<'_, SD_INFO1_MASK_SPEC> {
         SDD3RMM_W::new(self, 8)
     }
     ///Bit 9 - SDnDAT3 Card Insertion Interrupt Request Mask
     #[inline(always)]
-    pub fn sdd3inm(&mut self) -> SDD3INM_W<SD_INFO1_MASK_SPEC> {
+    pub fn sdd3inm(&mut self) -> SDD3INM_W<'_, SD_INFO1_MASK_SPEC> {
         SDD3INM_W::new(self, 9)
     }
 }

@@ -453,32 +453,32 @@ impl R {
 impl W {
     ///Bit 0 - IDPSRC Control
     #[inline(always)]
-    pub fn idpsrce(&mut self) -> IDPSRCE_W<BCCTRL_SPEC> {
+    pub fn idpsrce(&mut self) -> IDPSRCE_W<'_, BCCTRL_SPEC> {
         IDPSRCE_W::new(self, 0)
     }
     ///Bit 1 - IDMSINK Control
     #[inline(always)]
-    pub fn idmsinke(&mut self) -> IDMSINKE_W<BCCTRL_SPEC> {
+    pub fn idmsinke(&mut self) -> IDMSINKE_W<'_, BCCTRL_SPEC> {
         IDMSINKE_W::new(self, 1)
     }
     ///Bit 2 - VDPSRC Control
     #[inline(always)]
-    pub fn vdpsrce(&mut self) -> VDPSRCE_W<BCCTRL_SPEC> {
+    pub fn vdpsrce(&mut self) -> VDPSRCE_W<'_, BCCTRL_SPEC> {
         VDPSRCE_W::new(self, 2)
     }
     ///Bit 3 - IDPSINK Control
     #[inline(always)]
-    pub fn idpsinke(&mut self) -> IDPSINKE_W<BCCTRL_SPEC> {
+    pub fn idpsinke(&mut self) -> IDPSINKE_W<'_, BCCTRL_SPEC> {
         IDPSINKE_W::new(self, 3)
     }
     ///Bit 4 - VDMSRC Control
     #[inline(always)]
-    pub fn vdmsrce(&mut self) -> VDMSRCE_W<BCCTRL_SPEC> {
+    pub fn vdmsrce(&mut self) -> VDMSRCE_W<'_, BCCTRL_SPEC> {
         VDMSRCE_W::new(self, 4)
     }
     ///Bit 5 - DCP Mode Control
     #[inline(always)]
-    pub fn dcpmode(&mut self) -> DCPMODE_W<BCCTRL_SPEC> {
+    pub fn dcpmode(&mut self) -> DCPMODE_W<'_, BCCTRL_SPEC> {
         DCPMODE_W::new(self, 5)
     }
 }

@@ -286,17 +286,17 @@ impl R {
 impl W {
     ///Bits 0:1 - Quantization table number for the first color componentNOTE: Read-only in Decompression.
     #[inline(always)]
-    pub fn qt1(&mut self) -> QT1_W<JCQTN_SPEC> {
+    pub fn qt1(&mut self) -> QT1_W<'_, JCQTN_SPEC> {
         QT1_W::new(self, 0)
     }
     ///Bits 2:3 - Quantization table number for the second color component NOTE: Read-only in Decompression.
     #[inline(always)]
-    pub fn qt2(&mut self) -> QT2_W<JCQTN_SPEC> {
+    pub fn qt2(&mut self) -> QT2_W<'_, JCQTN_SPEC> {
         QT2_W::new(self, 2)
     }
     ///Bits 4:5 - Quantization table number for the third color component NOTE: Read-only in Decompression.
     #[inline(always)]
-    pub fn qt3(&mut self) -> QT3_W<JCQTN_SPEC> {
+    pub fn qt3(&mut self) -> QT3_W<'_, JCQTN_SPEC> {
         QT3_W::new(self, 4)
     }
 }

@@ -226,22 +226,22 @@ impl R {
 impl W {
     ///Bit 0 - Protect Bit 0
     #[inline(always)]
-    pub fn prc0(&mut self) -> PRC0_W<PRCR_SPEC> {
+    pub fn prc0(&mut self) -> PRC0_W<'_, PRCR_SPEC> {
         PRC0_W::new(self, 0)
     }
     ///Bit 1 - Protect Bit 1
     #[inline(always)]
-    pub fn prc1(&mut self) -> PRC1_W<PRCR_SPEC> {
+    pub fn prc1(&mut self) -> PRC1_W<'_, PRCR_SPEC> {
         PRC1_W::new(self, 1)
     }
     ///Bit 3 - Protect Bit 3
     #[inline(always)]
-    pub fn prc3(&mut self) -> PRC3_W<PRCR_SPEC> {
+    pub fn prc3(&mut self) -> PRC3_W<'_, PRCR_SPEC> {
         PRC3_W::new(self, 3)
     }
     ///Bits 8:15 - PRC Key Code
     #[inline(always)]
-    pub fn prkey(&mut self) -> PRKEY_W<PRCR_SPEC> {
+    pub fn prkey(&mut self) -> PRKEY_W<'_, PRCR_SPEC> {
         PRKEY_W::new(self, 8)
     }
 }

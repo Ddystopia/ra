@@ -69,7 +69,7 @@ impl R {
 impl W {
     ///Bit 0 - DMA Transfer Enable
     #[inline(always)]
-    pub fn dte(&mut self) -> DTE_W<DMCNT_SPEC> {
+    pub fn dte(&mut self) -> DTE_W<'_, DMCNT_SPEC> {
         DTE_W::new(self, 0)
     }
 }

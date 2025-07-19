@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Specifies the transfer destination start address.
     #[inline(always)]
-    pub fn dmdar(&mut self) -> DMDAR_W<DMDAR_SPEC> {
+    pub fn dmdar(&mut self) -> DMDAR_W<'_, DMDAR_SPEC> {
         DMDAR_W::new(self, 0)
     }
 }

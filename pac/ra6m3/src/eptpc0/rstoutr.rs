@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Response Message Reception Timeout Time SettingA response message not being received within n x 1024 (ns), where n is the setting, is judged to represent a timeout.
     #[inline(always)]
-    pub fn rstoutr(&mut self) -> RSTOUTR_W<RSTOUTR_SPEC> {
+    pub fn rstoutr(&mut self) -> RSTOUTR_W<'_, RSTOUTR_SPEC> {
         RSTOUTR_W::new(self, 0)
     }
 }

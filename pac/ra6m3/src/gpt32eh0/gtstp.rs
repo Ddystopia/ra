@@ -847,72 +847,72 @@ impl R {
 impl W {
     ///Bit 0 - Channel 0 GTCNT Count StopRead data shows each channel's counter status (GTCR.CST bit). 0 means counter runnning. 1 means counter stop.
     #[inline(always)]
-    pub fn cstop0(&mut self) -> CSTOP0_W<GTSTP_SPEC> {
+    pub fn cstop0(&mut self) -> CSTOP0_W<'_, GTSTP_SPEC> {
         CSTOP0_W::new(self, 0)
     }
     ///Bit 1 - Channel 1 GTCNT Count StopRead data shows each channel's counter status (GTCR.CST bit). 0 means counter runnning. 1 means counter stop.
     #[inline(always)]
-    pub fn cstop1(&mut self) -> CSTOP1_W<GTSTP_SPEC> {
+    pub fn cstop1(&mut self) -> CSTOP1_W<'_, GTSTP_SPEC> {
         CSTOP1_W::new(self, 1)
     }
     ///Bit 2 - Channel 2 GTCNT Count StopRead data shows each channel's counter status (GTCR.CST bit). 0 means counter runnning. 1 means counter stop.
     #[inline(always)]
-    pub fn cstop2(&mut self) -> CSTOP2_W<GTSTP_SPEC> {
+    pub fn cstop2(&mut self) -> CSTOP2_W<'_, GTSTP_SPEC> {
         CSTOP2_W::new(self, 2)
     }
     ///Bit 3 - Channel 3 GTCNT Count StopRead data shows each channel's counter status (GTCR.CST bit). 0 means counter runnning. 1 means counter stop.
     #[inline(always)]
-    pub fn cstop3(&mut self) -> CSTOP3_W<GTSTP_SPEC> {
+    pub fn cstop3(&mut self) -> CSTOP3_W<'_, GTSTP_SPEC> {
         CSTOP3_W::new(self, 3)
     }
     ///Bit 4 - Channel 4 GTCNT Count StopRead data shows each channel's counter status (GTCR.CST bit). 0 means counter runnning. 1 means counter stop.
     #[inline(always)]
-    pub fn cstop4(&mut self) -> CSTOP4_W<GTSTP_SPEC> {
+    pub fn cstop4(&mut self) -> CSTOP4_W<'_, GTSTP_SPEC> {
         CSTOP4_W::new(self, 4)
     }
     ///Bit 5 - Channel 5 GTCNT Count StopRead data shows each channel's counter status (GTCR.CST bit). 0 means counter runnning. 1 means counter stop.
     #[inline(always)]
-    pub fn cstop5(&mut self) -> CSTOP5_W<GTSTP_SPEC> {
+    pub fn cstop5(&mut self) -> CSTOP5_W<'_, GTSTP_SPEC> {
         CSTOP5_W::new(self, 5)
     }
     ///Bit 6 - Channel 6 GTCNT Count StopRead data shows each channel's counter status (GTCR.CST bit). 0 means counter runnning. 1 means counter stop.
     #[inline(always)]
-    pub fn cstop6(&mut self) -> CSTOP6_W<GTSTP_SPEC> {
+    pub fn cstop6(&mut self) -> CSTOP6_W<'_, GTSTP_SPEC> {
         CSTOP6_W::new(self, 6)
     }
     ///Bit 7 - Channel 7 GTCNT Count StopRead data shows each channel's counter status (GTCR.CST bit). 0 means counter runnning. 1 means counter stop.
     #[inline(always)]
-    pub fn cstop7(&mut self) -> CSTOP7_W<GTSTP_SPEC> {
+    pub fn cstop7(&mut self) -> CSTOP7_W<'_, GTSTP_SPEC> {
         CSTOP7_W::new(self, 7)
     }
     ///Bit 8 - Channel 8 GTCNT Count StopRead data shows each channel's counter status (GTCR.CST bit). 0 means counter runnning. 1 means counter stop.
     #[inline(always)]
-    pub fn cstop8(&mut self) -> CSTOP8_W<GTSTP_SPEC> {
+    pub fn cstop8(&mut self) -> CSTOP8_W<'_, GTSTP_SPEC> {
         CSTOP8_W::new(self, 8)
     }
     ///Bit 9 - Channel 9 GTCNT Count StopRead data shows each channel's counter status (GTCR.CST bit). 0 means counter runnning. 1 means counter stop.
     #[inline(always)]
-    pub fn cstop9(&mut self) -> CSTOP9_W<GTSTP_SPEC> {
+    pub fn cstop9(&mut self) -> CSTOP9_W<'_, GTSTP_SPEC> {
         CSTOP9_W::new(self, 9)
     }
     ///Bit 10 - Channel 10 GTCNT Count StopRead data shows each channel's counter status (GTCR.CST bit). 0 means counter runnning. 1 means counter stop.
     #[inline(always)]
-    pub fn cstop10(&mut self) -> CSTOP10_W<GTSTP_SPEC> {
+    pub fn cstop10(&mut self) -> CSTOP10_W<'_, GTSTP_SPEC> {
         CSTOP10_W::new(self, 10)
     }
     ///Bit 11 - Channel 11 GTCNT Count StopRead data shows each channel's counter status (GTCR.CST bit). 0 means counter runnning. 1 means counter stop.
     #[inline(always)]
-    pub fn cstop11(&mut self) -> CSTOP11_W<GTSTP_SPEC> {
+    pub fn cstop11(&mut self) -> CSTOP11_W<'_, GTSTP_SPEC> {
         CSTOP11_W::new(self, 11)
     }
     ///Bit 12 - Channel 12 GTCNT Count StopRead data shows each channel's counter status (GTCR.CST bit). 0 means counter runnning. 1 means counter stop.
     #[inline(always)]
-    pub fn cstop12(&mut self) -> CSTOP12_W<GTSTP_SPEC> {
+    pub fn cstop12(&mut self) -> CSTOP12_W<'_, GTSTP_SPEC> {
         CSTOP12_W::new(self, 12)
     }
     ///Bit 13 - Channel 13 GTCNT Count StopRead data shows each channel's counter status (GTCR.CST bit). 0 means counter runnning. 1 means counter stop.
     #[inline(always)]
-    pub fn cstop13(&mut self) -> CSTOP13_W<GTSTP_SPEC> {
+    pub fn cstop13(&mut self) -> CSTOP13_W<'_, GTSTP_SPEC> {
         CSTOP13_W::new(self, 13)
     }
 }

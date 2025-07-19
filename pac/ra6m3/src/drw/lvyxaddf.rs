@@ -7,12 +7,12 @@ pub type LVYADDF_W<'a, REG> = crate::FieldWriter<'a, REG, 16, u16>;
 impl W {
     ///Bits 0:15 - V xlimiter increment fractional part
     #[inline(always)]
-    pub fn lvxaddf(&mut self) -> LVXADDF_W<LVYXADDF_SPEC> {
+    pub fn lvxaddf(&mut self) -> LVXADDF_W<'_, LVYXADDF_SPEC> {
         LVXADDF_W::new(self, 0)
     }
     ///Bits 16:31 - V y limiter increment fractional part
     #[inline(always)]
-    pub fn lvyaddf(&mut self) -> LVYADDF_W<LVYXADDF_SPEC> {
+    pub fn lvyaddf(&mut self) -> LVYADDF_W<'_, LVYXADDF_SPEC> {
         LVYADDF_W::new(self, 16)
     }
 }

@@ -231,17 +231,17 @@ impl R {
 impl W {
     ///Bits 0:2 - CRC Generating Polynomial Switching
     #[inline(always)]
-    pub fn gps(&mut self) -> GPS_W<CRCCR0_SPEC> {
+    pub fn gps(&mut self) -> GPS_W<'_, CRCCR0_SPEC> {
         GPS_W::new(self, 0)
     }
     ///Bit 6 - CRC Calculation Switching
     #[inline(always)]
-    pub fn lms(&mut self) -> LMS_W<CRCCR0_SPEC> {
+    pub fn lms(&mut self) -> LMS_W<'_, CRCCR0_SPEC> {
         LMS_W::new(self, 6)
     }
     ///Bit 7 - CRCDOR Register Clear
     #[inline(always)]
-    pub fn dorclr(&mut self) -> DORCLR_W<CRCCR0_SPEC> {
+    pub fn dorclr(&mut self) -> DORCLR_W<'_, CRCCR0_SPEC> {
         DORCLR_W::new(self, 7)
     }
 }

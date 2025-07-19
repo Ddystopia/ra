@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 8 - CRC Check Mask (for MMC test commands)
     #[inline(always)]
-    pub fn nochkcr(&mut self) -> NOCHKCR_W<SDIF_MODE_SPEC> {
+    pub fn nochkcr(&mut self) -> NOCHKCR_W<'_, SDIF_MODE_SPEC> {
         NOCHKCR_W::new(self, 8)
     }
 }

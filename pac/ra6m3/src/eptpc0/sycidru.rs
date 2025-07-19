@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - These bits hold the setting for the higher-order 32 bits of the clock-ID of your port.
     #[inline(always)]
-    pub fn sycidru(&mut self) -> SYCIDRU_W<SYCIDRU_SPEC> {
+    pub fn sycidru(&mut self) -> SYCIDRU_W<'_, SYCIDRU_SPEC> {
         SYCIDRU_W::new(self, 0)
     }
 }

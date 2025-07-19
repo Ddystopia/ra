@@ -1927,162 +1927,162 @@ impl R {
 impl W {
     ///Bit 0 - mailbox 0 Interrupt Enable
     #[inline(always)]
-    pub fn mb0(&mut self) -> MB0_W<MIER_SPEC> {
+    pub fn mb0(&mut self) -> MB0_W<'_, MIER_SPEC> {
         MB0_W::new(self, 0)
     }
     ///Bit 1 - mailbox 1 Interrupt Enable
     #[inline(always)]
-    pub fn mb1(&mut self) -> MB1_W<MIER_SPEC> {
+    pub fn mb1(&mut self) -> MB1_W<'_, MIER_SPEC> {
         MB1_W::new(self, 1)
     }
     ///Bit 2 - mailbox 2 Interrupt Enable
     #[inline(always)]
-    pub fn mb2(&mut self) -> MB2_W<MIER_SPEC> {
+    pub fn mb2(&mut self) -> MB2_W<'_, MIER_SPEC> {
         MB2_W::new(self, 2)
     }
     ///Bit 3 - mailbox 3 Interrupt Enable
     #[inline(always)]
-    pub fn mb3(&mut self) -> MB3_W<MIER_SPEC> {
+    pub fn mb3(&mut self) -> MB3_W<'_, MIER_SPEC> {
         MB3_W::new(self, 3)
     }
     ///Bit 4 - mailbox 4 Interrupt Enable
     #[inline(always)]
-    pub fn mb4(&mut self) -> MB4_W<MIER_SPEC> {
+    pub fn mb4(&mut self) -> MB4_W<'_, MIER_SPEC> {
         MB4_W::new(self, 4)
     }
     ///Bit 5 - mailbox 5 Interrupt Enable
     #[inline(always)]
-    pub fn mb5(&mut self) -> MB5_W<MIER_SPEC> {
+    pub fn mb5(&mut self) -> MB5_W<'_, MIER_SPEC> {
         MB5_W::new(self, 5)
     }
     ///Bit 6 - mailbox 6 Interrupt Enable
     #[inline(always)]
-    pub fn mb6(&mut self) -> MB6_W<MIER_SPEC> {
+    pub fn mb6(&mut self) -> MB6_W<'_, MIER_SPEC> {
         MB6_W::new(self, 6)
     }
     ///Bit 7 - mailbox 7 Interrupt Enable
     #[inline(always)]
-    pub fn mb7(&mut self) -> MB7_W<MIER_SPEC> {
+    pub fn mb7(&mut self) -> MB7_W<'_, MIER_SPEC> {
         MB7_W::new(self, 7)
     }
     ///Bit 8 - mailbox 8 Interrupt Enable
     #[inline(always)]
-    pub fn mb8(&mut self) -> MB8_W<MIER_SPEC> {
+    pub fn mb8(&mut self) -> MB8_W<'_, MIER_SPEC> {
         MB8_W::new(self, 8)
     }
     ///Bit 9 - mailbox 9 Interrupt Enable
     #[inline(always)]
-    pub fn mb9(&mut self) -> MB9_W<MIER_SPEC> {
+    pub fn mb9(&mut self) -> MB9_W<'_, MIER_SPEC> {
         MB9_W::new(self, 9)
     }
     ///Bit 10 - mailbox 10 Interrupt Enable
     #[inline(always)]
-    pub fn mb10(&mut self) -> MB10_W<MIER_SPEC> {
+    pub fn mb10(&mut self) -> MB10_W<'_, MIER_SPEC> {
         MB10_W::new(self, 10)
     }
     ///Bit 11 - mailbox 11 Interrupt Enable
     #[inline(always)]
-    pub fn mb11(&mut self) -> MB11_W<MIER_SPEC> {
+    pub fn mb11(&mut self) -> MB11_W<'_, MIER_SPEC> {
         MB11_W::new(self, 11)
     }
     ///Bit 12 - mailbox 12 Interrupt Enable
     #[inline(always)]
-    pub fn mb12(&mut self) -> MB12_W<MIER_SPEC> {
+    pub fn mb12(&mut self) -> MB12_W<'_, MIER_SPEC> {
         MB12_W::new(self, 12)
     }
     ///Bit 13 - mailbox 13 Interrupt Enable
     #[inline(always)]
-    pub fn mb13(&mut self) -> MB13_W<MIER_SPEC> {
+    pub fn mb13(&mut self) -> MB13_W<'_, MIER_SPEC> {
         MB13_W::new(self, 13)
     }
     ///Bit 14 - mailbox 14 Interrupt Enable
     #[inline(always)]
-    pub fn mb14(&mut self) -> MB14_W<MIER_SPEC> {
+    pub fn mb14(&mut self) -> MB14_W<'_, MIER_SPEC> {
         MB14_W::new(self, 14)
     }
     ///Bit 15 - mailbox 15 Interrupt Enable
     #[inline(always)]
-    pub fn mb15(&mut self) -> MB15_W<MIER_SPEC> {
+    pub fn mb15(&mut self) -> MB15_W<'_, MIER_SPEC> {
         MB15_W::new(self, 15)
     }
     ///Bit 16 - mailbox 16 Interrupt Enable
     #[inline(always)]
-    pub fn mb16(&mut self) -> MB16_W<MIER_SPEC> {
+    pub fn mb16(&mut self) -> MB16_W<'_, MIER_SPEC> {
         MB16_W::new(self, 16)
     }
     ///Bit 17 - mailbox 17 Interrupt Enable
     #[inline(always)]
-    pub fn mb17(&mut self) -> MB17_W<MIER_SPEC> {
+    pub fn mb17(&mut self) -> MB17_W<'_, MIER_SPEC> {
         MB17_W::new(self, 17)
     }
     ///Bit 18 - mailbox 18 Interrupt Enable
     #[inline(always)]
-    pub fn mb18(&mut self) -> MB18_W<MIER_SPEC> {
+    pub fn mb18(&mut self) -> MB18_W<'_, MIER_SPEC> {
         MB18_W::new(self, 18)
     }
     ///Bit 19 - mailbox 19 Interrupt Enable
     #[inline(always)]
-    pub fn mb19(&mut self) -> MB19_W<MIER_SPEC> {
+    pub fn mb19(&mut self) -> MB19_W<'_, MIER_SPEC> {
         MB19_W::new(self, 19)
     }
     ///Bit 20 - mailbox 20 Interrupt Enable
     #[inline(always)]
-    pub fn mb20(&mut self) -> MB20_W<MIER_SPEC> {
+    pub fn mb20(&mut self) -> MB20_W<'_, MIER_SPEC> {
         MB20_W::new(self, 20)
     }
     ///Bit 21 - mailbox 21 Interrupt Enable
     #[inline(always)]
-    pub fn mb21(&mut self) -> MB21_W<MIER_SPEC> {
+    pub fn mb21(&mut self) -> MB21_W<'_, MIER_SPEC> {
         MB21_W::new(self, 21)
     }
     ///Bit 22 - mailbox 22 Interrupt Enable
     #[inline(always)]
-    pub fn mb22(&mut self) -> MB22_W<MIER_SPEC> {
+    pub fn mb22(&mut self) -> MB22_W<'_, MIER_SPEC> {
         MB22_W::new(self, 22)
     }
     ///Bit 23 - mailbox 23 Interrupt Enable
     #[inline(always)]
-    pub fn mb23(&mut self) -> MB23_W<MIER_SPEC> {
+    pub fn mb23(&mut self) -> MB23_W<'_, MIER_SPEC> {
         MB23_W::new(self, 23)
     }
     ///Bit 24 - mailbox 24 Interrupt Enable
     #[inline(always)]
-    pub fn mb24(&mut self) -> MB24_W<MIER_SPEC> {
+    pub fn mb24(&mut self) -> MB24_W<'_, MIER_SPEC> {
         MB24_W::new(self, 24)
     }
     ///Bit 25 - mailbox 25 Interrupt Enable
     #[inline(always)]
-    pub fn mb25(&mut self) -> MB25_W<MIER_SPEC> {
+    pub fn mb25(&mut self) -> MB25_W<'_, MIER_SPEC> {
         MB25_W::new(self, 25)
     }
     ///Bit 26 - mailbox 26 Interrupt Enable
     #[inline(always)]
-    pub fn mb26(&mut self) -> MB26_W<MIER_SPEC> {
+    pub fn mb26(&mut self) -> MB26_W<'_, MIER_SPEC> {
         MB26_W::new(self, 26)
     }
     ///Bit 27 - mailbox 27 Interrupt Enable
     #[inline(always)]
-    pub fn mb27(&mut self) -> MB27_W<MIER_SPEC> {
+    pub fn mb27(&mut self) -> MB27_W<'_, MIER_SPEC> {
         MB27_W::new(self, 27)
     }
     ///Bit 28 - mailbox 28 Interrupt Enable
     #[inline(always)]
-    pub fn mb28(&mut self) -> MB28_W<MIER_SPEC> {
+    pub fn mb28(&mut self) -> MB28_W<'_, MIER_SPEC> {
         MB28_W::new(self, 28)
     }
     ///Bit 29 - mailbox 29 Interrupt Enable
     #[inline(always)]
-    pub fn mb29(&mut self) -> MB29_W<MIER_SPEC> {
+    pub fn mb29(&mut self) -> MB29_W<'_, MIER_SPEC> {
         MB29_W::new(self, 29)
     }
     ///Bit 30 - mailbox 30 Interrupt Enable
     #[inline(always)]
-    pub fn mb30(&mut self) -> MB30_W<MIER_SPEC> {
+    pub fn mb30(&mut self) -> MB30_W<'_, MIER_SPEC> {
         MB30_W::new(self, 30)
     }
     ///Bit 31 - mailbox 31 Interrupt Enable
     #[inline(always)]
-    pub fn mb31(&mut self) -> MB31_W<MIER_SPEC> {
+    pub fn mb31(&mut self) -> MB31_W<'_, MIER_SPEC> {
         MB31_W::new(self, 31)
     }
 }

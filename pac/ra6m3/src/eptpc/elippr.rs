@@ -847,72 +847,72 @@ impl R {
 impl W {
     ///Bit 0 - Pulse Output Timer 0 Rising Edge Detection Event Output Enable
     #[inline(always)]
-    pub fn cycp0(&mut self) -> CYCP0_W<ELIPPR_SPEC> {
+    pub fn cycp0(&mut self) -> CYCP0_W<'_, ELIPPR_SPEC> {
         CYCP0_W::new(self, 0)
     }
     ///Bit 1 - Pulse Output Timer 1 Rising Edge Detection Event Output Enable
     #[inline(always)]
-    pub fn cycp1(&mut self) -> CYCP1_W<ELIPPR_SPEC> {
+    pub fn cycp1(&mut self) -> CYCP1_W<'_, ELIPPR_SPEC> {
         CYCP1_W::new(self, 1)
     }
     ///Bit 2 - Pulse Output Timer 2 Rising Edge Detection Event Output Enable
     #[inline(always)]
-    pub fn cycp2(&mut self) -> CYCP2_W<ELIPPR_SPEC> {
+    pub fn cycp2(&mut self) -> CYCP2_W<'_, ELIPPR_SPEC> {
         CYCP2_W::new(self, 2)
     }
     ///Bit 3 - Pulse Output Timer 3 Rising Edge Detection Event Output Enable
     #[inline(always)]
-    pub fn cycp3(&mut self) -> CYCP3_W<ELIPPR_SPEC> {
+    pub fn cycp3(&mut self) -> CYCP3_W<'_, ELIPPR_SPEC> {
         CYCP3_W::new(self, 3)
     }
     ///Bit 4 - Pulse Output Timer 4 Rising Edge Detection Event Output Enable
     #[inline(always)]
-    pub fn cycp4(&mut self) -> CYCP4_W<ELIPPR_SPEC> {
+    pub fn cycp4(&mut self) -> CYCP4_W<'_, ELIPPR_SPEC> {
         CYCP4_W::new(self, 4)
     }
     ///Bit 5 - Pulse Output Timer 5 Rising Edge Detection Event Output Enable
     #[inline(always)]
-    pub fn cycp5(&mut self) -> CYCP5_W<ELIPPR_SPEC> {
+    pub fn cycp5(&mut self) -> CYCP5_W<'_, ELIPPR_SPEC> {
         CYCP5_W::new(self, 5)
     }
     ///Bit 8 - Pulse Output Timer 0 Falling Edge Detection Event Output Enable
     #[inline(always)]
-    pub fn cycn0(&mut self) -> CYCN0_W<ELIPPR_SPEC> {
+    pub fn cycn0(&mut self) -> CYCN0_W<'_, ELIPPR_SPEC> {
         CYCN0_W::new(self, 8)
     }
     ///Bit 9 - Pulse Output Timer 1 Falling Edge Detection Event Output Enable
     #[inline(always)]
-    pub fn cycn1(&mut self) -> CYCN1_W<ELIPPR_SPEC> {
+    pub fn cycn1(&mut self) -> CYCN1_W<'_, ELIPPR_SPEC> {
         CYCN1_W::new(self, 9)
     }
     ///Bit 10 - Pulse Output Timer 2 Falling Edge Detection Event Output Enable
     #[inline(always)]
-    pub fn cycn2(&mut self) -> CYCN2_W<ELIPPR_SPEC> {
+    pub fn cycn2(&mut self) -> CYCN2_W<'_, ELIPPR_SPEC> {
         CYCN2_W::new(self, 10)
     }
     ///Bit 11 - Pulse Output Timer 3 Falling Edge Detection Event Output Enable
     #[inline(always)]
-    pub fn cycn3(&mut self) -> CYCN3_W<ELIPPR_SPEC> {
+    pub fn cycn3(&mut self) -> CYCN3_W<'_, ELIPPR_SPEC> {
         CYCN3_W::new(self, 11)
     }
     ///Bit 12 - Pulse Output Timer 4 Falling Edge Detection Event Output Enable
     #[inline(always)]
-    pub fn cycn4(&mut self) -> CYCN4_W<ELIPPR_SPEC> {
+    pub fn cycn4(&mut self) -> CYCN4_W<'_, ELIPPR_SPEC> {
         CYCN4_W::new(self, 12)
     }
     ///Bit 13 - Pulse Output Timer 5 Falling Edge Detection Event Output Enable
     #[inline(always)]
-    pub fn cycn5(&mut self) -> CYCN5_W<ELIPPR_SPEC> {
+    pub fn cycn5(&mut self) -> CYCN5_W<'_, ELIPPR_SPEC> {
         CYCN5_W::new(self, 13)
     }
     ///Bit 16 - Pulse Output Timer Rising Edge Detection IPLS Interrupt Request Permission
     #[inline(always)]
-    pub fn plsp(&mut self) -> PLSP_W<ELIPPR_SPEC> {
+    pub fn plsp(&mut self) -> PLSP_W<'_, ELIPPR_SPEC> {
         PLSP_W::new(self, 16)
     }
     ///Bit 24 - Pulse Output Timer Falling Edge Detection IPLS Interrupt Request Permission
     #[inline(always)]
-    pub fn plsn(&mut self) -> PLSN_W<ELIPPR_SPEC> {
+    pub fn plsn(&mut self) -> PLSN_W<'_, ELIPPR_SPEC> {
         PLSN_W::new(self, 24)
     }
 }

@@ -76,12 +76,12 @@ impl R {
 impl W {
     ///Bit 0 - RGB-index chroma-key processing control.
     #[inline(always)]
-    pub fn ckon(&mut self) -> CKON_W<GR_AB7_SPEC> {
+    pub fn ckon(&mut self) -> CKON_W<'_, GR_AB7_SPEC> {
         CKON_W::new(self, 0)
     }
     ///Bits 16:23 - Initial alpha value for alpha blending in rectangular area.
     #[inline(always)]
-    pub fn arcdef(&mut self) -> ARCDEF_W<GR_AB7_SPEC> {
+    pub fn arcdef(&mut self) -> ARCDEF_W<'_, GR_AB7_SPEC> {
         ARCDEF_W::new(self, 16)
     }
 }

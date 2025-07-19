@@ -280,22 +280,22 @@ impl R {
 impl W {
     ///Bits 0:1 - Number of Frames Specification
     #[inline(always)]
-    pub fn spfc(&mut self) -> SPFC_W<SPDCR_SPEC> {
+    pub fn spfc(&mut self) -> SPFC_W<'_, SPDCR_SPEC> {
         SPFC_W::new(self, 0)
     }
     ///Bit 4 - RSPI Receive/Transmit Data Selection
     #[inline(always)]
-    pub fn sprdtd(&mut self) -> SPRDTD_W<SPDCR_SPEC> {
+    pub fn sprdtd(&mut self) -> SPRDTD_W<'_, SPDCR_SPEC> {
         SPRDTD_W::new(self, 4)
     }
     ///Bit 5 - SPI Word Access/Halfword Access Specification
     #[inline(always)]
-    pub fn splw(&mut self) -> SPLW_W<SPDCR_SPEC> {
+    pub fn splw(&mut self) -> SPLW_W<'_, SPDCR_SPEC> {
         SPLW_W::new(self, 5)
     }
     ///Bit 6 - SPI Byte Access Specification
     #[inline(always)]
-    pub fn spbyt(&mut self) -> SPBYT_W<SPDCR_SPEC> {
+    pub fn spbyt(&mut self) -> SPBYT_W<'_, SPDCR_SPEC> {
         SPBYT_W::new(self, 6)
     }
 }

@@ -553,42 +553,42 @@ impl R {
 impl W {
     ///Bit 0 - Receive FIFO Data Register Reset
     #[inline(always)]
-    pub fn rfrst(&mut self) -> RFRST_W<SSIFCR_SPEC> {
+    pub fn rfrst(&mut self) -> RFRST_W<'_, SSIFCR_SPEC> {
         RFRST_W::new(self, 0)
     }
     ///Bit 1 - Transmit FIFO Data Register Reset
     #[inline(always)]
-    pub fn tfrst(&mut self) -> TFRST_W<SSIFCR_SPEC> {
+    pub fn tfrst(&mut self) -> TFRST_W<'_, SSIFCR_SPEC> {
         TFRST_W::new(self, 1)
     }
     ///Bit 2 - Receive Interrupt Enable NOTE: RXI can be cleared by clearing either the RDF flag (see the description of the RDF bit for details) or RIE bit.
     #[inline(always)]
-    pub fn rie(&mut self) -> RIE_W<SSIFCR_SPEC> {
+    pub fn rie(&mut self) -> RIE_W<'_, SSIFCR_SPEC> {
         RIE_W::new(self, 2)
     }
     ///Bit 3 - Transmit Interrupt Enable NOTE: TXI can be cleared by clearing either the TDE flag (see the description of the TDE bit for details) or TIE bit.
     #[inline(always)]
-    pub fn tie(&mut self) -> TIE_W<SSIFCR_SPEC> {
+    pub fn tie(&mut self) -> TIE_W<'_, SSIFCR_SPEC> {
         TIE_W::new(self, 3)
     }
     ///Bits 4:5 - Receive Data Trigger Number
     #[inline(always)]
-    pub fn rtrg(&mut self) -> RTRG_W<SSIFCR_SPEC> {
+    pub fn rtrg(&mut self) -> RTRG_W<'_, SSIFCR_SPEC> {
         RTRG_W::new(self, 4)
     }
     ///Bits 6:7 - Transmit Data Trigger Number NOTE: The values in parenthesis are the number of empty stages in SSIFTDR at which the TDE flag is set.
     #[inline(always)]
-    pub fn ttrg(&mut self) -> TTRG_W<SSIFCR_SPEC> {
+    pub fn ttrg(&mut self) -> TTRG_W<'_, SSIFCR_SPEC> {
         TTRG_W::new(self, 6)
     }
     ///Bit 16 - SSI soft ware reset
     #[inline(always)]
-    pub fn ssirst(&mut self) -> SSIRST_W<SSIFCR_SPEC> {
+    pub fn ssirst(&mut self) -> SSIRST_W<'_, SSIFCR_SPEC> {
         SSIRST_W::new(self, 16)
     }
     ///Bit 31 - Oversampling Clock Enable
     #[inline(always)]
-    pub fn aucke(&mut self) -> AUCKE_W<SSIFCR_SPEC> {
+    pub fn aucke(&mut self) -> AUCKE_W<'_, SSIFCR_SPEC> {
         AUCKE_W::new(self, 31)
     }
 }

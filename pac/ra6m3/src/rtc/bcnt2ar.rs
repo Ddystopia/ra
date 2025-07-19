@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - The BCNT2AR counter is a readable/writable 32-bit binary counter b23 to b16.
     #[inline(always)]
-    pub fn bcnt2ar(&mut self) -> BCNT2AR_W<BCNT2AR_SPEC> {
+    pub fn bcnt2ar(&mut self) -> BCNT2AR_W<'_, BCNT2AR_SPEC> {
         BCNT2AR_W::new(self, 0)
     }
 }

@@ -5,7 +5,7 @@ pub type SRCID_W<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
 impl W {
     ///Bits 0:31 - SRCID is a 32-bit writ-only register that is used to input the data before sampling rate conversion. All the bits are read as 0.
     #[inline(always)]
-    pub fn srcid(&mut self) -> SRCID_W<SRCID_SPEC> {
+    pub fn srcid(&mut self) -> SRCID_W<'_, SRCID_SPEC> {
         SRCID_W::new(self, 0)
     }
 }

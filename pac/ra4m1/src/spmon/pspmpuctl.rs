@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 0 - Stack Pointer Monitor Enable
     #[inline(always)]
-    pub fn enable(&mut self) -> ENABLE_W<PSPMPUCTL_SPEC> {
+    pub fn enable(&mut self) -> ENABLE_W<'_, PSPMPUCTL_SPEC> {
         ENABLE_W::new(self, 0)
     }
     ///Bit 8 - Stack Pointer Monitor Error Flag
     #[inline(always)]
-    pub fn error(&mut self) -> ERROR_W<PSPMPUCTL_SPEC> {
+    pub fn error(&mut self) -> ERROR_W<'_, PSPMPUCTL_SPEC> {
         ERROR_W::new(self, 8)
     }
 }

@@ -170,12 +170,12 @@ impl R {
 impl W {
     ///Bit 6 - BRDY Interrupt Status Clear Timing
     #[inline(always)]
-    pub fn brdym(&mut self) -> BRDYM_W<SOFCFG_SPEC> {
+    pub fn brdym(&mut self) -> BRDYM_W<'_, SOFCFG_SPEC> {
         BRDYM_W::new(self, 6)
     }
     ///Bit 8 - Transaction-Enabled Time Select
     #[inline(always)]
-    pub fn trnensel(&mut self) -> TRNENSEL_W<SOFCFG_SPEC> {
+    pub fn trnensel(&mut self) -> TRNENSEL_W<'_, SOFCFG_SPEC> {
         TRNENSEL_W::new(self, 8)
     }
 }

@@ -463,32 +463,32 @@ impl R {
 impl W {
     ///Bit 0 - Multi-Processor Bit Transfer. Sets the multi-processor bit for adding to the transmission frame
     #[inline(always)]
-    pub fn mpbt(&mut self) -> MPBT_W<SSR_SPEC> {
+    pub fn mpbt(&mut self) -> MPBT_W<'_, SSR_SPEC> {
         MPBT_W::new(self, 0)
     }
     ///Bit 3 - Parity Error Flag
     #[inline(always)]
-    pub fn per(&mut self) -> PER_W<SSR_SPEC> {
+    pub fn per(&mut self) -> PER_W<'_, SSR_SPEC> {
         PER_W::new(self, 3)
     }
     ///Bit 4 - Framing Error Flag
     #[inline(always)]
-    pub fn fer(&mut self) -> FER_W<SSR_SPEC> {
+    pub fn fer(&mut self) -> FER_W<'_, SSR_SPEC> {
         FER_W::new(self, 4)
     }
     ///Bit 5 - Overrun Error Flag
     #[inline(always)]
-    pub fn orer(&mut self) -> ORER_W<SSR_SPEC> {
+    pub fn orer(&mut self) -> ORER_W<'_, SSR_SPEC> {
         ORER_W::new(self, 5)
     }
     ///Bit 6 - Receive Data Full Flag
     #[inline(always)]
-    pub fn rdrf(&mut self) -> RDRF_W<SSR_SPEC> {
+    pub fn rdrf(&mut self) -> RDRF_W<'_, SSR_SPEC> {
         RDRF_W::new(self, 6)
     }
     ///Bit 7 - Transmit Data Empty Flag
     #[inline(always)]
-    pub fn tdre(&mut self) -> TDRE_W<SSR_SPEC> {
+    pub fn tdre(&mut self) -> TDRE_W<'_, SSR_SPEC> {
         TDRE_W::new(self, 7)
     }
 }

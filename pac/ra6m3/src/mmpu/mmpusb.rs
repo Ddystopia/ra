@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Address where the region starts, for use in region determination.NOTE: The low-order 2 bits are fixed to 0.
     #[inline(always)]
-    pub fn mmpusb(&mut self) -> MMPUSB_W<MMPUSB_SPEC> {
+    pub fn mmpusb(&mut self) -> MMPUSB_W<'_, MMPUSB_SPEC> {
         MMPUSB_W::new(self, 0)
     }
 }

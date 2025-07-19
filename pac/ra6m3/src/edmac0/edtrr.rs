@@ -38,7 +38,7 @@ where
 impl W {
     ///Bit 0 - Transmit Request
     #[inline(always)]
-    pub fn tr(&mut self) -> TR_W<EDTRR_SPEC> {
+    pub fn tr(&mut self) -> TR_W<'_, EDTRR_SPEC> {
         TR_W::new(self, 0)
     }
 }

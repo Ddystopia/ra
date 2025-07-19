@@ -936,67 +936,67 @@ impl R {
 impl W {
     ///Bits 0:3 - PTP v2 Message Type Flag
     #[inline(always)]
-    pub fn type_(&mut self) -> TYPE_W<EESR_SPEC> {
+    pub fn type_(&mut self) -> TYPE_W<'_, EESR_SPEC> {
         TYPE_W::new(self, 0)
     }
     ///Bit 4 - PTP v2 Packet Flag
     #[inline(always)]
-    pub fn pver(&mut self) -> PVER_W<EESR_SPEC> {
+    pub fn pver(&mut self) -> PVER_W<'_, EESR_SPEC> {
         PVER_W::new(self, 4)
     }
     ///Bit 8 - MAC Address Mismatch Flag
     #[inline(always)]
-    pub fn mace(&mut self) -> MACE_W<EESR_SPEC> {
+    pub fn mace(&mut self) -> MACE_W<'_, EESR_SPEC> {
         MACE_W::new(self, 8)
     }
     ///Bit 16 - Receive FIFO Overflow Flag
     #[inline(always)]
-    pub fn rfof(&mut self) -> RFOF_W<EESR_SPEC> {
+    pub fn rfof(&mut self) -> RFOF_W<'_, EESR_SPEC> {
         RFOF_W::new(self, 16)
     }
     ///Bit 17 - Receive Descriptor Empty Flag
     #[inline(always)]
-    pub fn rde(&mut self) -> RDE_W<EESR_SPEC> {
+    pub fn rde(&mut self) -> RDE_W<'_, EESR_SPEC> {
         RDE_W::new(self, 17)
     }
     ///Bit 18 - Frame Receive Flag
     #[inline(always)]
-    pub fn fr(&mut self) -> FR_W<EESR_SPEC> {
+    pub fn fr(&mut self) -> FR_W<'_, EESR_SPEC> {
         FR_W::new(self, 18)
     }
     ///Bit 19 - Transmit FIFO Underflow Flag
     #[inline(always)]
-    pub fn tfuf(&mut self) -> TFUF_W<EESR_SPEC> {
+    pub fn tfuf(&mut self) -> TFUF_W<'_, EESR_SPEC> {
         TFUF_W::new(self, 19)
     }
     ///Bit 20 - Transmit Descriptor Empty Flag
     #[inline(always)]
-    pub fn tde(&mut self) -> TDE_W<EESR_SPEC> {
+    pub fn tde(&mut self) -> TDE_W<'_, EESR_SPEC> {
         TDE_W::new(self, 20)
     }
     ///Bit 21 - Frame Transfer Complete Flag
     #[inline(always)]
-    pub fn tc(&mut self) -> TC_W<EESR_SPEC> {
+    pub fn tc(&mut self) -> TC_W<'_, EESR_SPEC> {
         TC_W::new(self, 21)
     }
     ///Bit 23 - Address Error Flag
     #[inline(always)]
-    pub fn ade(&mut self) -> ADE_W<EESR_SPEC> {
+    pub fn ade(&mut self) -> ADE_W<'_, EESR_SPEC> {
         ADE_W::new(self, 23)
     }
     ///Bit 24 - Receive Frame Counter Overflow Flag
     #[inline(always)]
-    pub fn rfcof(&mut self) -> RFCOF_W<EESR_SPEC> {
+    pub fn rfcof(&mut self) -> RFCOF_W<'_, EESR_SPEC> {
         RFCOF_W::new(self, 24)
     }
     ///Bit 26 - Transmit Abort Detect Flag
     #[inline(always)]
-    pub fn tabt(&mut self) -> TABT_W<EESR_SPEC> {
+    pub fn tabt(&mut self) -> TABT_W<'_, EESR_SPEC> {
         TABT_W::new(self, 26)
     }
     ///Bit 30 - Write-Back Complete Flag
     #[inline(always)]
-    pub fn twb(&mut self) -> TWB_W<EESR_SPEC> {
+    pub fn twb(&mut self) -> TWB_W<'_, EESR_SPEC> {
         TWB_W::new(self, 30)
     }
 }

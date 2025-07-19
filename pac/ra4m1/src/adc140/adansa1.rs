@@ -607,52 +607,52 @@ impl R {
 impl W {
     ///Bit 0 - AN016 Select
     #[inline(always)]
-    pub fn ansa16(&mut self) -> ANSA16_W<ADANSA1_SPEC> {
+    pub fn ansa16(&mut self) -> ANSA16_W<'_, ADANSA1_SPEC> {
         ANSA16_W::new(self, 0)
     }
     ///Bit 1 - AN017 Select
     #[inline(always)]
-    pub fn ansa17(&mut self) -> ANSA17_W<ADANSA1_SPEC> {
+    pub fn ansa17(&mut self) -> ANSA17_W<'_, ADANSA1_SPEC> {
         ANSA17_W::new(self, 1)
     }
     ///Bit 2 - AN018 Select
     #[inline(always)]
-    pub fn ansa18(&mut self) -> ANSA18_W<ADANSA1_SPEC> {
+    pub fn ansa18(&mut self) -> ANSA18_W<'_, ADANSA1_SPEC> {
         ANSA18_W::new(self, 2)
     }
     ///Bit 3 - AN019 Select
     #[inline(always)]
-    pub fn ansa19(&mut self) -> ANSA19_W<ADANSA1_SPEC> {
+    pub fn ansa19(&mut self) -> ANSA19_W<'_, ADANSA1_SPEC> {
         ANSA19_W::new(self, 3)
     }
     ///Bit 4 - AN020 Select
     #[inline(always)]
-    pub fn ansa20(&mut self) -> ANSA20_W<ADANSA1_SPEC> {
+    pub fn ansa20(&mut self) -> ANSA20_W<'_, ADANSA1_SPEC> {
         ANSA20_W::new(self, 4)
     }
     ///Bit 5 - AN021 Select
     #[inline(always)]
-    pub fn ansa21(&mut self) -> ANSA21_W<ADANSA1_SPEC> {
+    pub fn ansa21(&mut self) -> ANSA21_W<'_, ADANSA1_SPEC> {
         ANSA21_W::new(self, 5)
     }
     ///Bit 6 - AN022 Select
     #[inline(always)]
-    pub fn ansa22(&mut self) -> ANSA22_W<ADANSA1_SPEC> {
+    pub fn ansa22(&mut self) -> ANSA22_W<'_, ADANSA1_SPEC> {
         ANSA22_W::new(self, 6)
     }
     ///Bit 7 - AN023 Select
     #[inline(always)]
-    pub fn ansa23(&mut self) -> ANSA23_W<ADANSA1_SPEC> {
+    pub fn ansa23(&mut self) -> ANSA23_W<'_, ADANSA1_SPEC> {
         ANSA23_W::new(self, 7)
     }
     ///Bit 8 - AN024 Select
     #[inline(always)]
-    pub fn ansa24(&mut self) -> ANSA24_W<ADANSA1_SPEC> {
+    pub fn ansa24(&mut self) -> ANSA24_W<'_, ADANSA1_SPEC> {
         ANSA24_W::new(self, 8)
     }
     ///Bit 9 - AN025 Select
     #[inline(always)]
-    pub fn ansa25(&mut self) -> ANSA25_W<ADANSA1_SPEC> {
+    pub fn ansa25(&mut self) -> ANSA25_W<'_, ADANSA1_SPEC> {
         ANSA25_W::new(self, 9)
     }
 }

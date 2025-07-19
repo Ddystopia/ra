@@ -145,12 +145,12 @@ impl R {
 impl W {
     ///Bit 0 - Receive Data Full Flag NOTE: Since the SSIFRDR register is a 32-byte FIFO register, the maximum number of data bytes that can be read from it while the RDF flag is 1 is indicated in the RDC\[3:0\] flags. If reading data from the SSIFRDR register is continued after all the data is read, undefined values will be read.
     #[inline(always)]
-    pub fn rdf(&mut self) -> RDF_W<SSIFSR_SPEC> {
+    pub fn rdf(&mut self) -> RDF_W<'_, SSIFSR_SPEC> {
         RDF_W::new(self, 0)
     }
     ///Bit 16 - Transmit Data Empty Flag NOTE: Since the SSIFTDR register is a 32-byte FIFO register, the maximum number of bytes that can be written to it while the TDE flag is 1 is 8 - TDC\[3:0\]. If writing data to the SSIFTDR register is continued after all the data is written, writing will be invalid and an overflow occurs.
     #[inline(always)]
-    pub fn tde(&mut self) -> TDE_W<SSIFSR_SPEC> {
+    pub fn tde(&mut self) -> TDE_W<'_, SSIFSR_SPEC> {
         TDE_W::new(self, 16)
     }
 }

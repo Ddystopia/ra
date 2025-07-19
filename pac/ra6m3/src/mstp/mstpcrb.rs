@@ -1387,117 +1387,117 @@ impl R {
 impl W {
     ///Bit 1 - RCAN1 Module Stop
     #[inline(always)]
-    pub fn mstpb1(&mut self) -> MSTPB1_W<MSTPCRB_SPEC> {
+    pub fn mstpb1(&mut self) -> MSTPB1_W<'_, MSTPCRB_SPEC> {
         MSTPB1_W::new(self, 1)
     }
     ///Bit 2 - RCAN0 Module Stop
     #[inline(always)]
-    pub fn mstpb2(&mut self) -> MSTPB2_W<MSTPCRB_SPEC> {
+    pub fn mstpb2(&mut self) -> MSTPB2_W<'_, MSTPCRB_SPEC> {
         MSTPB2_W::new(self, 2)
     }
     ///Bit 5 - IrDA Module Stop
     #[inline(always)]
-    pub fn mstpb5(&mut self) -> MSTPB5_W<MSTPCRB_SPEC> {
+    pub fn mstpb5(&mut self) -> MSTPB5_W<'_, MSTPCRB_SPEC> {
         MSTPB5_W::new(self, 5)
     }
     ///Bit 6 - Queued Serial Peripheral Interface Module Stop
     #[inline(always)]
-    pub fn mstpb6(&mut self) -> MSTPB6_W<MSTPCRB_SPEC> {
+    pub fn mstpb6(&mut self) -> MSTPB6_W<'_, MSTPCRB_SPEC> {
         MSTPB6_W::new(self, 6)
     }
     ///Bit 7 - I2C Bus Interface 2 Module Stop
     #[inline(always)]
-    pub fn mstpb7(&mut self) -> MSTPB7_W<MSTPCRB_SPEC> {
+    pub fn mstpb7(&mut self) -> MSTPB7_W<'_, MSTPCRB_SPEC> {
         MSTPB7_W::new(self, 7)
     }
     ///Bit 8 - I2C Bus Interface 1 Module Stop
     #[inline(always)]
-    pub fn mstpb8(&mut self) -> MSTPB8_W<MSTPCRB_SPEC> {
+    pub fn mstpb8(&mut self) -> MSTPB8_W<'_, MSTPCRB_SPEC> {
         MSTPB8_W::new(self, 8)
     }
     ///Bit 9 - I2C Bus Interface 0 Module Stop
     #[inline(always)]
-    pub fn mstpb9(&mut self) -> MSTPB9_W<MSTPCRB_SPEC> {
+    pub fn mstpb9(&mut self) -> MSTPB9_W<'_, MSTPCRB_SPEC> {
         MSTPB9_W::new(self, 9)
     }
     ///Bit 11 - Universal Serial Bus 2.0 FS Interface Module Stop
     #[inline(always)]
-    pub fn mstpb11(&mut self) -> MSTPB11_W<MSTPCRB_SPEC> {
+    pub fn mstpb11(&mut self) -> MSTPB11_W<'_, MSTPCRB_SPEC> {
         MSTPB11_W::new(self, 11)
     }
     ///Bit 12 - Universal Serial Bus 2.0 HS Interface Module Stop
     #[inline(always)]
-    pub fn mstpb12(&mut self) -> MSTPB12_W<MSTPCRB_SPEC> {
+    pub fn mstpb12(&mut self) -> MSTPB12_W<'_, MSTPCRB_SPEC> {
         MSTPB12_W::new(self, 12)
     }
     ///Bit 13 - EPTPC and PTPEDMAC Module Stop
     #[inline(always)]
-    pub fn mstpb13(&mut self) -> MSTPB13_W<MSTPCRB_SPEC> {
+    pub fn mstpb13(&mut self) -> MSTPB13_W<'_, MSTPCRB_SPEC> {
         MSTPB13_W::new(self, 13)
     }
     ///Bit 15 - ETHERC0 and EDMAC0 Module Stop
     #[inline(always)]
-    pub fn mstpb15(&mut self) -> MSTPB15_W<MSTPCRB_SPEC> {
+    pub fn mstpb15(&mut self) -> MSTPB15_W<'_, MSTPCRB_SPEC> {
         MSTPB15_W::new(self, 15)
     }
     ///Bit 18 - Serial Peripheral Interface Module Stop
     #[inline(always)]
-    pub fn mstpb18(&mut self) -> MSTPB18_W<MSTPCRB_SPEC> {
+    pub fn mstpb18(&mut self) -> MSTPB18_W<'_, MSTPCRB_SPEC> {
         MSTPB18_W::new(self, 18)
     }
     ///Bit 19 - Serial Peripheral Interface 0 Module Stop
     #[inline(always)]
-    pub fn mstpb19(&mut self) -> MSTPB19_W<MSTPCRB_SPEC> {
+    pub fn mstpb19(&mut self) -> MSTPB19_W<'_, MSTPCRB_SPEC> {
         MSTPB19_W::new(self, 19)
     }
     ///Bit 22 - Serial Communication Interface 9 Module Stop
     #[inline(always)]
-    pub fn mstpb22(&mut self) -> MSTPB22_W<MSTPCRB_SPEC> {
+    pub fn mstpb22(&mut self) -> MSTPB22_W<'_, MSTPCRB_SPEC> {
         MSTPB22_W::new(self, 22)
     }
     ///Bit 23 - Serial Communication Interface 8 Module Stop
     #[inline(always)]
-    pub fn mstpb23(&mut self) -> MSTPB23_W<MSTPCRB_SPEC> {
+    pub fn mstpb23(&mut self) -> MSTPB23_W<'_, MSTPCRB_SPEC> {
         MSTPB23_W::new(self, 23)
     }
     ///Bit 24 - Serial Communication Interface 7 Module Stop
     #[inline(always)]
-    pub fn mstpb24(&mut self) -> MSTPB24_W<MSTPCRB_SPEC> {
+    pub fn mstpb24(&mut self) -> MSTPB24_W<'_, MSTPCRB_SPEC> {
         MSTPB24_W::new(self, 24)
     }
     ///Bit 25 - Serial Communication Interface 6 Module Stop
     #[inline(always)]
-    pub fn mstpb25(&mut self) -> MSTPB25_W<MSTPCRB_SPEC> {
+    pub fn mstpb25(&mut self) -> MSTPB25_W<'_, MSTPCRB_SPEC> {
         MSTPB25_W::new(self, 25)
     }
     ///Bit 26 - Serial Communication Interface 5 Module Stop
     #[inline(always)]
-    pub fn mstpb26(&mut self) -> MSTPB26_W<MSTPCRB_SPEC> {
+    pub fn mstpb26(&mut self) -> MSTPB26_W<'_, MSTPCRB_SPEC> {
         MSTPB26_W::new(self, 26)
     }
     ///Bit 27 - Serial Communication Interface 4 Module Stop
     #[inline(always)]
-    pub fn mstpb27(&mut self) -> MSTPB27_W<MSTPCRB_SPEC> {
+    pub fn mstpb27(&mut self) -> MSTPB27_W<'_, MSTPCRB_SPEC> {
         MSTPB27_W::new(self, 27)
     }
     ///Bit 28 - Serial Communication Interface 3 Module Stop
     #[inline(always)]
-    pub fn mstpb28(&mut self) -> MSTPB28_W<MSTPCRB_SPEC> {
+    pub fn mstpb28(&mut self) -> MSTPB28_W<'_, MSTPCRB_SPEC> {
         MSTPB28_W::new(self, 28)
     }
     ///Bit 29 - Serial Communication Interface 2 Module Stop
     #[inline(always)]
-    pub fn mstpb29(&mut self) -> MSTPB29_W<MSTPCRB_SPEC> {
+    pub fn mstpb29(&mut self) -> MSTPB29_W<'_, MSTPCRB_SPEC> {
         MSTPB29_W::new(self, 29)
     }
     ///Bit 30 - Serial Communication Interface 1 Module Stop
     #[inline(always)]
-    pub fn mstpb30(&mut self) -> MSTPB30_W<MSTPCRB_SPEC> {
+    pub fn mstpb30(&mut self) -> MSTPB30_W<'_, MSTPCRB_SPEC> {
         MSTPB30_W::new(self, 30)
     }
     ///Bit 31 - Serial Communication Interface 0 Module Stop
     #[inline(always)]
-    pub fn mstpb31(&mut self) -> MSTPB31_W<MSTPCRB_SPEC> {
+    pub fn mstpb31(&mut self) -> MSTPB31_W<'_, MSTPCRB_SPEC> {
         MSTPB31_W::new(self, 31)
     }
 }

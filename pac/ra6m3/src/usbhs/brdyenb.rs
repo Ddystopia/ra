@@ -74,7 +74,7 @@ impl R {
 impl W {
     ///Bits 0:9 - BRDY Interrupt Enable for Each Pipe
     #[inline(always)]
-    pub fn pipebrdye(&mut self) -> PIPEBRDYE_W<BRDYENB_SPEC> {
+    pub fn pipebrdye(&mut self) -> PIPEBRDYE_W<'_, BRDYENB_SPEC> {
         PIPEBRDYE_W::new(self, 0)
     }
 }

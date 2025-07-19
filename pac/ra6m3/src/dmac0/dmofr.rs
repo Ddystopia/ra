@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Specifies the offset when offset addition is selected as the address update mode for transfer source or destination.
     #[inline(always)]
-    pub fn dmofr(&mut self) -> DMOFR_W<DMOFR_SPEC> {
+    pub fn dmofr(&mut self) -> DMOFR_W<'_, DMOFR_SPEC> {
         DMOFR_W::new(self, 0)
     }
 }

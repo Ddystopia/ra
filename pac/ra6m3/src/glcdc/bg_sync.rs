@@ -139,12 +139,12 @@ impl R {
 impl W {
     ///Bits 0:3 - Background plane horizontal synchronization signal assertion position on the basis of pixel clock (PXCLK).
     #[inline(always)]
-    pub fn hp(&mut self) -> HP_W<BG_SYNC_SPEC> {
+    pub fn hp(&mut self) -> HP_W<'_, BG_SYNC_SPEC> {
         HP_W::new(self, 0)
     }
     ///Bits 16:19 - Background plane vertical synchronization signal assertion position on the basis of line.
     #[inline(always)]
-    pub fn vp(&mut self) -> VP_W<BG_SYNC_SPEC> {
+    pub fn vp(&mut self) -> VP_W<'_, BG_SYNC_SPEC> {
         VP_W::new(self, 16)
     }
 }

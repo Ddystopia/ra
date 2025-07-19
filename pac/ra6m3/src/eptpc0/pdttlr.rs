@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - PTP-pdelay Message TTL Field ValueThese bits hold the setting for the value of the TTL field within the IPv4 headers of PTP-pdelay messages.
     #[inline(always)]
-    pub fn pdtl(&mut self) -> PDTL_W<PDTTLR_SPEC> {
+    pub fn pdtl(&mut self) -> PDTL_W<'_, PDTTLR_SPEC> {
         PDTL_W::new(self, 0)
     }
 }

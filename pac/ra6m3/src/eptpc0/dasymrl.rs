@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - These bits hold the setting for the lower-order 32 bits of the asymmetric delay value.
     #[inline(always)]
-    pub fn dasymrl(&mut self) -> DASYMRL_W<DASYMRL_SPEC> {
+    pub fn dasymrl(&mut self) -> DASYMRL_W<'_, DASYMRL_SPEC> {
         DASYMRL_W::new(self, 0)
     }
 }

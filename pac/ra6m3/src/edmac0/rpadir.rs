@@ -166,12 +166,12 @@ impl R {
 impl W {
     ///Bits 0:5 - Padding Slot
     #[inline(always)]
-    pub fn padr(&mut self) -> PADR_W<RPADIR_SPEC> {
+    pub fn padr(&mut self) -> PADR_W<'_, RPADIR_SPEC> {
         PADR_W::new(self, 0)
     }
     ///Bits 16:17 - Padding Size
     #[inline(always)]
-    pub fn pads(&mut self) -> PADS_W<RPADIR_SPEC> {
+    pub fn pads(&mut self) -> PADS_W<'_, RPADIR_SPEC> {
         PADS_W::new(self, 16)
     }
 }

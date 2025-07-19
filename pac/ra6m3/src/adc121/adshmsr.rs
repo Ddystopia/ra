@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Channel-Dedicated Sample-and-Hold Circuit Operation Mode Select
     #[inline(always)]
-    pub fn shmd(&mut self) -> SHMD_W<ADSHMSR_SPEC> {
+    pub fn shmd(&mut self) -> SHMD_W<'_, ADSHMSR_SPEC> {
         SHMD_W::new(self, 0)
     }
 }

@@ -212,12 +212,12 @@ impl R {
 impl W {
     ///Bits 0:2 - Output signal select control for VSOUT (controlled by TCON_STVA2 register)/VEOUT (controlled by the TCON_STVB2 register) pin
     #[inline(always)]
-    pub fn sel(&mut self) -> SEL_W<TCON_STV2_SPEC> {
+    pub fn sel(&mut self) -> SEL_W<'_, TCON_STV2_SPEC> {
         SEL_W::new(self, 0)
     }
     ///Bit 4 - STVx signal polarity inversion control
     #[inline(always)]
-    pub fn inv(&mut self) -> INV_W<TCON_STV2_SPEC> {
+    pub fn inv(&mut self) -> INV_W<'_, TCON_STV2_SPEC> {
         INV_W::new(self, 4)
     }
 }

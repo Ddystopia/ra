@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bit 0 - Frequency Comparison Value (b16) To generate the operating clock from the LOCOclock, this bit sets the comparison value of the 128-Hz clock cycle.
     #[inline(always)]
-    pub fn rfc16(&mut self) -> RFC16_W<RFRH_SPEC> {
+    pub fn rfc16(&mut self) -> RFC16_W<'_, RFRH_SPEC> {
         RFC16_W::new(self, 0)
     }
 }

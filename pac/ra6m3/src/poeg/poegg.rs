@@ -1049,82 +1049,82 @@ impl R {
 impl W {
     ///Bit 0 - Port Input Detection Flag
     #[inline(always)]
-    pub fn pidf(&mut self) -> PIDF_W<POEGG_SPEC> {
+    pub fn pidf(&mut self) -> PIDF_W<'_, POEGG_SPEC> {
         PIDF_W::new(self, 0)
     }
     ///Bit 1 - Real Time Overcurrent Detection Flag
     #[inline(always)]
-    pub fn iocf(&mut self) -> IOCF_W<POEGG_SPEC> {
+    pub fn iocf(&mut self) -> IOCF_W<'_, POEGG_SPEC> {
         IOCF_W::new(self, 1)
     }
     ///Bit 2 - Oscillation Stop Detection Flag
     #[inline(always)]
-    pub fn ostpf(&mut self) -> OSTPF_W<POEGG_SPEC> {
+    pub fn ostpf(&mut self) -> OSTPF_W<'_, POEGG_SPEC> {
         OSTPF_W::new(self, 2)
     }
     ///Bit 3 - Software Stop Flag
     #[inline(always)]
-    pub fn ssf(&mut self) -> SSF_W<POEGG_SPEC> {
+    pub fn ssf(&mut self) -> SSF_W<'_, POEGG_SPEC> {
         SSF_W::new(self, 3)
     }
     ///Bit 4 - Port Input Detection EnableNote: Can be modified only once after a reset.
     #[inline(always)]
-    pub fn pide(&mut self) -> PIDE_W<POEGG_SPEC> {
+    pub fn pide(&mut self) -> PIDE_W<'_, POEGG_SPEC> {
         PIDE_W::new(self, 4)
     }
     ///Bit 5 - Enable for GPT Output-Disable RequestNote: Can be modified only once after a reset.
     #[inline(always)]
-    pub fn ioce(&mut self) -> IOCE_W<POEGG_SPEC> {
+    pub fn ioce(&mut self) -> IOCE_W<'_, POEGG_SPEC> {
         IOCE_W::new(self, 5)
     }
     ///Bit 6 - Oscillation Stop Detection EnableNote: Can be modified only once after a reset.
     #[inline(always)]
-    pub fn ostpe(&mut self) -> OSTPE_W<POEGG_SPEC> {
+    pub fn ostpe(&mut self) -> OSTPE_W<'_, POEGG_SPEC> {
         OSTPE_W::new(self, 6)
     }
     ///Bit 8 - Comparator Disable Request Enable 0Note: Can be modified only once after a reset.
     #[inline(always)]
-    pub fn cdre0(&mut self) -> CDRE0_W<POEGG_SPEC> {
+    pub fn cdre0(&mut self) -> CDRE0_W<'_, POEGG_SPEC> {
         CDRE0_W::new(self, 8)
     }
     ///Bit 9 - Comparator Disable Request Enable 1Note: Can be modified only once after a reset.
     #[inline(always)]
-    pub fn cdre1(&mut self) -> CDRE1_W<POEGG_SPEC> {
+    pub fn cdre1(&mut self) -> CDRE1_W<'_, POEGG_SPEC> {
         CDRE1_W::new(self, 9)
     }
     ///Bit 10 - Comparator Disable Request Enable 2Note: Can be modified only once after a reset.
     #[inline(always)]
-    pub fn cdre2(&mut self) -> CDRE2_W<POEGG_SPEC> {
+    pub fn cdre2(&mut self) -> CDRE2_W<'_, POEGG_SPEC> {
         CDRE2_W::new(self, 10)
     }
     ///Bit 11 - Comparator Disable Request Enable 3Note: Can be modified only once after a reset.
     #[inline(always)]
-    pub fn cdre3(&mut self) -> CDRE3_W<POEGG_SPEC> {
+    pub fn cdre3(&mut self) -> CDRE3_W<'_, POEGG_SPEC> {
         CDRE3_W::new(self, 11)
     }
     ///Bit 12 - Comparator Disable Request Enable 4Note: Can be modified only once after a reset.
     #[inline(always)]
-    pub fn cdre4(&mut self) -> CDRE4_W<POEGG_SPEC> {
+    pub fn cdre4(&mut self) -> CDRE4_W<'_, POEGG_SPEC> {
         CDRE4_W::new(self, 12)
     }
     ///Bit 13 - Comparator Disable Request Enable 5Note: Can be modified only once after a reset.
     #[inline(always)]
-    pub fn cdre5(&mut self) -> CDRE5_W<POEGG_SPEC> {
+    pub fn cdre5(&mut self) -> CDRE5_W<'_, POEGG_SPEC> {
         CDRE5_W::new(self, 13)
     }
     ///Bit 28 - GTETRG Input Reverse
     #[inline(always)]
-    pub fn inv(&mut self) -> INV_W<POEGG_SPEC> {
+    pub fn inv(&mut self) -> INV_W<'_, POEGG_SPEC> {
         INV_W::new(self, 28)
     }
     ///Bit 29 - Noise Filter Enable
     #[inline(always)]
-    pub fn nfen(&mut self) -> NFEN_W<POEGG_SPEC> {
+    pub fn nfen(&mut self) -> NFEN_W<'_, POEGG_SPEC> {
         NFEN_W::new(self, 29)
     }
     ///Bits 30:31 - Noise Filter Clock Select
     #[inline(always)]
-    pub fn nfcs(&mut self) -> NFCS_W<POEGG_SPEC> {
+    pub fn nfcs(&mut self) -> NFCS_W<'_, POEGG_SPEC> {
         NFCS_W::new(self, 30)
     }
 }

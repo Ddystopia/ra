@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Counter value.The counter is reset by writing PERFCOUNT = 0000 0000H.
     #[inline(always)]
-    pub fn perfcount(&mut self) -> PERFCOUNT_W<PERFCOUNT_SPEC> {
+    pub fn perfcount(&mut self) -> PERFCOUNT_W<'_, PERFCOUNT_SPEC> {
         PERFCOUNT_W::new(self, 0)
     }
 }

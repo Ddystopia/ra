@@ -307,27 +307,27 @@ impl R {
 impl W {
     ///Bit 0 - Enables or disables a data transfer processing interrupt request (JDTI) when the DOUTLF bit in JINTS1 is set to 1
     #[inline(always)]
-    pub fn doutlen(&mut self) -> DOUTLEN_W<JINTE1_SPEC> {
+    pub fn doutlen(&mut self) -> DOUTLEN_W<'_, JINTE1_SPEC> {
         DOUTLEN_W::new(self, 0)
     }
     ///Bit 1 - Enables or disables a data transfer processing interrupt request (JDTI) when the JINF bit in JINTS1 is set to 1.
     #[inline(always)]
-    pub fn jinen(&mut self) -> JINEN_W<JINTE1_SPEC> {
+    pub fn jinen(&mut self) -> JINEN_W<'_, JINTE1_SPEC> {
         JINEN_W::new(self, 1)
     }
     ///Bit 2 - Enables or disables a data transfer processing interrupt request (JDTI) when the DBTF bit in JINTS1 is set to 1.
     #[inline(always)]
-    pub fn dbten(&mut self) -> DBTEN_W<JINTE1_SPEC> {
+    pub fn dbten(&mut self) -> DBTEN_W<'_, JINTE1_SPEC> {
         DBTEN_W::new(self, 2)
     }
     ///Bit 5 - Enables or disables a data transfer processing interrupt request (JDTI) when the DINLF bit in JINTS1 is set to 1.
     #[inline(always)]
-    pub fn dinlen(&mut self) -> DINLEN_W<JINTE1_SPEC> {
+    pub fn dinlen(&mut self) -> DINLEN_W<'_, JINTE1_SPEC> {
         DINLEN_W::new(self, 5)
     }
     ///Bit 6 - Enables or disables a data transfer processing interrupt request (JDTI) when the CBTF bit in JINTS1 is set to 1.
     #[inline(always)]
-    pub fn cbten(&mut self) -> CBTEN_W<JINTE1_SPEC> {
+    pub fn cbten(&mut self) -> CBTEN_W<'_, JINTE1_SPEC> {
         CBTEN_W::new(self, 6)
     }
 }

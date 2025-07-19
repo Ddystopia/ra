@@ -113,12 +113,12 @@ impl R {
 impl W {
     ///Bits 0:10 - Background plane horizontal synchronization signal period on the basis of pixel clock (PXCLK).
     #[inline(always)]
-    pub fn fh(&mut self) -> FH_W<BG_PERI_SPEC> {
+    pub fn fh(&mut self) -> FH_W<'_, BG_PERI_SPEC> {
         FH_W::new(self, 0)
     }
     ///Bits 16:26 - Background plane vertical synchronization signal period on the basis of line.
     #[inline(always)]
-    pub fn fv(&mut self) -> FV_W<BG_PERI_SPEC> {
+    pub fn fv(&mut self) -> FV_W<'_, BG_PERI_SPEC> {
         FV_W::new(self, 16)
     }
 }

@@ -220,17 +220,17 @@ impl R {
 impl W {
     ///Bit 0 - NMI Detection Set
     #[inline(always)]
-    pub fn nmimd(&mut self) -> NMIMD_W<NMICR_SPEC> {
+    pub fn nmimd(&mut self) -> NMIMD_W<'_, NMICR_SPEC> {
         NMIMD_W::new(self, 0)
     }
     ///Bits 4:5 - NMI Digital Filter Sampling Clock Select
     #[inline(always)]
-    pub fn nfclksel(&mut self) -> NFCLKSEL_W<NMICR_SPEC> {
+    pub fn nfclksel(&mut self) -> NFCLKSEL_W<'_, NMICR_SPEC> {
         NFCLKSEL_W::new(self, 4)
     }
     ///Bit 7 - NMI Digital Filter Enable
     #[inline(always)]
-    pub fn nflten(&mut self) -> NFLTEN_W<NMICR_SPEC> {
+    pub fn nflten(&mut self) -> NFLTEN_W<'_, NMICR_SPEC> {
         NFLTEN_W::new(self, 7)
     }
 }

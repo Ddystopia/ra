@@ -42,7 +42,7 @@ where
 impl W {
     ///Bits 0:15 - Pmn Output Reset
     #[inline(always)]
-    pub fn porr(&mut self) -> PORR_W<PORR_SPEC> {
+    pub fn porr(&mut self) -> PORR_W<'_, PORR_SPEC> {
         PORR_W::new(self, 0)
     }
 }

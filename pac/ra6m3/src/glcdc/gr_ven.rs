@@ -69,7 +69,7 @@ impl R {
 impl W {
     ///Bit 0 - Control of graphics n module register value reflection to internal operations.Reflection of the register values to the internal operation at the assertion of the vertical synchronization signal (VS).
     #[inline(always)]
-    pub fn pven(&mut self) -> PVEN_W<GR_VEN_SPEC> {
+    pub fn pven(&mut self) -> PVEN_W<'_, GR_VEN_SPEC> {
         PVEN_W::new(self, 0)
     }
 }

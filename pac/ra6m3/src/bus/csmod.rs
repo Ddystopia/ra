@@ -307,27 +307,27 @@ impl R {
 impl W {
     ///Bit 0 - Write Access Mode Select
     #[inline(always)]
-    pub fn wrmod(&mut self) -> WRMOD_W<CSMOD_SPEC> {
+    pub fn wrmod(&mut self) -> WRMOD_W<'_, CSMOD_SPEC> {
         WRMOD_W::new(self, 0)
     }
     ///Bit 3 - External Wait Enable
     #[inline(always)]
-    pub fn ewenb(&mut self) -> EWENB_W<CSMOD_SPEC> {
+    pub fn ewenb(&mut self) -> EWENB_W<'_, CSMOD_SPEC> {
         EWENB_W::new(self, 3)
     }
     ///Bit 8 - Page Read Access Enable
     #[inline(always)]
-    pub fn prenb(&mut self) -> PRENB_W<CSMOD_SPEC> {
+    pub fn prenb(&mut self) -> PRENB_W<'_, CSMOD_SPEC> {
         PRENB_W::new(self, 8)
     }
     ///Bit 9 - Page Write Access Enable
     #[inline(always)]
-    pub fn pwenb(&mut self) -> PWENB_W<CSMOD_SPEC> {
+    pub fn pwenb(&mut self) -> PWENB_W<'_, CSMOD_SPEC> {
         PWENB_W::new(self, 9)
     }
     ///Bit 15 - Page Read Access Mode Select
     #[inline(always)]
-    pub fn prmod(&mut self) -> PRMOD_W<CSMOD_SPEC> {
+    pub fn prmod(&mut self) -> PRMOD_W<'_, CSMOD_SPEC> {
         PRMOD_W::new(self, 15)
     }
 }

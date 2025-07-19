@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Auto-Refresh Operation Enable
     #[inline(always)]
-    pub fn rfen(&mut self) -> RFEN_W<SDRFEN_SPEC> {
+    pub fn rfen(&mut self) -> RFEN_W<'_, SDRFEN_SPEC> {
         RFEN_W::new(self, 0)
     }
 }

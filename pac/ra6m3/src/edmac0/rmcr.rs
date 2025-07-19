@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Receive Request Reset
     #[inline(always)]
-    pub fn rnr(&mut self) -> RNR_W<RMCR_SPEC> {
+    pub fn rnr(&mut self) -> RNR_W<'_, RMCR_SPEC> {
         RNR_W::new(self, 0)
     }
 }

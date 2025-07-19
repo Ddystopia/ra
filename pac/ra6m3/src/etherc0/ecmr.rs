@@ -787,67 +787,67 @@ impl R {
 impl W {
     ///Bit 0 - Promiscuous Mode
     #[inline(always)]
-    pub fn prm(&mut self) -> PRM_W<ECMR_SPEC> {
+    pub fn prm(&mut self) -> PRM_W<'_, ECMR_SPEC> {
         PRM_W::new(self, 0)
     }
     ///Bit 1 - Duplex Mode
     #[inline(always)]
-    pub fn dm(&mut self) -> DM_W<ECMR_SPEC> {
+    pub fn dm(&mut self) -> DM_W<'_, ECMR_SPEC> {
         DM_W::new(self, 1)
     }
     ///Bit 2 - Bit Rate
     #[inline(always)]
-    pub fn rtm(&mut self) -> RTM_W<ECMR_SPEC> {
+    pub fn rtm(&mut self) -> RTM_W<'_, ECMR_SPEC> {
         RTM_W::new(self, 2)
     }
     ///Bit 3 - Internal Loopback Mode
     #[inline(always)]
-    pub fn ilb(&mut self) -> ILB_W<ECMR_SPEC> {
+    pub fn ilb(&mut self) -> ILB_W<'_, ECMR_SPEC> {
         ILB_W::new(self, 3)
     }
     ///Bit 5 - Transmission Enable
     #[inline(always)]
-    pub fn te(&mut self) -> TE_W<ECMR_SPEC> {
+    pub fn te(&mut self) -> TE_W<'_, ECMR_SPEC> {
         TE_W::new(self, 5)
     }
     ///Bit 6 - Reception Enable
     #[inline(always)]
-    pub fn re(&mut self) -> RE_W<ECMR_SPEC> {
+    pub fn re(&mut self) -> RE_W<'_, ECMR_SPEC> {
         RE_W::new(self, 6)
     }
     ///Bit 9 - Magic Packet Detection Enable
     #[inline(always)]
-    pub fn mpde(&mut self) -> MPDE_W<ECMR_SPEC> {
+    pub fn mpde(&mut self) -> MPDE_W<'_, ECMR_SPEC> {
         MPDE_W::new(self, 9)
     }
     ///Bit 12 - CRC Error Frame Receive Mode
     #[inline(always)]
-    pub fn prcef(&mut self) -> PRCEF_W<ECMR_SPEC> {
+    pub fn prcef(&mut self) -> PRCEF_W<'_, ECMR_SPEC> {
         PRCEF_W::new(self, 12)
     }
     ///Bit 16 - Transmit Flow Control Operating Mode
     #[inline(always)]
-    pub fn txf(&mut self) -> TXF_W<ECMR_SPEC> {
+    pub fn txf(&mut self) -> TXF_W<'_, ECMR_SPEC> {
         TXF_W::new(self, 16)
     }
     ///Bit 17 - Receive Flow Control Operating Mode
     #[inline(always)]
-    pub fn rxf(&mut self) -> RXF_W<ECMR_SPEC> {
+    pub fn rxf(&mut self) -> RXF_W<'_, ECMR_SPEC> {
         RXF_W::new(self, 17)
     }
     ///Bit 18 - PAUSE Frame Receive Mode
     #[inline(always)]
-    pub fn pfr(&mut self) -> PFR_W<ECMR_SPEC> {
+    pub fn pfr(&mut self) -> PFR_W<'_, ECMR_SPEC> {
         PFR_W::new(self, 18)
     }
     ///Bit 19 - 0 Time PAUSE Frame Enable
     #[inline(always)]
-    pub fn zpf(&mut self) -> ZPF_W<ECMR_SPEC> {
+    pub fn zpf(&mut self) -> ZPF_W<'_, ECMR_SPEC> {
         ZPF_W::new(self, 19)
     }
     ///Bit 20 - PAUSE Frame Transmit
     #[inline(always)]
-    pub fn tpc(&mut self) -> TPC_W<ECMR_SPEC> {
+    pub fn tpc(&mut self) -> TPC_W<'_, ECMR_SPEC> {
         TPC_W::new(self, 20)
     }
 }

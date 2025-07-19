@@ -152,7 +152,7 @@ impl R {
 impl W {
     ///Bits 0:2 - SPI Next-Access Delay Setting
     #[inline(always)]
-    pub fn spndl(&mut self) -> SPNDL_W<SPND_SPEC> {
+    pub fn spndl(&mut self) -> SPNDL_W<'_, SPND_SPEC> {
         SPNDL_W::new(self, 0)
     }
 }

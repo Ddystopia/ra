@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:23 - These bits hold the setting for the lower-order 24 bits of the destination MAC address for received multicast frames.
     #[inline(always)]
-    pub fn fmacrl(&mut self) -> FMACRL_W<FMACRL_SPEC> {
+    pub fn fmacrl(&mut self) -> FMACRL_W<'_, FMACRL_SPEC> {
         FMACRL_W::new(self, 0)
     }
 }

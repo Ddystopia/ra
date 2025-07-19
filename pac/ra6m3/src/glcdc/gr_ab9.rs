@@ -43,22 +43,22 @@ impl R {
 impl W {
     ///Bits 0:7 - R value after RGB-index chroma-key processing replacementUnsigned; 8 bits.
     #[inline(always)]
-    pub fn ckr(&mut self) -> CKR_W<GR_AB9_SPEC> {
+    pub fn ckr(&mut self) -> CKR_W<'_, GR_AB9_SPEC> {
         CKR_W::new(self, 0)
     }
     ///Bits 8:15 - B value after RGB-index chroma-key processing replacementUnsigned; 8 bits.
     #[inline(always)]
-    pub fn ckb(&mut self) -> CKB_W<GR_AB9_SPEC> {
+    pub fn ckb(&mut self) -> CKB_W<'_, GR_AB9_SPEC> {
         CKB_W::new(self, 8)
     }
     ///Bits 16:23 - G value after RGB-index chroma-key processing replacementUnsigned; 8 bits.
     #[inline(always)]
-    pub fn ckg(&mut self) -> CKG_W<GR_AB9_SPEC> {
+    pub fn ckg(&mut self) -> CKG_W<'_, GR_AB9_SPEC> {
         CKG_W::new(self, 16)
     }
     ///Bits 24:31 - A value after RGB-index chroma-key processing replacement.
     #[inline(always)]
-    pub fn cka(&mut self) -> CKA_W<GR_AB9_SPEC> {
+    pub fn cka(&mut self) -> CKA_W<'_, GR_AB9_SPEC> {
         CKA_W::new(self, 24)
     }
 }

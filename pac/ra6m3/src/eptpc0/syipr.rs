@@ -607,52 +607,52 @@ impl R {
 impl W {
     ///Bit 0 - SYSR.OFMUD Status Notification Permission
     #[inline(always)]
-    pub fn ofmud(&mut self) -> OFMUD_W<SYIPR_SPEC> {
+    pub fn ofmud(&mut self) -> OFMUD_W<'_, SYIPR_SPEC> {
         OFMUD_W::new(self, 0)
     }
     ///Bit 1 - SYSR.INTCHG Status Notification Permission
     #[inline(always)]
-    pub fn intchg(&mut self) -> INTCHG_W<SYIPR_SPEC> {
+    pub fn intchg(&mut self) -> INTCHG_W<'_, SYIPR_SPEC> {
         INTCHG_W::new(self, 1)
     }
     ///Bit 2 - SYSR.MPDUD Status Notification Permission
     #[inline(always)]
-    pub fn mpdud(&mut self) -> MPDUD_W<SYIPR_SPEC> {
+    pub fn mpdud(&mut self) -> MPDUD_W<'_, SYIPR_SPEC> {
         MPDUD_W::new(self, 2)
     }
     ///Bit 4 - SYSR.DRPTO Status Notification Permission
     #[inline(always)]
-    pub fn drpto(&mut self) -> DRPTO_W<SYIPR_SPEC> {
+    pub fn drpto(&mut self) -> DRPTO_W<'_, SYIPR_SPEC> {
         DRPTO_W::new(self, 4)
     }
     ///Bit 5 - SYSR.INTDEV Status Notification Permission
     #[inline(always)]
-    pub fn intdev(&mut self) -> INTDEV_W<SYIPR_SPEC> {
+    pub fn intdev(&mut self) -> INTDEV_W<'_, SYIPR_SPEC> {
         INTDEV_W::new(self, 5)
     }
     ///Bit 6 - SYSR.DRQOVR Status Notification Permission
     #[inline(always)]
-    pub fn drqovr(&mut self) -> DRQOVR_W<SYIPR_SPEC> {
+    pub fn drqovr(&mut self) -> DRQOVR_W<'_, SYIPR_SPEC> {
         DRQOVR_W::new(self, 6)
     }
     ///Bit 12 - SYSR.RECLP Status Notification Permission
     #[inline(always)]
-    pub fn reclp(&mut self) -> RECLP_W<SYIPR_SPEC> {
+    pub fn reclp(&mut self) -> RECLP_W<'_, SYIPR_SPEC> {
         RECLP_W::new(self, 12)
     }
     ///Bit 14 - SYSR.INFABT Status Notification Permission
     #[inline(always)]
-    pub fn infabt(&mut self) -> INFABT_W<SYIPR_SPEC> {
+    pub fn infabt(&mut self) -> INFABT_W<'_, SYIPR_SPEC> {
         INFABT_W::new(self, 14)
     }
     ///Bit 16 - SYSR.RESDN Status Notification Permission
     #[inline(always)]
-    pub fn resdn(&mut self) -> RESDN_W<SYIPR_SPEC> {
+    pub fn resdn(&mut self) -> RESDN_W<'_, SYIPR_SPEC> {
         RESDN_W::new(self, 16)
     }
     ///Bit 17 - SYSR.GENDN Status Notification Permission
     #[inline(always)]
-    pub fn gendn(&mut self) -> GENDN_W<SYIPR_SPEC> {
+    pub fn gendn(&mut self) -> GENDN_W<'_, SYIPR_SPEC> {
         GENDN_W::new(self, 17)
     }
 }

@@ -280,22 +280,22 @@ impl R {
 impl W {
     ///Bits 0:1 - Output FIFO Data Trigger Number
     #[inline(always)]
-    pub fn oftrg(&mut self) -> OFTRG_W<SRCODCTRL_SPEC> {
+    pub fn oftrg(&mut self) -> OFTRG_W<'_, SRCODCTRL_SPEC> {
         OFTRG_W::new(self, 0)
     }
     ///Bit 8 - Output Data FIFO Full Interrupt Enable
     #[inline(always)]
-    pub fn oen(&mut self) -> OEN_W<SRCODCTRL_SPEC> {
+    pub fn oen(&mut self) -> OEN_W<'_, SRCODCTRL_SPEC> {
         OEN_W::new(self, 8)
     }
     ///Bit 9 - Output Data Endian
     #[inline(always)]
-    pub fn oed(&mut self) -> OED_W<SRCODCTRL_SPEC> {
+    pub fn oed(&mut self) -> OED_W<'_, SRCODCTRL_SPEC> {
         OED_W::new(self, 9)
     }
     ///Bit 10 - Output Data Channel Exchange
     #[inline(always)]
-    pub fn och(&mut self) -> OCH_W<SRCODCTRL_SPEC> {
+    pub fn och(&mut self) -> OCH_W<'_, SRCODCTRL_SPEC> {
         OCH_W::new(self, 10)
     }
 }

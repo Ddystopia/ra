@@ -160,12 +160,12 @@ impl R {
 impl W {
     ///Bits 0:1 - Voltage Monitor Interrupt Generation Condition Select
     #[inline(always)]
-    pub fn idtsel(&mut self) -> IDTSEL_W<LVDCR1_SPEC> {
+    pub fn idtsel(&mut self) -> IDTSEL_W<'_, LVDCR1_SPEC> {
         IDTSEL_W::new(self, 0)
     }
     ///Bit 2 - Voltage Monitor Interrupt Type Select
     #[inline(always)]
-    pub fn irqsel(&mut self) -> IRQSEL_W<LVDCR1_SPEC> {
+    pub fn irqsel(&mut self) -> IRQSEL_W<'_, LVDCR1_SPEC> {
         IRQSEL_W::new(self, 2)
     }
 }

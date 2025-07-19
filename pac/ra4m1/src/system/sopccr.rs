@@ -110,7 +110,7 @@ impl R {
 impl W {
     ///Bit 0 - Sub Operating Power Control Mode Select
     #[inline(always)]
-    pub fn sopcm(&mut self) -> SOPCM_W<SOPCCR_SPEC> {
+    pub fn sopcm(&mut self) -> SOPCM_W<'_, SOPCCR_SPEC> {
         SOPCM_W::new(self, 0)
     }
 }

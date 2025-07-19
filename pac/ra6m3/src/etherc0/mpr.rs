@@ -5,7 +5,7 @@ pub type MP_W<'a, REG> = crate::FieldWriter<'a, REG, 16, u16>;
 impl W {
     ///Bits 0:15 - Manual PAUSE Time SettingThese bits set the value of the pause_time parameter for a PAUSE frame that is manually transmitted. Transmission is not performed until the set value multiplied by 512 bit time has elapsed. The read value is undefined.
     #[inline(always)]
-    pub fn mp(&mut self) -> MP_W<MPR_SPEC> {
+    pub fn mp(&mut self) -> MP_W<'_, MPR_SPEC> {
         MP_W::new(self, 0)
     }
 }

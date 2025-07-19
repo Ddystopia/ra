@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - LOCO Stop
     #[inline(always)]
-    pub fn lcstp(&mut self) -> LCSTP_W<LOCOCR_SPEC> {
+    pub fn lcstp(&mut self) -> LCSTP_W<'_, LOCOCR_SPEC> {
         LCSTP_W::new(self, 0)
     }
 }

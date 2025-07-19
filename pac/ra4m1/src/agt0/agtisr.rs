@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 2 - AGTEE polarty selection
     #[inline(always)]
-    pub fn eeps(&mut self) -> EEPS_W<AGTISR_SPEC> {
+    pub fn eeps(&mut self) -> EEPS_W<'_, AGTISR_SPEC> {
         EEPS_W::new(self, 2)
     }
 }

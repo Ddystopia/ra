@@ -907,77 +907,77 @@ impl R {
 impl W {
     ///Bit 0 - CAC Module Stop
     #[inline(always)]
-    pub fn mstpc0(&mut self) -> MSTPC0_W<MSTPCRC_SPEC> {
+    pub fn mstpc0(&mut self) -> MSTPC0_W<'_, MSTPCRC_SPEC> {
         MSTPC0_W::new(self, 0)
     }
     ///Bit 1 - CRC Calculator Module Stop
     #[inline(always)]
-    pub fn mstpc1(&mut self) -> MSTPC1_W<MSTPCRC_SPEC> {
+    pub fn mstpc1(&mut self) -> MSTPC1_W<'_, MSTPCRC_SPEC> {
         MSTPC1_W::new(self, 1)
     }
     ///Bit 2 - Parallel Data Capture Module Stop
     #[inline(always)]
-    pub fn mstpc2(&mut self) -> MSTPC2_W<MSTPCRC_SPEC> {
+    pub fn mstpc2(&mut self) -> MSTPC2_W<'_, MSTPCRC_SPEC> {
         MSTPC2_W::new(self, 2)
     }
     ///Bit 3 - Capacitive Touch Sensing Unit Module Stop
     #[inline(always)]
-    pub fn mstpc3(&mut self) -> MSTPC3_W<MSTPCRC_SPEC> {
+    pub fn mstpc3(&mut self) -> MSTPC3_W<'_, MSTPCRC_SPEC> {
         MSTPC3_W::new(self, 3)
     }
     ///Bit 4 - Grafic LCD Controler Module Stop
     #[inline(always)]
-    pub fn mstpc4(&mut self) -> MSTPC4_W<MSTPCRC_SPEC> {
+    pub fn mstpc4(&mut self) -> MSTPC4_W<'_, MSTPCRC_SPEC> {
         MSTPC4_W::new(self, 4)
     }
     ///Bit 5 - JPEG codec engine Module Stop
     #[inline(always)]
-    pub fn mstpc5(&mut self) -> MSTPC5_W<MSTPCRC_SPEC> {
+    pub fn mstpc5(&mut self) -> MSTPC5_W<'_, MSTPCRC_SPEC> {
         MSTPC5_W::new(self, 5)
     }
     ///Bit 6 - 2DG engine Module Stop
     #[inline(always)]
-    pub fn mstpc6(&mut self) -> MSTPC6_W<MSTPCRC_SPEC> {
+    pub fn mstpc6(&mut self) -> MSTPC6_W<'_, MSTPCRC_SPEC> {
         MSTPC6_W::new(self, 6)
     }
     ///Bit 7 - Synchronous Serial Interface 1 Module Stop
     #[inline(always)]
-    pub fn mstpc7(&mut self) -> MSTPC7_W<MSTPCRC_SPEC> {
+    pub fn mstpc7(&mut self) -> MSTPC7_W<'_, MSTPCRC_SPEC> {
         MSTPC7_W::new(self, 7)
     }
     ///Bit 8 - Synchronous Serial Interface 0 Module Stop
     #[inline(always)]
-    pub fn mstpc8(&mut self) -> MSTPC8_W<MSTPCRC_SPEC> {
+    pub fn mstpc8(&mut self) -> MSTPC8_W<'_, MSTPCRC_SPEC> {
         MSTPC8_W::new(self, 8)
     }
     ///Bit 9 - Sampling Rate Converter Module Stop
     #[inline(always)]
-    pub fn mstpc9(&mut self) -> MSTPC9_W<MSTPCRC_SPEC> {
+    pub fn mstpc9(&mut self) -> MSTPC9_W<'_, MSTPCRC_SPEC> {
         MSTPC9_W::new(self, 9)
     }
     ///Bit 11 - Synchronous Digital Hierarchy/ Multi Media Card 1 Module Stop
     #[inline(always)]
-    pub fn mstpc11(&mut self) -> MSTPC11_W<MSTPCRC_SPEC> {
+    pub fn mstpc11(&mut self) -> MSTPC11_W<'_, MSTPCRC_SPEC> {
         MSTPC11_W::new(self, 11)
     }
     ///Bit 12 - Synchronous Digital Hierarchy/ Multi Media Card 0 Module Stop
     #[inline(always)]
-    pub fn mstpc12(&mut self) -> MSTPC12_W<MSTPCRC_SPEC> {
+    pub fn mstpc12(&mut self) -> MSTPC12_W<'_, MSTPCRC_SPEC> {
         MSTPC12_W::new(self, 12)
     }
     ///Bit 13 - Data Operation Circuit Module Stop
     #[inline(always)]
-    pub fn mstpc13(&mut self) -> MSTPC13_W<MSTPCRC_SPEC> {
+    pub fn mstpc13(&mut self) -> MSTPC13_W<'_, MSTPCRC_SPEC> {
         MSTPC13_W::new(self, 13)
     }
     ///Bit 14 - Event Link Controller Module Stop
     #[inline(always)]
-    pub fn mstpc14(&mut self) -> MSTPC14_W<MSTPCRC_SPEC> {
+    pub fn mstpc14(&mut self) -> MSTPC14_W<'_, MSTPCRC_SPEC> {
         MSTPC14_W::new(self, 14)
     }
     ///Bit 31 - TSIP Module Stop
     #[inline(always)]
-    pub fn mstpc31(&mut self) -> MSTPC31_W<MSTPCRC_SPEC> {
+    pub fn mstpc31(&mut self) -> MSTPC31_W<'_, MSTPCRC_SPEC> {
         MSTPC31_W::new(self, 31)
     }
 }

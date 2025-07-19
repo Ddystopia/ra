@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Base address for accessing graphics data (frame buffer data)Set the head address in the frame buffer where graphics data is to be stored. GRn_FLM2.BASE\[5:0\] should be fixed to 0 during 64-byte burst transfer.
     #[inline(always)]
-    pub fn base(&mut self) -> BASE_W<GR_FLM2_SPEC> {
+    pub fn base(&mut self) -> BASE_W<'_, GR_FLM2_SPEC> {
         BASE_W::new(self, 0)
     }
 }

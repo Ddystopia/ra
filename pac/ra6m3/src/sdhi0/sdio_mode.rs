@@ -145,22 +145,22 @@ impl R {
 impl W {
     ///Bit 0 - SDIO Mode
     #[inline(always)]
-    pub fn inten(&mut self) -> INTEN_W<SDIO_MODE_SPEC> {
+    pub fn inten(&mut self) -> INTEN_W<'_, SDIO_MODE_SPEC> {
         INTEN_W::new(self, 0)
     }
     ///Bit 2 - Read Wait Request
     #[inline(always)]
-    pub fn rwreq(&mut self) -> RWREQ_W<SDIO_MODE_SPEC> {
+    pub fn rwreq(&mut self) -> RWREQ_W<'_, SDIO_MODE_SPEC> {
         RWREQ_W::new(self, 2)
     }
     ///Bit 8 - SDIO AbortNOTE: See manual
     #[inline(always)]
-    pub fn ioabt(&mut self) -> IOABT_W<SDIO_MODE_SPEC> {
+    pub fn ioabt(&mut self) -> IOABT_W<'_, SDIO_MODE_SPEC> {
         IOABT_W::new(self, 8)
     }
     ///Bit 9 - SDIO None AbortNOTE: See manual
     #[inline(always)]
-    pub fn c52pub(&mut self) -> C52PUB_W<SDIO_MODE_SPEC> {
+    pub fn c52pub(&mut self) -> C52PUB_W<'_, SDIO_MODE_SPEC> {
         C52PUB_W::new(self, 9)
     }
 }

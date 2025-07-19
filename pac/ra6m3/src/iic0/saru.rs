@@ -85,17 +85,17 @@ impl R {
 impl W {
     ///Bit 0 - 7-Bit/10-Bit Address Format Selection
     #[inline(always)]
-    pub fn fs(&mut self) -> FS_W<SARU_SPEC> {
+    pub fn fs(&mut self) -> FS_W<'_, SARU_SPEC> {
         FS_W::new(self, 0)
     }
     ///Bit 1 - 10-Bit Address(bit8)
     #[inline(always)]
-    pub fn sva8(&mut self) -> SVA8_W<SARU_SPEC> {
+    pub fn sva8(&mut self) -> SVA8_W<'_, SARU_SPEC> {
         SVA8_W::new(self, 1)
     }
     ///Bit 2 - 10-Bit Address(bit9)
     #[inline(always)]
-    pub fn sva9(&mut self) -> SVA9_W<SARU_SPEC> {
+    pub fn sva9(&mut self) -> SVA9_W<'_, SARU_SPEC> {
         SVA9_W::new(self, 2)
     }
 }

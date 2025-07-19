@@ -806,57 +806,57 @@ impl R {
 impl W {
     ///Bits 0:2 - Byte/Word Swap Output image data in decompression is swapped.
     #[inline(always)]
-    pub fn doutswap(&mut self) -> DOUTSWAP_W<JIFDCNT_SPEC> {
+    pub fn doutswap(&mut self) -> DOUTSWAP_W<'_, JIFDCNT_SPEC> {
         DOUTSWAP_W::new(self, 0)
     }
     ///Bit 4 - Count Mode for Stopping Output Image Data Lines
     #[inline(always)]
-    pub fn doutlc(&mut self) -> DOUTLC_W<JIFDCNT_SPEC> {
+    pub fn doutlc(&mut self) -> DOUTLC_W<'_, JIFDCNT_SPEC> {
         DOUTLC_W::new(self, 4)
     }
     ///Bit 5 - Output Image Data Lines Resume Command This bit is valid only when the count mode for stopping the output of image data lines is on. Setting this bit to 1 resumes writing image data. This bit is always read as 0.
     #[inline(always)]
-    pub fn doutrcmd(&mut self) -> DOUTRCMD_W<JIFDCNT_SPEC> {
+    pub fn doutrcmd(&mut self) -> DOUTRCMD_W<'_, JIFDCNT_SPEC> {
         DOUTRCMD_W::new(self, 5)
     }
     ///Bit 6 - Address Initialization when Resuming Output of Image Data Lines This bit is only valid when the count mode for stopping the output of image data lines is on. Set this bit before writing 1 to the data-line resume command bit.
     #[inline(always)]
-    pub fn doutrini(&mut self) -> DOUTRINI_W<JIFDCNT_SPEC> {
+    pub fn doutrini(&mut self) -> DOUTRINI_W<'_, JIFDCNT_SPEC> {
         DOUTRINI_W::new(self, 6)
     }
     ///Bits 8:10 - Byte/Word/Longword Swap Input coded data in decompression is swapped.
     #[inline(always)]
-    pub fn jinswap(&mut self) -> JINSWAP_W<JIFDCNT_SPEC> {
+    pub fn jinswap(&mut self) -> JINSWAP_W<'_, JIFDCNT_SPEC> {
         JINSWAP_W::new(self, 8)
     }
     ///Bit 12 - Count Mode Setting for Stopping Input Coded Data
     #[inline(always)]
-    pub fn jinc(&mut self) -> JINC_W<JIFDCNT_SPEC> {
+    pub fn jinc(&mut self) -> JINC_W<'_, JIFDCNT_SPEC> {
         JINC_W::new(self, 12)
     }
     ///Bit 13 - Input Coded Data Resume CommandThis bit is valid only when the count mode for stopping the input of coded data is on. Setting this bit to 1 resumes reading input coded data. This bit is always read as 0.
     #[inline(always)]
-    pub fn jinrcmd(&mut self) -> JINRCMD_W<JIFDCNT_SPEC> {
+    pub fn jinrcmd(&mut self) -> JINRCMD_W<'_, JIFDCNT_SPEC> {
         JINRCMD_W::new(self, 13)
     }
     ///Bit 14 - Address Initialization when Input Coded Data is Resumed This bit is only valid when the count mode for stopping the input of coded data is on. Set this bit before writing 1 to the data resume command bit.
     #[inline(always)]
-    pub fn jinrini(&mut self) -> JINRINI_W<JIFDCNT_SPEC> {
+    pub fn jinrini(&mut self) -> JINRINI_W<'_, JIFDCNT_SPEC> {
         JINRINI_W::new(self, 14)
     }
     ///Bits 24:25 - Specifies output image data pixel format.
     #[inline(always)]
-    pub fn opf(&mut self) -> OPF_W<JIFDCNT_SPEC> {
+    pub fn opf(&mut self) -> OPF_W<'_, JIFDCNT_SPEC> {
         OPF_W::new(self, 24)
     }
     ///Bits 26:27 - Horizontal Subsampling Subsamples horizontal output image data.
     #[inline(always)]
-    pub fn hinter(&mut self) -> HINTER_W<JIFDCNT_SPEC> {
+    pub fn hinter(&mut self) -> HINTER_W<'_, JIFDCNT_SPEC> {
         HINTER_W::new(self, 26)
     }
     ///Bits 28:29 - Vertical SubsamplingSubsamples vertical output image data.
     #[inline(always)]
-    pub fn vinter(&mut self) -> VINTER_W<JIFDCNT_SPEC> {
+    pub fn vinter(&mut self) -> VINTER_W<'_, JIFDCNT_SPEC> {
         VINTER_W::new(self, 28)
     }
 }

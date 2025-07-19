@@ -1927,162 +1927,162 @@ impl R {
 impl W {
     ///Bit 0 - mailbox 0 Mask Invalid
     #[inline(always)]
-    pub fn mb0(&mut self) -> MB0_W<MKIVLR_SPEC> {
+    pub fn mb0(&mut self) -> MB0_W<'_, MKIVLR_SPEC> {
         MB0_W::new(self, 0)
     }
     ///Bit 1 - mailbox 1 Mask Invalid
     #[inline(always)]
-    pub fn mb1(&mut self) -> MB1_W<MKIVLR_SPEC> {
+    pub fn mb1(&mut self) -> MB1_W<'_, MKIVLR_SPEC> {
         MB1_W::new(self, 1)
     }
     ///Bit 2 - mailbox 2 Mask Invalid
     #[inline(always)]
-    pub fn mb2(&mut self) -> MB2_W<MKIVLR_SPEC> {
+    pub fn mb2(&mut self) -> MB2_W<'_, MKIVLR_SPEC> {
         MB2_W::new(self, 2)
     }
     ///Bit 3 - mailbox 3 Mask Invalid
     #[inline(always)]
-    pub fn mb3(&mut self) -> MB3_W<MKIVLR_SPEC> {
+    pub fn mb3(&mut self) -> MB3_W<'_, MKIVLR_SPEC> {
         MB3_W::new(self, 3)
     }
     ///Bit 4 - mailbox 4 Mask Invalid
     #[inline(always)]
-    pub fn mb4(&mut self) -> MB4_W<MKIVLR_SPEC> {
+    pub fn mb4(&mut self) -> MB4_W<'_, MKIVLR_SPEC> {
         MB4_W::new(self, 4)
     }
     ///Bit 5 - mailbox 5 Mask Invalid
     #[inline(always)]
-    pub fn mb5(&mut self) -> MB5_W<MKIVLR_SPEC> {
+    pub fn mb5(&mut self) -> MB5_W<'_, MKIVLR_SPEC> {
         MB5_W::new(self, 5)
     }
     ///Bit 6 - mailbox 6 Mask Invalid
     #[inline(always)]
-    pub fn mb6(&mut self) -> MB6_W<MKIVLR_SPEC> {
+    pub fn mb6(&mut self) -> MB6_W<'_, MKIVLR_SPEC> {
         MB6_W::new(self, 6)
     }
     ///Bit 7 - mailbox 7 Mask Invalid
     #[inline(always)]
-    pub fn mb7(&mut self) -> MB7_W<MKIVLR_SPEC> {
+    pub fn mb7(&mut self) -> MB7_W<'_, MKIVLR_SPEC> {
         MB7_W::new(self, 7)
     }
     ///Bit 8 - mailbox 8 Mask Invalid
     #[inline(always)]
-    pub fn mb8(&mut self) -> MB8_W<MKIVLR_SPEC> {
+    pub fn mb8(&mut self) -> MB8_W<'_, MKIVLR_SPEC> {
         MB8_W::new(self, 8)
     }
     ///Bit 9 - mailbox 9 Mask Invalid
     #[inline(always)]
-    pub fn mb9(&mut self) -> MB9_W<MKIVLR_SPEC> {
+    pub fn mb9(&mut self) -> MB9_W<'_, MKIVLR_SPEC> {
         MB9_W::new(self, 9)
     }
     ///Bit 10 - mailbox 10 Mask Invalid
     #[inline(always)]
-    pub fn mb10(&mut self) -> MB10_W<MKIVLR_SPEC> {
+    pub fn mb10(&mut self) -> MB10_W<'_, MKIVLR_SPEC> {
         MB10_W::new(self, 10)
     }
     ///Bit 11 - mailbox 11 Mask Invalid
     #[inline(always)]
-    pub fn mb11(&mut self) -> MB11_W<MKIVLR_SPEC> {
+    pub fn mb11(&mut self) -> MB11_W<'_, MKIVLR_SPEC> {
         MB11_W::new(self, 11)
     }
     ///Bit 12 - mailbox 12 Mask Invalid
     #[inline(always)]
-    pub fn mb12(&mut self) -> MB12_W<MKIVLR_SPEC> {
+    pub fn mb12(&mut self) -> MB12_W<'_, MKIVLR_SPEC> {
         MB12_W::new(self, 12)
     }
     ///Bit 13 - mailbox 13 Mask Invalid
     #[inline(always)]
-    pub fn mb13(&mut self) -> MB13_W<MKIVLR_SPEC> {
+    pub fn mb13(&mut self) -> MB13_W<'_, MKIVLR_SPEC> {
         MB13_W::new(self, 13)
     }
     ///Bit 14 - mailbox 14 Mask Invalid
     #[inline(always)]
-    pub fn mb14(&mut self) -> MB14_W<MKIVLR_SPEC> {
+    pub fn mb14(&mut self) -> MB14_W<'_, MKIVLR_SPEC> {
         MB14_W::new(self, 14)
     }
     ///Bit 15 - mailbox 15 Mask Invalid
     #[inline(always)]
-    pub fn mb15(&mut self) -> MB15_W<MKIVLR_SPEC> {
+    pub fn mb15(&mut self) -> MB15_W<'_, MKIVLR_SPEC> {
         MB15_W::new(self, 15)
     }
     ///Bit 16 - mailbox 16 Mask Invalid
     #[inline(always)]
-    pub fn mb16(&mut self) -> MB16_W<MKIVLR_SPEC> {
+    pub fn mb16(&mut self) -> MB16_W<'_, MKIVLR_SPEC> {
         MB16_W::new(self, 16)
     }
     ///Bit 17 - mailbox 17 Mask Invalid
     #[inline(always)]
-    pub fn mb17(&mut self) -> MB17_W<MKIVLR_SPEC> {
+    pub fn mb17(&mut self) -> MB17_W<'_, MKIVLR_SPEC> {
         MB17_W::new(self, 17)
     }
     ///Bit 18 - mailbox 18 Mask Invalid
     #[inline(always)]
-    pub fn mb18(&mut self) -> MB18_W<MKIVLR_SPEC> {
+    pub fn mb18(&mut self) -> MB18_W<'_, MKIVLR_SPEC> {
         MB18_W::new(self, 18)
     }
     ///Bit 19 - mailbox 19 Mask Invalid
     #[inline(always)]
-    pub fn mb19(&mut self) -> MB19_W<MKIVLR_SPEC> {
+    pub fn mb19(&mut self) -> MB19_W<'_, MKIVLR_SPEC> {
         MB19_W::new(self, 19)
     }
     ///Bit 20 - mailbox 20 Mask Invalid
     #[inline(always)]
-    pub fn mb20(&mut self) -> MB20_W<MKIVLR_SPEC> {
+    pub fn mb20(&mut self) -> MB20_W<'_, MKIVLR_SPEC> {
         MB20_W::new(self, 20)
     }
     ///Bit 21 - mailbox 21 Mask Invalid
     #[inline(always)]
-    pub fn mb21(&mut self) -> MB21_W<MKIVLR_SPEC> {
+    pub fn mb21(&mut self) -> MB21_W<'_, MKIVLR_SPEC> {
         MB21_W::new(self, 21)
     }
     ///Bit 22 - mailbox 22 Mask Invalid
     #[inline(always)]
-    pub fn mb22(&mut self) -> MB22_W<MKIVLR_SPEC> {
+    pub fn mb22(&mut self) -> MB22_W<'_, MKIVLR_SPEC> {
         MB22_W::new(self, 22)
     }
     ///Bit 23 - mailbox 23 Mask Invalid
     #[inline(always)]
-    pub fn mb23(&mut self) -> MB23_W<MKIVLR_SPEC> {
+    pub fn mb23(&mut self) -> MB23_W<'_, MKIVLR_SPEC> {
         MB23_W::new(self, 23)
     }
     ///Bit 24 - mailbox 24 Mask Invalid
     #[inline(always)]
-    pub fn mb24(&mut self) -> MB24_W<MKIVLR_SPEC> {
+    pub fn mb24(&mut self) -> MB24_W<'_, MKIVLR_SPEC> {
         MB24_W::new(self, 24)
     }
     ///Bit 25 - mailbox 25 Mask Invalid
     #[inline(always)]
-    pub fn mb25(&mut self) -> MB25_W<MKIVLR_SPEC> {
+    pub fn mb25(&mut self) -> MB25_W<'_, MKIVLR_SPEC> {
         MB25_W::new(self, 25)
     }
     ///Bit 26 - mailbox 26 Mask Invalid
     #[inline(always)]
-    pub fn mb26(&mut self) -> MB26_W<MKIVLR_SPEC> {
+    pub fn mb26(&mut self) -> MB26_W<'_, MKIVLR_SPEC> {
         MB26_W::new(self, 26)
     }
     ///Bit 27 - mailbox 27 Mask Invalid
     #[inline(always)]
-    pub fn mb27(&mut self) -> MB27_W<MKIVLR_SPEC> {
+    pub fn mb27(&mut self) -> MB27_W<'_, MKIVLR_SPEC> {
         MB27_W::new(self, 27)
     }
     ///Bit 28 - mailbox 28 Mask Invalid
     #[inline(always)]
-    pub fn mb28(&mut self) -> MB28_W<MKIVLR_SPEC> {
+    pub fn mb28(&mut self) -> MB28_W<'_, MKIVLR_SPEC> {
         MB28_W::new(self, 28)
     }
     ///Bit 29 - mailbox 29 Mask Invalid
     #[inline(always)]
-    pub fn mb29(&mut self) -> MB29_W<MKIVLR_SPEC> {
+    pub fn mb29(&mut self) -> MB29_W<'_, MKIVLR_SPEC> {
         MB29_W::new(self, 29)
     }
     ///Bit 30 - mailbox 30 Mask Invalid
     #[inline(always)]
-    pub fn mb30(&mut self) -> MB30_W<MKIVLR_SPEC> {
+    pub fn mb30(&mut self) -> MB30_W<'_, MKIVLR_SPEC> {
         MB30_W::new(self, 30)
     }
     ///Bit 31 - mailbox 31 Mask Invalid
     #[inline(always)]
-    pub fn mb31(&mut self) -> MB31_W<MKIVLR_SPEC> {
+    pub fn mb31(&mut self) -> MB31_W<'_, MKIVLR_SPEC> {
         MB31_W::new(self, 31)
     }
 }

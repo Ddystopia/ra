@@ -400,32 +400,32 @@ impl R {
 impl W {
     ///Bit 0 - Voltage Monitor Interrupt/Reset Enable
     #[inline(always)]
-    pub fn rie(&mut self) -> RIE_W<LVDCR0_SPEC> {
+    pub fn rie(&mut self) -> RIE_W<'_, LVDCR0_SPEC> {
         RIE_W::new(self, 0)
     }
     ///Bit 1 - Voltage Monitor Digital Filter Disable Mode Select
     #[inline(always)]
-    pub fn dfdis(&mut self) -> DFDIS_W<LVDCR0_SPEC> {
+    pub fn dfdis(&mut self) -> DFDIS_W<'_, LVDCR0_SPEC> {
         DFDIS_W::new(self, 1)
     }
     ///Bit 2 - Voltage Monitor Circuit Comparison Result Output Enable
     #[inline(always)]
-    pub fn cmpe(&mut self) -> CMPE_W<LVDCR0_SPEC> {
+    pub fn cmpe(&mut self) -> CMPE_W<'_, LVDCR0_SPEC> {
         CMPE_W::new(self, 2)
     }
     ///Bits 4:5 - Sampling Clock Select
     #[inline(always)]
-    pub fn fsamp(&mut self) -> FSAMP_W<LVDCR0_SPEC> {
+    pub fn fsamp(&mut self) -> FSAMP_W<'_, LVDCR0_SPEC> {
         FSAMP_W::new(self, 4)
     }
     ///Bit 6 - Voltage Monitor Circuit Mode Select
     #[inline(always)]
-    pub fn ri(&mut self) -> RI_W<LVDCR0_SPEC> {
+    pub fn ri(&mut self) -> RI_W<'_, LVDCR0_SPEC> {
         RI_W::new(self, 6)
     }
     ///Bit 7 - Voltage Monitor Reset Negate Select
     #[inline(always)]
-    pub fn rn(&mut self) -> RN_W<LVDCR0_SPEC> {
+    pub fn rn(&mut self) -> RN_W<'_, LVDCR0_SPEC> {
         RN_W::new(self, 7)
     }
 }

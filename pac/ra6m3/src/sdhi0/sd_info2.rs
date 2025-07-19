@@ -756,52 +756,52 @@ impl R {
 impl W {
     ///Bit 0 - Command Error
     #[inline(always)]
-    pub fn cmde(&mut self) -> CMDE_W<SD_INFO2_SPEC> {
+    pub fn cmde(&mut self) -> CMDE_W<'_, SD_INFO2_SPEC> {
         CMDE_W::new(self, 0)
     }
     ///Bit 1 - CRC Error
     #[inline(always)]
-    pub fn crce(&mut self) -> CRCE_W<SD_INFO2_SPEC> {
+    pub fn crce(&mut self) -> CRCE_W<'_, SD_INFO2_SPEC> {
         CRCE_W::new(self, 1)
     }
     ///Bit 2 - END Error
     #[inline(always)]
-    pub fn ende(&mut self) -> ENDE_W<SD_INFO2_SPEC> {
+    pub fn ende(&mut self) -> ENDE_W<'_, SD_INFO2_SPEC> {
         ENDE_W::new(self, 2)
     }
     ///Bit 3 - Data Timeout
     #[inline(always)]
-    pub fn dto(&mut self) -> DTO_W<SD_INFO2_SPEC> {
+    pub fn dto(&mut self) -> DTO_W<'_, SD_INFO2_SPEC> {
         DTO_W::new(self, 3)
     }
     ///Bit 4 - SD_BUF Illegal Write Access
     #[inline(always)]
-    pub fn ilw(&mut self) -> ILW_W<SD_INFO2_SPEC> {
+    pub fn ilw(&mut self) -> ILW_W<'_, SD_INFO2_SPEC> {
         ILW_W::new(self, 4)
     }
     ///Bit 5 - SD_BUF Illegal Read Access
     #[inline(always)]
-    pub fn ilr(&mut self) -> ILR_W<SD_INFO2_SPEC> {
+    pub fn ilr(&mut self) -> ILR_W<'_, SD_INFO2_SPEC> {
         ILR_W::new(self, 5)
     }
     ///Bit 6 - Response Timeout
     #[inline(always)]
-    pub fn rspto(&mut self) -> RSPTO_W<SD_INFO2_SPEC> {
+    pub fn rspto(&mut self) -> RSPTO_W<'_, SD_INFO2_SPEC> {
         RSPTO_W::new(self, 6)
     }
     ///Bit 8 - SD_BUF Read Enable
     #[inline(always)]
-    pub fn bre(&mut self) -> BRE_W<SD_INFO2_SPEC> {
+    pub fn bre(&mut self) -> BRE_W<'_, SD_INFO2_SPEC> {
         BRE_W::new(self, 8)
     }
     ///Bit 9 - SD_BUF Write Enable
     #[inline(always)]
-    pub fn bwe(&mut self) -> BWE_W<SD_INFO2_SPEC> {
+    pub fn bwe(&mut self) -> BWE_W<'_, SD_INFO2_SPEC> {
         BWE_W::new(self, 9)
     }
     ///Bit 15 - Illegal Access Error
     #[inline(always)]
-    pub fn ila(&mut self) -> ILA_W<SD_INFO2_SPEC> {
+    pub fn ila(&mut self) -> ILA_W<'_, SD_INFO2_SPEC> {
         ILA_W::new(self, 15)
     }
 }

@@ -145,12 +145,12 @@ impl R {
 impl W {
     ///Bit 0 - Receive Data Full Flag
     #[inline(always)]
-    pub fn rdf(&mut self) -> RDF_W<SSIFSR_SPEC> {
+    pub fn rdf(&mut self) -> RDF_W<'_, SSIFSR_SPEC> {
         RDF_W::new(self, 0)
     }
     ///Bit 16 - Transmit Data Empty Flag
     #[inline(always)]
-    pub fn tde(&mut self) -> TDE_W<SSIFSR_SPEC> {
+    pub fn tde(&mut self) -> TDE_W<'_, SSIFSR_SPEC> {
         TDE_W::new(self, 16)
     }
 }

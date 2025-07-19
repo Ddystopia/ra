@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - CAULVR is a 16-bit readable/writable register that stores the upper-limit value of the frequency.
     #[inline(always)]
-    pub fn caulvr(&mut self) -> CAULVR_W<CAULVR_SPEC> {
+    pub fn caulvr(&mut self) -> CAULVR_W<'_, CAULVR_SPEC> {
         CAULVR_W::new(self, 0)
     }
 }

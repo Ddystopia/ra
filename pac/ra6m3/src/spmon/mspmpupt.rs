@@ -106,12 +106,12 @@ impl R {
 impl W {
     ///Bit 0 - Protection of register (MSPMPUAC, MSPMPUSA and MSPMPUSE)
     #[inline(always)]
-    pub fn protect(&mut self) -> PROTECT_W<MSPMPUPT_SPEC> {
+    pub fn protect(&mut self) -> PROTECT_W<'_, MSPMPUPT_SPEC> {
         PROTECT_W::new(self, 0)
     }
     ///Bits 8:15 - Write Keyword The data written to these bits are not stored.
     #[inline(always)]
-    pub fn key(&mut self) -> KEY_W<MSPMPUPT_SPEC> {
+    pub fn key(&mut self) -> KEY_W<'_, MSPMPUPT_SPEC> {
         KEY_W::new(self, 8)
     }
 }

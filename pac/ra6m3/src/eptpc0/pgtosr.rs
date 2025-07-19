@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - PTP general Message TOS Field Value SettingThese bits hold the setting for the value of the TOS field within the IPv4 headers of PTP general messages.
     #[inline(always)]
-    pub fn geto(&mut self) -> GETO_W<PGTOSR_SPEC> {
+    pub fn geto(&mut self) -> GETO_W<'_, PGTOSR_SPEC> {
         GETO_W::new(self, 0)
     }
 }

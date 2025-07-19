@@ -106,12 +106,12 @@ impl R {
 impl W {
     ///Bit 0 - Protection of register(MMPUSAn, MMPUEAn and MMPUACAn)
     #[inline(always)]
-    pub fn protect(&mut self) -> PROTECT_W<MMPUPTA_SPEC> {
+    pub fn protect(&mut self) -> PROTECT_W<'_, MMPUPTA_SPEC> {
         PROTECT_W::new(self, 0)
     }
     ///Bits 8:15 - Write Keyword The data written to these bits are not stored.
     #[inline(always)]
-    pub fn key(&mut self) -> KEY_W<MMPUPTA_SPEC> {
+    pub fn key(&mut self) -> KEY_W<'_, MMPUPTA_SPEC> {
         KEY_W::new(self, 8)
     }
 }

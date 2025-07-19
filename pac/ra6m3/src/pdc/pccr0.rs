@@ -845,67 +845,67 @@ impl R {
 impl W {
     ///Bit 0 - Channel 0 GTCNT Count Clear
     #[inline(always)]
-    pub fn pcke(&mut self) -> PCKE_W<PCCR0_SPEC> {
+    pub fn pcke(&mut self) -> PCKE_W<'_, PCCR0_SPEC> {
         PCKE_W::new(self, 0)
     }
     ///Bit 1 - VSYNC Signal Polarity Select
     #[inline(always)]
-    pub fn vps(&mut self) -> VPS_W<PCCR0_SPEC> {
+    pub fn vps(&mut self) -> VPS_W<'_, PCCR0_SPEC> {
         VPS_W::new(self, 1)
     }
     ///Bit 2 - HSYNC Signal Polarity Select
     #[inline(always)]
-    pub fn hps(&mut self) -> HPS_W<PCCR0_SPEC> {
+    pub fn hps(&mut self) -> HPS_W<'_, PCCR0_SPEC> {
         HPS_W::new(self, 2)
     }
     ///Bit 3 - PDC Reset
     #[inline(always)]
-    pub fn prst(&mut self) -> PRST_W<PCCR0_SPEC> {
+    pub fn prst(&mut self) -> PRST_W<'_, PCCR0_SPEC> {
         PRST_W::new(self, 3)
     }
     ///Bit 4 - Receive Data Ready Interrupt Enable
     #[inline(always)]
-    pub fn dfie(&mut self) -> DFIE_W<PCCR0_SPEC> {
+    pub fn dfie(&mut self) -> DFIE_W<'_, PCCR0_SPEC> {
         DFIE_W::new(self, 4)
     }
     ///Bit 5 - Frame End Interrupt Enable
     #[inline(always)]
-    pub fn feie(&mut self) -> FEIE_W<PCCR0_SPEC> {
+    pub fn feie(&mut self) -> FEIE_W<'_, PCCR0_SPEC> {
         FEIE_W::new(self, 5)
     }
     ///Bit 6 - Overrun Interrupt Enable
     #[inline(always)]
-    pub fn ovie(&mut self) -> OVIE_W<PCCR0_SPEC> {
+    pub fn ovie(&mut self) -> OVIE_W<'_, PCCR0_SPEC> {
         OVIE_W::new(self, 6)
     }
     ///Bit 7 - Underrun Interrupt Enable
     #[inline(always)]
-    pub fn udrie(&mut self) -> UDRIE_W<PCCR0_SPEC> {
+    pub fn udrie(&mut self) -> UDRIE_W<'_, PCCR0_SPEC> {
         UDRIE_W::new(self, 7)
     }
     ///Bit 8 - Vertical Line Number Setting Error Interrupt Enable
     #[inline(always)]
-    pub fn verie(&mut self) -> VERIE_W<PCCR0_SPEC> {
+    pub fn verie(&mut self) -> VERIE_W<'_, PCCR0_SPEC> {
         VERIE_W::new(self, 8)
     }
     ///Bit 9 - Horizontal Byte Number Setting Error Interrupt Enable
     #[inline(always)]
-    pub fn herie(&mut self) -> HERIE_W<PCCR0_SPEC> {
+    pub fn herie(&mut self) -> HERIE_W<'_, PCCR0_SPEC> {
         HERIE_W::new(self, 9)
     }
     ///Bit 10 - PCKO Output Enable
     #[inline(always)]
-    pub fn pckoe(&mut self) -> PCKOE_W<PCCR0_SPEC> {
+    pub fn pckoe(&mut self) -> PCKOE_W<'_, PCCR0_SPEC> {
         PCKOE_W::new(self, 10)
     }
     ///Bits 11:13 - PCKO Frequency Division Ratio Select
     #[inline(always)]
-    pub fn pckdiv(&mut self) -> PCKDIV_W<PCCR0_SPEC> {
+    pub fn pckdiv(&mut self) -> PCKDIV_W<'_, PCCR0_SPEC> {
         PCKDIV_W::new(self, 11)
     }
     ///Bit 14 - Endian Select
     #[inline(always)]
-    pub fn eds(&mut self) -> EDS_W<PCCR0_SPEC> {
+    pub fn eds(&mut self) -> EDS_W<'_, PCCR0_SPEC> {
         EDS_W::new(self, 14)
     }
 }

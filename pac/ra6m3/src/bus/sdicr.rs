@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Initialization Sequence Start
     #[inline(always)]
-    pub fn inirq(&mut self) -> INIRQ_W<SDICR_SPEC> {
+    pub fn inirq(&mut self) -> INIRQ_W<'_, SDICR_SPEC> {
         INIRQ_W::new(self, 0)
     }
 }

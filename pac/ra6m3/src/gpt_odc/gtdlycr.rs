@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 0 - DLL Operation Enable
     #[inline(always)]
-    pub fn dllen(&mut self) -> DLLEN_W<GTDLYCR_SPEC> {
+    pub fn dllen(&mut self) -> DLLEN_W<'_, GTDLYCR_SPEC> {
         DLLEN_W::new(self, 0)
     }
     ///Bit 1 - PWM Delay Generation Circuit Reset
     #[inline(always)]
-    pub fn dlyrst(&mut self) -> DLYRST_W<GTDLYCR_SPEC> {
+    pub fn dlyrst(&mut self) -> DLYRST_W<'_, GTDLYCR_SPEC> {
         DLYRST_W::new(self, 1)
     }
 }

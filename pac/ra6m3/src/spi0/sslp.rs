@@ -247,22 +247,22 @@ impl R {
 impl W {
     ///Bit 0 - SSL0 Signal Polarity Setting
     #[inline(always)]
-    pub fn ssl0p(&mut self) -> SSL0P_W<SSLP_SPEC> {
+    pub fn ssl0p(&mut self) -> SSL0P_W<'_, SSLP_SPEC> {
         SSL0P_W::new(self, 0)
     }
     ///Bit 1 - SSL1 Signal Polarity Setting
     #[inline(always)]
-    pub fn ssl1p(&mut self) -> SSL1P_W<SSLP_SPEC> {
+    pub fn ssl1p(&mut self) -> SSL1P_W<'_, SSLP_SPEC> {
         SSL1P_W::new(self, 1)
     }
     ///Bit 2 - SSL2 Signal Polarity Setting
     #[inline(always)]
-    pub fn ssl2p(&mut self) -> SSL2P_W<SSLP_SPEC> {
+    pub fn ssl2p(&mut self) -> SSL2P_W<'_, SSLP_SPEC> {
         SSL2P_W::new(self, 2)
     }
     ///Bit 3 - SSL3 Signal Polarity Setting
     #[inline(always)]
-    pub fn ssl3p(&mut self) -> SSL3P_W<SSLP_SPEC> {
+    pub fn ssl3p(&mut self) -> SSL3P_W<'_, SSLP_SPEC> {
         SSL3P_W::new(self, 3)
     }
 }

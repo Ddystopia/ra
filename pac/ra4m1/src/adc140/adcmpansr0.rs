@@ -907,77 +907,77 @@ impl R {
 impl W {
     ///Bit 0 - AN000 Select
     #[inline(always)]
-    pub fn cmpcha00(&mut self) -> CMPCHA00_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha00(&mut self) -> CMPCHA00_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA00_W::new(self, 0)
     }
     ///Bit 1 - AN001 Select
     #[inline(always)]
-    pub fn cmpcha01(&mut self) -> CMPCHA01_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha01(&mut self) -> CMPCHA01_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA01_W::new(self, 1)
     }
     ///Bit 2 - AN002 Select
     #[inline(always)]
-    pub fn cmpcha02(&mut self) -> CMPCHA02_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha02(&mut self) -> CMPCHA02_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA02_W::new(self, 2)
     }
     ///Bit 3 - AN003 Select
     #[inline(always)]
-    pub fn cmpcha03(&mut self) -> CMPCHA03_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha03(&mut self) -> CMPCHA03_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA03_W::new(self, 3)
     }
     ///Bit 4 - AN004 Select
     #[inline(always)]
-    pub fn cmpcha04(&mut self) -> CMPCHA04_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha04(&mut self) -> CMPCHA04_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA04_W::new(self, 4)
     }
     ///Bit 5 - AN005 Select
     #[inline(always)]
-    pub fn cmpcha05(&mut self) -> CMPCHA05_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha05(&mut self) -> CMPCHA05_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA05_W::new(self, 5)
     }
     ///Bit 6 - AN006 Select
     #[inline(always)]
-    pub fn cmpcha06(&mut self) -> CMPCHA06_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha06(&mut self) -> CMPCHA06_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA06_W::new(self, 6)
     }
     ///Bit 7 - AN007 Select
     #[inline(always)]
-    pub fn cmpcha07(&mut self) -> CMPCHA07_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha07(&mut self) -> CMPCHA07_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA07_W::new(self, 7)
     }
     ///Bit 8 - AN008 Select
     #[inline(always)]
-    pub fn cmpcha08(&mut self) -> CMPCHA08_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha08(&mut self) -> CMPCHA08_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA08_W::new(self, 8)
     }
     ///Bit 9 - AN009 Select
     #[inline(always)]
-    pub fn cmpcha09(&mut self) -> CMPCHA09_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha09(&mut self) -> CMPCHA09_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA09_W::new(self, 9)
     }
     ///Bit 10 - AN010 Select
     #[inline(always)]
-    pub fn cmpcha10(&mut self) -> CMPCHA10_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha10(&mut self) -> CMPCHA10_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA10_W::new(self, 10)
     }
     ///Bit 11 - AN011 Select
     #[inline(always)]
-    pub fn cmpcha11(&mut self) -> CMPCHA11_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha11(&mut self) -> CMPCHA11_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA11_W::new(self, 11)
     }
     ///Bit 12 - AN012 Select
     #[inline(always)]
-    pub fn cmpcha12(&mut self) -> CMPCHA12_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha12(&mut self) -> CMPCHA12_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA12_W::new(self, 12)
     }
     ///Bit 13 - AN013 Select
     #[inline(always)]
-    pub fn cmpcha13(&mut self) -> CMPCHA13_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha13(&mut self) -> CMPCHA13_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA13_W::new(self, 13)
     }
     ///Bit 14 - AN014 Select
     #[inline(always)]
-    pub fn cmpcha14(&mut self) -> CMPCHA14_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha14(&mut self) -> CMPCHA14_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA14_W::new(self, 14)
     }
 }

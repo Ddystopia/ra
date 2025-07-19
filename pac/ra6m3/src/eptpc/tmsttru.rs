@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - These bits hold the setting for the higher-order 32 bits of the start time of the pulse output timer in nanoseconds.
     #[inline(always)]
-    pub fn tmsttru(&mut self) -> TMSTTRU_W<TMSTTRU_SPEC> {
+    pub fn tmsttru(&mut self) -> TMSTTRU_W<'_, TMSTTRU_SPEC> {
         TMSTTRU_W::new(self, 0)
     }
 }

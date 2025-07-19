@@ -350,27 +350,27 @@ impl R {
 impl W {
     ///Bit 0 - Transmission Complete Flag
     #[inline(always)]
-    pub fn sentdata(&mut self) -> SENTDATA_W<MCTL_TX_SPEC> {
+    pub fn sentdata(&mut self) -> SENTDATA_W<'_, MCTL_TX_SPEC> {
         SENTDATA_W::new(self, 0)
     }
     ///Bit 2 - Transmission Abort Complete Flag (Transmit mailbox setting enabled)
     #[inline(always)]
-    pub fn trmabt(&mut self) -> TRMABT_W<MCTL_TX_SPEC> {
+    pub fn trmabt(&mut self) -> TRMABT_W<'_, MCTL_TX_SPEC> {
         TRMABT_W::new(self, 2)
     }
     ///Bit 4 - One-Shot Enable
     #[inline(always)]
-    pub fn oneshot(&mut self) -> ONESHOT_W<MCTL_TX_SPEC> {
+    pub fn oneshot(&mut self) -> ONESHOT_W<'_, MCTL_TX_SPEC> {
         ONESHOT_W::new(self, 4)
     }
     ///Bit 6 - Receive Mailbox Request
     #[inline(always)]
-    pub fn recreq(&mut self) -> RECREQ_W<MCTL_TX_SPEC> {
+    pub fn recreq(&mut self) -> RECREQ_W<'_, MCTL_TX_SPEC> {
         RECREQ_W::new(self, 6)
     }
     ///Bit 7 - Transmit Mailbox Request
     #[inline(always)]
-    pub fn trmreq(&mut self) -> TRMREQ_W<MCTL_TX_SPEC> {
+    pub fn trmreq(&mut self) -> TRMREQ_W<'_, MCTL_TX_SPEC> {
         TRMREQ_W::new(self, 7)
     }
 }

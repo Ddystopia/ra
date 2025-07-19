@@ -774,47 +774,47 @@ impl R {
 impl W {
     ///Bit 0 - RSPCK Phase Setting
     #[inline(always)]
-    pub fn cpha(&mut self) -> CPHA_W<SPCMD0_SPEC> {
+    pub fn cpha(&mut self) -> CPHA_W<'_, SPCMD0_SPEC> {
         CPHA_W::new(self, 0)
     }
     ///Bit 1 - RSPCK Polarity Setting
     #[inline(always)]
-    pub fn cpol(&mut self) -> CPOL_W<SPCMD0_SPEC> {
+    pub fn cpol(&mut self) -> CPOL_W<'_, SPCMD0_SPEC> {
         CPOL_W::new(self, 1)
     }
     ///Bits 2:3 - Bit Rate Division Setting
     #[inline(always)]
-    pub fn brdv(&mut self) -> BRDV_W<SPCMD0_SPEC> {
+    pub fn brdv(&mut self) -> BRDV_W<'_, SPCMD0_SPEC> {
         BRDV_W::new(self, 2)
     }
     ///Bits 4:6 - SSL Signal Assertion Setting
     #[inline(always)]
-    pub fn ssla(&mut self) -> SSLA_W<SPCMD0_SPEC> {
+    pub fn ssla(&mut self) -> SSLA_W<'_, SPCMD0_SPEC> {
         SSLA_W::new(self, 4)
     }
     ///Bits 8:11 - RSPI Data Length Setting
     #[inline(always)]
-    pub fn spb(&mut self) -> SPB_W<SPCMD0_SPEC> {
+    pub fn spb(&mut self) -> SPB_W<'_, SPCMD0_SPEC> {
         SPB_W::new(self, 8)
     }
     ///Bit 12 - RSPI LSB First
     #[inline(always)]
-    pub fn lsbf(&mut self) -> LSBF_W<SPCMD0_SPEC> {
+    pub fn lsbf(&mut self) -> LSBF_W<'_, SPCMD0_SPEC> {
         LSBF_W::new(self, 12)
     }
     ///Bit 13 - RSPI Next-Access Delay Enable
     #[inline(always)]
-    pub fn spnden(&mut self) -> SPNDEN_W<SPCMD0_SPEC> {
+    pub fn spnden(&mut self) -> SPNDEN_W<'_, SPCMD0_SPEC> {
         SPNDEN_W::new(self, 13)
     }
     ///Bit 14 - SSL Negation Delay Setting Enable
     #[inline(always)]
-    pub fn slnden(&mut self) -> SLNDEN_W<SPCMD0_SPEC> {
+    pub fn slnden(&mut self) -> SLNDEN_W<'_, SPCMD0_SPEC> {
         SLNDEN_W::new(self, 14)
     }
     ///Bit 15 - RSPCK Delay Setting Enable
     #[inline(always)]
-    pub fn sckden(&mut self) -> SCKDEN_W<SPCMD0_SPEC> {
+    pub fn sckden(&mut self) -> SCKDEN_W<'_, SPCMD0_SPEC> {
         SCKDEN_W::new(self, 15)
     }
 }

@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Region end address register Address where the region starts, for use in region determination. NOTE: Range: 0x1FF00003-0x200FFFFF The low-order 2 bits are fixed to 1.
     #[inline(always)]
-    pub fn pspmpuea(&mut self) -> PSPMPUEA_W<PSPMPUEA_SPEC> {
+    pub fn pspmpuea(&mut self) -> PSPMPUEA_W<'_, PSPMPUEA_SPEC> {
         PSPMPUEA_W::new(self, 0)
     }
 }

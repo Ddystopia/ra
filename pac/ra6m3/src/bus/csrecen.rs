@@ -967,82 +967,82 @@ impl R {
 impl W {
     ///Bit 0 - Separate Bus Recovery Cycle Insertion Enable 0
     #[inline(always)]
-    pub fn rcven0(&mut self) -> RCVEN0_W<CSRECEN_SPEC> {
+    pub fn rcven0(&mut self) -> RCVEN0_W<'_, CSRECEN_SPEC> {
         RCVEN0_W::new(self, 0)
     }
     ///Bit 1 - Separate Bus Recovery Cycle Insertion Enable 1
     #[inline(always)]
-    pub fn rcven1(&mut self) -> RCVEN1_W<CSRECEN_SPEC> {
+    pub fn rcven1(&mut self) -> RCVEN1_W<'_, CSRECEN_SPEC> {
         RCVEN1_W::new(self, 1)
     }
     ///Bit 2 - Separate Bus Recovery Cycle Insertion Enable 2
     #[inline(always)]
-    pub fn rcven2(&mut self) -> RCVEN2_W<CSRECEN_SPEC> {
+    pub fn rcven2(&mut self) -> RCVEN2_W<'_, CSRECEN_SPEC> {
         RCVEN2_W::new(self, 2)
     }
     ///Bit 3 - Separate Bus Recovery Cycle Insertion Enable 3
     #[inline(always)]
-    pub fn rcven3(&mut self) -> RCVEN3_W<CSRECEN_SPEC> {
+    pub fn rcven3(&mut self) -> RCVEN3_W<'_, CSRECEN_SPEC> {
         RCVEN3_W::new(self, 3)
     }
     ///Bit 4 - Separate Bus Recovery Cycle Insertion Enable 4
     #[inline(always)]
-    pub fn rcven4(&mut self) -> RCVEN4_W<CSRECEN_SPEC> {
+    pub fn rcven4(&mut self) -> RCVEN4_W<'_, CSRECEN_SPEC> {
         RCVEN4_W::new(self, 4)
     }
     ///Bit 5 - Separate Bus Recovery Cycle Insertion Enable 5
     #[inline(always)]
-    pub fn rcven5(&mut self) -> RCVEN5_W<CSRECEN_SPEC> {
+    pub fn rcven5(&mut self) -> RCVEN5_W<'_, CSRECEN_SPEC> {
         RCVEN5_W::new(self, 5)
     }
     ///Bit 6 - Separate Bus Recovery Cycle Insertion Enable 6
     #[inline(always)]
-    pub fn rcven6(&mut self) -> RCVEN6_W<CSRECEN_SPEC> {
+    pub fn rcven6(&mut self) -> RCVEN6_W<'_, CSRECEN_SPEC> {
         RCVEN6_W::new(self, 6)
     }
     ///Bit 7 - Separate Bus Recovery Cycle Insertion Enable 7
     #[inline(always)]
-    pub fn rcven7(&mut self) -> RCVEN7_W<CSRECEN_SPEC> {
+    pub fn rcven7(&mut self) -> RCVEN7_W<'_, CSRECEN_SPEC> {
         RCVEN7_W::new(self, 7)
     }
     ///Bit 8 - Multiplexed Bus Recovery Cycle Insertion Enable 0
     #[inline(always)]
-    pub fn rcvenm0(&mut self) -> RCVENM0_W<CSRECEN_SPEC> {
+    pub fn rcvenm0(&mut self) -> RCVENM0_W<'_, CSRECEN_SPEC> {
         RCVENM0_W::new(self, 8)
     }
     ///Bit 9 - Multiplexed Bus Recovery Cycle Insertion Enable 1
     #[inline(always)]
-    pub fn rcvenm1(&mut self) -> RCVENM1_W<CSRECEN_SPEC> {
+    pub fn rcvenm1(&mut self) -> RCVENM1_W<'_, CSRECEN_SPEC> {
         RCVENM1_W::new(self, 9)
     }
     ///Bit 10 - Multiplexed Bus Recovery Cycle Insertion Enable 2
     #[inline(always)]
-    pub fn rcvenm2(&mut self) -> RCVENM2_W<CSRECEN_SPEC> {
+    pub fn rcvenm2(&mut self) -> RCVENM2_W<'_, CSRECEN_SPEC> {
         RCVENM2_W::new(self, 10)
     }
     ///Bit 11 - Multiplexed Bus Recovery Cycle Insertion Enable 3
     #[inline(always)]
-    pub fn rcvenm3(&mut self) -> RCVENM3_W<CSRECEN_SPEC> {
+    pub fn rcvenm3(&mut self) -> RCVENM3_W<'_, CSRECEN_SPEC> {
         RCVENM3_W::new(self, 11)
     }
     ///Bit 12 - Multiplexed Bus Recovery Cycle Insertion Enable 4
     #[inline(always)]
-    pub fn rcvenm4(&mut self) -> RCVENM4_W<CSRECEN_SPEC> {
+    pub fn rcvenm4(&mut self) -> RCVENM4_W<'_, CSRECEN_SPEC> {
         RCVENM4_W::new(self, 12)
     }
     ///Bit 13 - Multiplexed Bus Recovery Cycle Insertion Enable 5
     #[inline(always)]
-    pub fn rcvenm5(&mut self) -> RCVENM5_W<CSRECEN_SPEC> {
+    pub fn rcvenm5(&mut self) -> RCVENM5_W<'_, CSRECEN_SPEC> {
         RCVENM5_W::new(self, 13)
     }
     ///Bit 14 - Multiplexed Bus Recovery Cycle Insertion Enable 6
     #[inline(always)]
-    pub fn rcvenm6(&mut self) -> RCVENM6_W<CSRECEN_SPEC> {
+    pub fn rcvenm6(&mut self) -> RCVENM6_W<'_, CSRECEN_SPEC> {
         RCVENM6_W::new(self, 14)
     }
     ///Bit 15 - Multiplexed Bus Recovery Cycle Insertion Enable 7
     #[inline(always)]
-    pub fn rcvenm7(&mut self) -> RCVENM7_W<CSRECEN_SPEC> {
+    pub fn rcvenm7(&mut self) -> RCVENM7_W<'_, CSRECEN_SPEC> {
         RCVENM7_W::new(self, 15)
     }
 }

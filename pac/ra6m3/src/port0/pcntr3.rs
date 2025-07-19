@@ -81,12 +81,12 @@ where
 impl W {
     ///Bits 0:15 - Pmn Output Set
     #[inline(always)]
-    pub fn posr(&mut self) -> POSR_W<PCNTR3_SPEC> {
+    pub fn posr(&mut self) -> POSR_W<'_, PCNTR3_SPEC> {
         POSR_W::new(self, 0)
     }
     ///Bits 16:31 - Pmn Output Reset
     #[inline(always)]
-    pub fn porr(&mut self) -> PORR_W<PCNTR3_SPEC> {
+    pub fn porr(&mut self) -> PORR_W<'_, PCNTR3_SPEC> {
         PORR_W::new(self, 16)
     }
 }

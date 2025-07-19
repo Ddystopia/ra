@@ -169,17 +169,17 @@ impl R {
 impl W {
     ///Bits 0:3 - CTSU Measurement Time and Pulse Count AdjustmentRecommended setting: 3 (0011b)
     #[inline(always)]
-    pub fn ctsuprratio(&mut self) -> CTSUPRRATIO_W<CTSUSDPRS_SPEC> {
+    pub fn ctsuprratio(&mut self) -> CTSUPRRATIO_W<'_, CTSUSDPRS_SPEC> {
         CTSUPRRATIO_W::new(self, 0)
     }
     ///Bits 4:5 - CTSU Base Period and Pulse Count Setting
     #[inline(always)]
-    pub fn ctsuprmode(&mut self) -> CTSUPRMODE_W<CTSUSDPRS_SPEC> {
+    pub fn ctsuprmode(&mut self) -> CTSUPRMODE_W<'_, CTSUSDPRS_SPEC> {
         CTSUPRMODE_W::new(self, 4)
     }
     ///Bit 6 - CTSU High-Pass Noise Reduction Function Off Setting
     #[inline(always)]
-    pub fn ctsusoff(&mut self) -> CTSUSOFF_W<CTSUSDPRS_SPEC> {
+    pub fn ctsusoff(&mut self) -> CTSUSOFF_W<'_, CTSUSDPRS_SPEC> {
         CTSUSOFF_W::new(self, 6)
     }
 }

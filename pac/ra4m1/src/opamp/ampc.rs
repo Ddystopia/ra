@@ -307,27 +307,27 @@ impl R {
 impl W {
     ///Bit 0 - Operation control of operational amplifier(UNIT0)
     #[inline(always)]
-    pub fn ampe0(&mut self) -> AMPE0_W<AMPC_SPEC> {
+    pub fn ampe0(&mut self) -> AMPE0_W<'_, AMPC_SPEC> {
         AMPE0_W::new(self, 0)
     }
     ///Bit 1 - Operation control of operational amplifier(UNIT1)
     #[inline(always)]
-    pub fn ampe1(&mut self) -> AMPE1_W<AMPC_SPEC> {
+    pub fn ampe1(&mut self) -> AMPE1_W<'_, AMPC_SPEC> {
         AMPE1_W::new(self, 1)
     }
     ///Bit 2 - Operation control of operational amplifier(UNIT2)
     #[inline(always)]
-    pub fn ampe2(&mut self) -> AMPE2_W<AMPC_SPEC> {
+    pub fn ampe2(&mut self) -> AMPE2_W<'_, AMPC_SPEC> {
         AMPE2_W::new(self, 2)
     }
     ///Bit 3 - Operation control of operational amplifier(UNIT3)
     #[inline(always)]
-    pub fn ampe3(&mut self) -> AMPE3_W<AMPC_SPEC> {
+    pub fn ampe3(&mut self) -> AMPE3_W<'_, AMPC_SPEC> {
         AMPE3_W::new(self, 3)
     }
     ///Bit 7 - Operation control of operational amplifier reference current circuit
     #[inline(always)]
-    pub fn irefe(&mut self) -> IREFE_W<AMPC_SPEC> {
+    pub fn irefe(&mut self) -> IREFE_W<'_, AMPC_SPEC> {
         IREFE_W::new(self, 7)
     }
 }

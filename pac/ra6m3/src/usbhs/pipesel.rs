@@ -190,7 +190,7 @@ impl R {
 impl W {
     ///Bits 0:3 - Pipe Window SelectThese bits specify the pipe for registers at addresses 68H to 6EH.
     #[inline(always)]
-    pub fn pipesel(&mut self) -> PIPESEL_W<PIPESEL_SPEC> {
+    pub fn pipesel(&mut self) -> PIPESEL_W<'_, PIPESEL_SPEC> {
         PIPESEL_W::new(self, 0)
     }
 }

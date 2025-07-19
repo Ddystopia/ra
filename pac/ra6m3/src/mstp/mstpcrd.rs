@@ -907,77 +907,77 @@ impl R {
 impl W {
     ///Bit 2 - AGT1 Module StopNote: AGT1 is in the module stop state when the count source is either of PCLKB, PCLKB/2 or PCLKB/8. In case the count source is sub-clock or LOCO, this bit should be set to 1 except when accessing the registers of AGT1.
     #[inline(always)]
-    pub fn mstpd2(&mut self) -> MSTPD2_W<MSTPCRD_SPEC> {
+    pub fn mstpd2(&mut self) -> MSTPD2_W<'_, MSTPCRD_SPEC> {
         MSTPD2_W::new(self, 2)
     }
     ///Bit 3 - AGT0 Module StopNote: AGT0 is in the module stop state when the count source is either of PCLKB, PCLKB/2 or PCLKB/8. In case the count source is sub-clock or LOCO, this bit should be set to 1 except when accessing the registers of AGT0.
     #[inline(always)]
-    pub fn mstpd3(&mut self) -> MSTPD3_W<MSTPCRD_SPEC> {
+    pub fn mstpd3(&mut self) -> MSTPD3_W<'_, MSTPCRD_SPEC> {
         MSTPD3_W::new(self, 3)
     }
     ///Bit 5 - GPT ch7-ch0 Module Stop
     #[inline(always)]
-    pub fn mstpd5(&mut self) -> MSTPD5_W<MSTPCRD_SPEC> {
+    pub fn mstpd5(&mut self) -> MSTPD5_W<'_, MSTPCRD_SPEC> {
         MSTPD5_W::new(self, 5)
     }
     ///Bit 6 - GPT ch13-ch8 Module Stop
     #[inline(always)]
-    pub fn mstpd6(&mut self) -> MSTPD6_W<MSTPCRD_SPEC> {
+    pub fn mstpd6(&mut self) -> MSTPD6_W<'_, MSTPCRD_SPEC> {
         MSTPD6_W::new(self, 6)
     }
     ///Bit 14 - PGI Module Stop
     #[inline(always)]
-    pub fn mstpd14(&mut self) -> MSTPD14_W<MSTPCRD_SPEC> {
+    pub fn mstpd14(&mut self) -> MSTPD14_W<'_, MSTPCRD_SPEC> {
         MSTPD14_W::new(self, 14)
     }
     ///Bit 15 - 12-bit A/D Converter 1 Module Stop
     #[inline(always)]
-    pub fn mstpd15(&mut self) -> MSTPD15_W<MSTPCRD_SPEC> {
+    pub fn mstpd15(&mut self) -> MSTPD15_W<'_, MSTPCRD_SPEC> {
         MSTPD15_W::new(self, 15)
     }
     ///Bit 16 - 12-bit A/D Converter 0 Module Stop
     #[inline(always)]
-    pub fn mstpd16(&mut self) -> MSTPD16_W<MSTPCRD_SPEC> {
+    pub fn mstpd16(&mut self) -> MSTPD16_W<'_, MSTPCRD_SPEC> {
         MSTPD16_W::new(self, 16)
     }
     ///Bit 20 - D/A Converter 0 Module Stop
     #[inline(always)]
-    pub fn mstpd20(&mut self) -> MSTPD20_W<MSTPCRD_SPEC> {
+    pub fn mstpd20(&mut self) -> MSTPD20_W<'_, MSTPCRD_SPEC> {
         MSTPD20_W::new(self, 20)
     }
     ///Bit 22 - Temperature Sensor Module Stop
     #[inline(always)]
-    pub fn mstpd22(&mut self) -> MSTPD22_W<MSTPCRD_SPEC> {
+    pub fn mstpd22(&mut self) -> MSTPD22_W<'_, MSTPCRD_SPEC> {
         MSTPD22_W::new(self, 22)
     }
     ///Bit 23 - Comparator-OC5 Module Stop
     #[inline(always)]
-    pub fn mstpd23(&mut self) -> MSTPD23_W<MSTPCRD_SPEC> {
+    pub fn mstpd23(&mut self) -> MSTPD23_W<'_, MSTPCRD_SPEC> {
         MSTPD23_W::new(self, 23)
     }
     ///Bit 24 - Comparator-OC4 Module Stop
     #[inline(always)]
-    pub fn mstpd24(&mut self) -> MSTPD24_W<MSTPCRD_SPEC> {
+    pub fn mstpd24(&mut self) -> MSTPD24_W<'_, MSTPCRD_SPEC> {
         MSTPD24_W::new(self, 24)
     }
     ///Bit 25 - Comparator-OC3 Module Stop
     #[inline(always)]
-    pub fn mstpd25(&mut self) -> MSTPD25_W<MSTPCRD_SPEC> {
+    pub fn mstpd25(&mut self) -> MSTPD25_W<'_, MSTPCRD_SPEC> {
         MSTPD25_W::new(self, 25)
     }
     ///Bit 26 - Comparator-OC2 Module Stop
     #[inline(always)]
-    pub fn mstpd26(&mut self) -> MSTPD26_W<MSTPCRD_SPEC> {
+    pub fn mstpd26(&mut self) -> MSTPD26_W<'_, MSTPCRD_SPEC> {
         MSTPD26_W::new(self, 26)
     }
     ///Bit 27 - Comparator-OC1 Module Stop
     #[inline(always)]
-    pub fn mstpd27(&mut self) -> MSTPD27_W<MSTPCRD_SPEC> {
+    pub fn mstpd27(&mut self) -> MSTPD27_W<'_, MSTPCRD_SPEC> {
         MSTPD27_W::new(self, 27)
     }
     ///Bit 28 - Comparator-OC0 Module Stop
     #[inline(always)]
-    pub fn mstpd28(&mut self) -> MSTPD28_W<MSTPCRD_SPEC> {
+    pub fn mstpd28(&mut self) -> MSTPD28_W<'_, MSTPCRD_SPEC> {
         MSTPD28_W::new(self, 28)
     }
 }

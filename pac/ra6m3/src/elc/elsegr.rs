@@ -133,17 +133,17 @@ impl R {
 impl W {
     ///Bit 0 - Software Event Generation
     #[inline(always)]
-    pub fn seg(&mut self) -> SEG_W<ELSEGR_SPEC> {
+    pub fn seg(&mut self) -> SEG_W<'_, ELSEGR_SPEC> {
         SEG_W::new(self, 0)
     }
     ///Bit 6 - SEG Bit Write Enable
     #[inline(always)]
-    pub fn we(&mut self) -> WE_W<ELSEGR_SPEC> {
+    pub fn we(&mut self) -> WE_W<'_, ELSEGR_SPEC> {
         WE_W::new(self, 6)
     }
     ///Bit 7 - ELSEGR Register Write Disable
     #[inline(always)]
-    pub fn wi(&mut self) -> WI_W<ELSEGR_SPEC> {
+    pub fn wi(&mut self) -> WI_W<'_, ELSEGR_SPEC> {
         WI_W::new(self, 7)
     }
 }

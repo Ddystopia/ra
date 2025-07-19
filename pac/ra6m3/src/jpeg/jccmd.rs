@@ -135,22 +135,22 @@ where
 impl W {
     ///Bit 0 - JPEG Core Process Start CommandTo start JPEG core processing, set this bit to 1. Do not write this bit to 1 again while this module is in operation.
     #[inline(always)]
-    pub fn jsrt(&mut self) -> JSRT_W<JCCMD_SPEC> {
+    pub fn jsrt(&mut self) -> JSRT_W<'_, JCCMD_SPEC> {
         JSRT_W::new(self, 0)
     }
     ///Bit 1 - JPEG Core Process Stop Clear CommandTo clear the process-stopped state caused by requests to read the image size and pixel format (enabled by the INT3 bit in JINTE0), set this bit to 1.
     #[inline(always)]
-    pub fn jrst(&mut self) -> JRST_W<JCCMD_SPEC> {
+    pub fn jrst(&mut self) -> JRST_W<'_, JCCMD_SPEC> {
         JRST_W::new(self, 1)
     }
     ///Bit 2 - Interrupt Request Clear Command This bit is valid only for the interrupt sources corresponding to bits INS6, INS5, and INS3 in JINTS0. To clear an interrupt request, set this bit to 1
     #[inline(always)]
-    pub fn jend(&mut self) -> JEND_W<JCCMD_SPEC> {
+    pub fn jend(&mut self) -> JEND_W<'_, JCCMD_SPEC> {
         JEND_W::new(self, 2)
     }
     ///Bit 7 - Bus Reset. NOTE: When this module is in operation, the bus reset command should not be issued.
     #[inline(always)]
-    pub fn brst(&mut self) -> BRST_W<JCCMD_SPEC> {
+    pub fn brst(&mut self) -> BRST_W<'_, JCCMD_SPEC> {
         BRST_W::new(self, 7)
     }
 }

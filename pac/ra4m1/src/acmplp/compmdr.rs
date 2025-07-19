@@ -453,32 +453,32 @@ impl R {
 impl W {
     ///Bit 0 - ACMPLP0 Operation Enable
     #[inline(always)]
-    pub fn c0enb(&mut self) -> C0ENB_W<COMPMDR_SPEC> {
+    pub fn c0enb(&mut self) -> C0ENB_W<'_, COMPMDR_SPEC> {
         C0ENB_W::new(self, 0)
     }
     ///Bit 1 - ACMPLP0 Window Function Mode Enable
     #[inline(always)]
-    pub fn c0wde(&mut self) -> C0WDE_W<COMPMDR_SPEC> {
+    pub fn c0wde(&mut self) -> C0WDE_W<'_, COMPMDR_SPEC> {
         C0WDE_W::new(self, 1)
     }
     ///Bit 2 - ACMPLP0 Reference Voltage Selection
     #[inline(always)]
-    pub fn c0vrf(&mut self) -> C0VRF_W<COMPMDR_SPEC> {
+    pub fn c0vrf(&mut self) -> C0VRF_W<'_, COMPMDR_SPEC> {
         C0VRF_W::new(self, 2)
     }
     ///Bit 4 - ACMPLP1 Operation Enable
     #[inline(always)]
-    pub fn c1enb(&mut self) -> C1ENB_W<COMPMDR_SPEC> {
+    pub fn c1enb(&mut self) -> C1ENB_W<'_, COMPMDR_SPEC> {
         C1ENB_W::new(self, 4)
     }
     ///Bit 5 - ACMPLP1 Window Function Mode Enable
     #[inline(always)]
-    pub fn c1wde(&mut self) -> C1WDE_W<COMPMDR_SPEC> {
+    pub fn c1wde(&mut self) -> C1WDE_W<'_, COMPMDR_SPEC> {
         C1WDE_W::new(self, 5)
     }
     ///Bit 6 - ACMPLP1 Reference Voltage Selection
     #[inline(always)]
-    pub fn c1vrf(&mut self) -> C1VRF_W<COMPMDR_SPEC> {
+    pub fn c1vrf(&mut self) -> C1VRF_W<'_, COMPMDR_SPEC> {
         C1VRF_W::new(self, 6)
     }
 }

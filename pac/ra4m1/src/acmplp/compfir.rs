@@ -433,32 +433,32 @@ impl R {
 impl W {
     ///Bits 0:1 - ACMPLP0 Filter Select
     #[inline(always)]
-    pub fn c0fck(&mut self) -> C0FCK_W<COMPFIR_SPEC> {
+    pub fn c0fck(&mut self) -> C0FCK_W<'_, COMPFIR_SPEC> {
         C0FCK_W::new(self, 0)
     }
     ///Bit 2 - ACMPLP0 Edge Polarity Switching
     #[inline(always)]
-    pub fn c0epo(&mut self) -> C0EPO_W<COMPFIR_SPEC> {
+    pub fn c0epo(&mut self) -> C0EPO_W<'_, COMPFIR_SPEC> {
         C0EPO_W::new(self, 2)
     }
     ///Bit 3 - ACMPLP0 Edge Detection Selection
     #[inline(always)]
-    pub fn c0edg(&mut self) -> C0EDG_W<COMPFIR_SPEC> {
+    pub fn c0edg(&mut self) -> C0EDG_W<'_, COMPFIR_SPEC> {
         C0EDG_W::new(self, 3)
     }
     ///Bits 4:5 - ACMPLP1 Filter Select
     #[inline(always)]
-    pub fn c1fck(&mut self) -> C1FCK_W<COMPFIR_SPEC> {
+    pub fn c1fck(&mut self) -> C1FCK_W<'_, COMPFIR_SPEC> {
         C1FCK_W::new(self, 4)
     }
     ///Bit 6 - ACMPLP1 Edge Polarity Switching
     #[inline(always)]
-    pub fn c1epo(&mut self) -> C1EPO_W<COMPFIR_SPEC> {
+    pub fn c1epo(&mut self) -> C1EPO_W<'_, COMPFIR_SPEC> {
         C1EPO_W::new(self, 6)
     }
     ///Bit 7 - ACMPLP1 Edge Detection Selection
     #[inline(always)]
-    pub fn c1edg(&mut self) -> C1EDG_W<COMPFIR_SPEC> {
+    pub fn c1edg(&mut self) -> C1EDG_W<'_, COMPFIR_SPEC> {
         C1EDG_W::new(self, 7)
     }
 }

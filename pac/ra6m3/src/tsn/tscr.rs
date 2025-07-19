@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 4 - Temperature Sensor Enable
     #[inline(always)]
-    pub fn tsoe(&mut self) -> TSOE_W<TSCR_SPEC> {
+    pub fn tsoe(&mut self) -> TSOE_W<'_, TSCR_SPEC> {
         TSOE_W::new(self, 4)
     }
     ///Bit 7 - Temperature Sensor Output Enable
     #[inline(always)]
-    pub fn tsen(&mut self) -> TSEN_W<TSCR_SPEC> {
+    pub fn tsen(&mut self) -> TSEN_W<'_, TSCR_SPEC> {
         TSEN_W::new(self, 7)
     }
 }

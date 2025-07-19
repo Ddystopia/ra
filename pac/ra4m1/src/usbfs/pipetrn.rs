@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - Transaction Counter
     #[inline(always)]
-    pub fn trncnt(&mut self) -> TRNCNT_W<PIPETRN_SPEC> {
+    pub fn trncnt(&mut self) -> TRNCNT_W<'_, PIPETRN_SPEC> {
         TRNCNT_W::new(self, 0)
     }
 }

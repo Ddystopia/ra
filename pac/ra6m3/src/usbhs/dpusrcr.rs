@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 0 - USB Transceiver Control Fix
     #[inline(always)]
-    pub fn fixphy(&mut self) -> FIXPHY_W<DPUSRCR_SPEC> {
+    pub fn fixphy(&mut self) -> FIXPHY_W<'_, DPUSRCR_SPEC> {
         FIXPHY_W::new(self, 0)
     }
     ///Bit 1 - USB Transceiver Control Fix for PLL
     #[inline(always)]
-    pub fn fixphypd(&mut self) -> FIXPHYPD_W<DPUSRCR_SPEC> {
+    pub fn fixphypd(&mut self) -> FIXPHYPD_W<'_, DPUSRCR_SPEC> {
         FIXPHYPD_W::new(self, 1)
     }
 }

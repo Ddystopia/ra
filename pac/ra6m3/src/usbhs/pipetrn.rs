@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - Transaction CounterWhen writing to: Specify the number of total packets (number of transactions) to be received by the relevant PIPE.When read from: When TRENB = 0: Indicate the specified number of transactions.When TRENB = 1: Indicate the number of currently counted transactions.
     #[inline(always)]
-    pub fn trncnt(&mut self) -> TRNCNT_W<PIPETRN_SPEC> {
+    pub fn trncnt(&mut self) -> TRNCNT_W<'_, PIPETRN_SPEC> {
         TRNCNT_W::new(self, 0)
     }
 }

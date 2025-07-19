@@ -277,12 +277,12 @@ where
 impl W {
     ///Bits 0:15 - Selects the internal event that will increment PERFCOUNT1 register.
     #[inline(always)]
-    pub fn perftrigger1(&mut self) -> PERFTRIGGER1_W<PERFTRIGGER_SPEC> {
+    pub fn perftrigger1(&mut self) -> PERFTRIGGER1_W<'_, PERFTRIGGER_SPEC> {
         PERFTRIGGER1_W::new(self, 0)
     }
     ///Bits 16:31 - Selects the internal event that will increment PERFCOUNT2 register
     #[inline(always)]
-    pub fn perftrigger2(&mut self) -> PERFTRIGGER2_W<PERFTRIGGER_SPEC> {
+    pub fn perftrigger2(&mut self) -> PERFTRIGGER2_W<'_, PERFTRIGGER_SPEC> {
         PERFTRIGGER2_W::new(self, 16)
     }
 }

@@ -25,12 +25,12 @@ impl R {
 impl W {
     ///Bits 0:1 - CTSU Diffusion Clock Mode SelectNOTE: This bit should be set to 00b.
     #[inline(always)]
-    pub fn ctsussmod(&mut self) -> CTSUSSMOD_W<CTSUDCLKC_SPEC> {
+    pub fn ctsussmod(&mut self) -> CTSUSSMOD_W<'_, CTSUDCLKC_SPEC> {
         CTSUSSMOD_W::new(self, 0)
     }
     ///Bits 4:5 - CTSU Diffusion Clock Mode ControlNOTE: This bit should be set to 11b.
     #[inline(always)]
-    pub fn ctsusscnt(&mut self) -> CTSUSSCNT_W<CTSUDCLKC_SPEC> {
+    pub fn ctsusscnt(&mut self) -> CTSUSSCNT_W<'_, CTSUDCLKC_SPEC> {
         CTSUSSCNT_W::new(self, 4)
     }
 }

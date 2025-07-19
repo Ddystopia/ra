@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - After the standard ID of a received message is written, the value converted for data table search can be read.
     #[inline(always)]
-    pub fn afsr(&mut self) -> AFSR_W<AFSR_SPEC> {
+    pub fn afsr(&mut self) -> AFSR_W<'_, AFSR_SPEC> {
         AFSR_W::new(self, 0)
     }
 }

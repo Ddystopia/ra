@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Bypass 1588 module for Ether 0ch
     #[inline(always)]
-    pub fn bypass0(&mut self) -> BYPASS0_W<BYPASS_SPEC> {
+    pub fn bypass0(&mut self) -> BYPASS0_W<'_, BYPASS_SPEC> {
         BYPASS0_W::new(self, 0)
     }
 }

@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Address where the region starts, for use in region determination.NOTE: The low-order 2 bits are fixed to 0.
     #[inline(always)]
-    pub fn mmpusc(&mut self) -> MMPUSC_W<MMPUSC_SPEC> {
+    pub fn mmpusc(&mut self) -> MMPUSC_W<'_, MMPUSC_SPEC> {
         MMPUSC_W::new(self, 0)
     }
 }

@@ -607,52 +607,52 @@ impl R {
 impl W {
     ///Bit 0 - leap61This bit is used to set the logical value of the leap61 member of timePropertiesDS.
     #[inline(always)]
-    pub fn flag0(&mut self) -> FLAG0_W<ANFR_SPEC> {
+    pub fn flag0(&mut self) -> FLAG0_W<'_, ANFR_SPEC> {
         FLAG0_W::new(self, 0)
     }
     ///Bit 1 - leap59This bit is used to set the logical value of the leap59 member of timePropertiesDS.
     #[inline(always)]
-    pub fn flag1(&mut self) -> FLAG1_W<ANFR_SPEC> {
+    pub fn flag1(&mut self) -> FLAG1_W<'_, ANFR_SPEC> {
         FLAG1_W::new(self, 1)
     }
     ///Bit 2 - currentUtcOffsetValidThis bit is used to set the logical value of the currentUtcOffsetValid member of timePropertiesDS.
     #[inline(always)]
-    pub fn flag2(&mut self) -> FLAG2_W<ANFR_SPEC> {
+    pub fn flag2(&mut self) -> FLAG2_W<'_, ANFR_SPEC> {
         FLAG2_W::new(self, 2)
     }
     ///Bit 3 - ptpTimescaleThis bit is used to set the logical value of the ptpTimescale member of timePropertiesDS.
     #[inline(always)]
-    pub fn flag3(&mut self) -> FLAG3_W<ANFR_SPEC> {
+    pub fn flag3(&mut self) -> FLAG3_W<'_, ANFR_SPEC> {
         FLAG3_W::new(self, 3)
     }
     ///Bit 4 - timeTraceableThis bit is used to set the logical value of the timeTraceable member of timePropertiesDS.
     #[inline(always)]
-    pub fn flag4(&mut self) -> FLAG4_W<ANFR_SPEC> {
+    pub fn flag4(&mut self) -> FLAG4_W<'_, ANFR_SPEC> {
         FLAG4_W::new(self, 4)
     }
     ///Bit 5 - frequencyTraceableThis bit is used to set the logical value of the frequencyTraceable member of timePropertiesDS.
     #[inline(always)]
-    pub fn flag5(&mut self) -> FLAG5_W<ANFR_SPEC> {
+    pub fn flag5(&mut self) -> FLAG5_W<'_, ANFR_SPEC> {
         FLAG5_W::new(self, 5)
     }
     ///Bit 8 - alternateMasterFlag
     #[inline(always)]
-    pub fn flag8(&mut self) -> FLAG8_W<ANFR_SPEC> {
+    pub fn flag8(&mut self) -> FLAG8_W<'_, ANFR_SPEC> {
         FLAG8_W::new(self, 8)
     }
     ///Bit 10 - unicastFlag
     #[inline(always)]
-    pub fn flag10(&mut self) -> FLAG10_W<ANFR_SPEC> {
+    pub fn flag10(&mut self) -> FLAG10_W<'_, ANFR_SPEC> {
         FLAG10_W::new(self, 10)
     }
     ///Bit 13 - PTP profile Specific 1
     #[inline(always)]
-    pub fn flag13(&mut self) -> FLAG13_W<ANFR_SPEC> {
+    pub fn flag13(&mut self) -> FLAG13_W<'_, ANFR_SPEC> {
         FLAG13_W::new(self, 13)
     }
     ///Bit 14 - PTP profile Specific 2
     #[inline(always)]
-    pub fn flag14(&mut self) -> FLAG14_W<ANFR_SPEC> {
+    pub fn flag14(&mut self) -> FLAG14_W<'_, ANFR_SPEC> {
         FLAG14_W::new(self, 14)
     }
 }

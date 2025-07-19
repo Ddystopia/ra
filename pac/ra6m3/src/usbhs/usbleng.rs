@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - Value of USB request wLength Finction controller selected : read-only Host controller selected : read-write
     #[inline(always)]
-    pub fn wlength(&mut self) -> WLENGTH_W<USBLENG_SPEC> {
+    pub fn wlength(&mut self) -> WLENGTH_W<'_, USBLENG_SPEC> {
         WLENGTH_W::new(self, 0)
     }
 }

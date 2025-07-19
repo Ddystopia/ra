@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Main Clock Oscillator Stop
     #[inline(always)]
-    pub fn mostp(&mut self) -> MOSTP_W<MOSCCR_SPEC> {
+    pub fn mostp(&mut self) -> MOSTP_W<'_, MOSCCR_SPEC> {
         MOSTP_W::new(self, 0)
     }
 }

@@ -5,7 +5,7 @@ pub type CLOFFSET_W<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl W {
     ///Bits 0:7 - Texture CLUT offset for Indexed texture format. CLOFFSET\[7:0\] is or'ed with the original index
     #[inline(always)]
-    pub fn cloffset(&mut self) -> CLOFFSET_W<TEXCLOFFSET_SPEC> {
+    pub fn cloffset(&mut self) -> CLOFFSET_W<'_, TEXCLOFFSET_SPEC> {
         CLOFFSET_W::new(self, 0)
     }
 }

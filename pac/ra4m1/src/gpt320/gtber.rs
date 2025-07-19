@@ -372,27 +372,27 @@ impl R {
 impl W {
     ///Bits 0:1 - BD\[1\]: GTPR Buffer Operation Disable BD\[0\]: GTCCR Buffer Operation Disable
     #[inline(always)]
-    pub fn bd(&mut self) -> BD_W<GTBER_SPEC> {
+    pub fn bd(&mut self) -> BD_W<'_, GTBER_SPEC> {
         BD_W::new(self, 0)
     }
     ///Bits 16:17 - GTCCRA Buffer Operation
     #[inline(always)]
-    pub fn ccra(&mut self) -> CCRA_W<GTBER_SPEC> {
+    pub fn ccra(&mut self) -> CCRA_W<'_, GTBER_SPEC> {
         CCRA_W::new(self, 16)
     }
     ///Bits 18:19 - GTCCRB Buffer Operation
     #[inline(always)]
-    pub fn ccrb(&mut self) -> CCRB_W<GTBER_SPEC> {
+    pub fn ccrb(&mut self) -> CCRB_W<'_, GTBER_SPEC> {
         CCRB_W::new(self, 18)
     }
     ///Bits 20:21 - GTPR Buffer Operation
     #[inline(always)]
-    pub fn pr(&mut self) -> PR_W<GTBER_SPEC> {
+    pub fn pr(&mut self) -> PR_W<'_, GTBER_SPEC> {
         PR_W::new(self, 20)
     }
     ///Bit 22 - GTCCRA and GTCCRB Forcible Buffer Operation This bit is read as 0.
     #[inline(always)]
-    pub fn ccrswt(&mut self) -> CCRSWT_W<GTBER_SPEC> {
+    pub fn ccrswt(&mut self) -> CCRSWT_W<'_, GTBER_SPEC> {
         CCRSWT_W::new(self, 22)
     }
 }

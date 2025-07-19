@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Gamma correction on/off control
     #[inline(always)]
-    pub fn gamon(&mut self) -> GAMON_W<GAM_SW_SPEC> {
+    pub fn gamon(&mut self) -> GAMON_W<'_, GAM_SW_SPEC> {
         GAMON_W::new(self, 0)
     }
 }

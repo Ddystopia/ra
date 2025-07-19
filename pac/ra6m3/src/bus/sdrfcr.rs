@@ -82,12 +82,12 @@ impl R {
 impl W {
     ///Bits 0:11 - Auto-Refresh Request Interval Setting
     #[inline(always)]
-    pub fn rfc(&mut self) -> RFC_W<SDRFCR_SPEC> {
+    pub fn rfc(&mut self) -> RFC_W<'_, SDRFCR_SPEC> {
         RFC_W::new(self, 0)
     }
     ///Bits 12:15 - Auto-Refresh Cycle/ Self-Refresh Clearing Cycle Count Setting. ( REFW+1 Cycles )
     #[inline(always)]
-    pub fn refw(&mut self) -> REFW_W<SDRFCR_SPEC> {
+    pub fn refw(&mut self) -> REFW_W<'_, SDRFCR_SPEC> {
         REFW_W::new(self, 12)
     }
 }

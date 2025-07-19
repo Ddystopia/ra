@@ -170,12 +170,12 @@ impl R {
 impl W {
     ///Bit 1 - Serial port break data select bit (The output level of TxD terminal is selected when SCR.TE = 0.)
     #[inline(always)]
-    pub fn spb2dt(&mut self) -> SPB2DT_W<SPTR_SPEC> {
+    pub fn spb2dt(&mut self) -> SPB2DT_W<'_, SPTR_SPEC> {
         SPB2DT_W::new(self, 1)
     }
     ///Bit 2 - Serial port break I/O bit (It's selected whether the value of SPB2DT is output to TxD terminal.)
     #[inline(always)]
-    pub fn spb2io(&mut self) -> SPB2IO_W<SPTR_SPEC> {
+    pub fn spb2io(&mut self) -> SPB2IO_W<'_, SPTR_SPEC> {
         SPB2IO_W::new(self, 2)
     }
 }

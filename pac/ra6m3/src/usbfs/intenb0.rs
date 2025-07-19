@@ -487,42 +487,42 @@ impl R {
 impl W {
     ///Bit 8 - Buffer Ready Interrupt Enable
     #[inline(always)]
-    pub fn brdye(&mut self) -> BRDYE_W<INTENB0_SPEC> {
+    pub fn brdye(&mut self) -> BRDYE_W<'_, INTENB0_SPEC> {
         BRDYE_W::new(self, 8)
     }
     ///Bit 9 - Buffer Not Ready Response Interrupt Enable
     #[inline(always)]
-    pub fn nrdye(&mut self) -> NRDYE_W<INTENB0_SPEC> {
+    pub fn nrdye(&mut self) -> NRDYE_W<'_, INTENB0_SPEC> {
         NRDYE_W::new(self, 9)
     }
     ///Bit 10 - Buffer Empty Interrupt Enable
     #[inline(always)]
-    pub fn bempe(&mut self) -> BEMPE_W<INTENB0_SPEC> {
+    pub fn bempe(&mut self) -> BEMPE_W<'_, INTENB0_SPEC> {
         BEMPE_W::new(self, 10)
     }
     ///Bit 11 - Control Transfer Stage Transition Interrupt Enable
     #[inline(always)]
-    pub fn ctre(&mut self) -> CTRE_W<INTENB0_SPEC> {
+    pub fn ctre(&mut self) -> CTRE_W<'_, INTENB0_SPEC> {
         CTRE_W::new(self, 11)
     }
     ///Bit 12 - Device State Transition Interrupt Enable
     #[inline(always)]
-    pub fn dvse(&mut self) -> DVSE_W<INTENB0_SPEC> {
+    pub fn dvse(&mut self) -> DVSE_W<'_, INTENB0_SPEC> {
         DVSE_W::new(self, 12)
     }
     ///Bit 13 - Frame Number Update Interrupt Enable
     #[inline(always)]
-    pub fn sofe(&mut self) -> SOFE_W<INTENB0_SPEC> {
+    pub fn sofe(&mut self) -> SOFE_W<'_, INTENB0_SPEC> {
         SOFE_W::new(self, 13)
     }
     ///Bit 14 - Resume Interrupt Enable
     #[inline(always)]
-    pub fn rsme(&mut self) -> RSME_W<INTENB0_SPEC> {
+    pub fn rsme(&mut self) -> RSME_W<'_, INTENB0_SPEC> {
         RSME_W::new(self, 14)
     }
     ///Bit 15 - VBUS Interrupt Enable
     #[inline(always)]
-    pub fn vbse(&mut self) -> VBSE_W<INTENB0_SPEC> {
+    pub fn vbse(&mut self) -> VBSE_W<'_, INTENB0_SPEC> {
         VBSE_W::new(self, 15)
     }
 }

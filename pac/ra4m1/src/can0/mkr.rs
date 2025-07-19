@@ -25,12 +25,12 @@ impl R {
 impl W {
     ///Bits 0:17 - Extended ID
     #[inline(always)]
-    pub fn eid(&mut self) -> EID_W<MKR_SPEC> {
+    pub fn eid(&mut self) -> EID_W<'_, MKR_SPEC> {
         EID_W::new(self, 0)
     }
     ///Bits 18:28 - Standard ID
     #[inline(always)]
-    pub fn sid(&mut self) -> SID_W<MKR_SPEC> {
+    pub fn sid(&mut self) -> SID_W<'_, MKR_SPEC> {
         SID_W::new(self, 18)
     }
 }

@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:10 - FLL Multiplication ControlMultiplication ratio of the FLL reference clock select
     #[inline(always)]
-    pub fn fllcntl(&mut self) -> FLLCNTL_W<FLLCR2_SPEC> {
+    pub fn fllcntl(&mut self) -> FLLCNTL_W<'_, FLLCR2_SPEC> {
         FLLCNTL_W::new(self, 0)
     }
 }

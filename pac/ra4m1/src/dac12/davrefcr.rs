@@ -112,7 +112,7 @@ impl R {
 impl W {
     ///Bits 0:2 - D/A Reference Voltage Select
     #[inline(always)]
-    pub fn ref_(&mut self) -> REF_W<DAVREFCR_SPEC> {
+    pub fn ref_(&mut self) -> REF_W<'_, DAVREFCR_SPEC> {
         REF_W::new(self, 0)
     }
 }

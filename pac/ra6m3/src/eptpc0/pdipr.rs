@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - These bits hold the setting for the destination IP address for PTPpdelay messages.
     #[inline(always)]
-    pub fn pdipr(&mut self) -> PDIPR_W<PDIPR_SPEC> {
+    pub fn pdipr(&mut self) -> PDIPR_W<'_, PDIPR_SPEC> {
         PDIPR_W::new(self, 0)
     }
 }

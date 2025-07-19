@@ -69,7 +69,7 @@ impl R {
 impl W {
     ///Bit 0 - FCACHE Invalidation
     #[inline(always)]
-    pub fn fcacheiv(&mut self) -> FCACHEIV_W<FCACHEIV_SPEC> {
+    pub fn fcacheiv(&mut self) -> FCACHEIV_W<'_, FCACHEIV_SPEC> {
         FCACHEIV_W::new(self, 0)
     }
 }

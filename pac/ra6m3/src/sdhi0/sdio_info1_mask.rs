@@ -187,17 +187,17 @@ impl R {
 impl W {
     ///Bit 0 - IOIRQ Interrupt Mask Control
     #[inline(always)]
-    pub fn ioirqm(&mut self) -> IOIRQM_W<SDIO_INFO1_MASK_SPEC> {
+    pub fn ioirqm(&mut self) -> IOIRQM_W<'_, SDIO_INFO1_MASK_SPEC> {
         IOIRQM_W::new(self, 0)
     }
     ///Bit 14 - EXPUB52 Interrupt Request Mask Control
     #[inline(always)]
-    pub fn expub52m(&mut self) -> EXPUB52M_W<SDIO_INFO1_MASK_SPEC> {
+    pub fn expub52m(&mut self) -> EXPUB52M_W<'_, SDIO_INFO1_MASK_SPEC> {
         EXPUB52M_W::new(self, 14)
     }
     ///Bit 15 - EXWT Interrupt Request Mask Control
     #[inline(always)]
-    pub fn exwtm(&mut self) -> EXWTM_W<SDIO_INFO1_MASK_SPEC> {
+    pub fn exwtm(&mut self) -> EXWTM_W<'_, SDIO_INFO1_MASK_SPEC> {
         EXWTM_W::new(self, 15)
     }
 }

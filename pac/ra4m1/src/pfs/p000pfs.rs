@@ -539,47 +539,47 @@ impl R {
 impl W {
     ///Bit 0 - Port Output Data
     #[inline(always)]
-    pub fn podr(&mut self) -> PODR_W<P000PFS_SPEC> {
+    pub fn podr(&mut self) -> PODR_W<'_, P000PFS_SPEC> {
         PODR_W::new(self, 0)
     }
     ///Bit 2 - Port Direction
     #[inline(always)]
-    pub fn pdr(&mut self) -> PDR_W<P000PFS_SPEC> {
+    pub fn pdr(&mut self) -> PDR_W<'_, P000PFS_SPEC> {
         PDR_W::new(self, 2)
     }
     ///Bit 4 - Pull-up Control
     #[inline(always)]
-    pub fn pcr(&mut self) -> PCR_W<P000PFS_SPEC> {
+    pub fn pcr(&mut self) -> PCR_W<'_, P000PFS_SPEC> {
         PCR_W::new(self, 4)
     }
     ///Bit 6 - N-Channel Open Drain Control
     #[inline(always)]
-    pub fn ncodr(&mut self) -> NCODR_W<P000PFS_SPEC> {
+    pub fn ncodr(&mut self) -> NCODR_W<'_, P000PFS_SPEC> {
         NCODR_W::new(self, 6)
     }
     ///Bit 10 - Port Drive Capability
     #[inline(always)]
-    pub fn dscr(&mut self) -> DSCR_W<P000PFS_SPEC> {
+    pub fn dscr(&mut self) -> DSCR_W<'_, P000PFS_SPEC> {
         DSCR_W::new(self, 10)
     }
     ///Bit 14 - IRQ input enable
     #[inline(always)]
-    pub fn isel(&mut self) -> ISEL_W<P000PFS_SPEC> {
+    pub fn isel(&mut self) -> ISEL_W<'_, P000PFS_SPEC> {
         ISEL_W::new(self, 14)
     }
     ///Bit 15 - Analog Input enable
     #[inline(always)]
-    pub fn asel(&mut self) -> ASEL_W<P000PFS_SPEC> {
+    pub fn asel(&mut self) -> ASEL_W<'_, P000PFS_SPEC> {
         ASEL_W::new(self, 15)
     }
     ///Bit 16 - Port Mode Control
     #[inline(always)]
-    pub fn pmr(&mut self) -> PMR_W<P000PFS_SPEC> {
+    pub fn pmr(&mut self) -> PMR_W<'_, P000PFS_SPEC> {
         PMR_W::new(self, 16)
     }
     ///Bits 24:28 - Port Function Select These bits select the peripheral function. For individual pin functions, see the MPC table
     #[inline(always)]
-    pub fn psel(&mut self) -> PSEL_W<P000PFS_SPEC> {
+    pub fn psel(&mut self) -> PSEL_W<'_, P000PFS_SPEC> {
         PSEL_W::new(self, 24)
     }
 }

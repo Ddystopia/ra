@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - PTP Message EtherType Value SettingThese bits hold the setting for the EtherType field value for frames in the Ethernet II format.
     #[inline(always)]
-    pub fn type_(&mut self) -> TYPE_W<PETYPER_SPEC> {
+    pub fn type_(&mut self) -> TYPE_W<'_, PETYPER_SPEC> {
         TYPE_W::new(self, 0)
     }
 }

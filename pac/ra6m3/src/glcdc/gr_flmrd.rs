@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Graphics data (frame buffer data) read enable.
     #[inline(always)]
-    pub fn renb(&mut self) -> RENB_W<GR_FLMRD_SPEC> {
+    pub fn renb(&mut self) -> RENB_W<'_, GR_FLMRD_SPEC> {
         RENB_W::new(self, 0)
     }
 }

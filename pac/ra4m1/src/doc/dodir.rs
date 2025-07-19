@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - 16-bit read-write register in which 16-bit data for use in the operations are stored.
     #[inline(always)]
-    pub fn dodir(&mut self) -> DODIR_W<DODIR_SPEC> {
+    pub fn dodir(&mut self) -> DODIR_W<'_, DODIR_SPEC> {
         DODIR_W::new(self, 0)
     }
 }

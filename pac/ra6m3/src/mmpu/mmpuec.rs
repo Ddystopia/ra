@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Region end address registerAddress where the region end, for use in region determination.NOTE: The low-order 2 bits are fixed to 1.
     #[inline(always)]
-    pub fn mmpuec(&mut self) -> MMPUEC_W<MMPUEC_SPEC> {
+    pub fn mmpuec(&mut self) -> MMPUEC_W<'_, MMPUEC_SPEC> {
         MMPUEC_W::new(self, 0)
     }
 }

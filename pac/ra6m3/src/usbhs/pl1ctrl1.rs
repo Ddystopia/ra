@@ -425,27 +425,27 @@ impl R {
 impl W {
     ///Bit 0 - L1 Response Enable
     #[inline(always)]
-    pub fn l1respen(&mut self) -> L1RESPEN_W<PL1CTRL1_SPEC> {
+    pub fn l1respen(&mut self) -> L1RESPEN_W<'_, PL1CTRL1_SPEC> {
         L1RESPEN_W::new(self, 0)
     }
     ///Bits 1:2 - L1 Response Mode
     #[inline(always)]
-    pub fn l1respmd(&mut self) -> L1RESPMD_W<PL1CTRL1_SPEC> {
+    pub fn l1respmd(&mut self) -> L1RESPMD_W<'_, PL1CTRL1_SPEC> {
         L1RESPMD_W::new(self, 1)
     }
     ///Bit 3 - L1 Response Negotiation Control.NOTE: This bit is valid only when the L1RESPMD\[1:0\] value is 2'b11.
     #[inline(always)]
-    pub fn l1negomd(&mut self) -> L1NEGOMD_W<PL1CTRL1_SPEC> {
+    pub fn l1negomd(&mut self) -> L1NEGOMD_W<'_, PL1CTRL1_SPEC> {
         L1NEGOMD_W::new(self, 3)
     }
     ///Bits 8:11 - L1 Response Negotiation Threshold ValueHIRD threshold value used for L1NEGOMD.The format is the same as the HIRD field in HL1CTRL.
     #[inline(always)]
-    pub fn hirdthr(&mut self) -> HIRDTHR_W<PL1CTRL1_SPEC> {
+    pub fn hirdthr(&mut self) -> HIRDTHR_W<'_, PL1CTRL1_SPEC> {
         HIRDTHR_W::new(self, 8)
     }
     ///Bit 14 - PHY Control Mode at L1 Return
     #[inline(always)]
-    pub fn l1extmd(&mut self) -> L1EXTMD_W<PL1CTRL1_SPEC> {
+    pub fn l1extmd(&mut self) -> L1EXTMD_W<'_, PL1CTRL1_SPEC> {
         L1EXTMD_W::new(self, 14)
     }
 }

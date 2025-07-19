@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 15 - Ignore Error Responses
     #[inline(always)]
-    pub fn ieres(&mut self) -> IERES_W<BUSMCNTDMA_SPEC> {
+    pub fn ieres(&mut self) -> IERES_W<'_, BUSMCNTDMA_SPEC> {
         IERES_W::new(self, 15)
     }
 }

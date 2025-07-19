@@ -109,12 +109,12 @@ impl R {
 impl W {
     ///Bits 0:5 - Adjustment Value These bits specify the adjustment value from the prescaler.
     #[inline(always)]
-    pub fn adj(&mut self) -> ADJ_W<RADJ_SPEC> {
+    pub fn adj(&mut self) -> ADJ_W<'_, RADJ_SPEC> {
         ADJ_W::new(self, 0)
     }
     ///Bits 6:7 - Plus-Minus
     #[inline(always)]
-    pub fn pmadj(&mut self) -> PMADJ_W<RADJ_SPEC> {
+    pub fn pmadj(&mut self) -> PMADJ_W<'_, RADJ_SPEC> {
         PMADJ_W::new(self, 6)
     }
 }

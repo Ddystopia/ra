@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 4 - Transfer Direction
     #[inline(always)]
-    pub fn dir(&mut self) -> DIR_W<DCPCFG_SPEC> {
+    pub fn dir(&mut self) -> DIR_W<'_, DCPCFG_SPEC> {
         DIR_W::new(self, 4)
     }
     ///Bit 7 - Pipe Disabled at End of Transfer
     #[inline(always)]
-    pub fn shtnak(&mut self) -> SHTNAK_W<DCPCFG_SPEC> {
+    pub fn shtnak(&mut self) -> SHTNAK_W<'_, DCPCFG_SPEC> {
         SHTNAK_W::new(self, 7)
     }
 }

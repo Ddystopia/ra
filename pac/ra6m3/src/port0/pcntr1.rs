@@ -141,12 +141,12 @@ impl R {
 impl W {
     ///Bits 0:15 - Pmn Direction
     #[inline(always)]
-    pub fn pdr(&mut self) -> PDR_W<PCNTR1_SPEC> {
+    pub fn pdr(&mut self) -> PDR_W<'_, PCNTR1_SPEC> {
         PDR_W::new(self, 0)
     }
     ///Bits 16:31 - Pmn Output Data
     #[inline(always)]
-    pub fn podr(&mut self) -> PODR_W<PCNTR1_SPEC> {
+    pub fn podr(&mut self) -> PODR_W<'_, PCNTR1_SPEC> {
         PODR_W::new(self, 16)
     }
 }

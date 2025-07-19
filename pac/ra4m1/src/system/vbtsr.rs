@@ -174,12 +174,12 @@ impl R {
 impl W {
     ///Bit 0 - VBAT_R Reset Detect Flag
     #[inline(always)]
-    pub fn vbtrdf(&mut self) -> VBTRDF_W<VBTSR_SPEC> {
+    pub fn vbtrdf(&mut self) -> VBTRDF_W<'_, VBTSR_SPEC> {
         VBTRDF_W::new(self, 0)
     }
     ///Bit 1 - VBATT Battery Low voltage Detect Flag
     #[inline(always)]
-    pub fn vbtbldf(&mut self) -> VBTBLDF_W<VBTSR_SPEC> {
+    pub fn vbtbldf(&mut self) -> VBTBLDF_W<'_, VBTSR_SPEC> {
         VBTBLDF_W::new(self, 1)
     }
 }

@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - VBTBKR is a 512-byte readable/writable register to store data powered by VBATT.The value of this register is retained even when VCC is not powered but VBATT is powered.VBTBKR is initialized by VBATT selected voltage power-on-reset.
     #[inline(always)]
-    pub fn vbtbkr(&mut self) -> VBTBKR_W<VBTBKR_SPEC> {
+    pub fn vbtbkr(&mut self) -> VBTBKR_W<'_, VBTBKR_SPEC> {
         VBTBKR_W::new(self, 0)
     }
 }

@@ -113,12 +113,12 @@ impl R {
 impl W {
     ///Bits 0:10 - Vertical width of graphics image area.
     #[inline(always)]
-    pub fn grcvw(&mut self) -> GRCVW_W<GR_AB2_SPEC> {
+    pub fn grcvw(&mut self) -> GRCVW_W<'_, GR_AB2_SPEC> {
         GRCVW_W::new(self, 0)
     }
     ///Bits 16:26 - Vertical start position of graphics image area.
     #[inline(always)]
-    pub fn grcvs(&mut self) -> GRCVS_W<GR_AB2_SPEC> {
+    pub fn grcvs(&mut self) -> GRCVS_W<'_, GR_AB2_SPEC> {
         GRCVS_W::new(self, 16)
     }
 }

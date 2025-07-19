@@ -523,37 +523,37 @@ impl R {
 impl W {
     ///Bits 0:3 - FIFO Port Access Pipe Specification
     #[inline(always)]
-    pub fn curpipe(&mut self) -> CURPIPE_W<D0FIFOSEL_SPEC> {
+    pub fn curpipe(&mut self) -> CURPIPE_W<'_, D0FIFOSEL_SPEC> {
         CURPIPE_W::new(self, 0)
     }
     ///Bit 8 - FIFO Port Endian Control
     #[inline(always)]
-    pub fn bigend(&mut self) -> BIGEND_W<D0FIFOSEL_SPEC> {
+    pub fn bigend(&mut self) -> BIGEND_W<'_, D0FIFOSEL_SPEC> {
         BIGEND_W::new(self, 8)
     }
     ///Bit 10 - FIFO Port Access Bit Width
     #[inline(always)]
-    pub fn mbw(&mut self) -> MBW_W<D0FIFOSEL_SPEC> {
+    pub fn mbw(&mut self) -> MBW_W<'_, D0FIFOSEL_SPEC> {
         MBW_W::new(self, 10)
     }
     ///Bit 12 - DMA/DTC Transfer Request Enable
     #[inline(always)]
-    pub fn dreqe(&mut self) -> DREQE_W<D0FIFOSEL_SPEC> {
+    pub fn dreqe(&mut self) -> DREQE_W<'_, D0FIFOSEL_SPEC> {
         DREQE_W::new(self, 12)
     }
     ///Bit 13 - Auto Buffer Memory Clear Mode Accessed after Specified Pipe Data is Read
     #[inline(always)]
-    pub fn dclrm(&mut self) -> DCLRM_W<D0FIFOSEL_SPEC> {
+    pub fn dclrm(&mut self) -> DCLRM_W<'_, D0FIFOSEL_SPEC> {
         DCLRM_W::new(self, 13)
     }
     ///Bit 14 - Buffer Pointer Rewind Note: Only 0 can be read.
     #[inline(always)]
-    pub fn rew(&mut self) -> REW_W<D0FIFOSEL_SPEC> {
+    pub fn rew(&mut self) -> REW_W<'_, D0FIFOSEL_SPEC> {
         REW_W::new(self, 14)
     }
     ///Bit 15 - Read Count Mode
     #[inline(always)]
-    pub fn rcnt(&mut self) -> RCNT_W<D0FIFOSEL_SPEC> {
+    pub fn rcnt(&mut self) -> RCNT_W<'_, D0FIFOSEL_SPEC> {
         RCNT_W::new(self, 15)
     }
 }

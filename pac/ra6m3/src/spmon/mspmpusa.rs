@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 2:31 - Region start address register Address where the region starts, for use in region determination.NOTE: Range: 0x1FF00000-0x200FFFFC The low-order 2 bits are fixed to 0.
     #[inline(always)]
-    pub fn mspmpusa(&mut self) -> MSPMPUSA_W<MSPMPUSA_SPEC> {
+    pub fn mspmpusa(&mut self) -> MSPMPUSA_W<'_, MSPMPUSA_SPEC> {
         MSPMPUSA_W::new(self, 2)
     }
 }

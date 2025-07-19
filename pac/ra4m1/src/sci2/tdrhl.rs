@@ -7,7 +7,7 @@ pub type TDRHL_W<'a, REG> = crate::FieldWriter<'a, REG, 16, u16>;
 impl W {
     ///Bits 0:15 - TDRHL is a 16-bit register that stores transmit data.
     #[inline(always)]
-    pub fn tdrhl(&mut self) -> TDRHL_W<TDRHL_SPEC> {
+    pub fn tdrhl(&mut self) -> TDRHL_W<'_, TDRHL_SPEC> {
         TDRHL_W::new(self, 0)
     }
 }

@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Dead Time Buffer Register U
     #[inline(always)]
-    pub fn gtdvu(&mut self) -> GTDVU_W<GTDBU_SPEC> {
+    pub fn gtdvu(&mut self) -> GTDVU_W<'_, GTDBU_SPEC> {
         GTDVU_W::new(self, 0)
     }
 }

@@ -187,17 +187,17 @@ impl R {
 impl W {
     ///Bit 0 - Graphics 2 specified line detection flag clear field
     #[inline(always)]
-    pub fn vposclr(&mut self) -> VPOSCLR_W<SYSCNT_STCLR_SPEC> {
+    pub fn vposclr(&mut self) -> VPOSCLR_W<'_, SYSCNT_STCLR_SPEC> {
         VPOSCLR_W::new(self, 0)
     }
     ///Bit 1 - Graphics 1 underflow detection flag clear field
     #[inline(always)]
-    pub fn l1undfclr(&mut self) -> L1UNDFCLR_W<SYSCNT_STCLR_SPEC> {
+    pub fn l1undfclr(&mut self) -> L1UNDFCLR_W<'_, SYSCNT_STCLR_SPEC> {
         L1UNDFCLR_W::new(self, 1)
     }
     ///Bit 2 - Graphics 2 underflow detection flag clear field
     #[inline(always)]
-    pub fn l2undfclr(&mut self) -> L2UNDFCLR_W<SYSCNT_STCLR_SPEC> {
+    pub fn l2undfclr(&mut self) -> L2UNDFCLR_W<'_, SYSCNT_STCLR_SPEC> {
         L2UNDFCLR_W::new(self, 2)
     }
 }

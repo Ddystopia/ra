@@ -443,32 +443,32 @@ impl R {
 impl W {
     ///Bits 0:1 - Noise Filter Stage Selection
     #[inline(always)]
-    pub fn nf(&mut self) -> NF_W<ICMR3_SPEC> {
+    pub fn nf(&mut self) -> NF_W<'_, ICMR3_SPEC> {
         NF_W::new(self, 0)
     }
     ///Bit 3 - Transmit Acknowledge
     #[inline(always)]
-    pub fn ackbt(&mut self) -> ACKBT_W<ICMR3_SPEC> {
+    pub fn ackbt(&mut self) -> ACKBT_W<'_, ICMR3_SPEC> {
         ACKBT_W::new(self, 3)
     }
     ///Bit 4 - ACKBT Write Protect
     #[inline(always)]
-    pub fn ackwp(&mut self) -> ACKWP_W<ICMR3_SPEC> {
+    pub fn ackwp(&mut self) -> ACKWP_W<'_, ICMR3_SPEC> {
         ACKWP_W::new(self, 4)
     }
     ///Bit 5 - RDRF Flag Set Timing Selection
     #[inline(always)]
-    pub fn rdrfs(&mut self) -> RDRFS_W<ICMR3_SPEC> {
+    pub fn rdrfs(&mut self) -> RDRFS_W<'_, ICMR3_SPEC> {
         RDRFS_W::new(self, 5)
     }
     ///Bit 6 - WAITNote: When the value of the WAIT bit is to be read, be sure to read the ICDRR beforehand.
     #[inline(always)]
-    pub fn wait(&mut self) -> WAIT_W<ICMR3_SPEC> {
+    pub fn wait(&mut self) -> WAIT_W<'_, ICMR3_SPEC> {
         WAIT_W::new(self, 6)
     }
     ///Bit 7 - SMBus/I2C Bus Selection
     #[inline(always)]
-    pub fn smbs(&mut self) -> SMBS_W<ICMR3_SPEC> {
+    pub fn smbs(&mut self) -> SMBS_W<'_, ICMR3_SPEC> {
         SMBS_W::new(self, 7)
     }
 }

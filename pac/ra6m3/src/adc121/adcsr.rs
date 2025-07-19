@@ -411,37 +411,37 @@ impl R {
 impl W {
     ///Bits 0:4 - Double Trigger Channel SelectThese bits select one analog input channel for double triggered operation. The setting is only effective while double trigger mode is selected.
     #[inline(always)]
-    pub fn dblans(&mut self) -> DBLANS_W<ADCSR_SPEC> {
+    pub fn dblans(&mut self) -> DBLANS_W<'_, ADCSR_SPEC> {
         DBLANS_W::new(self, 0)
     }
     ///Bit 6 - Group B Scan End Interrupt Enable
     #[inline(always)]
-    pub fn gbadie(&mut self) -> GBADIE_W<ADCSR_SPEC> {
+    pub fn gbadie(&mut self) -> GBADIE_W<'_, ADCSR_SPEC> {
         GBADIE_W::new(self, 6)
     }
     ///Bit 7 - Double Trigger Mode Select
     #[inline(always)]
-    pub fn dble(&mut self) -> DBLE_W<ADCSR_SPEC> {
+    pub fn dble(&mut self) -> DBLE_W<'_, ADCSR_SPEC> {
         DBLE_W::new(self, 7)
     }
     ///Bit 8 - Trigger Select
     #[inline(always)]
-    pub fn extrg(&mut self) -> EXTRG_W<ADCSR_SPEC> {
+    pub fn extrg(&mut self) -> EXTRG_W<'_, ADCSR_SPEC> {
         EXTRG_W::new(self, 8)
     }
     ///Bit 9 - Trigger Start Enable
     #[inline(always)]
-    pub fn trge(&mut self) -> TRGE_W<ADCSR_SPEC> {
+    pub fn trge(&mut self) -> TRGE_W<'_, ADCSR_SPEC> {
         TRGE_W::new(self, 9)
     }
     ///Bits 13:14 - Scan Mode Select
     #[inline(always)]
-    pub fn adcs(&mut self) -> ADCS_W<ADCSR_SPEC> {
+    pub fn adcs(&mut self) -> ADCS_W<'_, ADCSR_SPEC> {
         ADCS_W::new(self, 13)
     }
     ///Bit 15 - A/D Conversion Start
     #[inline(always)]
-    pub fn adst(&mut self) -> ADST_W<ADCSR_SPEC> {
+    pub fn adst(&mut self) -> ADST_W<'_, ADCSR_SPEC> {
         ADST_W::new(self, 15)
     }
 }

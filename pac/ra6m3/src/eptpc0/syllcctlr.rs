@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - LLC-CTL FieldThese bits specify the value used for the control field in the LLC sublayer when generating IEEE802.3 frames.
     #[inline(always)]
-    pub fn ctl(&mut self) -> CTL_W<SYLLCCTLR_SPEC> {
+    pub fn ctl(&mut self) -> CTL_W<'_, SYLLCCTLR_SPEC> {
         CTL_W::new(self, 0)
     }
 }

@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - PTP Event Message Destination Port Number SettingThese bits hold the setting for the value of the destination port number field within the UDP headers of PTP event messages.
     #[inline(always)]
-    pub fn evupt(&mut self) -> EVUPT_W<PEUDPR_SPEC> {
+    pub fn evupt(&mut self) -> EVUPT_W<'_, PEUDPR_SPEC> {
         EVUPT_W::new(self, 0)
     }
 }

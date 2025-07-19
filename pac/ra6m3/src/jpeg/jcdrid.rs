@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - Lower Bytes of MCUs Preceding RST MarkerWhen both upper and lower bytes are set to 00h, neither a DRI nor an RST marker is placed.NOTE: Read-only in Decompression.
     #[inline(always)]
-    pub fn drid(&mut self) -> DRID_W<JCDRID_SPEC> {
+    pub fn drid(&mut self) -> DRID_W<'_, JCDRID_SPEC> {
         DRID_W::new(self, 0)
     }
 }

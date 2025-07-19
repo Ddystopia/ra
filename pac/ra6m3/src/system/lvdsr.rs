@@ -112,7 +112,7 @@ impl R {
 impl W {
     ///Bit 0 - Voltage Monitor Voltage Change Detection Flag NOTE: Only 0 can be written to this bit. After writing 0 to this bit, it takes 2 system clock cycles for the bit to be read as 0.
     #[inline(always)]
-    pub fn det(&mut self) -> DET_W<LVDSR_SPEC> {
+    pub fn det(&mut self) -> DET_W<'_, LVDSR_SPEC> {
         DET_W::new(self, 0)
     }
 }

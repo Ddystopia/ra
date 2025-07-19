@@ -73,7 +73,7 @@ impl R {
 impl W {
     ///Bits 0:10 - Transmit FIFO Threshold00Dh to 200h: The threshold is the set value multiplied by 4. Example: 00Dh: 52 bytes 040h: 256 bytes 100h: 1024 bytes 200h: 2048 bytes
     #[inline(always)]
-    pub fn tft(&mut self) -> TFT_W<TFTR_SPEC> {
+    pub fn tft(&mut self) -> TFT_W<'_, TFTR_SPEC> {
         TFT_W::new(self, 0)
     }
 }

@@ -907,77 +907,77 @@ impl R {
 impl W {
     ///Bit 0 - AN000 Select
     #[inline(always)]
-    pub fn ansa00(&mut self) -> ANSA00_W<ADANSA0_SPEC> {
+    pub fn ansa00(&mut self) -> ANSA00_W<'_, ADANSA0_SPEC> {
         ANSA00_W::new(self, 0)
     }
     ///Bit 1 - AN001 Select
     #[inline(always)]
-    pub fn ansa01(&mut self) -> ANSA01_W<ADANSA0_SPEC> {
+    pub fn ansa01(&mut self) -> ANSA01_W<'_, ADANSA0_SPEC> {
         ANSA01_W::new(self, 1)
     }
     ///Bit 2 - AN002 Select
     #[inline(always)]
-    pub fn ansa02(&mut self) -> ANSA02_W<ADANSA0_SPEC> {
+    pub fn ansa02(&mut self) -> ANSA02_W<'_, ADANSA0_SPEC> {
         ANSA02_W::new(self, 2)
     }
     ///Bit 3 - AN003 Select
     #[inline(always)]
-    pub fn ansa03(&mut self) -> ANSA03_W<ADANSA0_SPEC> {
+    pub fn ansa03(&mut self) -> ANSA03_W<'_, ADANSA0_SPEC> {
         ANSA03_W::new(self, 3)
     }
     ///Bit 4 - AN004 Select
     #[inline(always)]
-    pub fn ansa04(&mut self) -> ANSA04_W<ADANSA0_SPEC> {
+    pub fn ansa04(&mut self) -> ANSA04_W<'_, ADANSA0_SPEC> {
         ANSA04_W::new(self, 4)
     }
     ///Bit 5 - AN005 Select
     #[inline(always)]
-    pub fn ansa05(&mut self) -> ANSA05_W<ADANSA0_SPEC> {
+    pub fn ansa05(&mut self) -> ANSA05_W<'_, ADANSA0_SPEC> {
         ANSA05_W::new(self, 5)
     }
     ///Bit 6 - AN006 Select
     #[inline(always)]
-    pub fn ansa06(&mut self) -> ANSA06_W<ADANSA0_SPEC> {
+    pub fn ansa06(&mut self) -> ANSA06_W<'_, ADANSA0_SPEC> {
         ANSA06_W::new(self, 6)
     }
     ///Bit 7 - AN007 Select
     #[inline(always)]
-    pub fn ansa07(&mut self) -> ANSA07_W<ADANSA0_SPEC> {
+    pub fn ansa07(&mut self) -> ANSA07_W<'_, ADANSA0_SPEC> {
         ANSA07_W::new(self, 7)
     }
     ///Bit 8 - AN008 Select
     #[inline(always)]
-    pub fn ansa08(&mut self) -> ANSA08_W<ADANSA0_SPEC> {
+    pub fn ansa08(&mut self) -> ANSA08_W<'_, ADANSA0_SPEC> {
         ANSA08_W::new(self, 8)
     }
     ///Bit 9 - AN009 Select
     #[inline(always)]
-    pub fn ansa09(&mut self) -> ANSA09_W<ADANSA0_SPEC> {
+    pub fn ansa09(&mut self) -> ANSA09_W<'_, ADANSA0_SPEC> {
         ANSA09_W::new(self, 9)
     }
     ///Bit 10 - AN010 Select
     #[inline(always)]
-    pub fn ansa010(&mut self) -> ANSA010_W<ADANSA0_SPEC> {
+    pub fn ansa010(&mut self) -> ANSA010_W<'_, ADANSA0_SPEC> {
         ANSA010_W::new(self, 10)
     }
     ///Bit 11 - AN011 Select
     #[inline(always)]
-    pub fn ansa011(&mut self) -> ANSA011_W<ADANSA0_SPEC> {
+    pub fn ansa011(&mut self) -> ANSA011_W<'_, ADANSA0_SPEC> {
         ANSA011_W::new(self, 11)
     }
     ///Bit 12 - AN012 Select
     #[inline(always)]
-    pub fn ansa012(&mut self) -> ANSA012_W<ADANSA0_SPEC> {
+    pub fn ansa012(&mut self) -> ANSA012_W<'_, ADANSA0_SPEC> {
         ANSA012_W::new(self, 12)
     }
     ///Bit 13 - AN013 Select
     #[inline(always)]
-    pub fn ansa013(&mut self) -> ANSA013_W<ADANSA0_SPEC> {
+    pub fn ansa013(&mut self) -> ANSA013_W<'_, ADANSA0_SPEC> {
         ANSA013_W::new(self, 13)
     }
     ///Bit 14 - AN014 Select
     #[inline(always)]
-    pub fn ansa014(&mut self) -> ANSA014_W<ADANSA0_SPEC> {
+    pub fn ansa014(&mut self) -> ANSA014_W<'_, ADANSA0_SPEC> {
         ANSA014_W::new(self, 14)
     }
 }

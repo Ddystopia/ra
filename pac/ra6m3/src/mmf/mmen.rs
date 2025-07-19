@@ -106,12 +106,12 @@ impl R {
 impl W {
     ///Bit 0 - Memory Mirror Function Enable
     #[inline(always)]
-    pub fn en(&mut self) -> EN_W<MMEN_SPEC> {
+    pub fn en(&mut self) -> EN_W<'_, MMEN_SPEC> {
         EN_W::new(self, 0)
     }
     ///Bits 24:31 - MMEN Key Code
     #[inline(always)]
-    pub fn key(&mut self) -> KEY_W<MMEN_SPEC> {
+    pub fn key(&mut self) -> KEY_W<'_, MMEN_SPEC> {
         KEY_W::new(self, 24)
     }
 }

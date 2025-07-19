@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Counter
     #[inline(always)]
-    pub fn gtcnt(&mut self) -> GTCNT_W<GTCNT_SPEC> {
+    pub fn gtcnt(&mut self) -> GTCNT_W<'_, GTCNT_SPEC> {
         GTCNT_W::new(self, 0)
     }
 }

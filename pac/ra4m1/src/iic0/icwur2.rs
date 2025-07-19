@@ -153,7 +153,7 @@ impl R {
 impl W {
     ///Bit 0 - Wake-up Function Synchronous Enable
     #[inline(always)]
-    pub fn wusen(&mut self) -> WUSEN_W<ICWUR2_SPEC> {
+    pub fn wusen(&mut self) -> WUSEN_W<'_, ICWUR2_SPEC> {
         WUSEN_W::new(self, 0)
     }
 }

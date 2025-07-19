@@ -125,7 +125,7 @@ impl R {
 impl W {
     ///Bits 0:3 - Comparator input selection
     #[inline(always)]
-    pub fn cmpsel(&mut self) -> CMPSEL_W<CMPSEL0_SPEC> {
+    pub fn cmpsel(&mut self) -> CMPSEL_W<'_, CMPSEL0_SPEC> {
         CMPSEL_W::new(self, 0)
     }
 }

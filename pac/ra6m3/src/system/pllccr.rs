@@ -213,17 +213,17 @@ impl R {
 impl W {
     ///Bits 0:1 - PLL Input Frequency Division Ratio Select
     #[inline(always)]
-    pub fn plidiv(&mut self) -> PLIDIV_W<PLLCCR_SPEC> {
+    pub fn plidiv(&mut self) -> PLIDIV_W<'_, PLLCCR_SPEC> {
         PLIDIV_W::new(self, 0)
     }
     ///Bit 4 - PLL Clock Source Select
     #[inline(always)]
-    pub fn plsrcsel(&mut self) -> PLSRCSEL_W<PLLCCR_SPEC> {
+    pub fn plsrcsel(&mut self) -> PLSRCSEL_W<'_, PLLCCR_SPEC> {
         PLSRCSEL_W::new(self, 4)
     }
     ///Bits 8:13 - PLL Frequency Multiplication Factor Select \[PLL Frequency Multiplication Factor\] = (PLLUMUL+1) / 2 Range: 0x23 - 0x3B for example 010011: x10.0 010100: x10.5 010101: x11.0 : 011100: x14.5 011101: x15.0 011110: x15.5 : 111010: x29.5 111011: x30.0
     #[inline(always)]
-    pub fn pllmul(&mut self) -> PLLMUL_W<PLLCCR_SPEC> {
+    pub fn pllmul(&mut self) -> PLLMUL_W<'_, PLLCCR_SPEC> {
         PLLMUL_W::new(self, 8)
     }
 }

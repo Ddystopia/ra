@@ -193,17 +193,17 @@ impl R {
 impl W {
     ///Bit 0 - USBFS Suspend/Resume Deep Standby Cancel Flag
     #[inline(always)]
-    pub fn dusbfsif(&mut self) -> DUSBFSIF_W<DPSIFR3_SPEC> {
+    pub fn dusbfsif(&mut self) -> DUSBFSIF_W<'_, DPSIFR3_SPEC> {
         DUSBFSIF_W::new(self, 0)
     }
     ///Bit 1 - USBHS Suspend/Resume Deep Standby Cancel Flag
     #[inline(always)]
-    pub fn dusbhsif(&mut self) -> DUSBHSIF_W<DPSIFR3_SPEC> {
+    pub fn dusbhsif(&mut self) -> DUSBHSIF_W<'_, DPSIFR3_SPEC> {
         DUSBHSIF_W::new(self, 1)
     }
     ///Bit 2 - AGT1 Underflow Deep Standby Cancel Flag
     #[inline(always)]
-    pub fn dagt1if(&mut self) -> DAGT1IF_W<DPSIFR3_SPEC> {
+    pub fn dagt1if(&mut self) -> DAGT1IF_W<'_, DPSIFR3_SPEC> {
         DAGT1IF_W::new(self, 2)
     }
 }

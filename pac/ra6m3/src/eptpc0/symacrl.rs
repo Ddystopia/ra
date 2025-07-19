@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:23 - These bits hold the setting for the lower-order 24 bits of the local MAC address.
     #[inline(always)]
-    pub fn symacrl(&mut self) -> SYMACRL_W<SYMACRL_SPEC> {
+    pub fn symacrl(&mut self) -> SYMACRL_W<'_, SYMACRL_SPEC> {
         SYMACRL_W::new(self, 0)
     }
 }

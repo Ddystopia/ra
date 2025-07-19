@@ -25,12 +25,12 @@ impl R {
 impl W {
     ///Bits 0:9 - CTSU Sensor Offset Adjustment Current offset amount is CTSUSO ( 0 to 1023 )
     #[inline(always)]
-    pub fn ctsuso(&mut self) -> CTSUSO_W<CTSUSO0_SPEC> {
+    pub fn ctsuso(&mut self) -> CTSUSO_W<'_, CTSUSO0_SPEC> {
         CTSUSO_W::new(self, 0)
     }
     ///Bits 10:15 - CTSU Measurement Count Setting
     #[inline(always)]
-    pub fn ctsusnum(&mut self) -> CTSUSNUM_W<CTSUSO0_SPEC> {
+    pub fn ctsusnum(&mut self) -> CTSUSNUM_W<'_, CTSUSO0_SPEC> {
         CTSUSNUM_W::new(self, 10)
     }
 }

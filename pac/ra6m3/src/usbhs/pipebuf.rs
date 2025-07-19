@@ -113,12 +113,12 @@ impl R {
 impl W {
     ///Bits 0:7 - Buffer NumberThese bits specify the FIFO buffer number of the selected pipe (04h to 87h).
     #[inline(always)]
-    pub fn bufnmb(&mut self) -> BUFNMB_W<PIPEBUF_SPEC> {
+    pub fn bufnmb(&mut self) -> BUFNMB_W<'_, PIPEBUF_SPEC> {
         BUFNMB_W::new(self, 0)
     }
     ///Bits 10:14 - Buffer Size 00h: 64 bytes 01h: 128 bytes : 1Fh: 2 Kbytes
     #[inline(always)]
-    pub fn bufsize(&mut self) -> BUFSIZE_W<PIPEBUF_SPEC> {
+    pub fn bufsize(&mut self) -> BUFSIZE_W<'_, PIPEBUF_SPEC> {
         BUFSIZE_W::new(self, 10)
     }
 }

@@ -160,12 +160,12 @@ impl R {
 impl W {
     ///Bits 0:1 - Selection the number of address bits of the serial interface
     #[inline(always)]
-    pub fn sfmas(&mut self) -> SFMAS_W<SFMSAC_SPEC> {
+    pub fn sfmas(&mut self) -> SFMAS_W<'_, SFMSAC_SPEC> {
         SFMAS_W::new(self, 0)
     }
     ///Bit 4 - Selection of a default instruction code, when Serial Interface address width is selected 4 bytes.
     #[inline(always)]
-    pub fn sfm4bc(&mut self) -> SFM4BC_W<SFMSAC_SPEC> {
+    pub fn sfm4bc(&mut self) -> SFM4BC_W<'_, SFMSAC_SPEC> {
         SFM4BC_W::new(self, 4)
     }
 }

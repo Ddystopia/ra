@@ -113,12 +113,12 @@ impl R {
 impl W {
     ///Bits 0:10 - Gain value of area 13Unsigned 11-bit fixed point
     #[inline(always)]
-    pub fn gain13(&mut self) -> GAIN13_W<GAM_LUT7_SPEC> {
+    pub fn gain13(&mut self) -> GAIN13_W<'_, GAM_LUT7_SPEC> {
         GAIN13_W::new(self, 0)
     }
     ///Bits 16:26 - Gain value of area 12Unsigned 11-bit fixed point
     #[inline(always)]
-    pub fn gain12(&mut self) -> GAIN12_W<GAM_LUT7_SPEC> {
+    pub fn gain12(&mut self) -> GAIN12_W<'_, GAM_LUT7_SPEC> {
         GAIN12_W::new(self, 16)
     }
 }

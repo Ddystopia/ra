@@ -369,22 +369,22 @@ impl R {
 impl W {
     ///Bit 26 - Receive Overflow Error Interrupt Status Flag NOTE: Writable only to clear the flag. Confirm the value is 1 and then write 0.
     #[inline(always)]
-    pub fn roirq(&mut self) -> ROIRQ_W<SSISR_SPEC> {
+    pub fn roirq(&mut self) -> ROIRQ_W<'_, SSISR_SPEC> {
         ROIRQ_W::new(self, 26)
     }
     ///Bit 27 - Receive Underflow Error Interrupt Status Flag NOTE: Writable only to clear the flag. Confirm the value is 1 and then write 0.
     #[inline(always)]
-    pub fn ruirq(&mut self) -> RUIRQ_W<SSISR_SPEC> {
+    pub fn ruirq(&mut self) -> RUIRQ_W<'_, SSISR_SPEC> {
         RUIRQ_W::new(self, 27)
     }
     ///Bit 28 - Transmit Overflow Error Interrupt Status Flag NOTE: Writable only to clear the flag. Confirm the value is 1 and then write 0.
     #[inline(always)]
-    pub fn toirq(&mut self) -> TOIRQ_W<SSISR_SPEC> {
+    pub fn toirq(&mut self) -> TOIRQ_W<'_, SSISR_SPEC> {
         TOIRQ_W::new(self, 28)
     }
     ///Bit 29 - Transmit Underflow Error Interrupt Status Flag NOTE: Writable only to clear the flag. Confirm the value is 1 and then write 0.
     #[inline(always)]
-    pub fn tuirq(&mut self) -> TUIRQ_W<SSISR_SPEC> {
+    pub fn tuirq(&mut self) -> TUIRQ_W<'_, SSISR_SPEC> {
         TUIRQ_W::new(self, 29)
     }
 }

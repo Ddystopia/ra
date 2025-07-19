@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:30 - These bits hold the setting for the higher-order 31 bits of the limit for the negative gradient.
     #[inline(always)]
-    pub fn mlimitru(&mut self) -> MLIMITRU_W<MLIMITRU_SPEC> {
+    pub fn mlimitru(&mut self) -> MLIMITRU_W<'_, MLIMITRU_SPEC> {
         MLIMITRU_W::new(self, 0)
     }
 }

@@ -102,17 +102,17 @@ where
 impl W {
     ///Bit 0 - BMC Update
     #[inline(always)]
-    pub fn bmup(&mut self) -> BMUP_W<SYRVLDR_SPEC> {
+    pub fn bmup(&mut self) -> BMUP_W<'_, SYRVLDR_SPEC> {
         BMUP_W::new(self, 0)
     }
     ///Bit 1 - State Update
     #[inline(always)]
-    pub fn stup(&mut self) -> STUP_W<SYRVLDR_SPEC> {
+    pub fn stup(&mut self) -> STUP_W<'_, SYRVLDR_SPEC> {
         STUP_W::new(self, 1)
     }
     ///Bit 2 - Announce Message Generation Information Update
     #[inline(always)]
-    pub fn anup(&mut self) -> ANUP_W<SYRVLDR_SPEC> {
+    pub fn anup(&mut self) -> ANUP_W<'_, SYRVLDR_SPEC> {
         ANUP_W::new(self, 2)
     }
 }

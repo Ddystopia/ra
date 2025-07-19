@@ -187,17 +187,17 @@ impl R {
 impl W {
     ///Bit 0 - VBATWIO0 Wakeup Trigger Source Edge Select
     #[inline(always)]
-    pub fn vch0eg(&mut self) -> VCH0EG_W<VBTWEGR_SPEC> {
+    pub fn vch0eg(&mut self) -> VCH0EG_W<'_, VBTWEGR_SPEC> {
         VCH0EG_W::new(self, 0)
     }
     ///Bit 1 - VBATWIO1 Wakeup Trigger Source Edge Select
     #[inline(always)]
-    pub fn vch1eg(&mut self) -> VCH1EG_W<VBTWEGR_SPEC> {
+    pub fn vch1eg(&mut self) -> VCH1EG_W<'_, VBTWEGR_SPEC> {
         VCH1EG_W::new(self, 1)
     }
     ///Bit 2 - VBATWIO2 Wakeup Trigger Source Edge Select
     #[inline(always)]
-    pub fn vch2eg(&mut self) -> VCH2EG_W<VBTWEGR_SPEC> {
+    pub fn vch2eg(&mut self) -> VCH2EG_W<'_, VBTWEGR_SPEC> {
         VCH2EG_W::new(self, 2)
     }
 }

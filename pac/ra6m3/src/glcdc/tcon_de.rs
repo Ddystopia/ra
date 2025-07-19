@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - DE signal polarity inversion control.
     #[inline(always)]
-    pub fn inv(&mut self) -> INV_W<TCON_DE_SPEC> {
+    pub fn inv(&mut self) -> INV_W<'_, TCON_DE_SPEC> {
         INV_W::new(self, 0)
     }
 }

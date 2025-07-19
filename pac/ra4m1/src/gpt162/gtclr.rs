@@ -267,42 +267,42 @@ where
 impl W {
     ///Bit 0 - Channel 0 GTCNT Count Clear
     #[inline(always)]
-    pub fn cclr0(&mut self) -> CCLR0_W<GTCLR_SPEC> {
+    pub fn cclr0(&mut self) -> CCLR0_W<'_, GTCLR_SPEC> {
         CCLR0_W::new(self, 0)
     }
     ///Bit 1 - Channel 1 GTCNT Count Clear
     #[inline(always)]
-    pub fn cclr1(&mut self) -> CCLR1_W<GTCLR_SPEC> {
+    pub fn cclr1(&mut self) -> CCLR1_W<'_, GTCLR_SPEC> {
         CCLR1_W::new(self, 1)
     }
     ///Bit 2 - Channel 2 GTCNT Count Clear
     #[inline(always)]
-    pub fn cclr2(&mut self) -> CCLR2_W<GTCLR_SPEC> {
+    pub fn cclr2(&mut self) -> CCLR2_W<'_, GTCLR_SPEC> {
         CCLR2_W::new(self, 2)
     }
     ///Bit 3 - Channel 3 GTCNT Count Clear
     #[inline(always)]
-    pub fn cclr3(&mut self) -> CCLR3_W<GTCLR_SPEC> {
+    pub fn cclr3(&mut self) -> CCLR3_W<'_, GTCLR_SPEC> {
         CCLR3_W::new(self, 3)
     }
     ///Bit 4 - Channel 4 GTCNT Count Clear
     #[inline(always)]
-    pub fn cclr4(&mut self) -> CCLR4_W<GTCLR_SPEC> {
+    pub fn cclr4(&mut self) -> CCLR4_W<'_, GTCLR_SPEC> {
         CCLR4_W::new(self, 4)
     }
     ///Bit 5 - Channel 5 GTCNT Count Clear
     #[inline(always)]
-    pub fn cclr5(&mut self) -> CCLR5_W<GTCLR_SPEC> {
+    pub fn cclr5(&mut self) -> CCLR5_W<'_, GTCLR_SPEC> {
         CCLR5_W::new(self, 5)
     }
     ///Bit 6 - Channel 6 GTCNT Count Clear
     #[inline(always)]
-    pub fn cclr6(&mut self) -> CCLR6_W<GTCLR_SPEC> {
+    pub fn cclr6(&mut self) -> CCLR6_W<'_, GTCLR_SPEC> {
         CCLR6_W::new(self, 6)
     }
     ///Bit 7 - Channel 7 GTCNT Count Clear
     #[inline(always)]
-    pub fn cclr7(&mut self) -> CCLR7_W<GTCLR_SPEC> {
+    pub fn cclr7(&mut self) -> CCLR7_W<'_, GTCLR_SPEC> {
         CCLR7_W::new(self, 7)
     }
 }

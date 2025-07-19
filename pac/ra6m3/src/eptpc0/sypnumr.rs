@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - Local Port Number SettingThese bits hold the setting for the port number of the local port.
     #[inline(always)]
-    pub fn pnum(&mut self) -> PNUM_W<SYPNUMR_SPEC> {
+    pub fn pnum(&mut self) -> PNUM_W<'_, SYPNUMR_SPEC> {
         PNUM_W::new(self, 0)
     }
 }

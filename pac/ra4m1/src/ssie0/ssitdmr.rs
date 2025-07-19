@@ -220,17 +220,17 @@ impl R {
 impl W {
     ///Bits 0:1 - Audio Format Select
     #[inline(always)]
-    pub fn omod(&mut self) -> OMOD_W<SSITDMR_SPEC> {
+    pub fn omod(&mut self) -> OMOD_W<'_, SSITDMR_SPEC> {
         OMOD_W::new(self, 0)
     }
     ///Bit 8 - Whether to Enable LRCK/FS Continuation
     #[inline(always)]
-    pub fn lrcont(&mut self) -> LRCONT_W<SSITDMR_SPEC> {
+    pub fn lrcont(&mut self) -> LRCONT_W<'_, SSITDMR_SPEC> {
         LRCONT_W::new(self, 8)
     }
     ///Bit 9 - Whether to Enable Stopping BCK Output When SSIE is in Idle Status
     #[inline(always)]
-    pub fn bckastp(&mut self) -> BCKASTP_W<SSITDMR_SPEC> {
+    pub fn bckastp(&mut self) -> BCKASTP_W<'_, SSITDMR_SPEC> {
         BCKASTP_W::new(self, 9)
     }
 }

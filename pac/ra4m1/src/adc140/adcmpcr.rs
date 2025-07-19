@@ -400,32 +400,32 @@ impl R {
 impl W {
     ///Bits 0:1 - Window A/B Composite Conditions Setting NOTE: These bits are valid when both window A and window B are enabled (CMPAE = 1 and CMPBE = 1).
     #[inline(always)]
-    pub fn cmpab(&mut self) -> CMPAB_W<ADCMPCR_SPEC> {
+    pub fn cmpab(&mut self) -> CMPAB_W<'_, ADCMPCR_SPEC> {
         CMPAB_W::new(self, 0)
     }
     ///Bit 9 - Compare Window B Operation Enable
     #[inline(always)]
-    pub fn cmpbe(&mut self) -> CMPBE_W<ADCMPCR_SPEC> {
+    pub fn cmpbe(&mut self) -> CMPBE_W<'_, ADCMPCR_SPEC> {
         CMPBE_W::new(self, 9)
     }
     ///Bit 11 - Compare Window A Operation Enable
     #[inline(always)]
-    pub fn cmpae(&mut self) -> CMPAE_W<ADCMPCR_SPEC> {
+    pub fn cmpae(&mut self) -> CMPAE_W<'_, ADCMPCR_SPEC> {
         CMPAE_W::new(self, 11)
     }
     ///Bit 13 - Compare B Interrupt Enable
     #[inline(always)]
-    pub fn cmpbie(&mut self) -> CMPBIE_W<ADCMPCR_SPEC> {
+    pub fn cmpbie(&mut self) -> CMPBIE_W<'_, ADCMPCR_SPEC> {
         CMPBIE_W::new(self, 13)
     }
     ///Bit 14 - Window Function Setting
     #[inline(always)]
-    pub fn wcmpe(&mut self) -> WCMPE_W<ADCMPCR_SPEC> {
+    pub fn wcmpe(&mut self) -> WCMPE_W<'_, ADCMPCR_SPEC> {
         WCMPE_W::new(self, 14)
     }
     ///Bit 15 - Compare A Interrupt Enable
     #[inline(always)]
-    pub fn cmpaie(&mut self) -> CMPAIE_W<ADCMPCR_SPEC> {
+    pub fn cmpaie(&mut self) -> CMPAIE_W<'_, ADCMPCR_SPEC> {
         CMPAIE_W::new(self, 15)
     }
 }

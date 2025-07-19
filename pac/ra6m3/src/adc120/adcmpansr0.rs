@@ -487,42 +487,42 @@ impl R {
 impl W {
     ///Bit 0 - Compare Window A Channel AN000 Select
     #[inline(always)]
-    pub fn cmpcha00(&mut self) -> CMPCHA00_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha00(&mut self) -> CMPCHA00_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA00_W::new(self, 0)
     }
     ///Bit 1 - Compare Window A Channel AN001 Select
     #[inline(always)]
-    pub fn cmpcha01(&mut self) -> CMPCHA01_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha01(&mut self) -> CMPCHA01_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA01_W::new(self, 1)
     }
     ///Bit 2 - Compare Window A Channel AN002 Select
     #[inline(always)]
-    pub fn cmpcha02(&mut self) -> CMPCHA02_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha02(&mut self) -> CMPCHA02_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA02_W::new(self, 2)
     }
     ///Bit 3 - Compare Window A Channel AN003 Select
     #[inline(always)]
-    pub fn cmpcha03(&mut self) -> CMPCHA03_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha03(&mut self) -> CMPCHA03_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA03_W::new(self, 3)
     }
     ///Bit 4 - Compare Window A Channel AN004 Select
     #[inline(always)]
-    pub fn cmpcha04(&mut self) -> CMPCHA04_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha04(&mut self) -> CMPCHA04_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA04_W::new(self, 4)
     }
     ///Bit 5 - Compare Window A Channel AN005 Select
     #[inline(always)]
-    pub fn cmpcha05(&mut self) -> CMPCHA05_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha05(&mut self) -> CMPCHA05_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA05_W::new(self, 5)
     }
     ///Bit 6 - Compare Window A Channel AN006 Select
     #[inline(always)]
-    pub fn cmpcha06(&mut self) -> CMPCHA06_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha06(&mut self) -> CMPCHA06_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA06_W::new(self, 6)
     }
     ///Bit 7 - Compare Window A Channel AN007 Select
     #[inline(always)]
-    pub fn cmpcha07(&mut self) -> CMPCHA07_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha07(&mut self) -> CMPCHA07_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA07_W::new(self, 7)
     }
 }

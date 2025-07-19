@@ -373,27 +373,27 @@ impl R {
 impl W {
     ///Bit 0 - CTSU Power Supply Enable
     #[inline(always)]
-    pub fn ctsupon(&mut self) -> CTSUPON_W<CTSUCR1_SPEC> {
+    pub fn ctsupon(&mut self) -> CTSUPON_W<'_, CTSUCR1_SPEC> {
         CTSUPON_W::new(self, 0)
     }
     ///Bit 1 - CTSU LPF Capacitance Charging Control
     #[inline(always)]
-    pub fn ctsucsw(&mut self) -> CTSUCSW_W<CTSUCR1_SPEC> {
+    pub fn ctsucsw(&mut self) -> CTSUCSW_W<'_, CTSUCR1_SPEC> {
         CTSUCSW_W::new(self, 1)
     }
     ///Bit 3 - CTSU Power Supply Capacity Adjustment
     #[inline(always)]
-    pub fn ctsuatune1(&mut self) -> CTSUATUNE1_W<CTSUCR1_SPEC> {
+    pub fn ctsuatune1(&mut self) -> CTSUATUNE1_W<'_, CTSUCR1_SPEC> {
         CTSUATUNE1_W::new(self, 3)
     }
     ///Bits 4:5 - CTSU Operating Clock Select
     #[inline(always)]
-    pub fn ctsuclk(&mut self) -> CTSUCLK_W<CTSUCR1_SPEC> {
+    pub fn ctsuclk(&mut self) -> CTSUCLK_W<'_, CTSUCR1_SPEC> {
         CTSUCLK_W::new(self, 4)
     }
     ///Bits 6:7 - CTSU Measurement Mode Select
     #[inline(always)]
-    pub fn ctsumd(&mut self) -> CTSUMD_W<CTSUCR1_SPEC> {
+    pub fn ctsumd(&mut self) -> CTSUMD_W<'_, CTSUCR1_SPEC> {
         CTSUMD_W::new(self, 6)
     }
 }

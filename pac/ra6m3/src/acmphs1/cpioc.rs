@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 0 - Comparator output selection
     #[inline(always)]
-    pub fn cpoe(&mut self) -> CPOE_W<CPIOC_SPEC> {
+    pub fn cpoe(&mut self) -> CPOE_W<'_, CPIOC_SPEC> {
         CPOE_W::new(self, 0)
     }
     ///Bit 7 - Internal Vref enable
     #[inline(always)]
-    pub fn vrefen(&mut self) -> VREFEN_W<CPIOC_SPEC> {
+    pub fn vrefen(&mut self) -> VREFEN_W<'_, CPIOC_SPEC> {
         VREFEN_W::new(self, 7)
     }
 }

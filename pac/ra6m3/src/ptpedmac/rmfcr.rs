@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - Missed-Frame CounterThese bits indicate the number of frames that are discarded and not transferred to the receive buffer during reception.
     #[inline(always)]
-    pub fn mfc(&mut self) -> MFC_W<RMFCR_SPEC> {
+    pub fn mfc(&mut self) -> MFC_W<'_, RMFCR_SPEC> {
         MFC_W::new(self, 0)
     }
 }

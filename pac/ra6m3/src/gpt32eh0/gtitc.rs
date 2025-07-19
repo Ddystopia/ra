@@ -725,52 +725,52 @@ impl R {
 impl W {
     ///Bit 0 - GTCCRA Compare Match/Input Capture Interrupt Link
     #[inline(always)]
-    pub fn itla(&mut self) -> ITLA_W<GTITC_SPEC> {
+    pub fn itla(&mut self) -> ITLA_W<'_, GTITC_SPEC> {
         ITLA_W::new(self, 0)
     }
     ///Bit 1 - GTCCRB Compare Match/Input Capture Interrupt Link
     #[inline(always)]
-    pub fn itlb(&mut self) -> ITLB_W<GTITC_SPEC> {
+    pub fn itlb(&mut self) -> ITLB_W<'_, GTITC_SPEC> {
         ITLB_W::new(self, 1)
     }
     ///Bit 2 - GTCCRC Compare Match Interrupt Link
     #[inline(always)]
-    pub fn itlc(&mut self) -> ITLC_W<GTITC_SPEC> {
+    pub fn itlc(&mut self) -> ITLC_W<'_, GTITC_SPEC> {
         ITLC_W::new(self, 2)
     }
     ///Bit 3 - GTCCRD Compare Match Interrupt Link
     #[inline(always)]
-    pub fn itld(&mut self) -> ITLD_W<GTITC_SPEC> {
+    pub fn itld(&mut self) -> ITLD_W<'_, GTITC_SPEC> {
         ITLD_W::new(self, 3)
     }
     ///Bit 4 - GTCCRE Compare Match Interrupt Link
     #[inline(always)]
-    pub fn itle(&mut self) -> ITLE_W<GTITC_SPEC> {
+    pub fn itle(&mut self) -> ITLE_W<'_, GTITC_SPEC> {
         ITLE_W::new(self, 4)
     }
     ///Bit 5 - GTCCRF Compare Match Interrupt Link
     #[inline(always)]
-    pub fn itlf(&mut self) -> ITLF_W<GTITC_SPEC> {
+    pub fn itlf(&mut self) -> ITLF_W<'_, GTITC_SPEC> {
         ITLF_W::new(self, 5)
     }
     ///Bits 6:7 - GPT_OVF/GPT_UDF Interrupt Skipping Function Select
     #[inline(always)]
-    pub fn ivtc(&mut self) -> IVTC_W<GTITC_SPEC> {
+    pub fn ivtc(&mut self) -> IVTC_W<'_, GTITC_SPEC> {
         IVTC_W::new(self, 6)
     }
     ///Bits 8:10 - GPT_OVF/GPT_UDF Interrupt Skipping Count Select
     #[inline(always)]
-    pub fn ivtt(&mut self) -> IVTT_W<GTITC_SPEC> {
+    pub fn ivtt(&mut self) -> IVTT_W<'_, GTITC_SPEC> {
         IVTT_W::new(self, 8)
     }
     ///Bit 12 - GTADTRA A/D Converter Start Request Link
     #[inline(always)]
-    pub fn adtal(&mut self) -> ADTAL_W<GTITC_SPEC> {
+    pub fn adtal(&mut self) -> ADTAL_W<'_, GTITC_SPEC> {
         ADTAL_W::new(self, 12)
     }
     ///Bit 14 - GTADTRB A/D Converter Start Request Link
     #[inline(always)]
-    pub fn adtbl(&mut self) -> ADTBL_W<GTITC_SPEC> {
+    pub fn adtbl(&mut self) -> ADTBL_W<'_, GTITC_SPEC> {
         ADTBL_W::new(self, 14)
     }
 }

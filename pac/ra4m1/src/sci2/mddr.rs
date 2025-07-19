@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - MDDR corrects the bit rate adjusted by the BRR register.
     #[inline(always)]
-    pub fn mddr(&mut self) -> MDDR_W<MDDR_SPEC> {
+    pub fn mddr(&mut self) -> MDDR_W<'_, MDDR_SPEC> {
         MDDR_W::new(self, 0)
     }
 }

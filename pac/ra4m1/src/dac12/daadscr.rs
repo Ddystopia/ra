@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 7 - D/A-A/D Synchronous Conversion
     #[inline(always)]
-    pub fn daadst(&mut self) -> DAADST_W<DAADSCR_SPEC> {
+    pub fn daadst(&mut self) -> DAADST_W<'_, DAADSCR_SPEC> {
         DAADST_W::new(self, 7)
     }
 }

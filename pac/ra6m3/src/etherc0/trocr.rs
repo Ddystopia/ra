@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Transmit Retry Over Counter RegisterThe TROCR register is a counter indicating the number of frames that fail to be retransmitted.
     #[inline(always)]
-    pub fn trocr(&mut self) -> TROCR_W<TROCR_SPEC> {
+    pub fn trocr(&mut self) -> TROCR_W<'_, TROCR_SPEC> {
         TROCR_W::new(self, 0)
     }
 }

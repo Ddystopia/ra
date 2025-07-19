@@ -86,7 +86,7 @@ impl R {
 impl W {
     ///Bits 0:2 - Backup Register Access Control Register
     #[inline(always)]
-    pub fn bkracs(&mut self) -> BKRACS_W<BKRACR_SPEC> {
+    pub fn bkracs(&mut self) -> BKRACS_W<'_, BKRACR_SPEC> {
         BKRACS_W::new(self, 0)
     }
 }

@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 6 - Snoop-on-write/read switch bit
     #[inline(always)]
-    pub fn crcswr(&mut self) -> CRCSWR_W<CRCCR1_SPEC> {
+    pub fn crcswr(&mut self) -> CRCSWR_W<'_, CRCCR1_SPEC> {
         CRCSWR_W::new(self, 6)
     }
     ///Bit 7 - Snoop enable bit
     #[inline(always)]
-    pub fn crcsen(&mut self) -> CRCSEN_W<CRCCR1_SPEC> {
+    pub fn crcsen(&mut self) -> CRCSEN_W<'_, CRCCR1_SPEC> {
         CRCSEN_W::new(self, 7)
     }
 }

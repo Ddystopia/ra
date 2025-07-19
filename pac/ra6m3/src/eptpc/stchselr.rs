@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Timer Information Input SelectNOTE: Do not change the value of this bit while the SYNSTARTR.STR bit is 1.
     #[inline(always)]
-    pub fn sysel(&mut self) -> SYSEL_W<STCHSELR_SPEC> {
+    pub fn sysel(&mut self) -> SYSEL_W<'_, STCHSELR_SPEC> {
         SYSEL_W::new(self, 0)
     }
 }

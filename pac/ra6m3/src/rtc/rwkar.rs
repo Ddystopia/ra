@@ -212,12 +212,12 @@ impl R {
 impl W {
     ///Bits 0:2 - Day-of-Week Counting
     #[inline(always)]
-    pub fn dayw(&mut self) -> DAYW_W<RWKAR_SPEC> {
+    pub fn dayw(&mut self) -> DAYW_W<'_, RWKAR_SPEC> {
         DAYW_W::new(self, 0)
     }
     ///Bit 7 - Compare enable
     #[inline(always)]
-    pub fn enb(&mut self) -> ENB_W<RWKAR_SPEC> {
+    pub fn enb(&mut self) -> ENB_W<'_, RWKAR_SPEC> {
         ENB_W::new(self, 7)
     }
 }

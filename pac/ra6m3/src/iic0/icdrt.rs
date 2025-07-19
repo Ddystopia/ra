@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - 8-bit read-write register that stores transmit data.
     #[inline(always)]
-    pub fn icdrt(&mut self) -> ICDRT_W<ICDRT_SPEC> {
+    pub fn icdrt(&mut self) -> ICDRT_W<'_, ICDRT_SPEC> {
         ICDRT_W::new(self, 0)
     }
 }

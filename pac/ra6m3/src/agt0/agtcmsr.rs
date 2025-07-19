@@ -367,32 +367,32 @@ impl R {
 impl W {
     ///Bit 0 - Compare match A register enable
     #[inline(always)]
-    pub fn tcmea(&mut self) -> TCMEA_W<AGTCMSR_SPEC> {
+    pub fn tcmea(&mut self) -> TCMEA_W<'_, AGTCMSR_SPEC> {
         TCMEA_W::new(self, 0)
     }
     ///Bit 1 - AGTOA output enable
     #[inline(always)]
-    pub fn toea(&mut self) -> TOEA_W<AGTCMSR_SPEC> {
+    pub fn toea(&mut self) -> TOEA_W<'_, AGTCMSR_SPEC> {
         TOEA_W::new(self, 1)
     }
     ///Bit 2 - AGTOA polarity select
     #[inline(always)]
-    pub fn topola(&mut self) -> TOPOLA_W<AGTCMSR_SPEC> {
+    pub fn topola(&mut self) -> TOPOLA_W<'_, AGTCMSR_SPEC> {
         TOPOLA_W::new(self, 2)
     }
     ///Bit 4 - Compare match B register enable
     #[inline(always)]
-    pub fn tcmeb(&mut self) -> TCMEB_W<AGTCMSR_SPEC> {
+    pub fn tcmeb(&mut self) -> TCMEB_W<'_, AGTCMSR_SPEC> {
         TCMEB_W::new(self, 4)
     }
     ///Bit 5 - AGTOB output enable
     #[inline(always)]
-    pub fn toeb(&mut self) -> TOEB_W<AGTCMSR_SPEC> {
+    pub fn toeb(&mut self) -> TOEB_W<'_, AGTCMSR_SPEC> {
         TOEB_W::new(self, 5)
     }
     ///Bit 6 - AGTOB polarity select
     #[inline(always)]
-    pub fn topolb(&mut self) -> TOPOLB_W<AGTCMSR_SPEC> {
+    pub fn topolb(&mut self) -> TOPOLB_W<'_, AGTCMSR_SPEC> {
         TOPOLB_W::new(self, 6)
     }
 }

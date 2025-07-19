@@ -73,7 +73,7 @@ impl R {
 impl W {
     ///Bits 0:8 - SYS Event Link Select
     #[inline(always)]
-    pub fn sels(&mut self) -> SELS_W<SELSR0_SPEC> {
+    pub fn sels(&mut self) -> SELS_W<'_, SELSR0_SPEC> {
         SELS_W::new(self, 0)
     }
 }

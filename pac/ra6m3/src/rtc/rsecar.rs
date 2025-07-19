@@ -85,17 +85,17 @@ impl R {
 impl W {
     ///Bits 0:3 - 1-Second Value for the ones place of seconds
     #[inline(always)]
-    pub fn sec1(&mut self) -> SEC1_W<RSECAR_SPEC> {
+    pub fn sec1(&mut self) -> SEC1_W<'_, RSECAR_SPEC> {
         SEC1_W::new(self, 0)
     }
     ///Bits 4:6 - 10-Seconds Value for the tens place of seconds
     #[inline(always)]
-    pub fn sec10(&mut self) -> SEC10_W<RSECAR_SPEC> {
+    pub fn sec10(&mut self) -> SEC10_W<'_, RSECAR_SPEC> {
         SEC10_W::new(self, 4)
     }
     ///Bit 7 - Compare enable
     #[inline(always)]
-    pub fn enb(&mut self) -> ENB_W<RSECAR_SPEC> {
+    pub fn enb(&mut self) -> ENB_W<'_, RSECAR_SPEC> {
         ENB_W::new(self, 7)
     }
 }

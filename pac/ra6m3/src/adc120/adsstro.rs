@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - Sampling Time Setting (Internal reference voltage)
     #[inline(always)]
-    pub fn sst(&mut self) -> SST_W<ADSSTRO_SPEC> {
+    pub fn sst(&mut self) -> SST_W<'_, ADSSTRO_SPEC> {
         SST_W::new(self, 0)
     }
 }

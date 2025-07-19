@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Slave Time Synchronization Control
     #[inline(always)]
-    pub fn str(&mut self) -> STR_W<SYNSTARTR_SPEC> {
+    pub fn str(&mut self) -> STR_W<'_, SYNSTARTR_SPEC> {
         STR_W::new(self, 0)
     }
 }

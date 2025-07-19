@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 7 - Reset Interrupt Request Selection
     #[inline(always)]
-    pub fn rstirqs(&mut self) -> RSTIRQS_W<WDTRCR_SPEC> {
+    pub fn rstirqs(&mut self) -> RSTIRQS_W<'_, WDTRCR_SPEC> {
         RSTIRQS_W::new(self, 7)
     }
 }

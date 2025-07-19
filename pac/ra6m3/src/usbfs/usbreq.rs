@@ -25,12 +25,12 @@ impl R {
 impl W {
     ///Bits 0:7 - Request TypeThese bits store the USB request bmRequestType value.
     #[inline(always)]
-    pub fn bmrequesttype(&mut self) -> BMREQUESTTYPE_W<USBREQ_SPEC> {
+    pub fn bmrequesttype(&mut self) -> BMREQUESTTYPE_W<'_, USBREQ_SPEC> {
         BMREQUESTTYPE_W::new(self, 0)
     }
     ///Bits 8:15 - RequestThese bits store the USB request bRequest value.
     #[inline(always)]
-    pub fn brequest(&mut self) -> BREQUEST_W<USBREQ_SPEC> {
+    pub fn brequest(&mut self) -> BREQUEST_W<'_, USBREQ_SPEC> {
         BREQUEST_W::new(self, 8)
     }
 }

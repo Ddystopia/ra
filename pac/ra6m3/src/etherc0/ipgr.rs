@@ -73,7 +73,7 @@ impl R {
 impl W {
     ///Bits 0:4 - Interpacket Gap Range:"16bit time(0x00)"-"140bit time(0x1F)"
     #[inline(always)]
-    pub fn ipg(&mut self) -> IPG_W<IPGR_SPEC> {
+    pub fn ipg(&mut self) -> IPG_W<'_, IPGR_SPEC> {
         IPG_W::new(self, 0)
     }
 }

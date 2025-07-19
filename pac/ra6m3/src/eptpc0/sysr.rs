@@ -627,52 +627,52 @@ impl R {
 impl W {
     ///Bit 0 - offsetFromMaster Value Update Flag
     #[inline(always)]
-    pub fn ofmud(&mut self) -> OFMUD_W<SYSR_SPEC> {
+    pub fn ofmud(&mut self) -> OFMUD_W<'_, SYSR_SPEC> {
         OFMUD_W::new(self, 0)
     }
     ///Bit 1 - Receive logMessageInterval Value Change Detection Flag
     #[inline(always)]
-    pub fn intchg(&mut self) -> INTCHG_W<SYSR_SPEC> {
+    pub fn intchg(&mut self) -> INTCHG_W<'_, SYSR_SPEC> {
         INTCHG_W::new(self, 1)
     }
     ///Bit 2 - meanPathDelay Value Update Flag
     #[inline(always)]
-    pub fn mpdud(&mut self) -> MPDUD_W<SYSR_SPEC> {
+    pub fn mpdud(&mut self) -> MPDUD_W<'_, SYSR_SPEC> {
         MPDUD_W::new(self, 2)
     }
     ///Bit 4 - Delay_Resp/Pdelay_Resp Reception Timeout Detection Flag
     #[inline(always)]
-    pub fn drpto(&mut self) -> DRPTO_W<SYSR_SPEC> {
+    pub fn drpto(&mut self) -> DRPTO_W<'_, SYSR_SPEC> {
         DRPTO_W::new(self, 4)
     }
     ///Bit 5 - Receive logMessageInterval Value Out-of-Range Flag
     #[inline(always)]
-    pub fn intdev(&mut self) -> INTDEV_W<SYSR_SPEC> {
+    pub fn intdev(&mut self) -> INTDEV_W<'_, SYSR_SPEC> {
         INTDEV_W::new(self, 5)
     }
     ///Bit 6 - Delay_Req Reception FIFO Overflow Detection Flag
     #[inline(always)]
-    pub fn drqovr(&mut self) -> DRQOVR_W<SYSR_SPEC> {
+    pub fn drqovr(&mut self) -> DRQOVR_W<'_, SYSR_SPEC> {
         DRQOVR_W::new(self, 6)
     }
     ///Bit 12 - Loop Reception Detection Flag
     #[inline(always)]
-    pub fn reclp(&mut self) -> RECLP_W<SYSR_SPEC> {
+    pub fn reclp(&mut self) -> RECLP_W<'_, SYSR_SPEC> {
         RECLP_W::new(self, 12)
     }
     ///Bit 14 - Control Information Abnormality Detection Flag
     #[inline(always)]
-    pub fn infabt(&mut self) -> INFABT_W<SYSR_SPEC> {
+    pub fn infabt(&mut self) -> INFABT_W<'_, SYSR_SPEC> {
         INFABT_W::new(self, 14)
     }
     ///Bit 16 - Response Stop Completion Detection Flag
     #[inline(always)]
-    pub fn resdn(&mut self) -> RESDN_W<SYSR_SPEC> {
+    pub fn resdn(&mut self) -> RESDN_W<'_, SYSR_SPEC> {
         RESDN_W::new(self, 16)
     }
     ///Bit 17 - Generation Stop Completion Detection Flag
     #[inline(always)]
-    pub fn gendn(&mut self) -> GENDN_W<SYSR_SPEC> {
+    pub fn gendn(&mut self) -> GENDN_W<'_, SYSR_SPEC> {
         GENDN_W::new(self, 17)
     }
 }

@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - These bits hold the setting for the destination IP address for PTPprimary messages.
     #[inline(always)]
-    pub fn ppipr(&mut self) -> PPIPR_W<PPIPR_SPEC> {
+    pub fn ppipr(&mut self) -> PPIPR_W<'_, PPIPR_SPEC> {
         PPIPR_W::new(self, 0)
     }
 }

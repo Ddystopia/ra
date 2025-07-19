@@ -529,32 +529,32 @@ impl R {
 impl W {
     ///Bits 0:1 - Response PID
     #[inline(always)]
-    pub fn pid(&mut self) -> PID_W<DCPCTR_SPEC> {
+    pub fn pid(&mut self) -> PID_W<'_, DCPCTR_SPEC> {
         PID_W::new(self, 0)
     }
     ///Bit 2 - Control Transfer End Enable
     #[inline(always)]
-    pub fn ccpl(&mut self) -> CCPL_W<DCPCTR_SPEC> {
+    pub fn ccpl(&mut self) -> CCPL_W<'_, DCPCTR_SPEC> {
         CCPL_W::new(self, 2)
     }
     ///Bit 7 - Sequence Toggle Bit Set
     #[inline(always)]
-    pub fn sqset(&mut self) -> SQSET_W<DCPCTR_SPEC> {
+    pub fn sqset(&mut self) -> SQSET_W<'_, DCPCTR_SPEC> {
         SQSET_W::new(self, 7)
     }
     ///Bit 8 - Sequence Toggle Bit Clear
     #[inline(always)]
-    pub fn sqclr(&mut self) -> SQCLR_W<DCPCTR_SPEC> {
+    pub fn sqclr(&mut self) -> SQCLR_W<'_, DCPCTR_SPEC> {
         SQCLR_W::new(self, 8)
     }
     ///Bit 11 - SUREQ Bit Clear
     #[inline(always)]
-    pub fn sureqclr(&mut self) -> SUREQCLR_W<DCPCTR_SPEC> {
+    pub fn sureqclr(&mut self) -> SUREQCLR_W<'_, DCPCTR_SPEC> {
         SUREQCLR_W::new(self, 11)
     }
     ///Bit 14 - Setup Token Transmission
     #[inline(always)]
-    pub fn sureq(&mut self) -> SUREQ_W<DCPCTR_SPEC> {
+    pub fn sureq(&mut self) -> SUREQ_W<'_, DCPCTR_SPEC> {
         SUREQ_W::new(self, 14)
     }
 }

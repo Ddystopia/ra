@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 0 - Ethernet/UDP Encapsulation
     #[inline(always)]
-    pub fn form0(&mut self) -> FORM0_W<SYFORMR_SPEC> {
+    pub fn form0(&mut self) -> FORM0_W<'_, SYFORMR_SPEC> {
         FORM0_W::new(self, 0)
     }
     ///Bit 1 - Ethernet Frame Format Setting
     #[inline(always)]
-    pub fn form1(&mut self) -> FORM1_W<SYFORMR_SPEC> {
+    pub fn form1(&mut self) -> FORM1_W<'_, SYFORMR_SPEC> {
         FORM1_W::new(self, 1)
     }
 }

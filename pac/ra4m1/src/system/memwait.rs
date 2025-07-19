@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Memory Wait Cycle Select Note: Writing 0 to the MEMWAIT is prohibited when SCKDIVCR.ICK selects division by 1 and SCKSCR.CKSEL\[2:0\] bits select the system clock source that is faster than 32 MHz (ICLK > 32 MHz).
     #[inline(always)]
-    pub fn memwait(&mut self) -> MEMWAIT_W<MEMWAIT_SPEC> {
+    pub fn memwait(&mut self) -> MEMWAIT_W<'_, MEMWAIT_SPEC> {
         MEMWAIT_W::new(self, 0)
     }
 }

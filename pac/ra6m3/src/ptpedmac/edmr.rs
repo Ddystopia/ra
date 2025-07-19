@@ -220,17 +220,17 @@ impl R {
 impl W {
     ///Bit 0 - Software Reset (The read value is 0.)
     #[inline(always)]
-    pub fn swr(&mut self) -> SWR_W<EDMR_SPEC> {
+    pub fn swr(&mut self) -> SWR_W<'_, EDMR_SPEC> {
         SWR_W::new(self, 0)
     }
     ///Bits 4:5 - Transmit/Receive DescriptorLength
     #[inline(always)]
-    pub fn dl(&mut self) -> DL_W<EDMR_SPEC> {
+    pub fn dl(&mut self) -> DL_W<'_, EDMR_SPEC> {
         DL_W::new(self, 4)
     }
     ///Bit 6 - Big Endian Mode/Little Endian ModeNOTE: This setting applies to data for the transmit/receive buffer. It does not apply to transmit/receive descriptors and registers.
     #[inline(always)]
-    pub fn de(&mut self) -> DE_W<EDMR_SPEC> {
+    pub fn de(&mut self) -> DE_W<'_, EDMR_SPEC> {
         DE_W::new(self, 6)
     }
 }

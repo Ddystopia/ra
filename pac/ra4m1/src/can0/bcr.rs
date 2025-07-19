@@ -536,27 +536,27 @@ impl R {
 impl W {
     ///Bit 0 - CAN Clock Source Selection
     #[inline(always)]
-    pub fn cclks(&mut self) -> CCLKS_W<BCR_SPEC> {
+    pub fn cclks(&mut self) -> CCLKS_W<'_, BCR_SPEC> {
         CCLKS_W::new(self, 0)
     }
     ///Bits 8:10 - Time Segment 2 Control
     #[inline(always)]
-    pub fn tseg2(&mut self) -> TSEG2_W<BCR_SPEC> {
+    pub fn tseg2(&mut self) -> TSEG2_W<'_, BCR_SPEC> {
         TSEG2_W::new(self, 8)
     }
     ///Bits 12:13 - Resynchronization Jump Width Control
     #[inline(always)]
-    pub fn sjw(&mut self) -> SJW_W<BCR_SPEC> {
+    pub fn sjw(&mut self) -> SJW_W<'_, BCR_SPEC> {
         SJW_W::new(self, 12)
     }
     ///Bits 16:25 - Prescaler Division Ratio Select . These bits set the frequency of the CAN communication clock (fCANCLK).
     #[inline(always)]
-    pub fn brp(&mut self) -> BRP_W<BCR_SPEC> {
+    pub fn brp(&mut self) -> BRP_W<'_, BCR_SPEC> {
         BRP_W::new(self, 16)
     }
     ///Bits 28:31 - Time Segment 1 Control
     #[inline(always)]
-    pub fn tseg1(&mut self) -> TSEG1_W<BCR_SPEC> {
+    pub fn tseg1(&mut self) -> TSEG1_W<'_, BCR_SPEC> {
         TSEG1_W::new(self, 28)
     }
 }

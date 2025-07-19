@@ -25,12 +25,12 @@ impl R {
 impl W {
     ///Bits 0:11 - Horizontal Capture Start Byte Position Horizontal position in bytes where capture is to start.
     #[inline(always)]
-    pub fn hst(&mut self) -> HST_W<HCR_SPEC> {
+    pub fn hst(&mut self) -> HST_W<'_, HCR_SPEC> {
         HST_W::new(self, 0)
     }
     ///Bits 16:27 - Horizontal Capture Size Number of bytes to capture horizontally.
     #[inline(always)]
-    pub fn hsz(&mut self) -> HSZ_W<HCR_SPEC> {
+    pub fn hsz(&mut self) -> HSZ_W<'_, HCR_SPEC> {
         HSZ_W::new(self, 16)
     }
 }

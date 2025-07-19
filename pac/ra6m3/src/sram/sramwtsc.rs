@@ -187,17 +187,17 @@ impl R {
 impl W {
     ///Bit 1 - ECCRAM Read wait enable
     #[inline(always)]
-    pub fn eccramrdwten(&mut self) -> ECCRAMRDWTEN_W<SRAMWTSC_SPEC> {
+    pub fn eccramrdwten(&mut self) -> ECCRAMRDWTEN_W<'_, SRAMWTSC_SPEC> {
         ECCRAMRDWTEN_W::new(self, 1)
     }
     ///Bit 2 - SRAM0 Wait Enable
     #[inline(always)]
-    pub fn sram0wten(&mut self) -> SRAM0WTEN_W<SRAMWTSC_SPEC> {
+    pub fn sram0wten(&mut self) -> SRAM0WTEN_W<'_, SRAMWTSC_SPEC> {
         SRAM0WTEN_W::new(self, 2)
     }
     ///Bit 3 - SRAM1 Wait Enable
     #[inline(always)]
-    pub fn sram1wten(&mut self) -> SRAM1WTEN_W<SRAMWTSC_SPEC> {
+    pub fn sram1wten(&mut self) -> SRAM1WTEN_W<'_, SRAMWTSC_SPEC> {
         SRAM1WTEN_W::new(self, 3)
     }
 }

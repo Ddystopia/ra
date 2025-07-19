@@ -106,12 +106,12 @@ impl R {
 impl W {
     ///Bit 0 - Register Write Disable
     #[inline(always)]
-    pub fn wp(&mut self) -> WP_W<GTWP_SPEC> {
+    pub fn wp(&mut self) -> WP_W<'_, GTWP_SPEC> {
         WP_W::new(self, 0)
     }
     ///Bits 8:15 - GTWP Key Code
     #[inline(always)]
-    pub fn prkey(&mut self) -> PRKEY_W<GTWP_SPEC> {
+    pub fn prkey(&mut self) -> PRKEY_W<'_, GTWP_SPEC> {
         PRKEY_W::new(self, 8)
     }
 }

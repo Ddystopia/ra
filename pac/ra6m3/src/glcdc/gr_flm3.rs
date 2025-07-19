@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 16:31 - Macro line offset address for accessing graphics data(frame buffer data)Signed; 16-bit integer
     #[inline(always)]
-    pub fn lnoff(&mut self) -> LNOFF_W<GR_FLM3_SPEC> {
+    pub fn lnoff(&mut self) -> LNOFF_W<'_, GR_FLM3_SPEC> {
         LNOFF_W::new(self, 16)
     }
 }

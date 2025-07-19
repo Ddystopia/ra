@@ -247,22 +247,22 @@ impl R {
 impl W {
     ///Bit 0 - Receiver Cross Point Adjustment 00
     #[inline(always)]
-    pub fn slewr00(&mut self) -> SLEWR00_W<PHYSLEW_SPEC> {
+    pub fn slewr00(&mut self) -> SLEWR00_W<'_, PHYSLEW_SPEC> {
         SLEWR00_W::new(self, 0)
     }
     ///Bit 1 - Receiver Cross Point Adjustment 01
     #[inline(always)]
-    pub fn slewr01(&mut self) -> SLEWR01_W<PHYSLEW_SPEC> {
+    pub fn slewr01(&mut self) -> SLEWR01_W<'_, PHYSLEW_SPEC> {
         SLEWR01_W::new(self, 1)
     }
     ///Bit 2 - Receiver Cross Point Adjustment 00
     #[inline(always)]
-    pub fn slewf00(&mut self) -> SLEWF00_W<PHYSLEW_SPEC> {
+    pub fn slewf00(&mut self) -> SLEWF00_W<'_, PHYSLEW_SPEC> {
         SLEWF00_W::new(self, 2)
     }
     ///Bit 3 - Receiver Cross Point Adjustment 01
     #[inline(always)]
-    pub fn slewf01(&mut self) -> SLEWF01_W<PHYSLEW_SPEC> {
+    pub fn slewf01(&mut self) -> SLEWF01_W<'_, PHYSLEW_SPEC> {
         SLEWF01_W::new(self, 3)
     }
 }

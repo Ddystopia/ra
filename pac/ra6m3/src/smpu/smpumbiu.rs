@@ -607,52 +607,52 @@ impl R {
 impl W {
     ///Bit 2 - Master Group A Read protection
     #[inline(always)]
-    pub fn rpgrpa(&mut self) -> RPGRPA_W<SMPUMBIU_SPEC> {
+    pub fn rpgrpa(&mut self) -> RPGRPA_W<'_, SMPUMBIU_SPEC> {
         RPGRPA_W::new(self, 2)
     }
     ///Bit 3 - Master Group A Write protection
     #[inline(always)]
-    pub fn wpgrpa(&mut self) -> WPGRPA_W<SMPUMBIU_SPEC> {
+    pub fn wpgrpa(&mut self) -> WPGRPA_W<'_, SMPUMBIU_SPEC> {
         WPGRPA_W::new(self, 3)
     }
     ///Bit 4 - Master Group B Read protection
     #[inline(always)]
-    pub fn rpgrpb(&mut self) -> RPGRPB_W<SMPUMBIU_SPEC> {
+    pub fn rpgrpb(&mut self) -> RPGRPB_W<'_, SMPUMBIU_SPEC> {
         RPGRPB_W::new(self, 4)
     }
     ///Bit 5 - Master Group B Write protection
     #[inline(always)]
-    pub fn wpgrpb(&mut self) -> WPGRPB_W<SMPUMBIU_SPEC> {
+    pub fn wpgrpb(&mut self) -> WPGRPB_W<'_, SMPUMBIU_SPEC> {
         WPGRPB_W::new(self, 5)
     }
     ///Bit 6 - Master Group C Read protection
     #[inline(always)]
-    pub fn rpgrpc(&mut self) -> RPGRPC_W<SMPUMBIU_SPEC> {
+    pub fn rpgrpc(&mut self) -> RPGRPC_W<'_, SMPUMBIU_SPEC> {
         RPGRPC_W::new(self, 6)
     }
     ///Bit 7 - Master Group C Write protection
     #[inline(always)]
-    pub fn wpgrpc(&mut self) -> WPGRPC_W<SMPUMBIU_SPEC> {
+    pub fn wpgrpc(&mut self) -> WPGRPC_W<'_, SMPUMBIU_SPEC> {
         WPGRPC_W::new(self, 7)
     }
     ///Bit 12 - Code Flash Memory Read Protection
     #[inline(always)]
-    pub fn rpfli(&mut self) -> RPFLI_W<SMPUMBIU_SPEC> {
+    pub fn rpfli(&mut self) -> RPFLI_W<'_, SMPUMBIU_SPEC> {
         RPFLI_W::new(self, 12)
     }
     ///Bit 13 - Code Flash Memory Write Protection (Note: This bit is read as 1. The write value should be 1.)
     #[inline(always)]
-    pub fn wpfli(&mut self) -> WPFLI_W<SMPUMBIU_SPEC> {
+    pub fn wpfli(&mut self) -> WPFLI_W<'_, SMPUMBIU_SPEC> {
         WPFLI_W::new(self, 13)
     }
     ///Bit 14 - SRAMHS Read Protection
     #[inline(always)]
-    pub fn rpsramhs(&mut self) -> RPSRAMHS_W<SMPUMBIU_SPEC> {
+    pub fn rpsramhs(&mut self) -> RPSRAMHS_W<'_, SMPUMBIU_SPEC> {
         RPSRAMHS_W::new(self, 14)
     }
     ///Bit 15 - SRAMHS Write Protection
     #[inline(always)]
-    pub fn wpsramhs(&mut self) -> WPSRAMHS_W<SMPUMBIU_SPEC> {
+    pub fn wpsramhs(&mut self) -> WPSRAMHS_W<'_, SMPUMBIU_SPEC> {
         WPSRAMHS_W::new(self, 15)
     }
 }

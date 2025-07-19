@@ -433,32 +433,32 @@ impl R {
 impl W {
     ///Bit 0 - Comparator output polarity selection
     #[inline(always)]
-    pub fn cinv(&mut self) -> CINV_W<CMPCTL_SPEC> {
+    pub fn cinv(&mut self) -> CINV_W<'_, CMPCTL_SPEC> {
         CINV_W::new(self, 0)
     }
     ///Bit 1 - Comparator output enable
     #[inline(always)]
-    pub fn coe(&mut self) -> COE_W<CMPCTL_SPEC> {
+    pub fn coe(&mut self) -> COE_W<'_, CMPCTL_SPEC> {
         COE_W::new(self, 1)
     }
     ///Bit 2 - Interrupt Select
     #[inline(always)]
-    pub fn csten(&mut self) -> CSTEN_W<CMPCTL_SPEC> {
+    pub fn csten(&mut self) -> CSTEN_W<'_, CMPCTL_SPEC> {
         CSTEN_W::new(self, 2)
     }
     ///Bits 3:4 - Selection of valid edge (Edge selector)
     #[inline(always)]
-    pub fn ceg(&mut self) -> CEG_W<CMPCTL_SPEC> {
+    pub fn ceg(&mut self) -> CEG_W<'_, CMPCTL_SPEC> {
         CEG_W::new(self, 3)
     }
     ///Bits 5:6 - Noise filter selection
     #[inline(always)]
-    pub fn cdfs(&mut self) -> CDFS_W<CMPCTL_SPEC> {
+    pub fn cdfs(&mut self) -> CDFS_W<'_, CMPCTL_SPEC> {
         CDFS_W::new(self, 5)
     }
     ///Bit 7 - Comparator operation control
     #[inline(always)]
-    pub fn hcmpon(&mut self) -> HCMPON_W<CMPCTL_SPEC> {
+    pub fn hcmpon(&mut self) -> HCMPON_W<'_, CMPCTL_SPEC> {
         HCMPON_W::new(self, 7)
     }
 }

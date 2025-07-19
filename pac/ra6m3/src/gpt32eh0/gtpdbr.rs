@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Cycle Setting Double-Buffer Register
     #[inline(always)]
-    pub fn gtpdbr(&mut self) -> GTPDBR_W<GTPDBR_SPEC> {
+    pub fn gtpdbr(&mut self) -> GTPDBR_W<'_, GTPDBR_SPEC> {
         GTPDBR_W::new(self, 0)
     }
 }

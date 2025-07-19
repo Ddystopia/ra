@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - DTC Vector Base Address.Note: A value cannot be set in the lower-order 10 bits. These bits are fixed to 0.
     #[inline(always)]
-    pub fn dtcvbr(&mut self) -> DTCVBR_W<DTCVBR_SPEC> {
+    pub fn dtcvbr(&mut self) -> DTCVBR_W<'_, DTCVBR_SPEC> {
         DTCVBR_W::new(self, 0)
     }
 }

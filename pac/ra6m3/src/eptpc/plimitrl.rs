@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - These bits hold the setting for the lower-order 32 bits of the limit for the positive gradient.
     #[inline(always)]
-    pub fn plimitrl(&mut self) -> PLIMITRL_W<PLIMITRL_SPEC> {
+    pub fn plimitrl(&mut self) -> PLIMITRL_W<'_, PLIMITRL_SPEC> {
         PLIMITRL_W::new(self, 0)
     }
 }

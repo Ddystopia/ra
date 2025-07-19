@@ -60,7 +60,7 @@ impl R {
 impl W {
     ///Bits 0:3 - CTSU Channel Enable Control 4. 0: Not measurement target 1: Measurement target Note: CTSUCHAC4\[0\] corresponds to TS32 and CTSUCHAC4\[3\] corresponds to TS35. but the write value of CTSUCHAC0\[4\],CTSUCHAC4\[5\],CTSUCHAC4\[6\],CTSUCHAC4\[7\] should be 0.
     #[inline(always)]
-    pub fn ctsuchac4(&mut self) -> CTSUCHAC4_W<CTSUCHAC4_SPEC> {
+    pub fn ctsuchac4(&mut self) -> CTSUCHAC4_W<'_, CTSUCHAC4_SPEC> {
         CTSUCHAC4_W::new(self, 0)
     }
 }

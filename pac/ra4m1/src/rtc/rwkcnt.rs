@@ -152,7 +152,7 @@ impl R {
 impl W {
     ///Bits 0:2 - Day-of-Week Counting
     #[inline(always)]
-    pub fn dayw(&mut self) -> DAYW_W<RWKCNT_SPEC> {
+    pub fn dayw(&mut self) -> DAYW_W<'_, RWKCNT_SPEC> {
         DAYW_W::new(self, 0)
     }
 }

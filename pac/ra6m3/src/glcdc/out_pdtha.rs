@@ -229,32 +229,32 @@ impl R {
 impl W {
     ///Bits 0:1 - Pattern value (D) of 2 x 2 pattern ditherUnsigned 2-bit integer
     #[inline(always)]
-    pub fn pd(&mut self) -> PD_W<OUT_PDTHA_SPEC> {
+    pub fn pd(&mut self) -> PD_W<'_, OUT_PDTHA_SPEC> {
         PD_W::new(self, 0)
     }
     ///Bits 4:5 - Pattern value (C) of 2 x 2 pattern ditherUnsigned 2-bit integer
     #[inline(always)]
-    pub fn pc(&mut self) -> PC_W<OUT_PDTHA_SPEC> {
+    pub fn pc(&mut self) -> PC_W<'_, OUT_PDTHA_SPEC> {
         PC_W::new(self, 4)
     }
     ///Bits 8:9 - Pattern value (B) of 2 x 2 pattern ditherUnsigned 2-bit integer
     #[inline(always)]
-    pub fn pb(&mut self) -> PB_W<OUT_PDTHA_SPEC> {
+    pub fn pb(&mut self) -> PB_W<'_, OUT_PDTHA_SPEC> {
         PB_W::new(self, 8)
     }
     ///Bits 12:13 - Pattern value (A) of 2 x 2 pattern ditherUnsigned 2-bit integer
     #[inline(always)]
-    pub fn pa(&mut self) -> PA_W<OUT_PDTHA_SPEC> {
+    pub fn pa(&mut self) -> PA_W<'_, OUT_PDTHA_SPEC> {
         PA_W::new(self, 12)
     }
     ///Bits 16:17 - Output format select
     #[inline(always)]
-    pub fn form(&mut self) -> FORM_W<OUT_PDTHA_SPEC> {
+    pub fn form(&mut self) -> FORM_W<'_, OUT_PDTHA_SPEC> {
         FORM_W::new(self, 16)
     }
     ///Bits 20:21 - Operation mode
     #[inline(always)]
-    pub fn sel(&mut self) -> SEL_W<OUT_PDTHA_SPEC> {
+    pub fn sel(&mut self) -> SEL_W<'_, OUT_PDTHA_SPEC> {
         SEL_W::new(self, 20)
     }
 }

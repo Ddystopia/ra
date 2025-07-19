@@ -881,137 +881,137 @@ where
 impl W {
     ///Bit 0 - Pixel source is a pattern color (blend of COLOR1 and COLOR2 depending on PATTERN and pattern index)
     #[inline(always)]
-    pub fn patternenable(&mut self) -> PATTERNENABLE_W<CONTROL2_SPEC> {
+    pub fn patternenable(&mut self) -> PATTERNENABLE_W<'_, CONTROL2_SPEC> {
         PATTERNENABLE_W::new(self, 0)
     }
     ///Bit 1 - Pixel source is read from texture and used as an alpha to blend between COLOR1 and COLOR2
     #[inline(always)]
-    pub fn textureenable(&mut self) -> TEXTUREENABLE_W<CONTROL2_SPEC> {
+    pub fn textureenable(&mut self) -> TEXTUREENABLE_W<'_, CONTROL2_SPEC> {
         TEXTUREENABLE_W::new(self, 1)
     }
     ///Bit 2 - Limiter 5 is used as pattern index instead of the default U limiter.Limiter 5 can be combined with limiter 6 to form a quadratic limiter which can be used to make quadratic pattern functions to draw radial patterns.
     #[inline(always)]
-    pub fn patternsourcel5(&mut self) -> PATTERNSOURCEL5_W<CONTROL2_SPEC> {
+    pub fn patternsourcel5(&mut self) -> PATTERNSOURCEL5_W<'_, CONTROL2_SPEC> {
         PATTERNSOURCEL5_W::new(self, 2)
     }
     ///Bit 3 - Alpha blend mode
     #[inline(always)]
-    pub fn useacb(&mut self) -> USEACB_W<CONTROL2_SPEC> {
+    pub fn useacb(&mut self) -> USEACB_W<'_, CONTROL2_SPEC> {
         USEACB_W::new(self, 3)
     }
     ///Bits 4:5 - Bit 4 and 3 of the texture buffer format.See READFORMAT above for description
     #[inline(always)]
-    pub fn readformat32(&mut self) -> READFORMAT32_W<CONTROL2_SPEC> {
+    pub fn readformat32(&mut self) -> READFORMAT32_W<'_, CONTROL2_SPEC> {
         READFORMAT32_W::new(self, 4)
     }
     ///Bit 6 - Blend source factor for alpha channel in alpha channel blending mode (USEACB = 1)
     #[inline(always)]
-    pub fn bsfa(&mut self) -> BSFA_W<CONTROL2_SPEC> {
+    pub fn bsfa(&mut self) -> BSFA_W<'_, CONTROL2_SPEC> {
         BSFA_W::new(self, 6)
     }
     ///Bit 7 - Blend destinetion factor for alpha channel in alpha channel blending mode (USEACB = 1)
     #[inline(always)]
-    pub fn bdfa(&mut self) -> BDFA_W<CONTROL2_SPEC> {
+    pub fn bdfa(&mut self) -> BDFA_W<'_, CONTROL2_SPEC> {
         BDFA_W::new(self, 7)
     }
     ///Bit 8 - Bit 3 of framebuffer pixel formatSee WRITEFORMAT above description.
     #[inline(always)]
-    pub fn writeformat2(&mut self) -> WRITEFORMAT2_W<CONTROL2_SPEC> {
+    pub fn writeformat2(&mut self) -> WRITEFORMAT2_W<'_, CONTROL2_SPEC> {
         WRITEFORMAT2_W::new(self, 8)
     }
     ///Bit 9 - Blend source factorsrc factor is alpha (factor is 1 per default)
     #[inline(always)]
-    pub fn bsf(&mut self) -> BSF_W<CONTROL2_SPEC> {
+    pub fn bsf(&mut self) -> BSF_W<'_, CONTROL2_SPEC> {
         BSF_W::new(self, 9)
     }
     ///Bit 10 - Blend destination factordst factor is alpha (factor is 1 per default)
     #[inline(always)]
-    pub fn bdf(&mut self) -> BDF_W<CONTROL2_SPEC> {
+    pub fn bdf(&mut self) -> BDF_W<'_, CONTROL2_SPEC> {
         BDF_W::new(self, 10)
     }
     ///Bit 11 - Blend source factor is invertedsrc factor will be inverted (meaning 1-a or 1-1 depending on BSF)
     #[inline(always)]
-    pub fn bsi(&mut self) -> BSI_W<CONTROL2_SPEC> {
+    pub fn bsi(&mut self) -> BSI_W<'_, CONTROL2_SPEC> {
         BSI_W::new(self, 11)
     }
     ///Bit 12 - Blend destination factor is inverteddst factor will be inverted (meaning 1-a or 1-1 depending on BDF)
     #[inline(always)]
-    pub fn bdi(&mut self) -> BDI_W<CONTROL2_SPEC> {
+    pub fn bdi(&mut self) -> BDI_W<'_, CONTROL2_SPEC> {
         BDI_W::new(self, 12)
     }
     ///Bit 13 - Blend color 2 instead of framebuffer pixel
     #[inline(always)]
-    pub fn bc2(&mut self) -> BC2_W<CONTROL2_SPEC> {
+    pub fn bc2(&mut self) -> BC2_W<'_, CONTROL2_SPEC> {
         BC2_W::new(self, 13)
     }
     ///Bit 14 - Calculating U limiter outside use textureThe bit describes what happens if the U limiter (x direction in texture space) calculates a U value outside of the used texture
     #[inline(always)]
-    pub fn textureclampx(&mut self) -> TEXTURECLAMPX_W<CONTROL2_SPEC> {
+    pub fn textureclampx(&mut self) -> TEXTURECLAMPX_W<'_, CONTROL2_SPEC> {
         TEXTURECLAMPX_W::new(self, 14)
     }
     ///Bit 15 - Calculating V limiter outside use textureThe bit describes what happens if the V limiter (y direction in texture space) calculates a V value outside of the used texture
     #[inline(always)]
-    pub fn textureclampy(&mut self) -> TEXTURECLAMPY_W<CONTROL2_SPEC> {
+    pub fn textureclampy(&mut self) -> TEXTURECLAMPY_W<'_, CONTROL2_SPEC> {
         TEXTURECLAMPY_W::new(self, 15)
     }
     ///Bit 16 - Linear filtering on texture U axis
     #[inline(always)]
-    pub fn texturefilterx(&mut self) -> TEXTUREFILTERX_W<CONTROL2_SPEC> {
+    pub fn texturefilterx(&mut self) -> TEXTUREFILTERX_W<'_, CONTROL2_SPEC> {
         TEXTUREFILTERX_W::new(self, 16)
     }
     ///Bit 17 - Linear filtering on texture V axis
     #[inline(always)]
-    pub fn texturefiltery(&mut self) -> TEXTUREFILTERY_W<CONTROL2_SPEC> {
+    pub fn texturefiltery(&mut self) -> TEXTUREFILTERY_W<'_, CONTROL2_SPEC> {
         TEXTUREFILTERY_W::new(self, 17)
     }
     ///Bits 18:19 - Pixel format of the texture buffer{READFORMAT32,READFORMAT10}0000: 8 bpp a(8)0001: 16 bpp RGB(565)0010: 32 bpp aRGB(8888)0011: 16 bpp aRGB(4444)0100: 16 bpp aRGB(1555)0101: 8 bpp aCLUT(44) 4 bit alpha and 4 bit indexed color1001: 8 bpp CLUT(8)/I(8), 8 bit indexed color/luminance1010: 4 bpp CLUT(4)/I(4), 4 bit indexed color/luminance1011: 2 bpp CLUT(2)/I(2), 2 bit indexed color/luminance 1100: 1 bpp CLUT(1)/I(1), 1 bit indexed color/luminance
     #[inline(always)]
-    pub fn readformat10(&mut self) -> READFORMAT10_W<CONTROL2_SPEC> {
+    pub fn readformat10(&mut self) -> READFORMAT10_W<'_, CONTROL2_SPEC> {
         READFORMAT10_W::new(self, 18)
     }
     ///Bits 20:21 - Pixel format of the framebuffer
     #[inline(always)]
-    pub fn writeformat10(&mut self) -> WRITEFORMAT10_W<CONTROL2_SPEC> {
+    pub fn writeformat10(&mut self) -> WRITEFORMAT10_W<'_, CONTROL2_SPEC> {
         WRITEFORMAT10_W::new(self, 20)
     }
     ///Bits 22:23 - Writeback alpha source for framebufferSet the 'alpha source' for the framebuffer(USEACB = 0)Blend alpha in color 2 instead of framebuffer alpha((USEACB = 1))In not alpha channel blending mode (USEACB = 0):Set the 'alpha source' for the framebuffer.In alpha channel blending mode (USEACB = 1):Blend alpha in color 2 instead of framebuffer alpha00B: BC2A = 1: use alpha from framebuffer as destination (DST_A)else: BC2A = 0: use alpha in color 2 as destination (DST_A)
     #[inline(always)]
-    pub fn writealpha(&mut self) -> WRITEALPHA_W<CONTROL2_SPEC> {
+    pub fn writealpha(&mut self) -> WRITEALPHA_W<'_, CONTROL2_SPEC> {
         WRITEALPHA_W::new(self, 22)
     }
     ///Bit 24 - RLE enable
     #[inline(always)]
-    pub fn rleenable(&mut self) -> RLEENABLE_W<CONTROL2_SPEC> {
+    pub fn rleenable(&mut self) -> RLEENABLE_W<'_, CONTROL2_SPEC> {
         RLEENABLE_W::new(self, 24)
     }
     ///Bit 25 - CLUT enable
     #[inline(always)]
-    pub fn clutenable(&mut self) -> CLUTENABLE_W<CONTROL2_SPEC> {
+    pub fn clutenable(&mut self) -> CLUTENABLE_W<'_, CONTROL2_SPEC> {
         CLUTENABLE_W::new(self, 25)
     }
     ///Bit 26 - color keying enable
     #[inline(always)]
-    pub fn colkeyenable(&mut self) -> COLKEYENABLE_W<CONTROL2_SPEC> {
+    pub fn colkeyenable(&mut self) -> COLKEYENABLE_W<'_, CONTROL2_SPEC> {
         COLKEYENABLE_W::new(self, 26)
     }
     ///Bit 27 - Format of the CLUT
     #[inline(always)]
-    pub fn clutformat(&mut self) -> CLUTFORMAT_W<CONTROL2_SPEC> {
+    pub fn clutformat(&mut self) -> CLUTFORMAT_W<'_, CONTROL2_SPEC> {
         CLUTFORMAT_W::new(self, 27)
     }
     ///Bit 28 - Blend source factor inverted in alpha channel (USEACB = 1)
     #[inline(always)]
-    pub fn bsia(&mut self) -> BSIA_W<CONTROL2_SPEC> {
+    pub fn bsia(&mut self) -> BSIA_W<'_, CONTROL2_SPEC> {
         BSIA_W::new(self, 28)
     }
     ///Bit 29 - Blend destination factor inverted in alpha channel (USEACB = 1)
     #[inline(always)]
-    pub fn bdia(&mut self) -> BDIA_W<CONTROL2_SPEC> {
+    pub fn bdia(&mut self) -> BDIA_W<'_, CONTROL2_SPEC> {
         BDIA_W::new(self, 29)
     }
     ///Bits 30:31 - Texel width for RLE unit
     #[inline(always)]
-    pub fn rlepixelwidth(&mut self) -> RLEPIXELWIDTH_W<CONTROL2_SPEC> {
+    pub fn rlepixelwidth(&mut self) -> RLEPIXELWIDTH_W<'_, CONTROL2_SPEC> {
         RLEPIXELWIDTH_W::new(self, 30)
     }
 }

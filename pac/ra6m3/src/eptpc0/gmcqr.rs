@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - These bits are used to set the value of the grandmasterClockQuality fields of Announce messages. The correspondence between bits and the grandmasterClockQuality fields is as listed below.b31 to b24: clockClassb23 to b16: clockAccuracyb15 to b0: offsetScaledLogVariance
     #[inline(always)]
-    pub fn gmcqr(&mut self) -> GMCQR_W<GMCQR_SPEC> {
+    pub fn gmcqr(&mut self) -> GMCQR_W<'_, GMCQR_SPEC> {
         GMCQR_W::new(self, 0)
     }
 }

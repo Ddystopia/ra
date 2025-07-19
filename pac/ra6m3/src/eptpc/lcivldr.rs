@@ -36,7 +36,7 @@ where
 impl W {
     ///Bit 0 - Local Time Counter Initial Value Load Directive
     #[inline(always)]
-    pub fn load(&mut self) -> LOAD_W<LCIVLDR_SPEC> {
+    pub fn load(&mut self) -> LOAD_W<'_, LCIVLDR_SPEC> {
         LOAD_W::new(self, 0)
     }
 }

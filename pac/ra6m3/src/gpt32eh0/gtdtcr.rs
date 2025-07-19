@@ -247,22 +247,22 @@ impl R {
 impl W {
     ///Bit 0 - Negative-Phase Waveform Setting
     #[inline(always)]
-    pub fn tde(&mut self) -> TDE_W<GTDTCR_SPEC> {
+    pub fn tde(&mut self) -> TDE_W<'_, GTDTCR_SPEC> {
         TDE_W::new(self, 0)
     }
     ///Bit 4 - GTDVU Buffer Operation Enable
     #[inline(always)]
-    pub fn tdbue(&mut self) -> TDBUE_W<GTDTCR_SPEC> {
+    pub fn tdbue(&mut self) -> TDBUE_W<'_, GTDTCR_SPEC> {
         TDBUE_W::new(self, 4)
     }
     ///Bit 5 - GTDVD Buffer Operation Enable
     #[inline(always)]
-    pub fn tdbde(&mut self) -> TDBDE_W<GTDTCR_SPEC> {
+    pub fn tdbde(&mut self) -> TDBDE_W<'_, GTDTCR_SPEC> {
         TDBDE_W::new(self, 5)
     }
     ///Bit 8 - GTDVD Setting
     #[inline(always)]
-    pub fn tdfer(&mut self) -> TDFER_W<GTDTCR_SPEC> {
+    pub fn tdfer(&mut self) -> TDFER_W<'_, GTDTCR_SPEC> {
         TDFER_W::new(self, 8)
     }
 }

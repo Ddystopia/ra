@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - The counter is refreshed by writing 0x00 and then writing 0xFF to this register.
     #[inline(always)]
-    pub fn iwdtrr(&mut self) -> IWDTRR_W<IWDTRR_SPEC> {
+    pub fn iwdtrr(&mut self) -> IWDTRR_W<'_, IWDTRR_SPEC> {
         IWDTRR_W::new(self, 0)
     }
 }

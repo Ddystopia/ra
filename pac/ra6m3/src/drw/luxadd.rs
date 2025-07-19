@@ -5,7 +5,7 @@ pub type LUXADD_W<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
 impl W {
     ///Bits 0:31 - U limiter x-axis increment
     #[inline(always)]
-    pub fn luxadd(&mut self) -> LUXADD_W<LUXADD_SPEC> {
+    pub fn luxadd(&mut self) -> LUXADD_W<'_, LUXADD_SPEC> {
         LUXADD_W::new(self, 0)
     }
 }

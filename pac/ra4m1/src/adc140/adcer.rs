@@ -419,32 +419,32 @@ impl R {
 impl W {
     ///Bits 1:2 - A/D Conversion Accuracy Specify
     #[inline(always)]
-    pub fn adprc(&mut self) -> ADPRC_W<ADCER_SPEC> {
+    pub fn adprc(&mut self) -> ADPRC_W<'_, ADCER_SPEC> {
         ADPRC_W::new(self, 1)
     }
     ///Bit 5 - A/D Data Register Automatic Clearing Enable
     #[inline(always)]
-    pub fn ace(&mut self) -> ACE_W<ADCER_SPEC> {
+    pub fn ace(&mut self) -> ACE_W<'_, ADCER_SPEC> {
         ACE_W::new(self, 5)
     }
     ///Bits 8:9 - Self-Diagnosis Conversion Voltage Select
     #[inline(always)]
-    pub fn diagval(&mut self) -> DIAGVAL_W<ADCER_SPEC> {
+    pub fn diagval(&mut self) -> DIAGVAL_W<'_, ADCER_SPEC> {
         DIAGVAL_W::new(self, 8)
     }
     ///Bit 10 - Self-Diagnosis Mode Select
     #[inline(always)]
-    pub fn diagld(&mut self) -> DIAGLD_W<ADCER_SPEC> {
+    pub fn diagld(&mut self) -> DIAGLD_W<'_, ADCER_SPEC> {
         DIAGLD_W::new(self, 10)
     }
     ///Bit 11 - Self-Diagnosis Enable
     #[inline(always)]
-    pub fn diagm(&mut self) -> DIAGM_W<ADCER_SPEC> {
+    pub fn diagm(&mut self) -> DIAGM_W<'_, ADCER_SPEC> {
         DIAGM_W::new(self, 11)
     }
     ///Bit 15 - A/D Data Register Format Select
     #[inline(always)]
-    pub fn adrfmt(&mut self) -> ADRFMT_W<ADCER_SPEC> {
+    pub fn adrfmt(&mut self) -> ADRFMT_W<'_, ADCER_SPEC> {
         ADRFMT_W::new(self, 15)
     }
 }

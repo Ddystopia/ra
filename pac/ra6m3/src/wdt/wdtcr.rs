@@ -417,22 +417,22 @@ impl R {
 impl W {
     ///Bits 0:1 - Timeout Period Selection
     #[inline(always)]
-    pub fn tops(&mut self) -> TOPS_W<WDTCR_SPEC> {
+    pub fn tops(&mut self) -> TOPS_W<'_, WDTCR_SPEC> {
         TOPS_W::new(self, 0)
     }
     ///Bits 4:7 - Clock Division Ratio Selection
     #[inline(always)]
-    pub fn cks(&mut self) -> CKS_W<WDTCR_SPEC> {
+    pub fn cks(&mut self) -> CKS_W<'_, WDTCR_SPEC> {
         CKS_W::new(self, 4)
     }
     ///Bits 8:9 - Window End Position Selection
     #[inline(always)]
-    pub fn rpes(&mut self) -> RPES_W<WDTCR_SPEC> {
+    pub fn rpes(&mut self) -> RPES_W<'_, WDTCR_SPEC> {
         RPES_W::new(self, 8)
     }
     ///Bits 12:13 - Window Start Position Selection
     #[inline(always)]
-    pub fn rpss(&mut self) -> RPSS_W<WDTCR_SPEC> {
+    pub fn rpss(&mut self) -> RPSS_W<'_, WDTCR_SPEC> {
         RPSS_W::new(self, 12)
     }
 }

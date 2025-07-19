@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:29 - These bits set the cycle of the pulse output timer in nanoseconds. Set a value that is equivalent to at least four cycles of the STCA clock.
     #[inline(always)]
-    pub fn tmcycr(&mut self) -> TMCYCR_W<TMCYCR_SPEC> {
+    pub fn tmcycr(&mut self) -> TMCYCR_W<'_, TMCYCR_SPEC> {
         TMCYCR_W::new(self, 0)
     }
 }

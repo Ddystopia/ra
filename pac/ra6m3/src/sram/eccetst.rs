@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - ECC Bypass Select
     #[inline(always)]
-    pub fn tstbyp(&mut self) -> TSTBYP_W<ECCETST_SPEC> {
+    pub fn tstbyp(&mut self) -> TSTBYP_W<'_, ECCETST_SPEC> {
         TSTBYP_W::new(self, 0)
     }
 }

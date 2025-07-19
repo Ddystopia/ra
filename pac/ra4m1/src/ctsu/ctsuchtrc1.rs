@@ -74,7 +74,7 @@ impl R {
 impl W {
     ///Bits 0:7 - CTSU Channel Transmit/Receive Control 1
     #[inline(always)]
-    pub fn ctsuchtrc1(&mut self) -> CTSUCHTRC1_W<CTSUCHTRC1_SPEC> {
+    pub fn ctsuchtrc1(&mut self) -> CTSUCHTRC1_W<'_, CTSUCHTRC1_SPEC> {
         CTSUCHTRC1_W::new(self, 0)
     }
 }

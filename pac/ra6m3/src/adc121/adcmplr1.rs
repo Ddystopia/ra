@@ -247,22 +247,22 @@ impl R {
 impl W {
     ///Bit 0 - Comparison condition of AN116
     #[inline(always)]
-    pub fn cmplcha16(&mut self) -> CMPLCHA16_W<ADCMPLR1_SPEC> {
+    pub fn cmplcha16(&mut self) -> CMPLCHA16_W<'_, ADCMPLR1_SPEC> {
         CMPLCHA16_W::new(self, 0)
     }
     ///Bit 1 - Comparison condition of AN117
     #[inline(always)]
-    pub fn cmplcha17(&mut self) -> CMPLCHA17_W<ADCMPLR1_SPEC> {
+    pub fn cmplcha17(&mut self) -> CMPLCHA17_W<'_, ADCMPLR1_SPEC> {
         CMPLCHA17_W::new(self, 1)
     }
     ///Bit 2 - Comparison condition of AN118
     #[inline(always)]
-    pub fn cmplcha18(&mut self) -> CMPLCHA18_W<ADCMPLR1_SPEC> {
+    pub fn cmplcha18(&mut self) -> CMPLCHA18_W<'_, ADCMPLR1_SPEC> {
         CMPLCHA18_W::new(self, 2)
     }
     ///Bit 3 - Comparison condition of AN119
     #[inline(always)]
-    pub fn cmplcha19(&mut self) -> CMPLCHA19_W<ADCMPLR1_SPEC> {
+    pub fn cmplcha19(&mut self) -> CMPLCHA19_W<'_, ADCMPLR1_SPEC> {
         CMPLCHA19_W::new(self, 3)
     }
 }

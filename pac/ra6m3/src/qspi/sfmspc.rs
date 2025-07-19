@@ -160,12 +160,12 @@ impl R {
 impl W {
     ///Bits 0:1 - Selection of SPI protocolNOTE: Serial ROM's SPI protocol is required to be set by software separately.
     #[inline(always)]
-    pub fn sfmspi(&mut self) -> SFMSPI_W<SFMSPC_SPEC> {
+    pub fn sfmspi(&mut self) -> SFMSPI_W<'_, SFMSPC_SPEC> {
         SFMSPI_W::new(self, 0)
     }
     ///Bit 4 - Selection of the minimum time of input output switch, when Dual SPI protocol or Quad SPI protocol is selected.
     #[inline(always)]
-    pub fn sfmsde(&mut self) -> SFMSDE_W<SFMSPC_SPEC> {
+    pub fn sfmsde(&mut self) -> SFMSDE_W<'_, SFMSPC_SPEC> {
         SFMSDE_W::new(self, 4)
     }
 }

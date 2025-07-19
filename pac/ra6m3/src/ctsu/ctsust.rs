@@ -294,12 +294,12 @@ impl R {
 impl W {
     ///Bit 5 - CTSU Sensor Counter Overflow Flag
     #[inline(always)]
-    pub fn ctsusovf(&mut self) -> CTSUSOVF_W<CTSUST_SPEC> {
+    pub fn ctsusovf(&mut self) -> CTSUSOVF_W<'_, CTSUST_SPEC> {
         CTSUSOVF_W::new(self, 5)
     }
     ///Bit 6 - CTSU Reference Counter Overflow Flag
     #[inline(always)]
-    pub fn ctsurovf(&mut self) -> CTSUROVF_W<CTSUST_SPEC> {
+    pub fn ctsurovf(&mut self) -> CTSUROVF_W<'_, CTSUST_SPEC> {
         CTSUROVF_W::new(self, 6)
     }
 }

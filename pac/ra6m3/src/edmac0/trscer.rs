@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 4 - RRF Flag Copy Enable
     #[inline(always)]
-    pub fn rrfce(&mut self) -> RRFCE_W<TRSCER_SPEC> {
+    pub fn rrfce(&mut self) -> RRFCE_W<'_, TRSCER_SPEC> {
         RRFCE_W::new(self, 4)
     }
     ///Bit 7 - RMAF Flag Copy Enable
     #[inline(always)]
-    pub fn rmafce(&mut self) -> RMAFCE_W<TRSCER_SPEC> {
+    pub fn rmafce(&mut self) -> RMAFCE_W<'_, TRSCER_SPEC> {
         RMAFCE_W::new(self, 7)
     }
 }

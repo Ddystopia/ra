@@ -73,7 +73,7 @@ impl R {
 impl W {
     ///Bits 0:8 - Event Link Select
     #[inline(always)]
-    pub fn els(&mut self) -> ELS_W<ELSR_SPEC> {
+    pub fn els(&mut self) -> ELS_W<'_, ELSR_SPEC> {
         ELS_W::new(self, 0)
     }
 }

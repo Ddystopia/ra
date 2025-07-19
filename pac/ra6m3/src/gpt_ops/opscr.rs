@@ -781,72 +781,72 @@ impl R {
 impl W {
     ///Bit 0 - Input Phase Soft Setting WFThis bit sets the input phase by the software settings.This bit setting is valid when the OPSCR.FB bit = 1.
     #[inline(always)]
-    pub fn uf(&mut self) -> UF_W<OPSCR_SPEC> {
+    pub fn uf(&mut self) -> UF_W<'_, OPSCR_SPEC> {
         UF_W::new(self, 0)
     }
     ///Bit 1 - Input Phase Soft Setting VFThis bit sets the input phase by the software settings.This bit setting is valid when the OPSCR.FB bit = 1.
     #[inline(always)]
-    pub fn vf(&mut self) -> VF_W<OPSCR_SPEC> {
+    pub fn vf(&mut self) -> VF_W<'_, OPSCR_SPEC> {
         VF_W::new(self, 1)
     }
     ///Bit 2 - Input Phase Soft Setting UFThis bit sets the input phase by the software settings.This bit setting is valid when the OPSCR.FB bit = 1.
     #[inline(always)]
-    pub fn wf(&mut self) -> WF_W<OPSCR_SPEC> {
+    pub fn wf(&mut self) -> WF_W<'_, OPSCR_SPEC> {
         WF_W::new(self, 2)
     }
     ///Bit 8 - Enable-Phase Output Control
     #[inline(always)]
-    pub fn en(&mut self) -> EN_W<OPSCR_SPEC> {
+    pub fn en(&mut self) -> EN_W<'_, OPSCR_SPEC> {
         EN_W::new(self, 8)
     }
     ///Bit 16 - External Feedback Signal EnableThis bit selects the input phase from the software settings and external input.
     #[inline(always)]
-    pub fn fb(&mut self) -> FB_W<OPSCR_SPEC> {
+    pub fn fb(&mut self) -> FB_W<'_, OPSCR_SPEC> {
         FB_W::new(self, 16)
     }
     ///Bit 17 - Positive-Phase Output (P) Control
     #[inline(always)]
-    pub fn p(&mut self) -> P_W<OPSCR_SPEC> {
+    pub fn p(&mut self) -> P_W<'_, OPSCR_SPEC> {
         P_W::new(self, 17)
     }
     ///Bit 18 - Negative-Phase Output (N) Control
     #[inline(always)]
-    pub fn n(&mut self) -> N_W<OPSCR_SPEC> {
+    pub fn n(&mut self) -> N_W<'_, OPSCR_SPEC> {
         N_W::new(self, 18)
     }
     ///Bit 19 - Invert-Phase Output Control
     #[inline(always)]
-    pub fn inv(&mut self) -> INV_W<OPSCR_SPEC> {
+    pub fn inv(&mut self) -> INV_W<'_, OPSCR_SPEC> {
         INV_W::new(self, 19)
     }
     ///Bit 20 - Output phase rotation direction reversal
     #[inline(always)]
-    pub fn rv(&mut self) -> RV_W<OPSCR_SPEC> {
+    pub fn rv(&mut self) -> RV_W<'_, OPSCR_SPEC> {
         RV_W::new(self, 20)
     }
     ///Bit 21 - Input phase alignment
     #[inline(always)]
-    pub fn align(&mut self) -> ALIGN_W<OPSCR_SPEC> {
+    pub fn align(&mut self) -> ALIGN_W<'_, OPSCR_SPEC> {
         ALIGN_W::new(self, 21)
     }
     ///Bits 24:25 - Output disabled source selection
     #[inline(always)]
-    pub fn grp(&mut self) -> GRP_W<OPSCR_SPEC> {
+    pub fn grp(&mut self) -> GRP_W<'_, OPSCR_SPEC> {
         GRP_W::new(self, 24)
     }
     ///Bit 26 - Group output disable function
     #[inline(always)]
-    pub fn godf(&mut self) -> GODF_W<OPSCR_SPEC> {
+    pub fn godf(&mut self) -> GODF_W<'_, OPSCR_SPEC> {
         GODF_W::new(self, 26)
     }
     ///Bit 29 - External Input Noise Filter Enable
     #[inline(always)]
-    pub fn nfen(&mut self) -> NFEN_W<OPSCR_SPEC> {
+    pub fn nfen(&mut self) -> NFEN_W<'_, OPSCR_SPEC> {
         NFEN_W::new(self, 29)
     }
     ///Bits 30:31 - External Input Noise Filter Clock selectionNoise filter sampling clock setting of the external input.
     #[inline(always)]
-    pub fn nfcs(&mut self) -> NFCS_W<OPSCR_SPEC> {
+    pub fn nfcs(&mut self) -> NFCS_W<'_, OPSCR_SPEC> {
         NFCS_W::new(self, 30)
     }
 }

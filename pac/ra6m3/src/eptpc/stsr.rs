@@ -247,22 +247,22 @@ impl R {
 impl W {
     ///Bit 0 - Synchronized State Detection Flag
     #[inline(always)]
-    pub fn sync(&mut self) -> SYNC_W<STSR_SPEC> {
+    pub fn sync(&mut self) -> SYNC_W<'_, STSR_SPEC> {
         SYNC_W::new(self, 0)
     }
     ///Bit 1 - Synchronization Loss Detection Flag
     #[inline(always)]
-    pub fn syncout(&mut self) -> SYNCOUT_W<STSR_SPEC> {
+    pub fn syncout(&mut self) -> SYNCOUT_W<'_, STSR_SPEC> {
         SYNCOUT_W::new(self, 1)
     }
     ///Bit 3 - Sync Message Reception Timeout Detection Flag
     #[inline(always)]
-    pub fn syntout(&mut self) -> SYNTOUT_W<STSR_SPEC> {
+    pub fn syntout(&mut self) -> SYNTOUT_W<'_, STSR_SPEC> {
         SYNTOUT_W::new(self, 3)
     }
     ///Bit 4 - Worst 10 Acquisition Completion Flag
     #[inline(always)]
-    pub fn w10d(&mut self) -> W10D_W<STSR_SPEC> {
+    pub fn w10d(&mut self) -> W10D_W<'_, STSR_SPEC> {
         W10D_W::new(self, 4)
     }
 }

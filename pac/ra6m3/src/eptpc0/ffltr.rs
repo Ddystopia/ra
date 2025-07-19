@@ -247,22 +247,22 @@ impl R {
 impl W {
     ///Bit 0 - Receive MAC Address SelectNOTE: The setting of these bits is only effective when EXTPRM=0, ENB=1and RPT=1.
     #[inline(always)]
-    pub fn sel(&mut self) -> SEL_W<FFLTR_SPEC> {
+    pub fn sel(&mut self) -> SEL_W<'_, FFLTR_SPEC> {
         SEL_W::new(self, 0)
     }
     ///Bit 1 - Frame Reception EnableNOTE: The setting of these bits is only effective when EXTPRM=0 and ENB=1.
     #[inline(always)]
-    pub fn prt(&mut self) -> PRT_W<FFLTR_SPEC> {
+    pub fn prt(&mut self) -> PRT_W<'_, FFLTR_SPEC> {
         PRT_W::new(self, 1)
     }
     ///Bit 2 - Reception Filter EnableNOTE: The setting of these bits is only effective when EXTPRM=0.
     #[inline(always)]
-    pub fn enb(&mut self) -> ENB_W<FFLTR_SPEC> {
+    pub fn enb(&mut self) -> ENB_W<'_, FFLTR_SPEC> {
         ENB_W::new(self, 2)
     }
     ///Bit 16 - Extended Promiscuous ModeSetting
     #[inline(always)]
-    pub fn extprm(&mut self) -> EXTPRM_W<FFLTR_SPEC> {
+    pub fn extprm(&mut self) -> EXTPRM_W<'_, FFLTR_SPEC> {
         EXTPRM_W::new(self, 16)
     }
 }

@@ -317,27 +317,27 @@ impl R {
 impl W {
     ///Bit 0 - False Carrier Detect Flag
     #[inline(always)]
-    pub fn icd(&mut self) -> ICD_W<ECSR_SPEC> {
+    pub fn icd(&mut self) -> ICD_W<'_, ECSR_SPEC> {
         ICD_W::new(self, 0)
     }
     ///Bit 1 - Magic Packet Detect Flag
     #[inline(always)]
-    pub fn mpd(&mut self) -> MPD_W<ECSR_SPEC> {
+    pub fn mpd(&mut self) -> MPD_W<'_, ECSR_SPEC> {
         MPD_W::new(self, 1)
     }
     ///Bit 2 - LCHNG Link Signal Change Flag
     #[inline(always)]
-    pub fn lchng(&mut self) -> LCHNG_W<ECSR_SPEC> {
+    pub fn lchng(&mut self) -> LCHNG_W<'_, ECSR_SPEC> {
         LCHNG_W::new(self, 2)
     }
     ///Bit 4 - PAUSE Frame Retransmit Over Flag
     #[inline(always)]
-    pub fn psrto(&mut self) -> PSRTO_W<ECSR_SPEC> {
+    pub fn psrto(&mut self) -> PSRTO_W<'_, ECSR_SPEC> {
         PSRTO_W::new(self, 4)
     }
     ///Bit 5 - Continuous Broadcast Frame Reception Flag
     #[inline(always)]
-    pub fn bfr(&mut self) -> BFR_W<ECSR_SPEC> {
+    pub fn bfr(&mut self) -> BFR_W<'_, ECSR_SPEC> {
         BFR_W::new(self, 5)
     }
 }

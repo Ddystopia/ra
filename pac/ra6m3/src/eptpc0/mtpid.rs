@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - Master Clock Port Number SettingThese bits hold the setting for the port number of the master clock.
     #[inline(always)]
-    pub fn pnum(&mut self) -> PNUM_W<MTPID_SPEC> {
+    pub fn pnum(&mut self) -> PNUM_W<'_, MTPID_SPEC> {
         PNUM_W::new(self, 0)
     }
 }

@@ -373,12 +373,12 @@ impl R {
 impl W {
     ///Bits 0:4 - Voltage Detection 1 Level Select (Standard voltage during drop in voltage)
     #[inline(always)]
-    pub fn lvd1lvl(&mut self) -> LVD1LVL_W<LVDLVLR_SPEC> {
+    pub fn lvd1lvl(&mut self) -> LVD1LVL_W<'_, LVDLVLR_SPEC> {
         LVD1LVL_W::new(self, 0)
     }
     ///Bits 5:7 - Voltage Detection 2 Level Select (Standard voltage during drop in voltage)
     #[inline(always)]
-    pub fn lvd2lvl(&mut self) -> LVD2LVL_W<LVDLVLR_SPEC> {
+    pub fn lvd2lvl(&mut self) -> LVD2LVL_W<'_, LVDLVLR_SPEC> {
         LVD2LVL_W::new(self, 5)
     }
 }

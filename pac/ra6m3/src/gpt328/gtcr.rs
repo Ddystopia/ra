@@ -343,17 +343,17 @@ impl R {
 impl W {
     ///Bit 0 - Count Start
     #[inline(always)]
-    pub fn cst(&mut self) -> CST_W<GTCR_SPEC> {
+    pub fn cst(&mut self) -> CST_W<'_, GTCR_SPEC> {
         CST_W::new(self, 0)
     }
     ///Bits 16:18 - Mode Select
     #[inline(always)]
-    pub fn md(&mut self) -> MD_W<GTCR_SPEC> {
+    pub fn md(&mut self) -> MD_W<'_, GTCR_SPEC> {
         MD_W::new(self, 16)
     }
     ///Bits 24:26 - Timer Prescaler Select
     #[inline(always)]
-    pub fn tpcs(&mut self) -> TPCS_W<GTCR_SPEC> {
+    pub fn tpcs(&mut self) -> TPCS_W<'_, GTCR_SPEC> {
         TPCS_W::new(self, 24)
     }
 }

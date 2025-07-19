@@ -1207,102 +1207,102 @@ impl R {
 impl W {
     ///Bit 0 - GTETRGA Pin Rising Input Source GTCCRB Input Capture Enable
     #[inline(always)]
-    pub fn bsgtrgar(&mut self) -> BSGTRGAR_W<GTICBSR_SPEC> {
+    pub fn bsgtrgar(&mut self) -> BSGTRGAR_W<'_, GTICBSR_SPEC> {
         BSGTRGAR_W::new(self, 0)
     }
     ///Bit 1 - GTETRGA Pin Falling Input Source GTCCRB Input Capture Enable
     #[inline(always)]
-    pub fn bsgtrgaf(&mut self) -> BSGTRGAF_W<GTICBSR_SPEC> {
+    pub fn bsgtrgaf(&mut self) -> BSGTRGAF_W<'_, GTICBSR_SPEC> {
         BSGTRGAF_W::new(self, 1)
     }
     ///Bit 2 - GTETRGB Pin Rising Input Source GTCCRB Input Capture Enable
     #[inline(always)]
-    pub fn bsgtrgbr(&mut self) -> BSGTRGBR_W<GTICBSR_SPEC> {
+    pub fn bsgtrgbr(&mut self) -> BSGTRGBR_W<'_, GTICBSR_SPEC> {
         BSGTRGBR_W::new(self, 2)
     }
     ///Bit 3 - GTETRGB Pin Falling Input Source GTCCRB Input Capture Enable
     #[inline(always)]
-    pub fn bsgtrgbf(&mut self) -> BSGTRGBF_W<GTICBSR_SPEC> {
+    pub fn bsgtrgbf(&mut self) -> BSGTRGBF_W<'_, GTICBSR_SPEC> {
         BSGTRGBF_W::new(self, 3)
     }
     ///Bit 8 - GTIOCA Pin Rising Input during GTIOCB Value Low Source GTCCRB Input Capture Enable
     #[inline(always)]
-    pub fn bscarbl(&mut self) -> BSCARBL_W<GTICBSR_SPEC> {
+    pub fn bscarbl(&mut self) -> BSCARBL_W<'_, GTICBSR_SPEC> {
         BSCARBL_W::new(self, 8)
     }
     ///Bit 9 - GTIOCA Pin Rising Input during GTIOCB Value High Source GTCCRB Input Capture Enable
     #[inline(always)]
-    pub fn bscarbh(&mut self) -> BSCARBH_W<GTICBSR_SPEC> {
+    pub fn bscarbh(&mut self) -> BSCARBH_W<'_, GTICBSR_SPEC> {
         BSCARBH_W::new(self, 9)
     }
     ///Bit 10 - GTIOCA Pin Falling Input during GTIOCB Value Low Source GTCCRB Input Capture Enable
     #[inline(always)]
-    pub fn bscafbl(&mut self) -> BSCAFBL_W<GTICBSR_SPEC> {
+    pub fn bscafbl(&mut self) -> BSCAFBL_W<'_, GTICBSR_SPEC> {
         BSCAFBL_W::new(self, 10)
     }
     ///Bit 11 - GTIOCA Pin Falling Input during GTIOCB Value High Source GTCCRB Input Capture Enable
     #[inline(always)]
-    pub fn bscafbh(&mut self) -> BSCAFBH_W<GTICBSR_SPEC> {
+    pub fn bscafbh(&mut self) -> BSCAFBH_W<'_, GTICBSR_SPEC> {
         BSCAFBH_W::new(self, 11)
     }
     ///Bit 12 - GTIOCB Pin Rising Input during GTIOCA Value Low Source GTCCRB Input Capture Enable
     #[inline(always)]
-    pub fn bscbral(&mut self) -> BSCBRAL_W<GTICBSR_SPEC> {
+    pub fn bscbral(&mut self) -> BSCBRAL_W<'_, GTICBSR_SPEC> {
         BSCBRAL_W::new(self, 12)
     }
     ///Bit 13 - GTIOCB Pin Rising Input during GTIOCA Value High Source GTCCRB Input Capture Enable
     #[inline(always)]
-    pub fn bscbrah(&mut self) -> BSCBRAH_W<GTICBSR_SPEC> {
+    pub fn bscbrah(&mut self) -> BSCBRAH_W<'_, GTICBSR_SPEC> {
         BSCBRAH_W::new(self, 13)
     }
     ///Bit 14 - GTIOCB Pin Falling Input during GTIOCA Value Low Source GTCCRB Input Capture Enable
     #[inline(always)]
-    pub fn bscbfal(&mut self) -> BSCBFAL_W<GTICBSR_SPEC> {
+    pub fn bscbfal(&mut self) -> BSCBFAL_W<'_, GTICBSR_SPEC> {
         BSCBFAL_W::new(self, 14)
     }
     ///Bit 15 - GTIOCB Pin Falling Input during GTIOCA Value High Source GTCCRB Input Capture Enable
     #[inline(always)]
-    pub fn bscbfah(&mut self) -> BSCBFAH_W<GTICBSR_SPEC> {
+    pub fn bscbfah(&mut self) -> BSCBFAH_W<'_, GTICBSR_SPEC> {
         BSCBFAH_W::new(self, 15)
     }
     ///Bit 16 - ELC_GPTA Event Source GTCCRB Input Capture Enable
     #[inline(always)]
-    pub fn bselca(&mut self) -> BSELCA_W<GTICBSR_SPEC> {
+    pub fn bselca(&mut self) -> BSELCA_W<'_, GTICBSR_SPEC> {
         BSELCA_W::new(self, 16)
     }
     ///Bit 17 - ELC_GPTB Event Source GTCCRB Input Capture Enable
     #[inline(always)]
-    pub fn bselcb(&mut self) -> BSELCB_W<GTICBSR_SPEC> {
+    pub fn bselcb(&mut self) -> BSELCB_W<'_, GTICBSR_SPEC> {
         BSELCB_W::new(self, 17)
     }
     ///Bit 18 - ELC_GPTC Event Source GTCCRB Input Capture Enable
     #[inline(always)]
-    pub fn bselcc(&mut self) -> BSELCC_W<GTICBSR_SPEC> {
+    pub fn bselcc(&mut self) -> BSELCC_W<'_, GTICBSR_SPEC> {
         BSELCC_W::new(self, 18)
     }
     ///Bit 19 - ELC_GPTD Event Source GTCCRB Input Capture Enable
     #[inline(always)]
-    pub fn bselcd(&mut self) -> BSELCD_W<GTICBSR_SPEC> {
+    pub fn bselcd(&mut self) -> BSELCD_W<'_, GTICBSR_SPEC> {
         BSELCD_W::new(self, 19)
     }
     ///Bit 20 - ELC_GPTE Event Source GTCCRB Input Capture Enable
     #[inline(always)]
-    pub fn bselce(&mut self) -> BSELCE_W<GTICBSR_SPEC> {
+    pub fn bselce(&mut self) -> BSELCE_W<'_, GTICBSR_SPEC> {
         BSELCE_W::new(self, 20)
     }
     ///Bit 21 - ELC_GPTF Event Source GTCCRB Input Capture Enable
     #[inline(always)]
-    pub fn bselcf(&mut self) -> BSELCF_W<GTICBSR_SPEC> {
+    pub fn bselcf(&mut self) -> BSELCF_W<'_, GTICBSR_SPEC> {
         BSELCF_W::new(self, 21)
     }
     ///Bit 22 - ELC_GPTG Event Source GTCCRB Input Capture Enable
     #[inline(always)]
-    pub fn bselcg(&mut self) -> BSELCG_W<GTICBSR_SPEC> {
+    pub fn bselcg(&mut self) -> BSELCG_W<'_, GTICBSR_SPEC> {
         BSELCG_W::new(self, 22)
     }
     ///Bit 23 - ELCH Event Source GTCCRB Input Capture Enable
     #[inline(always)]
-    pub fn bselch(&mut self) -> BSELCH_W<GTICBSR_SPEC> {
+    pub fn bselch(&mut self) -> BSELCH_W<'_, GTICBSR_SPEC> {
         BSELCH_W::new(self, 23)
     }
 }

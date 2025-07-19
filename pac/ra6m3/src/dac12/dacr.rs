@@ -187,17 +187,17 @@ impl R {
 impl W {
     ///Bit 5 - D/A Enable
     #[inline(always)]
-    pub fn dae(&mut self) -> DAE_W<DACR_SPEC> {
+    pub fn dae(&mut self) -> DAE_W<'_, DACR_SPEC> {
         DAE_W::new(self, 5)
     }
     ///Bit 6 - D/A Output Enable 0
     #[inline(always)]
-    pub fn daoe0(&mut self) -> DAOE0_W<DACR_SPEC> {
+    pub fn daoe0(&mut self) -> DAOE0_W<'_, DACR_SPEC> {
         DAOE0_W::new(self, 6)
     }
     ///Bit 7 - D/A Output Enable 1
     #[inline(always)]
-    pub fn daoe1(&mut self) -> DAOE1_W<DACR_SPEC> {
+    pub fn daoe1(&mut self) -> DAOE1_W<'_, DACR_SPEC> {
         DAOE1_W::new(self, 7)
     }
 }

@@ -5,7 +5,7 @@ pub type LUYADD_W<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
 impl W {
     ///Bits 0:31 - U limiter y-axis increment
     #[inline(always)]
-    pub fn luyadd(&mut self) -> LUYADD_W<LUYADD_SPEC> {
+    pub fn luyadd(&mut self) -> LUYADD_W<'_, LUYADD_SPEC> {
         LUYADD_W::new(self, 0)
     }
 }

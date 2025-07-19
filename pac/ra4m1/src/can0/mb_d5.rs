@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - Data Bytes 5 DATA5 store the transmitted or received CAN message data. Transmission or reception starts from DATA0. The bit order on the CAN bus is MSB first, and transmission or reception starts from bit 7.
     #[inline(always)]
-    pub fn data5(&mut self) -> DATA5_W<MB_D5_SPEC> {
+    pub fn data5(&mut self) -> DATA5_W<'_, MB_D5_SPEC> {
         DATA5_W::new(self, 0)
     }
 }

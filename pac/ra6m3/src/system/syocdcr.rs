@@ -129,12 +129,12 @@ impl R {
 impl W {
     ///Bit 0 - Deep Standby OCD flag
     #[inline(always)]
-    pub fn docdf(&mut self) -> DOCDF_W<SYOCDCR_SPEC> {
+    pub fn docdf(&mut self) -> DOCDF_W<'_, SYOCDCR_SPEC> {
         DOCDF_W::new(self, 0)
     }
     ///Bit 7 - Debugger Enable bit
     #[inline(always)]
-    pub fn dbgen(&mut self) -> DBGEN_W<SYOCDCR_SPEC> {
+    pub fn dbgen(&mut self) -> DBGEN_W<'_, SYOCDCR_SPEC> {
         DBGEN_W::new(self, 7)
     }
 }

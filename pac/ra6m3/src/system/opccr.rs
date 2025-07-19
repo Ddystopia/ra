@@ -143,7 +143,7 @@ impl R {
 impl W {
     ///Bits 0:1 - Operating Power Control Mode Select
     #[inline(always)]
-    pub fn opcm(&mut self) -> OPCM_W<OPCCR_SPEC> {
+    pub fn opcm(&mut self) -> OPCM_W<'_, OPCCR_SPEC> {
         OPCM_W::new(self, 0)
     }
 }

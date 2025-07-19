@@ -25,12 +25,12 @@ impl R {
 impl W {
     ///Bits 0:3 - 1-Year Count Counts from 0 to 9 once per year. When a carry is generated, 1 is added to the tens place.
     #[inline(always)]
-    pub fn yr1(&mut self) -> YR1_W<RYRCNT_SPEC> {
+    pub fn yr1(&mut self) -> YR1_W<'_, RYRCNT_SPEC> {
         YR1_W::new(self, 0)
     }
     ///Bits 4:7 - 10-Year Count Counts from 0 to 9 once per carry from ones place. When a carry is generated in the tens place, 1 is added to the hundreds place.
     #[inline(always)]
-    pub fn yr10(&mut self) -> YR10_W<RYRCNT_SPEC> {
+    pub fn yr10(&mut self) -> YR10_W<'_, RYRCNT_SPEC> {
         YR10_W::new(self, 4)
     }
 }

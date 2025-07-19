@@ -503,42 +503,42 @@ impl R {
 impl W {
     ///Bit 0 - Independent Watchdog Timer Reset Detect FlagNOTE: Writable only to clear the flag. Confirm the value is 1 and then write 0.
     #[inline(always)]
-    pub fn iwdtrf(&mut self) -> IWDTRF_W<RSTSR1_SPEC> {
+    pub fn iwdtrf(&mut self) -> IWDTRF_W<'_, RSTSR1_SPEC> {
         IWDTRF_W::new(self, 0)
     }
     ///Bit 1 - Watchdog Timer Reset Detect FlagNOTE: Writable only to clear the flag. Confirm the value is 1 and then write 0.
     #[inline(always)]
-    pub fn wdtrf(&mut self) -> WDTRF_W<RSTSR1_SPEC> {
+    pub fn wdtrf(&mut self) -> WDTRF_W<'_, RSTSR1_SPEC> {
         WDTRF_W::new(self, 1)
     }
     ///Bit 2 - Software Reset Detect FlagNOTE: Writable only to clear the flag. Confirm the value is 1 and then write 0.
     #[inline(always)]
-    pub fn swrf(&mut self) -> SWRF_W<RSTSR1_SPEC> {
+    pub fn swrf(&mut self) -> SWRF_W<'_, RSTSR1_SPEC> {
         SWRF_W::new(self, 2)
     }
     ///Bit 8 - RAM Parity Error Reset Detect FlagNOTE: Writable only to clear the flag. Confirm the value is 1 and then write 0.
     #[inline(always)]
-    pub fn rperf(&mut self) -> RPERF_W<RSTSR1_SPEC> {
+    pub fn rperf(&mut self) -> RPERF_W<'_, RSTSR1_SPEC> {
         RPERF_W::new(self, 8)
     }
     ///Bit 9 - RAM ECC Error Reset Detect FlagNOTE: Writable only to clear the flag. Confirm the value is 1 and then write 0.
     #[inline(always)]
-    pub fn reerf(&mut self) -> REERF_W<RSTSR1_SPEC> {
+    pub fn reerf(&mut self) -> REERF_W<'_, RSTSR1_SPEC> {
         REERF_W::new(self, 9)
     }
     ///Bit 10 - Bus Slave MPU Reset Detect FlagNOTE: Writable only to clear the flag. Confirm the value is 1 and then write 0.
     #[inline(always)]
-    pub fn bussrf(&mut self) -> BUSSRF_W<RSTSR1_SPEC> {
+    pub fn bussrf(&mut self) -> BUSSRF_W<'_, RSTSR1_SPEC> {
         BUSSRF_W::new(self, 10)
     }
     ///Bit 11 - Bus Master MPU Reset Detect FlagNOTE: Writable only to clear the flag. Confirm the value is 1 and then write 0.
     #[inline(always)]
-    pub fn busmrf(&mut self) -> BUSMRF_W<RSTSR1_SPEC> {
+    pub fn busmrf(&mut self) -> BUSMRF_W<'_, RSTSR1_SPEC> {
         BUSMRF_W::new(self, 11)
     }
     ///Bit 12 - SP Error Reset Detect FlagNOTE: Writable only to clear the flag. Confirm the value is 1 and then write 0.
     #[inline(always)]
-    pub fn sperf(&mut self) -> SPERF_W<RSTSR1_SPEC> {
+    pub fn sperf(&mut self) -> SPERF_W<'_, RSTSR1_SPEC> {
         SPERF_W::new(self, 12)
     }
 }

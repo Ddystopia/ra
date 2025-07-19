@@ -5,7 +5,7 @@ pub type TFPCR_W<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl W {
     ///Bits 0:7 - The CPU-side pointer for the transmit FIFO is incremented by writing FFh to TFPCR.
     #[inline(always)]
-    pub fn tfpcr(&mut self) -> TFPCR_W<TFPCR_SPEC> {
+    pub fn tfpcr(&mut self) -> TFPCR_W<'_, TFPCR_SPEC> {
         TFPCR_W::new(self, 0)
     }
 }

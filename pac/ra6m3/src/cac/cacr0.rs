@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Clock Frequency Measurement Enable.
     #[inline(always)]
-    pub fn cfme(&mut self) -> CFME_W<CACR0_SPEC> {
+    pub fn cfme(&mut self) -> CFME_W<'_, CACR0_SPEC> {
         CFME_W::new(self, 0)
     }
 }

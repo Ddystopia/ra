@@ -138,12 +138,12 @@ impl R {
 impl W {
     ///Bit 14 - Underflow Flag
     #[inline(always)]
-    pub fn undff(&mut self) -> UNDFF_W<WDTSR_SPEC> {
+    pub fn undff(&mut self) -> UNDFF_W<'_, WDTSR_SPEC> {
         UNDFF_W::new(self, 14)
     }
     ///Bit 15 - Refresh Error Flag
     #[inline(always)]
-    pub fn refef(&mut self) -> REFEF_W<WDTSR_SPEC> {
+    pub fn refef(&mut self) -> REFEF_W<'_, WDTSR_SPEC> {
         REFEF_W::new(self, 15)
     }
 }

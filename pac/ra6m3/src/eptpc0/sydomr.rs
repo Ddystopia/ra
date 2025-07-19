@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - domainNumber Field Value SettingThese bits are used to set the domainNumber field value of the PTP v2 header.When a message is received, this value is compared with the domainNumber field of the received frame as a condition for PTP reception processing.In generating messages, the value is used for the domainNumber field of the frame for transmission.
     #[inline(always)]
-    pub fn dnum(&mut self) -> DNUM_W<SYDOMR_SPEC> {
+    pub fn dnum(&mut self) -> DNUM_W<'_, SYDOMR_SPEC> {
         DNUM_W::new(self, 0)
     }
 }

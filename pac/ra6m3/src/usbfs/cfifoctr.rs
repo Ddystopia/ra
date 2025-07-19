@@ -160,7 +160,7 @@ impl R {
 impl W {
     ///Bit 15 - Buffer Memory Valid Flag
     #[inline(always)]
-    pub fn bval(&mut self) -> BVAL_W<CFIFOCTR_SPEC> {
+    pub fn bval(&mut self) -> BVAL_W<'_, CFIFOCTR_SPEC> {
         BVAL_W::new(self, 15)
     }
 }

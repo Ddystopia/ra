@@ -419,27 +419,27 @@ impl R {
 impl W {
     ///Bits 0:2 - Byte/Halfword Swap
     #[inline(always)]
-    pub fn dinswap(&mut self) -> DINSWAP_W<JIFECNT_SPEC> {
+    pub fn dinswap(&mut self) -> DINSWAP_W<'_, JIFECNT_SPEC> {
         DINSWAP_W::new(self, 0)
     }
     ///Bit 4 - Count Mode Setting for Stopping Input Image Data Lines
     #[inline(always)]
-    pub fn dinlc(&mut self) -> DINLC_W<JIFECNT_SPEC> {
+    pub fn dinlc(&mut self) -> DINLC_W<'_, JIFECNT_SPEC> {
         DINLC_W::new(self, 4)
     }
     ///Bit 5 - Input Image Data Lines Resume Command This bit is valid only when the count mode for stopping the input of image data lines is on. Setting this bit to 1 resumes reading input image data. This bit is always read as 0.
     #[inline(always)]
-    pub fn dinrcmd(&mut self) -> DINRCMD_W<JIFECNT_SPEC> {
+    pub fn dinrcmd(&mut self) -> DINRCMD_W<'_, JIFECNT_SPEC> {
         DINRCMD_W::new(self, 5)
     }
     ///Bit 6 - Address Initialization when Resuming Input of Image Data Lines This bit is only valid when the count mode for stopping the input of image data lines is on. Set this bit before writing 1 to the data-line resume command bit.
     #[inline(always)]
-    pub fn dinrini(&mut self) -> DINRINI_W<JIFECNT_SPEC> {
+    pub fn dinrini(&mut self) -> DINRINI_W<'_, JIFECNT_SPEC> {
         DINRINI_W::new(self, 6)
     }
     ///Bits 8:10 - Byte/Halfword/Word Swap Output coded data in compression is swapped.
     #[inline(always)]
-    pub fn joutswap(&mut self) -> JOUTSWAP_W<JIFECNT_SPEC> {
+    pub fn joutswap(&mut self) -> JOUTSWAP_W<'_, JIFECNT_SPEC> {
         JOUTSWAP_W::new(self, 8)
     }
 }

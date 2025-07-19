@@ -160,12 +160,12 @@ impl R {
 impl W {
     ///Bit 4 - VBATT Pin Low Voltage Detect Enable Bit
     #[inline(always)]
-    pub fn vbtlvden(&mut self) -> VBTLVDEN_W<VBTCR2_SPEC> {
+    pub fn vbtlvden(&mut self) -> VBTLVDEN_W<'_, VBTCR2_SPEC> {
         VBTLVDEN_W::new(self, 4)
     }
     ///Bits 6:7 - VBATT Pin Voltage Low Voltage Detect Level Select Bit
     #[inline(always)]
-    pub fn vbtlvdlvl(&mut self) -> VBTLVDLVL_W<VBTCR2_SPEC> {
+    pub fn vbtlvdlvl(&mut self) -> VBTLVDLVL_W<'_, VBTCR2_SPEC> {
         VBTLVDLVL_W::new(self, 6)
     }
 }

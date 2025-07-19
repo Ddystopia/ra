@@ -110,7 +110,7 @@ impl R {
 impl W {
     ///Bit 0 - SP_process monitor enable
     #[inline(always)]
-    pub fn enable(&mut self) -> ENABLE_W<PSPMPUCTL_SPEC> {
+    pub fn enable(&mut self) -> ENABLE_W<'_, PSPMPUCTL_SPEC> {
         ENABLE_W::new(self, 0)
     }
 }

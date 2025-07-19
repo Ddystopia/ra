@@ -230,17 +230,17 @@ impl R {
 impl W {
     ///Bit 5 - Interrupt Output Sense Select
     #[inline(always)]
-    pub fn intl(&mut self) -> INTL_W<SOFCFG_SPEC> {
+    pub fn intl(&mut self) -> INTL_W<'_, SOFCFG_SPEC> {
         INTL_W::new(self, 5)
     }
     ///Bit 6 - PIPEBRDY Interrupt Status Clear Timing.This bit can be set only in the initial setting (before communications).The setting cannot be changed once communication starts.
     #[inline(always)]
-    pub fn brdym(&mut self) -> BRDYM_W<SOFCFG_SPEC> {
+    pub fn brdym(&mut self) -> BRDYM_W<'_, SOFCFG_SPEC> {
         BRDYM_W::new(self, 6)
     }
     ///Bit 8 - Transaction-Enabled Time Select.The transfer efficiency can be improved by setting this bit to 1 if no low-speed device is connected directly or via FS-HUB to the USB port.
     #[inline(always)]
-    pub fn trnensel(&mut self) -> TRNENSEL_W<SOFCFG_SPEC> {
+    pub fn trnensel(&mut self) -> TRNENSEL_W<'_, SOFCFG_SPEC> {
         TRNENSEL_W::new(self, 8)
     }
 }

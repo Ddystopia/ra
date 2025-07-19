@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 7 - All Event Link Enable
     #[inline(always)]
-    pub fn elcon(&mut self) -> ELCON_W<ELCR_SPEC> {
+    pub fn elcon(&mut self) -> ELCON_W<'_, ELCR_SPEC> {
         ELCON_W::new(self, 7)
     }
 }

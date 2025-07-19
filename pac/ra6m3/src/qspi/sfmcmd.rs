@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Selection of a mode of communication with the SPI bus
     #[inline(always)]
-    pub fn dcom(&mut self) -> DCOM_W<SFMCMD_SPEC> {
+    pub fn dcom(&mut self) -> DCOM_W<'_, SFMCMD_SPEC> {
         DCOM_W::new(self, 0)
     }
 }

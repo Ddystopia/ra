@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - Receive FIFO Overflow CountThese bits indicate how many times the receive FIFO has overflowed. The counter stops when the counter value reaches FFFFh.
     #[inline(always)]
-    pub fn over(&mut self) -> OVER_W<RFOCR_SPEC> {
+    pub fn over(&mut self) -> OVER_W<'_, RFOCR_SPEC> {
         OVER_W::new(self, 0)
     }
 }

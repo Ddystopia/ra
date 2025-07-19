@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - LCD Display Data
     #[inline(always)]
-    pub fn seg(&mut self) -> SEG_W<SEG_SPEC> {
+    pub fn seg(&mut self) -> SEG_W<'_, SEG_SPEC> {
         SEG_W::new(self, 0)
     }
 }

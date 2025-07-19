@@ -100,7 +100,7 @@ impl R {
 impl W {
     ///Bits 0:1 - Flash Programming and Erasure
     #[inline(always)]
-    pub fn flwe(&mut self) -> FLWE_W<FWEPROR_SPEC> {
+    pub fn flwe(&mut self) -> FLWE_W<'_, FWEPROR_SPEC> {
         FLWE_W::new(self, 0)
     }
 }

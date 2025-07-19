@@ -320,7 +320,7 @@ impl R {
 impl W {
     ///Bits 0:13 - snoop address bitSet the I/O register address to snoop
     #[inline(always)]
-    pub fn crcsa(&mut self) -> CRCSA_W<CRCSAR_SPEC> {
+    pub fn crcsa(&mut self) -> CRCSA_W<'_, CRCSAR_SPEC> {
         CRCSA_W::new(self, 0)
     }
 }

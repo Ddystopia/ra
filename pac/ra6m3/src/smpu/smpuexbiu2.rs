@@ -487,42 +487,42 @@ impl R {
 impl W {
     ///Bit 0 - CPU Read protection
     #[inline(always)]
-    pub fn rp_cpu(&mut self) -> RP_CPU_W<SMPUEXBIU2_SPEC> {
+    pub fn rp_cpu(&mut self) -> RP_CPU_W<'_, SMPUEXBIU2_SPEC> {
         RP_CPU_W::new(self, 0)
     }
     ///Bit 1 - CPU Write protection
     #[inline(always)]
-    pub fn wp_cpu(&mut self) -> WP_CPU_W<SMPUEXBIU2_SPEC> {
+    pub fn wp_cpu(&mut self) -> WP_CPU_W<'_, SMPUEXBIU2_SPEC> {
         WP_CPU_W::new(self, 1)
     }
     ///Bit 2 - Master Group A Read protection
     #[inline(always)]
-    pub fn rp_grpa(&mut self) -> RP_GRPA_W<SMPUEXBIU2_SPEC> {
+    pub fn rp_grpa(&mut self) -> RP_GRPA_W<'_, SMPUEXBIU2_SPEC> {
         RP_GRPA_W::new(self, 2)
     }
     ///Bit 3 - Master Group A Write protection
     #[inline(always)]
-    pub fn wp_grpa(&mut self) -> WP_GRPA_W<SMPUEXBIU2_SPEC> {
+    pub fn wp_grpa(&mut self) -> WP_GRPA_W<'_, SMPUEXBIU2_SPEC> {
         WP_GRPA_W::new(self, 3)
     }
     ///Bit 4 - Master Group B Read protection
     #[inline(always)]
-    pub fn rp_grpb(&mut self) -> RP_GRPB_W<SMPUEXBIU2_SPEC> {
+    pub fn rp_grpb(&mut self) -> RP_GRPB_W<'_, SMPUEXBIU2_SPEC> {
         RP_GRPB_W::new(self, 4)
     }
     ///Bit 5 - Master Group B Write protection
     #[inline(always)]
-    pub fn wp_grpb(&mut self) -> WP_GRPB_W<SMPUEXBIU2_SPEC> {
+    pub fn wp_grpb(&mut self) -> WP_GRPB_W<'_, SMPUEXBIU2_SPEC> {
         WP_GRPB_W::new(self, 5)
     }
     ///Bit 6 - Master Group C Read protection
     #[inline(always)]
-    pub fn rp_grpc(&mut self) -> RP_GRPC_W<SMPUEXBIU2_SPEC> {
+    pub fn rp_grpc(&mut self) -> RP_GRPC_W<'_, SMPUEXBIU2_SPEC> {
         RP_GRPC_W::new(self, 6)
     }
     ///Bit 7 - Master Group C Write protection
     #[inline(always)]
-    pub fn wp_grpc(&mut self) -> WP_GRPC_W<SMPUEXBIU2_SPEC> {
+    pub fn wp_grpc(&mut self) -> WP_GRPC_W<'_, SMPUEXBIU2_SPEC> {
         WP_GRPC_W::new(self, 7)
     }
 }

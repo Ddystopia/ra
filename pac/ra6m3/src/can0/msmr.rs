@@ -100,7 +100,7 @@ impl R {
 impl W {
     ///Bits 0:1 - Mailbox Search Mode Select
     #[inline(always)]
-    pub fn mbsm(&mut self) -> MBSM_W<MSMR_SPEC> {
+    pub fn mbsm(&mut self) -> MBSM_W<'_, MSMR_SPEC> {
         MBSM_W::new(self, 0)
     }
 }

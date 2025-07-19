@@ -1,4 +1,4 @@
-/*!Peripheral access API for R7FA4M1AB microcontrollers (generated using svd2rust v0.36.1 ( ))
+/*!Peripheral access API for R7FA4M1AB microcontrollers (generated using svd2rust v0.36.1 (23464b3 2025-06-27))
 
 You can find an overview of the generated API [here].
 

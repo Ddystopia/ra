@@ -307,27 +307,27 @@ impl R {
 impl W {
     ///Bit 0 - Compare Window A Channel AN100 Select
     #[inline(always)]
-    pub fn cmpcha00(&mut self) -> CMPCHA00_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha00(&mut self) -> CMPCHA00_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA00_W::new(self, 0)
     }
     ///Bit 1 - Compare Window A Channel AN101 Select
     #[inline(always)]
-    pub fn cmpcha01(&mut self) -> CMPCHA01_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha01(&mut self) -> CMPCHA01_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA01_W::new(self, 1)
     }
     ///Bit 2 - Compare Window A Channel AN102 Select
     #[inline(always)]
-    pub fn cmpcha02(&mut self) -> CMPCHA02_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha02(&mut self) -> CMPCHA02_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA02_W::new(self, 2)
     }
     ///Bit 3 - Compare Window A Channel AN103 Select
     #[inline(always)]
-    pub fn cmpcha03(&mut self) -> CMPCHA03_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha03(&mut self) -> CMPCHA03_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA03_W::new(self, 3)
     }
     ///Bit 5 - Compare Window A Channel AN105 Select
     #[inline(always)]
-    pub fn cmpcha05(&mut self) -> CMPCHA05_W<ADCMPANSR0_SPEC> {
+    pub fn cmpcha05(&mut self) -> CMPCHA05_W<'_, ADCMPANSR0_SPEC> {
         CMPCHA05_W::new(self, 5)
     }
 }

@@ -86,7 +86,7 @@ impl R {
 impl W {
     ///Bits 0:2 - HOCO wait time setting
     #[inline(always)]
-    pub fn hsts(&mut self) -> HSTS_W<HOCOWTCR_SPEC> {
+    pub fn hsts(&mut self) -> HSTS_W<'_, HOCOWTCR_SPEC> {
         HSTS_W::new(self, 0)
     }
 }

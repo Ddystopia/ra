@@ -5,7 +5,7 @@ pub type TEXORIGIN_W<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
 impl W {
     ///Bits 0:31 - Texture base address
     #[inline(always)]
-    pub fn texorigin(&mut self) -> TEXORIGIN_W<TEXORIGIN_SPEC> {
+    pub fn texorigin(&mut self) -> TEXORIGIN_W<'_, TEXORIGIN_SPEC> {
         TEXORIGIN_W::new(self, 0)
     }
 }

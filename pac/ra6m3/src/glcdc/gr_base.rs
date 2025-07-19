@@ -34,17 +34,17 @@ impl R {
 impl W {
     ///Bits 0:7 - Background color R valueUnsigned; 8 bits
     #[inline(always)]
-    pub fn r(&mut self) -> R_W<GR_BASE_SPEC> {
+    pub fn r(&mut self) -> R_W<'_, GR_BASE_SPEC> {
         R_W::new(self, 0)
     }
     ///Bits 8:15 - Background color B valueUnsigned; 8 bits
     #[inline(always)]
-    pub fn b(&mut self) -> B_W<GR_BASE_SPEC> {
+    pub fn b(&mut self) -> B_W<'_, GR_BASE_SPEC> {
         B_W::new(self, 8)
     }
     ///Bits 16:23 - Background color G valueUnsigned; 8 bits
     #[inline(always)]
-    pub fn g(&mut self) -> G_W<GR_BASE_SPEC> {
+    pub fn g(&mut self) -> G_W<'_, GR_BASE_SPEC> {
         G_W::new(self, 16)
     }
 }

@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - PTP-primary Message TTL Field Value SettingThese bits hold the setting for the value of the TTL field within the IPv4 headers of PTP-primary messages.
     #[inline(always)]
-    pub fn prtl(&mut self) -> PRTL_W<PPTTLR_SPEC> {
+    pub fn prtl(&mut self) -> PRTL_W<'_, PPTTLR_SPEC> {
         PRTL_W::new(self, 0)
     }
 }

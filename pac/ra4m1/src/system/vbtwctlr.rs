@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - VBATT wakeup enable
     #[inline(always)]
-    pub fn vwen(&mut self) -> VWEN_W<VBTWCTLR_SPEC> {
+    pub fn vwen(&mut self) -> VWEN_W<'_, VBTWCTLR_SPEC> {
         VWEN_W::new(self, 0)
     }
 }

@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - These bits hold the setting for the higher-order 32 bits of the threshold for detection of loss of synchronization.
     #[inline(always)]
-    pub fn syntdaru(&mut self) -> SYNTDARU_W<SYNTDARU_SPEC> {
+    pub fn syntdaru(&mut self) -> SYNTDARU_W<'_, SYNTDARU_SPEC> {
         SYNTDARU_W::new(self, 0)
     }
 }

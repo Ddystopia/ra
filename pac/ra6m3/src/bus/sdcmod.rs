@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Endian Mode
     #[inline(always)]
-    pub fn emode(&mut self) -> EMODE_W<SDCMOD_SPEC> {
+    pub fn emode(&mut self) -> EMODE_W<'_, SDCMOD_SPEC> {
         EMODE_W::new(self, 0)
     }
 }

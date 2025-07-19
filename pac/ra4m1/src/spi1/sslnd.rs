@@ -152,7 +152,7 @@ impl R {
 impl W {
     ///Bits 0:2 - SSL Negation Delay Setting
     #[inline(always)]
-    pub fn slndl(&mut self) -> SLNDL_W<SSLND_SPEC> {
+    pub fn slndl(&mut self) -> SLNDL_W<'_, SSLND_SPEC> {
         SLNDL_W::new(self, 0)
     }
 }

@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 3 - Main Clock Oscillator Drive Capability 1 Switching
     #[inline(always)]
-    pub fn modrv1(&mut self) -> MODRV1_W<MOMCR_SPEC> {
+    pub fn modrv1(&mut self) -> MODRV1_W<'_, MOMCR_SPEC> {
         MODRV1_W::new(self, 3)
     }
     ///Bit 6 - Main Clock Oscillator Switching
     #[inline(always)]
-    pub fn mosel(&mut self) -> MOSEL_W<MOMCR_SPEC> {
+    pub fn mosel(&mut self) -> MOSEL_W<'_, MOMCR_SPEC> {
         MOSEL_W::new(self, 6)
     }
 }

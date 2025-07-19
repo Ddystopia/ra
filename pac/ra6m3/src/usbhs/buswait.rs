@@ -60,7 +60,7 @@ impl R {
 impl W {
     ///Bits 0:3 - CPU Bus Access Wait Specification BWAIT waits (BWAIT+2 access cycles)
     #[inline(always)]
-    pub fn bwait(&mut self) -> BWAIT_W<BUSWAIT_SPEC> {
+    pub fn bwait(&mut self) -> BWAIT_W<'_, BUSWAIT_SPEC> {
         BWAIT_W::new(self, 0)
     }
 }

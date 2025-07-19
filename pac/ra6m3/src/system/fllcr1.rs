@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - FLL Enable
     #[inline(always)]
-    pub fn fllen(&mut self) -> FLLEN_W<FLLCR1_SPEC> {
+    pub fn fllen(&mut self) -> FLLEN_W<'_, FLLCR1_SPEC> {
         FLLEN_W::new(self, 0)
     }
 }

@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Input Image Data Lines Offset (in 8-byte units) The lower three bits should be set to 0.
     #[inline(always)]
-    pub fn eda(&mut self) -> EDA_W<JIFEDA_SPEC> {
+    pub fn eda(&mut self) -> EDA_W<'_, JIFEDA_SPEC> {
         EDA_W::new(self, 0)
     }
 }

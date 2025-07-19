@@ -7,12 +7,12 @@ pub type SIZEY_W<'a, REG> = crate::FieldWriter<'a, REG, 16, u16>;
 impl W {
     ///Bits 0:15 - Width of the bounding box in pixelsvalid range: 0 to 1024
     #[inline(always)]
-    pub fn sizex(&mut self) -> SIZEX_W<SIZE_SPEC> {
+    pub fn sizex(&mut self) -> SIZEX_W<'_, SIZE_SPEC> {
         SIZEX_W::new(self, 0)
     }
     ///Bits 16:31 - Height of the bounding box in pixelsvalid range: 0 to 1024
     #[inline(always)]
-    pub fn sizey(&mut self) -> SIZEY_W<SIZE_SPEC> {
+    pub fn sizey(&mut self) -> SIZEY_W<'_, SIZE_SPEC> {
         SIZEY_W::new(self, 16)
     }
 }

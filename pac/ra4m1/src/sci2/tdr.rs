@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - TDR is an 8-bit register that stores transmit data.
     #[inline(always)]
-    pub fn tdr(&mut self) -> TDR_W<TDR_SPEC> {
+    pub fn tdr(&mut self) -> TDR_W<'_, TDR_SPEC> {
         TDR_W::new(self, 0)
     }
 }

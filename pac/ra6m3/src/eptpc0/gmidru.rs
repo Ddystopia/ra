@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - These bits hold the setting for the higher-order 32 bits of the value of the grandmasterIdentity fields of Announce messages.
     #[inline(always)]
-    pub fn gmidru(&mut self) -> GMIDRU_W<GMIDRU_SPEC> {
+    pub fn gmidru(&mut self) -> GMIDRU_W<'_, GMIDRU_SPEC> {
         GMIDRU_W::new(self, 0)
     }
 }

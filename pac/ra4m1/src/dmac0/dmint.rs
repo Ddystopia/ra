@@ -307,27 +307,27 @@ impl R {
 impl W {
     ///Bit 0 - Destination Address Extended Repeat Area Overflow Interrupt Enable
     #[inline(always)]
-    pub fn darie(&mut self) -> DARIE_W<DMINT_SPEC> {
+    pub fn darie(&mut self) -> DARIE_W<'_, DMINT_SPEC> {
         DARIE_W::new(self, 0)
     }
     ///Bit 1 - Source Address Extended Repeat Area Overflow Interrupt Enable
     #[inline(always)]
-    pub fn sarie(&mut self) -> SARIE_W<DMINT_SPEC> {
+    pub fn sarie(&mut self) -> SARIE_W<'_, DMINT_SPEC> {
         SARIE_W::new(self, 1)
     }
     ///Bit 2 - Repeat Size End Interrupt Enable
     #[inline(always)]
-    pub fn rptie(&mut self) -> RPTIE_W<DMINT_SPEC> {
+    pub fn rptie(&mut self) -> RPTIE_W<'_, DMINT_SPEC> {
         RPTIE_W::new(self, 2)
     }
     ///Bit 3 - Transfer Escape End Interrupt Enable
     #[inline(always)]
-    pub fn esie(&mut self) -> ESIE_W<DMINT_SPEC> {
+    pub fn esie(&mut self) -> ESIE_W<'_, DMINT_SPEC> {
         ESIE_W::new(self, 3)
     }
     ///Bit 4 - Transfer End Interrupt Enable
     #[inline(always)]
-    pub fn dtie(&mut self) -> DTIE_W<DMINT_SPEC> {
+    pub fn dtie(&mut self) -> DTIE_W<'_, DMINT_SPEC> {
         DTIE_W::new(self, 4)
     }
 }

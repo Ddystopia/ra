@@ -307,27 +307,27 @@ impl R {
 impl W {
     ///Bit 0 - VBATWIO0 Pin Enable
     #[inline(always)]
-    pub fn vch0e(&mut self) -> VCH0E_W<VBTWTER_SPEC> {
+    pub fn vch0e(&mut self) -> VCH0E_W<'_, VBTWTER_SPEC> {
         VCH0E_W::new(self, 0)
     }
     ///Bit 1 - VBATWIO1 Pin Enable
     #[inline(always)]
-    pub fn vch1e(&mut self) -> VCH1E_W<VBTWTER_SPEC> {
+    pub fn vch1e(&mut self) -> VCH1E_W<'_, VBTWTER_SPEC> {
         VCH1E_W::new(self, 1)
     }
     ///Bit 2 - VBATWIO2 Pin Enable
     #[inline(always)]
-    pub fn vch2e(&mut self) -> VCH2E_W<VBTWTER_SPEC> {
+    pub fn vch2e(&mut self) -> VCH2E_W<'_, VBTWTER_SPEC> {
         VCH2E_W::new(self, 2)
     }
     ///Bit 3 - RTC Periodic Signal Enable
     #[inline(always)]
-    pub fn vrtcie(&mut self) -> VRTCIE_W<VBTWTER_SPEC> {
+    pub fn vrtcie(&mut self) -> VRTCIE_W<'_, VBTWTER_SPEC> {
         VRTCIE_W::new(self, 3)
     }
     ///Bit 4 - RTC Alarm Signal Enable
     #[inline(always)]
-    pub fn vrtcae(&mut self) -> VRTCAE_W<VBTWTER_SPEC> {
+    pub fn vrtcae(&mut self) -> VRTCAE_W<'_, VBTWTER_SPEC> {
         VRTCAE_W::new(self, 4)
     }
 }

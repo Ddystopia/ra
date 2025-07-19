@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 1 - Sub Clock Oscillator Drive Capability Switching
     #[inline(always)]
-    pub fn sodrv1(&mut self) -> SODRV1_W<SOMCR_SPEC> {
+    pub fn sodrv1(&mut self) -> SODRV1_W<'_, SOMCR_SPEC> {
         SODRV1_W::new(self, 1)
     }
 }

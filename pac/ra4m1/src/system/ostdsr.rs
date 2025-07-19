@@ -69,7 +69,7 @@ impl R {
 impl W {
     ///Bit 0 - Oscillation Stop Detection Flag
     #[inline(always)]
-    pub fn ostdf(&mut self) -> OSTDF_W<OSTDSR_SPEC> {
+    pub fn ostdf(&mut self) -> OSTDF_W<'_, OSTDSR_SPEC> {
         OSTDF_W::new(self, 0)
     }
 }

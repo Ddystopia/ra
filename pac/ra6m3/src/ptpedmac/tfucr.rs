@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - Transmit FIFO Underflow CountThese bits indicate how many times the transmit FIFO has underflowed. The counter stops when the counter value reaches FFFFh.
     #[inline(always)]
-    pub fn under(&mut self) -> UNDER_W<TFUCR_SPEC> {
+    pub fn under(&mut self) -> UNDER_W<'_, TFUCR_SPEC> {
         UNDER_W::new(self, 0)
     }
 }

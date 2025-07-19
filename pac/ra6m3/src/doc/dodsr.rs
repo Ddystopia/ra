@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - This register stores 16-bit data for use as a reference in data comparison mode. This register also stores the results of operations in data addition and data subtraction modes.
     #[inline(always)]
-    pub fn dodsr(&mut self) -> DODSR_W<DODSR_SPEC> {
+    pub fn dodsr(&mut self) -> DODSR_W<'_, DODSR_SPEC> {
         DODSR_W::new(self, 0)
     }
 }

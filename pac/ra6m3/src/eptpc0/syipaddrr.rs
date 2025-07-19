@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - These bits hold the setting for the local IP address.
     #[inline(always)]
-    pub fn syipaddrr(&mut self) -> SYIPADDRR_W<SYIPADDRR_SPEC> {
+    pub fn syipaddrr(&mut self) -> SYIPADDRR_W<'_, SYIPADDRR_SPEC> {
         SYIPADDRR_W::new(self, 0)
     }
 }

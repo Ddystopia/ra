@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:14 - Input Image Data Lines Offset(in 8-byte units)The lower three bits should be set to 0.
     #[inline(always)]
-    pub fn esmw(&mut self) -> ESMW_W<JIFESOFST_SPEC> {
+    pub fn esmw(&mut self) -> ESMW_W<'_, JIFESOFST_SPEC> {
         ESMW_W::new(self, 0)
     }
 }

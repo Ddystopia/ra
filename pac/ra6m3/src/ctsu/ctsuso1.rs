@@ -118,17 +118,17 @@ impl R {
 impl W {
     ///Bits 0:7 - CTSU Reference ICO Current AdjustmentCurrent offset amount is CTSUSO ( 0 to 255 )
     #[inline(always)]
-    pub fn ctsuricoa(&mut self) -> CTSURICOA_W<CTSUSO1_SPEC> {
+    pub fn ctsuricoa(&mut self) -> CTSURICOA_W<'_, CTSUSO1_SPEC> {
         CTSURICOA_W::new(self, 0)
     }
     ///Bits 8:12 - CTSU Base Clock SettingOperating clock divided by ( CTSUSDPA + 1 ) x 2
     #[inline(always)]
-    pub fn ctsusdpa(&mut self) -> CTSUSDPA_W<CTSUSO1_SPEC> {
+    pub fn ctsusdpa(&mut self) -> CTSUSDPA_W<'_, CTSUSO1_SPEC> {
         CTSUSDPA_W::new(self, 8)
     }
     ///Bits 13:14 - CTSU ICO Gain Adjustment
     #[inline(always)]
-    pub fn ctsuicog(&mut self) -> CTSUICOG_W<CTSUSO1_SPEC> {
+    pub fn ctsuicog(&mut self) -> CTSUICOG_W<'_, CTSUSO1_SPEC> {
         CTSUICOG_W::new(self, 13)
     }
 }

@@ -307,27 +307,27 @@ impl R {
 impl W {
     ///Bit 0 - Parity Enable
     #[inline(always)]
-    pub fn sppe(&mut self) -> SPPE_W<SPCR2_SPEC> {
+    pub fn sppe(&mut self) -> SPPE_W<'_, SPCR2_SPEC> {
         SPPE_W::new(self, 0)
     }
     ///Bit 1 - Parity Mode
     #[inline(always)]
-    pub fn spoe(&mut self) -> SPOE_W<SPCR2_SPEC> {
+    pub fn spoe(&mut self) -> SPOE_W<'_, SPCR2_SPEC> {
         SPOE_W::new(self, 1)
     }
     ///Bit 2 - SPI Idle Interrupt Enable
     #[inline(always)]
-    pub fn spiie(&mut self) -> SPIIE_W<SPCR2_SPEC> {
+    pub fn spiie(&mut self) -> SPIIE_W<'_, SPCR2_SPEC> {
         SPIIE_W::new(self, 2)
     }
     ///Bit 3 - Parity Self-Testing
     #[inline(always)]
-    pub fn pte(&mut self) -> PTE_W<SPCR2_SPEC> {
+    pub fn pte(&mut self) -> PTE_W<'_, SPCR2_SPEC> {
         PTE_W::new(self, 3)
     }
     ///Bit 4 - RSPCK Auto-Stop Function Enable
     #[inline(always)]
-    pub fn sckase(&mut self) -> SCKASE_W<SPCR2_SPEC> {
+    pub fn sckase(&mut self) -> SCKASE_W<'_, SPCR2_SPEC> {
         SCKASE_W::new(self, 4)
     }
 }

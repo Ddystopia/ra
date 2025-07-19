@@ -147,12 +147,12 @@ impl R {
 impl W {
     ///Bits 0:8 - Maximum Packet Size PIPE1 and PIPE2: 1 byte (001h) to 256 bytes (100h) PIPE3 to PIPE5: 8 bytes (008h), 16 bytes (010h), 32 bytes (020h), 64 bytes (040h) (Bits \[8:7\] and \[2:0\] are not provided.) PIPE6 to PIPE9: 1 byte (001h) to 64 bytes (040h) (Bits \[8:7\] are not provided.)
     #[inline(always)]
-    pub fn mxps(&mut self) -> MXPS_W<PIPEMAXP_SPEC> {
+    pub fn mxps(&mut self) -> MXPS_W<'_, PIPEMAXP_SPEC> {
         MXPS_W::new(self, 0)
     }
     ///Bits 12:15 - Device Select
     #[inline(always)]
-    pub fn devsel(&mut self) -> DEVSEL_W<PIPEMAXP_SPEC> {
+    pub fn devsel(&mut self) -> DEVSEL_W<'_, PIPEMAXP_SPEC> {
         DEVSEL_W::new(self, 12)
     }
 }

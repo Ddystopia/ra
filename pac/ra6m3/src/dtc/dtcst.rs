@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - DTC Module Start
     #[inline(always)]
-    pub fn dtcst(&mut self) -> DTCST_W<DTCST_SPEC> {
+    pub fn dtcst(&mut self) -> DTCST_W<'_, DTCST_SPEC> {
         DTCST_W::new(self, 0)
     }
 }

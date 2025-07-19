@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - A Sync message not being received within 1024 x n (ns), where n is the setting, leads to a timeout for reception of Sync messages, leading to the STSR.SYNTOUT flag being set to 1.
     #[inline(always)]
-    pub fn syntor(&mut self) -> SYNTOR_W<SYNTOR_SPEC> {
+    pub fn syntor(&mut self) -> SYNTOR_W<'_, SYNTOR_SPEC> {
         SYNTOR_W::new(self, 0)
     }
 }

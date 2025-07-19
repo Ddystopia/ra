@@ -113,12 +113,12 @@ impl R {
 impl W {
     ///Bits 0:10 - Maximum Packet SizeThese bits specify the maximum data payload (maximum packet size) for the selected pipe.A size of 1h to 40h bytes can be set for PIPE6 to PIPE9.
     #[inline(always)]
-    pub fn mxps(&mut self) -> MXPS_W<PIPEMAXP_SPEC> {
+    pub fn mxps(&mut self) -> MXPS_W<'_, PIPEMAXP_SPEC> {
         MXPS_W::new(self, 0)
     }
     ///Bits 12:15 - Device SelectThese bits specify the address of the peripheral device when the host controller function is selected.
     #[inline(always)]
-    pub fn devsel(&mut self) -> DEVSEL_W<PIPEMAXP_SPEC> {
+    pub fn devsel(&mut self) -> DEVSEL_W<'_, PIPEMAXP_SPEC> {
         DEVSEL_W::new(self, 12)
     }
 }

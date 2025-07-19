@@ -435,32 +435,32 @@ impl R {
 impl W {
     ///Bit 0 - Start Condition Generation
     #[inline(always)]
-    pub fn iicstareq(&mut self) -> IICSTAREQ_W<SIMR3_SPEC> {
+    pub fn iicstareq(&mut self) -> IICSTAREQ_W<'_, SIMR3_SPEC> {
         IICSTAREQ_W::new(self, 0)
     }
     ///Bit 1 - Restart Condition Generation
     #[inline(always)]
-    pub fn iicrstareq(&mut self) -> IICRSTAREQ_W<SIMR3_SPEC> {
+    pub fn iicrstareq(&mut self) -> IICRSTAREQ_W<'_, SIMR3_SPEC> {
         IICRSTAREQ_W::new(self, 1)
     }
     ///Bit 2 - Stop Condition Generation
     #[inline(always)]
-    pub fn iicstpreq(&mut self) -> IICSTPREQ_W<SIMR3_SPEC> {
+    pub fn iicstpreq(&mut self) -> IICSTPREQ_W<'_, SIMR3_SPEC> {
         IICSTPREQ_W::new(self, 2)
     }
     ///Bit 3 - Issuing of Start, Restart, or Stop Condition Completed Flag (When 0 is written to IICSTIF, it is cleared to 0.)
     #[inline(always)]
-    pub fn iicstif(&mut self) -> IICSTIF_W<SIMR3_SPEC> {
+    pub fn iicstif(&mut self) -> IICSTIF_W<'_, SIMR3_SPEC> {
         IICSTIF_W::new(self, 3)
     }
     ///Bits 4:5 - SDA Output Select
     #[inline(always)]
-    pub fn iicsdas(&mut self) -> IICSDAS_W<SIMR3_SPEC> {
+    pub fn iicsdas(&mut self) -> IICSDAS_W<'_, SIMR3_SPEC> {
         IICSDAS_W::new(self, 4)
     }
     ///Bits 6:7 - SCL Output Select
     #[inline(always)]
-    pub fn iicscls(&mut self) -> IICSCLS_W<SIMR3_SPEC> {
+    pub fn iicscls(&mut self) -> IICSCLS_W<'_, SIMR3_SPEC> {
         IICSCLS_W::new(self, 6)
     }
 }

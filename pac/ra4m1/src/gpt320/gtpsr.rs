@@ -1267,107 +1267,107 @@ impl R {
 impl W {
     ///Bit 0 - GTETRGA Pin Rising Input Source Counter Stop Enable
     #[inline(always)]
-    pub fn psgtrgar(&mut self) -> PSGTRGAR_W<GTPSR_SPEC> {
+    pub fn psgtrgar(&mut self) -> PSGTRGAR_W<'_, GTPSR_SPEC> {
         PSGTRGAR_W::new(self, 0)
     }
     ///Bit 1 - GTETRGA Pin Falling Input Source Counter Stop Enable
     #[inline(always)]
-    pub fn psgtrgaf(&mut self) -> PSGTRGAF_W<GTPSR_SPEC> {
+    pub fn psgtrgaf(&mut self) -> PSGTRGAF_W<'_, GTPSR_SPEC> {
         PSGTRGAF_W::new(self, 1)
     }
     ///Bit 2 - GTETRGB Pin Rising Input Source Counter Stop Enable
     #[inline(always)]
-    pub fn psgtrgbr(&mut self) -> PSGTRGBR_W<GTPSR_SPEC> {
+    pub fn psgtrgbr(&mut self) -> PSGTRGBR_W<'_, GTPSR_SPEC> {
         PSGTRGBR_W::new(self, 2)
     }
     ///Bit 3 - GTETRGB Pin Falling Input Source Counter Stop Enable
     #[inline(always)]
-    pub fn psgtrgbf(&mut self) -> PSGTRGBF_W<GTPSR_SPEC> {
+    pub fn psgtrgbf(&mut self) -> PSGTRGBF_W<'_, GTPSR_SPEC> {
         PSGTRGBF_W::new(self, 3)
     }
     ///Bit 8 - GTIOCA Pin Rising Input during GTIOCB Value Low Source Counter Stop Enable
     #[inline(always)]
-    pub fn pscarbl(&mut self) -> PSCARBL_W<GTPSR_SPEC> {
+    pub fn pscarbl(&mut self) -> PSCARBL_W<'_, GTPSR_SPEC> {
         PSCARBL_W::new(self, 8)
     }
     ///Bit 9 - GTIOCA Pin Rising Input during GTIOCB Value High Source Counter Stop Enable
     #[inline(always)]
-    pub fn pscarbh(&mut self) -> PSCARBH_W<GTPSR_SPEC> {
+    pub fn pscarbh(&mut self) -> PSCARBH_W<'_, GTPSR_SPEC> {
         PSCARBH_W::new(self, 9)
     }
     ///Bit 10 - GTIOCA Pin Falling Input during GTIOCB Value Low Source Counter Stop Enable
     #[inline(always)]
-    pub fn pscafbl(&mut self) -> PSCAFBL_W<GTPSR_SPEC> {
+    pub fn pscafbl(&mut self) -> PSCAFBL_W<'_, GTPSR_SPEC> {
         PSCAFBL_W::new(self, 10)
     }
     ///Bit 11 - GTIOCA Pin Falling Input during GTIOCB Value High Source Counter Stop Enable
     #[inline(always)]
-    pub fn pscafbh(&mut self) -> PSCAFBH_W<GTPSR_SPEC> {
+    pub fn pscafbh(&mut self) -> PSCAFBH_W<'_, GTPSR_SPEC> {
         PSCAFBH_W::new(self, 11)
     }
     ///Bit 12 - GTIOCB Pin Rising Input during GTIOCA Value Low Source Counter Stop Enable
     #[inline(always)]
-    pub fn pscbral(&mut self) -> PSCBRAL_W<GTPSR_SPEC> {
+    pub fn pscbral(&mut self) -> PSCBRAL_W<'_, GTPSR_SPEC> {
         PSCBRAL_W::new(self, 12)
     }
     ///Bit 13 - GTIOCB Pin Rising Input during GTIOCA Value High Source Counter Stop Enable
     #[inline(always)]
-    pub fn pscbrah(&mut self) -> PSCBRAH_W<GTPSR_SPEC> {
+    pub fn pscbrah(&mut self) -> PSCBRAH_W<'_, GTPSR_SPEC> {
         PSCBRAH_W::new(self, 13)
     }
     ///Bit 14 - GTIOCB Pin Falling Input during GTIOCA Value Low Source Counter Stop Enable
     #[inline(always)]
-    pub fn pscbfal(&mut self) -> PSCBFAL_W<GTPSR_SPEC> {
+    pub fn pscbfal(&mut self) -> PSCBFAL_W<'_, GTPSR_SPEC> {
         PSCBFAL_W::new(self, 14)
     }
     ///Bit 15 - GTIOCB Pin Falling Input during GTIOCA Value High Source Counter Stop Enable
     #[inline(always)]
-    pub fn pscbfah(&mut self) -> PSCBFAH_W<GTPSR_SPEC> {
+    pub fn pscbfah(&mut self) -> PSCBFAH_W<'_, GTPSR_SPEC> {
         PSCBFAH_W::new(self, 15)
     }
     ///Bit 16 - ELC_GPTA Event Source Counter Stop Enable
     #[inline(always)]
-    pub fn pselca(&mut self) -> PSELCA_W<GTPSR_SPEC> {
+    pub fn pselca(&mut self) -> PSELCA_W<'_, GTPSR_SPEC> {
         PSELCA_W::new(self, 16)
     }
     ///Bit 17 - ELC_GPTB Event Source Counter Stop Enable
     #[inline(always)]
-    pub fn pselcb(&mut self) -> PSELCB_W<GTPSR_SPEC> {
+    pub fn pselcb(&mut self) -> PSELCB_W<'_, GTPSR_SPEC> {
         PSELCB_W::new(self, 17)
     }
     ///Bit 18 - ELC_GPTC Event Source Counter Stop Enable
     #[inline(always)]
-    pub fn pselcc(&mut self) -> PSELCC_W<GTPSR_SPEC> {
+    pub fn pselcc(&mut self) -> PSELCC_W<'_, GTPSR_SPEC> {
         PSELCC_W::new(self, 18)
     }
     ///Bit 19 - ELC_GPTD Event Source Counter Stop Enable
     #[inline(always)]
-    pub fn pselcd(&mut self) -> PSELCD_W<GTPSR_SPEC> {
+    pub fn pselcd(&mut self) -> PSELCD_W<'_, GTPSR_SPEC> {
         PSELCD_W::new(self, 19)
     }
     ///Bit 20 - ELC_GPTE Event Source Counter Stop Enable
     #[inline(always)]
-    pub fn pselce(&mut self) -> PSELCE_W<GTPSR_SPEC> {
+    pub fn pselce(&mut self) -> PSELCE_W<'_, GTPSR_SPEC> {
         PSELCE_W::new(self, 20)
     }
     ///Bit 21 - ELC_GPTF Event Source Counter Stop Enable
     #[inline(always)]
-    pub fn pselcf(&mut self) -> PSELCF_W<GTPSR_SPEC> {
+    pub fn pselcf(&mut self) -> PSELCF_W<'_, GTPSR_SPEC> {
         PSELCF_W::new(self, 21)
     }
     ///Bit 22 - ELC_GPTG Event Source Counter Stop Enable
     #[inline(always)]
-    pub fn pselcg(&mut self) -> PSELCG_W<GTPSR_SPEC> {
+    pub fn pselcg(&mut self) -> PSELCG_W<'_, GTPSR_SPEC> {
         PSELCG_W::new(self, 22)
     }
     ///Bit 23 - ELCH Event Source Counter Stop Enable
     #[inline(always)]
-    pub fn pselch(&mut self) -> PSELCH_W<GTPSR_SPEC> {
+    pub fn pselch(&mut self) -> PSELCH_W<'_, GTPSR_SPEC> {
         PSELCH_W::new(self, 23)
     }
     ///Bit 31 - Software Source Counter Stop Enable
     #[inline(always)]
-    pub fn cstop(&mut self) -> CSTOP_W<GTPSR_SPEC> {
+    pub fn cstop(&mut self) -> CSTOP_W<'_, GTPSR_SPEC> {
         CSTOP_W::new(self, 31)
     }
 }

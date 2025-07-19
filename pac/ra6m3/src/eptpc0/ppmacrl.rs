@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:23 - These bits hold the setting for the lower-order 24 bits of the destination MAC address for PTP-primary messages.
     #[inline(always)]
-    pub fn ppmacrl(&mut self) -> PPMACRL_W<PPMACRL_SPEC> {
+    pub fn ppmacrl(&mut self) -> PPMACRL_W<'_, PPMACRL_SPEC> {
         PPMACRL_W::new(self, 0)
     }
 }

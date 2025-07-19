@@ -392,27 +392,27 @@ impl R {
 impl W {
     ///Bit 0 - Timeout Detection Time Select
     #[inline(always)]
-    pub fn tmos(&mut self) -> TMOS_W<ICMR2_SPEC> {
+    pub fn tmos(&mut self) -> TMOS_W<'_, ICMR2_SPEC> {
         TMOS_W::new(self, 0)
     }
     ///Bit 1 - Timeout L Count Control
     #[inline(always)]
-    pub fn tmol(&mut self) -> TMOL_W<ICMR2_SPEC> {
+    pub fn tmol(&mut self) -> TMOL_W<'_, ICMR2_SPEC> {
         TMOL_W::new(self, 1)
     }
     ///Bit 2 - Timeout H Count Control
     #[inline(always)]
-    pub fn tmoh(&mut self) -> TMOH_W<ICMR2_SPEC> {
+    pub fn tmoh(&mut self) -> TMOH_W<'_, ICMR2_SPEC> {
         TMOH_W::new(self, 2)
     }
     ///Bits 4:6 - SDA Output Delay Counter
     #[inline(always)]
-    pub fn sddl(&mut self) -> SDDL_W<ICMR2_SPEC> {
+    pub fn sddl(&mut self) -> SDDL_W<'_, ICMR2_SPEC> {
         SDDL_W::new(self, 4)
     }
     ///Bit 7 - SDA Output Delay Clock Source Select
     #[inline(always)]
-    pub fn dlcs(&mut self) -> DLCS_W<ICMR2_SPEC> {
+    pub fn dlcs(&mut self) -> DLCS_W<'_, ICMR2_SPEC> {
         DLCS_W::new(self, 7)
     }
 }

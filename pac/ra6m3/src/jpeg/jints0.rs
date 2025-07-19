@@ -40,17 +40,17 @@ impl R {
 impl W {
     ///Bit 3 - This bit is set to 1 when the image size and pixel format can be read. When an interrupt occurs, this module stops processing and the state is indicated by the JCRST register. To make this module resume processing, set the JPEG core process stop clear command bit (JRST) in JCCMD.
     #[inline(always)]
-    pub fn ins3(&mut self) -> INS3_W<JINTS0_SPEC> {
+    pub fn ins3(&mut self) -> INS3_W<'_, JINTS0_SPEC> {
         INS3_W::new(self, 3)
     }
     ///Bit 5 - This bit is set to 1 when a compressed data error occurs.
     #[inline(always)]
-    pub fn ins5(&mut self) -> INS5_W<JINTS0_SPEC> {
+    pub fn ins5(&mut self) -> INS5_W<'_, JINTS0_SPEC> {
         INS5_W::new(self, 5)
     }
     ///Bit 6 - This bit is set to 1 when this module completes compression process normally.
     #[inline(always)]
-    pub fn ins6(&mut self) -> INS6_W<JINTS0_SPEC> {
+    pub fn ins6(&mut self) -> INS6_W<'_, JINTS0_SPEC> {
         INS6_W::new(self, 6)
     }
 }

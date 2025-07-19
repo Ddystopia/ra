@@ -134,12 +134,12 @@ impl R {
 impl W {
     ///Bit 14 - CRC Error Detection Status
     #[inline(always)]
-    pub fn crce(&mut self) -> CRCE_W<FRMNUM_SPEC> {
+    pub fn crce(&mut self) -> CRCE_W<'_, FRMNUM_SPEC> {
         CRCE_W::new(self, 14)
     }
     ///Bit 15 - Overrun/Underrun Detection Status
     #[inline(always)]
-    pub fn ovrn(&mut self) -> OVRN_W<FRMNUM_SPEC> {
+    pub fn ovrn(&mut self) -> OVRN_W<'_, FRMNUM_SPEC> {
         OVRN_W::new(self, 15)
     }
 }

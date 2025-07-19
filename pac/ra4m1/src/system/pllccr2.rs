@@ -166,12 +166,12 @@ impl R {
 impl W {
     ///Bits 0:4 - PLL Frequency Multiplication Factor Select
     #[inline(always)]
-    pub fn pllmul(&mut self) -> PLLMUL_W<PLLCCR2_SPEC> {
+    pub fn pllmul(&mut self) -> PLLMUL_W<'_, PLLCCR2_SPEC> {
         PLLMUL_W::new(self, 0)
     }
     ///Bits 6:7 - PLL Output Frequency Division Ratio Select
     #[inline(always)]
-    pub fn plodiv(&mut self) -> PLODIV_W<PLLCCR2_SPEC> {
+    pub fn plodiv(&mut self) -> PLODIV_W<'_, PLLCCR2_SPEC> {
         PLODIV_W::new(self, 6)
     }
 }

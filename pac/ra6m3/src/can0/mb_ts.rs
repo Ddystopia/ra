@@ -25,12 +25,12 @@ impl R {
 impl W {
     ///Bits 0:7 - Time Stamp Higher ByteBits TSL\[7:0\] store the counter value of the time stamp when received messages are stored in the mailbox.
     #[inline(always)]
-    pub fn tsl(&mut self) -> TSL_W<MB_TS_SPEC> {
+    pub fn tsl(&mut self) -> TSL_W<'_, MB_TS_SPEC> {
         TSL_W::new(self, 0)
     }
     ///Bits 8:15 - Time Stamp Lower ByteBits TSH\[7:0\] store the counter value of the time stamp when received messages are stored in the mailbox.
     #[inline(always)]
-    pub fn tsh(&mut self) -> TSH_W<MB_TS_SPEC> {
+    pub fn tsh(&mut self) -> TSH_W<'_, MB_TS_SPEC> {
         TSH_W::new(self, 8)
     }
 }

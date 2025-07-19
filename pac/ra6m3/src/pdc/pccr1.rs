@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - PDC Operation Enable
     #[inline(always)]
-    pub fn pce(&mut self) -> PCE_W<PCCR1_SPEC> {
+    pub fn pce(&mut self) -> PCE_W<'_, PCCR1_SPEC> {
         PCE_W::new(self, 0)
     }
 }

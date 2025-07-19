@@ -185,12 +185,12 @@ impl R {
 impl W {
     ///Bits 0:2 - Addition frequency selection bit. NOTE: AVEE bit is valid at the only setting of ADC\[2:0\] bits = 001b or 011b. When average mode is selected by setting the ADADC.AVEE bit to 1, do not set the addition count to three times (ADADC.ADC\[2:0\] = 010b)
     #[inline(always)]
-    pub fn adc(&mut self) -> ADC_W<ADADC_SPEC> {
+    pub fn adc(&mut self) -> ADC_W<'_, ADADC_SPEC> {
         ADC_W::new(self, 0)
     }
     ///Bit 7 - Average mode enable bit. Note: The AVEE bit converts twice, and only when converting it four times, is effective. Please do not set (ADADC.AVEE=1) to conversion (ADADC.ADC 2:0=010b) three times when you select the average mode.
     #[inline(always)]
-    pub fn avee(&mut self) -> AVEE_W<ADADC_SPEC> {
+    pub fn avee(&mut self) -> AVEE_W<'_, ADADC_SPEC> {
         AVEE_W::new(self, 7)
     }
 }

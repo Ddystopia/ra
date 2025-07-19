@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Specifies the transfer source start address.
     #[inline(always)]
-    pub fn dmsar(&mut self) -> DMSAR_W<DMSAR_SPEC> {
+    pub fn dmsar(&mut self) -> DMSAR_W<'_, DMSAR_SPEC> {
         DMSAR_W::new(self, 0)
     }
 }

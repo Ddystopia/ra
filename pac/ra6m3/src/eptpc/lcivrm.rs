@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - These bits hold the setting for the lower-order 32 bits of the integer portion of the initial value for the local timer counter.
     #[inline(always)]
-    pub fn lcivrm(&mut self) -> LCIVRM_W<LCIVRM_SPEC> {
+    pub fn lcivrm(&mut self) -> LCIVRM_W<'_, LCIVRM_SPEC> {
         LCIVRM_W::new(self, 0)
     }
 }

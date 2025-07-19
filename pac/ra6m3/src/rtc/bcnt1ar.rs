@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - he BCNT1AR counter is a readable/writable alarm register corresponding to 32-bit binary counter b15 to b8.
     #[inline(always)]
-    pub fn bcnt1ar(&mut self) -> BCNT1AR_W<BCNT1AR_SPEC> {
+    pub fn bcnt1ar(&mut self) -> BCNT1AR_W<'_, BCNT1AR_SPEC> {
         BCNT1AR_W::new(self, 0)
     }
 }

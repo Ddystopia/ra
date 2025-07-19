@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - This register is used to compare A window function is used to set the lower level of the window B.
     #[inline(always)]
-    pub fn adwinllb(&mut self) -> ADWINLLB_W<ADWINLLB_SPEC> {
+    pub fn adwinllb(&mut self) -> ADWINLLB_W<'_, ADWINLLB_SPEC> {
         ADWINLLB_W::new(self, 0)
     }
 }

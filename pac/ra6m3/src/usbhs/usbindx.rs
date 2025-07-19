@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - Value of USB request wIndex Finction controller selected : read-only Host controller selected : read-write
     #[inline(always)]
-    pub fn windex(&mut self) -> WINDEX_W<USBINDX_SPEC> {
+    pub fn windex(&mut self) -> WINDEX_W<'_, USBINDX_SPEC> {
         WINDEX_W::new(self, 0)
     }
 }

@@ -62,27 +62,27 @@ impl R {
 impl W {
     ///Bit 0 - In decompression, this bit is set to 1 when the number of lines of output image data indicated by JIFDDLC have been written. This bit is only valid when the DOUTLC bit in JIFDCNT is set to 1.
     #[inline(always)]
-    pub fn doutlf(&mut self) -> DOUTLF_W<JINTS1_SPEC> {
+    pub fn doutlf(&mut self) -> DOUTLF_W<'_, JINTS1_SPEC> {
         DOUTLF_W::new(self, 0)
     }
     ///Bit 1 - This bit is set to 1 when the amount of input coded data indicated by JIFDSDC is read in decompression. This bit is valid only when the JINC bit in JIFDCNT is set to 1.
     #[inline(always)]
-    pub fn jinf(&mut self) -> JINF_W<JINTS1_SPEC> {
+    pub fn jinf(&mut self) -> JINF_W<'_, JINTS1_SPEC> {
         JINF_W::new(self, 1)
     }
     ///Bit 2 - This bit is set to 1 when the last output image data is written in decompression.
     #[inline(always)]
-    pub fn dbtf(&mut self) -> DBTF_W<JINTS1_SPEC> {
+    pub fn dbtf(&mut self) -> DBTF_W<'_, JINTS1_SPEC> {
         DBTF_W::new(self, 2)
     }
     ///Bit 5 - This bit is set to 1 when the number of input image data lines indicated by JIFESLC is read in compression. This bit is valid only when the DINLC bit in JIFECNT is set to 1.
     #[inline(always)]
-    pub fn dinlf(&mut self) -> DINLF_W<JINTS1_SPEC> {
+    pub fn dinlf(&mut self) -> DINLF_W<'_, JINTS1_SPEC> {
         DINLF_W::new(self, 5)
     }
     ///Bit 6 - This bit is set to 1 when the last output coded data is written in compression.
     #[inline(always)]
-    pub fn cbtf(&mut self) -> CBTF_W<JINTS1_SPEC> {
+    pub fn cbtf(&mut self) -> CBTF_W<'_, JINTS1_SPEC> {
         CBTF_W::new(self, 6)
     }
 }

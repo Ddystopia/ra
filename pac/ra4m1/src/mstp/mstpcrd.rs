@@ -607,52 +607,52 @@ impl R {
 impl W {
     ///Bit 2 - Asynchronous General Purpose Timer 1 Module Stop
     #[inline(always)]
-    pub fn mstpd2(&mut self) -> MSTPD2_W<MSTPCRD_SPEC> {
+    pub fn mstpd2(&mut self) -> MSTPD2_W<'_, MSTPCRD_SPEC> {
         MSTPD2_W::new(self, 2)
     }
     ///Bit 3 - Asynchronous General Purpose Timer 0 Module Stop
     #[inline(always)]
-    pub fn mstpd3(&mut self) -> MSTPD3_W<MSTPCRD_SPEC> {
+    pub fn mstpd3(&mut self) -> MSTPD3_W<'_, MSTPCRD_SPEC> {
         MSTPD3_W::new(self, 3)
     }
     ///Bit 5 - General PWM Timer 323 to 320 Module Stop
     #[inline(always)]
-    pub fn mstpd5(&mut self) -> MSTPD5_W<MSTPCRD_SPEC> {
+    pub fn mstpd5(&mut self) -> MSTPD5_W<'_, MSTPCRD_SPEC> {
         MSTPD5_W::new(self, 5)
     }
     ///Bit 6 - General PWM Timer 169 to 164 Module Stop
     #[inline(always)]
-    pub fn mstpd6(&mut self) -> MSTPD6_W<MSTPCRD_SPEC> {
+    pub fn mstpd6(&mut self) -> MSTPD6_W<'_, MSTPCRD_SPEC> {
         MSTPD6_W::new(self, 6)
     }
     ///Bit 14 - Port Output Enable for GPT Module Stop
     #[inline(always)]
-    pub fn mstpd14(&mut self) -> MSTPD14_W<MSTPCRD_SPEC> {
+    pub fn mstpd14(&mut self) -> MSTPD14_W<'_, MSTPCRD_SPEC> {
         MSTPD14_W::new(self, 14)
     }
     ///Bit 16 - 14-Bit A/D Converter Module Stop
     #[inline(always)]
-    pub fn mstpd16(&mut self) -> MSTPD16_W<MSTPCRD_SPEC> {
+    pub fn mstpd16(&mut self) -> MSTPD16_W<'_, MSTPCRD_SPEC> {
         MSTPD16_W::new(self, 16)
     }
     ///Bit 19 - 8-bit D/A Converter Module Stop
     #[inline(always)]
-    pub fn mstpd19(&mut self) -> MSTPD19_W<MSTPCRD_SPEC> {
+    pub fn mstpd19(&mut self) -> MSTPD19_W<'_, MSTPCRD_SPEC> {
         MSTPD19_W::new(self, 19)
     }
     ///Bit 20 - 12-Bit D/A Converter Module Stop
     #[inline(always)]
-    pub fn mstpd20(&mut self) -> MSTPD20_W<MSTPCRD_SPEC> {
+    pub fn mstpd20(&mut self) -> MSTPD20_W<'_, MSTPCRD_SPEC> {
         MSTPD20_W::new(self, 20)
     }
     ///Bit 29 - Low-Power Analog Comparator Module Stop
     #[inline(always)]
-    pub fn mstpd29(&mut self) -> MSTPD29_W<MSTPCRD_SPEC> {
+    pub fn mstpd29(&mut self) -> MSTPD29_W<'_, MSTPCRD_SPEC> {
         MSTPD29_W::new(self, 29)
     }
     ///Bit 31 - Operational Amplifier Module Stop
     #[inline(always)]
-    pub fn mstpd31(&mut self) -> MSTPD31_W<MSTPCRD_SPEC> {
+    pub fn mstpd31(&mut self) -> MSTPD31_W<'_, MSTPCRD_SPEC> {
         MSTPD31_W::new(self, 31)
     }
 }

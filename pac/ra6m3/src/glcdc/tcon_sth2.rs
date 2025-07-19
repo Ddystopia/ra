@@ -272,17 +272,17 @@ impl R {
 impl W {
     ///Bits 0:2 - Output signal select control for LCD_TCON2 (controlled by TCON_STHA2 register)/LCD_TCON3 (controlled by the TCON_STHB2 register) pin.
     #[inline(always)]
-    pub fn sel(&mut self) -> SEL_W<TCON_STH2_SPEC> {
+    pub fn sel(&mut self) -> SEL_W<'_, TCON_STH2_SPEC> {
         SEL_W::new(self, 0)
     }
     ///Bit 4 - STVx signal polarity inversion control.
     #[inline(always)]
-    pub fn inv(&mut self) -> INV_W<TCON_STH2_SPEC> {
+    pub fn inv(&mut self) -> INV_W<'_, TCON_STH2_SPEC> {
         INV_W::new(self, 4)
     }
     ///Bit 8 - STHx signal generation reference timing control.
     #[inline(always)]
-    pub fn hssel(&mut self) -> HSSEL_W<TCON_STH2_SPEC> {
+    pub fn hssel(&mut self) -> HSSEL_W<'_, TCON_STH2_SPEC> {
         HSSEL_W::new(self, 8)
     }
 }

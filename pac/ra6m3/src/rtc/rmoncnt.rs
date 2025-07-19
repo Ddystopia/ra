@@ -25,12 +25,12 @@ impl R {
 impl W {
     ///Bits 0:3 - 1-Month Count Counts from 0 to 9 once per month. When a carry is generated, 1 is added to the tens place.
     #[inline(always)]
-    pub fn mon1(&mut self) -> MON1_W<RMONCNT_SPEC> {
+    pub fn mon1(&mut self) -> MON1_W<'_, RMONCNT_SPEC> {
         MON1_W::new(self, 0)
     }
     ///Bit 4 - 10-Month Count Counts from 0 to 1 once per carry from the ones place.
     #[inline(always)]
-    pub fn mon10(&mut self) -> MON10_W<RMONCNT_SPEC> {
+    pub fn mon10(&mut self) -> MON10_W<'_, RMONCNT_SPEC> {
         MON10_W::new(self, 4)
     }
 }

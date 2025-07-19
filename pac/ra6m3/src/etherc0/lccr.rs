@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Lost Carrier Counter RegisterThe LCCR register is a counter indicating the number of times a loss of carrier is detected during frame transmission.
     #[inline(always)]
-    pub fn lccr(&mut self) -> LCCR_W<LCCR_SPEC> {
+    pub fn lccr(&mut self) -> LCCR_W<'_, LCCR_SPEC> {
         LCCR_W::new(self, 0)
     }
 }

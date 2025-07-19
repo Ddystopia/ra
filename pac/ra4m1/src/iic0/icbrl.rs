@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:4 - Bit Rate Low-Level Period (Low-level period of SCL clock)
     #[inline(always)]
-    pub fn brl(&mut self) -> BRL_W<ICBRL_SPEC> {
+    pub fn brl(&mut self) -> BRL_W<'_, ICBRL_SPEC> {
         BRL_W::new(self, 0)
     }
 }

@@ -328,12 +328,12 @@ impl R {
 impl W {
     ///Bits 0:4 - Serial interface reference cycle selection (* Pay attention to the irregularity.)NOTE: When PCLKA multiplied by an odd number is selected, the high-level width of the SCK signal is longer than the low-level width by 1 x PCLKA before duty ratio correction.
     #[inline(always)]
-    pub fn sfmdv(&mut self) -> SFMDV_W<SFMSKC_SPEC> {
+    pub fn sfmdv(&mut self) -> SFMDV_W<'_, SFMSKC_SPEC> {
         SFMDV_W::new(self, 0)
     }
     ///Bit 5 - Selection of a duty ratio correction function for the SCK signal
     #[inline(always)]
-    pub fn sfmdty(&mut self) -> SFMDTY_W<SFMSKC_SPEC> {
+    pub fn sfmdty(&mut self) -> SFMDTY_W<'_, SFMSKC_SPEC> {
         SFMDTY_W::new(self, 5)
     }
 }

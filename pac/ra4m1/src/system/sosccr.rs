@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Sub-Clock Oscillator Stop
     #[inline(always)]
-    pub fn sostp(&mut self) -> SOSTP_W<SOSCCR_SPEC> {
+    pub fn sostp(&mut self) -> SOSTP_W<'_, SOSCCR_SPEC> {
         SOSTP_W::new(self, 0)
     }
 }

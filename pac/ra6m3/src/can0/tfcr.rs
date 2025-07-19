@@ -233,7 +233,7 @@ impl R {
 impl W {
     ///Bit 0 - Transmit FIFO Enable
     #[inline(always)]
-    pub fn tfe(&mut self) -> TFE_W<TFCR_SPEC> {
+    pub fn tfe(&mut self) -> TFE_W<'_, TFCR_SPEC> {
         TFE_W::new(self, 0)
     }
 }

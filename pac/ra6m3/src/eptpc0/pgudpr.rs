@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - PTP general Message Destination Port NumberThese bits hold the setting for the value of the destination port number field within the UDP headers of PTP general messages.
     #[inline(always)]
-    pub fn geupt(&mut self) -> GEUPT_W<PGUDPR_SPEC> {
+    pub fn geupt(&mut self) -> GEUPT_W<'_, PGUDPR_SPEC> {
         GEUPT_W::new(self, 0)
     }
 }

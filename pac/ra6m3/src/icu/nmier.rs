@@ -667,57 +667,57 @@ impl R {
 impl W {
     ///Bit 0 - IWDT Underflow/Refresh Error Interrupt Enable
     #[inline(always)]
-    pub fn iwdten(&mut self) -> IWDTEN_W<NMIER_SPEC> {
+    pub fn iwdten(&mut self) -> IWDTEN_W<'_, NMIER_SPEC> {
         IWDTEN_W::new(self, 0)
     }
     ///Bit 1 - WDT Underflow/Refresh Error Interrupt Enable
     #[inline(always)]
-    pub fn wdten(&mut self) -> WDTEN_W<NMIER_SPEC> {
+    pub fn wdten(&mut self) -> WDTEN_W<'_, NMIER_SPEC> {
         WDTEN_W::new(self, 1)
     }
     ///Bit 2 - Voltage-Monitoring 1 Interrupt Enable
     #[inline(always)]
-    pub fn lvd1en(&mut self) -> LVD1EN_W<NMIER_SPEC> {
+    pub fn lvd1en(&mut self) -> LVD1EN_W<'_, NMIER_SPEC> {
         LVD1EN_W::new(self, 2)
     }
     ///Bit 3 - Voltage-Monitoring 2 Interrupt Enable
     #[inline(always)]
-    pub fn lvd2en(&mut self) -> LVD2EN_W<NMIER_SPEC> {
+    pub fn lvd2en(&mut self) -> LVD2EN_W<'_, NMIER_SPEC> {
         LVD2EN_W::new(self, 3)
     }
     ///Bit 6 - Oscillation Stop Detection Interrupt Enable
     #[inline(always)]
-    pub fn osten(&mut self) -> OSTEN_W<NMIER_SPEC> {
+    pub fn osten(&mut self) -> OSTEN_W<'_, NMIER_SPEC> {
         OSTEN_W::new(self, 6)
     }
     ///Bit 7 - NMI Pin Interrupt Enable
     #[inline(always)]
-    pub fn nmien(&mut self) -> NMIEN_W<NMIER_SPEC> {
+    pub fn nmien(&mut self) -> NMIEN_W<'_, NMIER_SPEC> {
         NMIEN_W::new(self, 7)
     }
     ///Bit 8 - RAM Parity Error Interrupt Enable
     #[inline(always)]
-    pub fn rpeen(&mut self) -> RPEEN_W<NMIER_SPEC> {
+    pub fn rpeen(&mut self) -> RPEEN_W<'_, NMIER_SPEC> {
         RPEEN_W::new(self, 8)
     }
     ///Bit 9 - RAM ECC Error Interrupt Enable
     #[inline(always)]
-    pub fn reccen(&mut self) -> RECCEN_W<NMIER_SPEC> {
+    pub fn reccen(&mut self) -> RECCEN_W<'_, NMIER_SPEC> {
         RECCEN_W::new(self, 9)
     }
     ///Bit 10 - MPU Bus Slave Error Interrupt Enable
     #[inline(always)]
-    pub fn bussen(&mut self) -> BUSSEN_W<NMIER_SPEC> {
+    pub fn bussen(&mut self) -> BUSSEN_W<'_, NMIER_SPEC> {
         BUSSEN_W::new(self, 10)
     }
     ///Bit 11 - MPU Bus Master Error Interrupt Enable
     #[inline(always)]
-    pub fn busmen(&mut self) -> BUSMEN_W<NMIER_SPEC> {
+    pub fn busmen(&mut self) -> BUSMEN_W<'_, NMIER_SPEC> {
         BUSMEN_W::new(self, 11)
     }
     ///Bit 12 - MPU Stack Error Interrupt Enable
     #[inline(always)]
-    pub fn speen(&mut self) -> SPEEN_W<NMIER_SPEC> {
+    pub fn speen(&mut self) -> SPEEN_W<'_, NMIER_SPEC> {
         SPEEN_W::new(self, 12)
     }
 }

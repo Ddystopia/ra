@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - BCLK Pin Output Control
     #[inline(always)]
-    pub fn ebckoen(&mut self) -> EBCKOEN_W<EBCKOCR_SPEC> {
+    pub fn ebckoen(&mut self) -> EBCKOEN_W<'_, EBCKOCR_SPEC> {
         EBCKOEN_W::new(self, 0)
     }
 }

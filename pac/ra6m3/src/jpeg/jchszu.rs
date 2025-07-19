@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - Upper Bytes of Horizontal Image SizeIn decompression process, a downloaded value from the JPEG coded data is set. NOTE: Read-only in Decompression.
     #[inline(always)]
-    pub fn hszu(&mut self) -> HSZU_W<JCHSZU_SPEC> {
+    pub fn hszu(&mut self) -> HSZU_W<'_, JCHSZU_SPEC> {
         HSZU_W::new(self, 0)
     }
 }

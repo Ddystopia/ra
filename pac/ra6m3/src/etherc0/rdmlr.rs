@@ -73,7 +73,7 @@ impl R {
 impl W {
     ///Bits 0:19 - Random Number Generation Counter
     #[inline(always)]
-    pub fn rmd(&mut self) -> RMD_W<RDMLR_SPEC> {
+    pub fn rmd(&mut self) -> RMD_W<'_, RDMLR_SPEC> {
         RMD_W::new(self, 0)
     }
 }

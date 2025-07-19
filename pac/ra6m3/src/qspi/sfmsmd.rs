@@ -665,47 +665,47 @@ impl R {
 impl W {
     ///Bits 0:2 - Serial interface read mode selection
     #[inline(always)]
-    pub fn sfmrm(&mut self) -> SFMRM_W<SFMSMD_SPEC> {
+    pub fn sfmrm(&mut self) -> SFMRM_W<'_, SFMSMD_SPEC> {
         SFMRM_W::new(self, 0)
     }
     ///Bits 4:5 - Selection of the prefetch function
     #[inline(always)]
-    pub fn sfmse(&mut self) -> SFMSE_W<SFMSMD_SPEC> {
+    pub fn sfmse(&mut self) -> SFMSE_W<'_, SFMSMD_SPEC> {
         SFMSE_W::new(self, 4)
     }
     ///Bit 6 - Selection of the prefetch function
     #[inline(always)]
-    pub fn sfmpfe(&mut self) -> SFMPFE_W<SFMSMD_SPEC> {
+    pub fn sfmpfe(&mut self) -> SFMPFE_W<'_, SFMSMD_SPEC> {
         SFMPFE_W::new(self, 6)
     }
     ///Bit 7 - Selection of the function for stopping prefetch at locations other than on byte boundaries
     #[inline(always)]
-    pub fn sfmpae(&mut self) -> SFMPAE_W<SFMSMD_SPEC> {
+    pub fn sfmpae(&mut self) -> SFMPAE_W<'_, SFMSMD_SPEC> {
         SFMPAE_W::new(self, 7)
     }
     ///Bit 8 - SPI mode selection. An initial value is determined by input to CFGMD3.
     #[inline(always)]
-    pub fn sfmmd3(&mut self) -> SFMMD3_W<SFMSMD_SPEC> {
+    pub fn sfmmd3(&mut self) -> SFMMD3_W<'_, SFMSMD_SPEC> {
         SFMMD3_W::new(self, 8)
     }
     ///Bit 9 - Extension of the I/O buffer output enable signal for the serial interface
     #[inline(always)]
-    pub fn sfmoex(&mut self) -> SFMOEX_W<SFMSMD_SPEC> {
+    pub fn sfmoex(&mut self) -> SFMOEX_W<'_, SFMSMD_SPEC> {
         SFMOEX_W::new(self, 9)
     }
     ///Bit 10 - Hold time adjustment for serial transmission
     #[inline(always)]
-    pub fn sfmohw(&mut self) -> SFMOHW_W<SFMSMD_SPEC> {
+    pub fn sfmohw(&mut self) -> SFMOHW_W<'_, SFMSMD_SPEC> {
         SFMOHW_W::new(self, 10)
     }
     ///Bit 11 - Setup time adjustment for serial transmission
     #[inline(always)]
-    pub fn sfmosw(&mut self) -> SFMOSW_W<SFMSMD_SPEC> {
+    pub fn sfmosw(&mut self) -> SFMOSW_W<'_, SFMSMD_SPEC> {
         SFMOSW_W::new(self, 11)
     }
     ///Bit 15 - Read instruction code selection.
     #[inline(always)]
-    pub fn sfmcce(&mut self) -> SFMCCE_W<SFMSMD_SPEC> {
+    pub fn sfmcce(&mut self) -> SFMCCE_W<'_, SFMSMD_SPEC> {
         SFMCCE_W::new(self, 15)
     }
 }

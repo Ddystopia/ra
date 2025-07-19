@@ -247,22 +247,22 @@ impl R {
 impl W {
     ///Bit 0 - RSPI Loopback
     #[inline(always)]
-    pub fn splp(&mut self) -> SPLP_W<SPPCR_SPEC> {
+    pub fn splp(&mut self) -> SPLP_W<'_, SPPCR_SPEC> {
         SPLP_W::new(self, 0)
     }
     ///Bit 1 - RSPI Loopback 2
     #[inline(always)]
-    pub fn splp2(&mut self) -> SPLP2_W<SPPCR_SPEC> {
+    pub fn splp2(&mut self) -> SPLP2_W<'_, SPPCR_SPEC> {
         SPLP2_W::new(self, 1)
     }
     ///Bit 4 - MOSI Idle Fixed Value
     #[inline(always)]
-    pub fn moifv(&mut self) -> MOIFV_W<SPPCR_SPEC> {
+    pub fn moifv(&mut self) -> MOIFV_W<'_, SPPCR_SPEC> {
         MOIFV_W::new(self, 4)
     }
     ///Bit 5 - MOSI Idle Value Fixing Enable
     #[inline(always)]
-    pub fn moife(&mut self) -> MOIFE_W<SPPCR_SPEC> {
+    pub fn moife(&mut self) -> MOIFE_W<'_, SPPCR_SPEC> {
         MOIFE_W::new(self, 5)
     }
 }

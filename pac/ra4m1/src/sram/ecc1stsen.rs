@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - ECC 1-Bit Error Information Update Enable
     #[inline(always)]
-    pub fn e1stsen(&mut self) -> E1STSEN_W<ECC1STSEN_SPEC> {
+    pub fn e1stsen(&mut self) -> E1STSEN_W<'_, ECC1STSEN_SPEC> {
         E1STSEN_W::new(self, 0)
     }
 }

@@ -125,7 +125,7 @@ impl R {
 impl W {
     ///Bits 0:2 - Noise Filter Clock Select
     #[inline(always)]
-    pub fn nfcs(&mut self) -> NFCS_W<SNFR_SPEC> {
+    pub fn nfcs(&mut self) -> NFCS_W<'_, SNFR_SPEC> {
         NFCS_W::new(self, 0)
     }
 }

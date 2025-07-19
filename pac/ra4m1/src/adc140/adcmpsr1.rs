@@ -627,52 +627,52 @@ impl R {
 impl W {
     ///Bit 0 - Compare window A flag of AN016
     #[inline(always)]
-    pub fn cmpstcha16(&mut self) -> CMPSTCHA16_W<ADCMPSR1_SPEC> {
+    pub fn cmpstcha16(&mut self) -> CMPSTCHA16_W<'_, ADCMPSR1_SPEC> {
         CMPSTCHA16_W::new(self, 0)
     }
     ///Bit 1 - Compare window A flag of AN017
     #[inline(always)]
-    pub fn cmpstcha17(&mut self) -> CMPSTCHA17_W<ADCMPSR1_SPEC> {
+    pub fn cmpstcha17(&mut self) -> CMPSTCHA17_W<'_, ADCMPSR1_SPEC> {
         CMPSTCHA17_W::new(self, 1)
     }
     ///Bit 2 - Compare window A flag of AN018
     #[inline(always)]
-    pub fn cmpstcha18(&mut self) -> CMPSTCHA18_W<ADCMPSR1_SPEC> {
+    pub fn cmpstcha18(&mut self) -> CMPSTCHA18_W<'_, ADCMPSR1_SPEC> {
         CMPSTCHA18_W::new(self, 2)
     }
     ///Bit 3 - Compare window A flag of AN019
     #[inline(always)]
-    pub fn cmpstcha19(&mut self) -> CMPSTCHA19_W<ADCMPSR1_SPEC> {
+    pub fn cmpstcha19(&mut self) -> CMPSTCHA19_W<'_, ADCMPSR1_SPEC> {
         CMPSTCHA19_W::new(self, 3)
     }
     ///Bit 4 - Compare window A flag of AN020
     #[inline(always)]
-    pub fn cmpstcha20(&mut self) -> CMPSTCHA20_W<ADCMPSR1_SPEC> {
+    pub fn cmpstcha20(&mut self) -> CMPSTCHA20_W<'_, ADCMPSR1_SPEC> {
         CMPSTCHA20_W::new(self, 4)
     }
     ///Bit 5 - Compare window A flag of AN021
     #[inline(always)]
-    pub fn cmpstcha21(&mut self) -> CMPSTCHA21_W<ADCMPSR1_SPEC> {
+    pub fn cmpstcha21(&mut self) -> CMPSTCHA21_W<'_, ADCMPSR1_SPEC> {
         CMPSTCHA21_W::new(self, 5)
     }
     ///Bit 6 - Compare window A flag of AN022
     #[inline(always)]
-    pub fn cmpstcha22(&mut self) -> CMPSTCHA22_W<ADCMPSR1_SPEC> {
+    pub fn cmpstcha22(&mut self) -> CMPSTCHA22_W<'_, ADCMPSR1_SPEC> {
         CMPSTCHA22_W::new(self, 6)
     }
     ///Bit 7 - Compare window A flag of AN023
     #[inline(always)]
-    pub fn cmpstcha23(&mut self) -> CMPSTCHA23_W<ADCMPSR1_SPEC> {
+    pub fn cmpstcha23(&mut self) -> CMPSTCHA23_W<'_, ADCMPSR1_SPEC> {
         CMPSTCHA23_W::new(self, 7)
     }
     ///Bit 8 - Compare window A flag of AN024
     #[inline(always)]
-    pub fn cmpstcha24(&mut self) -> CMPSTCHA24_W<ADCMPSR1_SPEC> {
+    pub fn cmpstcha24(&mut self) -> CMPSTCHA24_W<'_, ADCMPSR1_SPEC> {
         CMPSTCHA24_W::new(self, 8)
     }
     ///Bit 9 - Compare window A flag of AN025
     #[inline(always)]
-    pub fn cmpstcha25(&mut self) -> CMPSTCHA25_W<ADCMPSR1_SPEC> {
+    pub fn cmpstcha25(&mut self) -> CMPSTCHA25_W<'_, ADCMPSR1_SPEC> {
         CMPSTCHA25_W::new(self, 9)
     }
 }

@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - SPDR is the interface with the buffers that hold data for transmission and reception by the RSPI.When accessing in halfword (SPDCR.SPLW=0), access SPDR_HA.
     #[inline(always)]
-    pub fn spdr_ha(&mut self) -> SPDR_HA_W<SPDR_HA_SPEC> {
+    pub fn spdr_ha(&mut self) -> SPDR_HA_W<'_, SPDR_HA_SPEC> {
         SPDR_HA_W::new(self, 0)
     }
 }

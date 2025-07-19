@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Number of Transfer BlocksNOTE: Do not change the value of this bit when the CBSY bit in SD_INFO2 is set to 1.
     #[inline(always)]
-    pub fn sd_seccnt(&mut self) -> SD_SECCNT_W<SD_SECCNT_SPEC> {
+    pub fn sd_seccnt(&mut self) -> SD_SECCNT_W<'_, SD_SECCNT_SPEC> {
         SD_SECCNT_W::new(self, 0)
     }
 }

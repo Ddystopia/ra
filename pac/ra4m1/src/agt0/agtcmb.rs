@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - AGT Compare Match B data is stored. NOTE : When 1 is written to the TSTOP bit in the AGTCR register, set to FFFFH
     #[inline(always)]
-    pub fn agtcmb(&mut self) -> AGTCMB_W<AGTCMB_SPEC> {
+    pub fn agtcmb(&mut self) -> AGTCMB_W<'_, AGTCMB_SPEC> {
         AGTCMB_W::new(self, 0)
     }
 }

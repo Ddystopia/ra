@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - SDCLK Pin Output Control
     #[inline(always)]
-    pub fn sdckoen(&mut self) -> SDCKOEN_W<SDCKOCR_SPEC> {
+    pub fn sdckoen(&mut self) -> SDCKOEN_W<'_, SDCKOCR_SPEC> {
         SDCKOEN_W::new(self, 0)
     }
 }

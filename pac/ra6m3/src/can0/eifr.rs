@@ -487,42 +487,42 @@ impl R {
 impl W {
     ///Bit 0 - Bus Error Detect Flag
     #[inline(always)]
-    pub fn beif(&mut self) -> BEIF_W<EIFR_SPEC> {
+    pub fn beif(&mut self) -> BEIF_W<'_, EIFR_SPEC> {
         BEIF_W::new(self, 0)
     }
     ///Bit 1 - Error-Warning Detect Flag
     #[inline(always)]
-    pub fn ewif(&mut self) -> EWIF_W<EIFR_SPEC> {
+    pub fn ewif(&mut self) -> EWIF_W<'_, EIFR_SPEC> {
         EWIF_W::new(self, 1)
     }
     ///Bit 2 - Error-Passive Detect Flag
     #[inline(always)]
-    pub fn epif(&mut self) -> EPIF_W<EIFR_SPEC> {
+    pub fn epif(&mut self) -> EPIF_W<'_, EIFR_SPEC> {
         EPIF_W::new(self, 2)
     }
     ///Bit 3 - Bus-Off Entry Detect Flag
     #[inline(always)]
-    pub fn boeif(&mut self) -> BOEIF_W<EIFR_SPEC> {
+    pub fn boeif(&mut self) -> BOEIF_W<'_, EIFR_SPEC> {
         BOEIF_W::new(self, 3)
     }
     ///Bit 4 - Bus-Off Recovery Detect Flag
     #[inline(always)]
-    pub fn borif(&mut self) -> BORIF_W<EIFR_SPEC> {
+    pub fn borif(&mut self) -> BORIF_W<'_, EIFR_SPEC> {
         BORIF_W::new(self, 4)
     }
     ///Bit 5 - Receive Overrun Detect Flag
     #[inline(always)]
-    pub fn orif(&mut self) -> ORIF_W<EIFR_SPEC> {
+    pub fn orif(&mut self) -> ORIF_W<'_, EIFR_SPEC> {
         ORIF_W::new(self, 5)
     }
     ///Bit 6 - Overload Frame Transmission Detect Flag
     #[inline(always)]
-    pub fn olif(&mut self) -> OLIF_W<EIFR_SPEC> {
+    pub fn olif(&mut self) -> OLIF_W<'_, EIFR_SPEC> {
         OLIF_W::new(self, 6)
     }
     ///Bit 7 - Bus Lock Detect Flag
     #[inline(always)]
-    pub fn blif(&mut self) -> BLIF_W<EIFR_SPEC> {
+    pub fn blif(&mut self) -> BLIF_W<'_, EIFR_SPEC> {
         BLIF_W::new(self, 7)
     }
 }

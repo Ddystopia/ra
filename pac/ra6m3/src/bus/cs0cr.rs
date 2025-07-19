@@ -280,22 +280,22 @@ impl R {
 impl W {
     ///Bit 0 - Operation Enable
     #[inline(always)]
-    pub fn exenb(&mut self) -> EXENB_W<CS0CR_SPEC> {
+    pub fn exenb(&mut self) -> EXENB_W<'_, CS0CR_SPEC> {
         EXENB_W::new(self, 0)
     }
     ///Bits 4:5 - External Bus Width Select
     #[inline(always)]
-    pub fn bsize(&mut self) -> BSIZE_W<CS0CR_SPEC> {
+    pub fn bsize(&mut self) -> BSIZE_W<'_, CS0CR_SPEC> {
         BSIZE_W::new(self, 4)
     }
     ///Bit 8 - Endian Mode
     #[inline(always)]
-    pub fn emode(&mut self) -> EMODE_W<CS0CR_SPEC> {
+    pub fn emode(&mut self) -> EMODE_W<'_, CS0CR_SPEC> {
         EMODE_W::new(self, 8)
     }
     ///Bit 12 - Address/Data Multiplexed I/O Interface Select
     #[inline(always)]
-    pub fn mpxen(&mut self) -> MPXEN_W<CS0CR_SPEC> {
+    pub fn mpxen(&mut self) -> MPXEN_W<'_, CS0CR_SPEC> {
         MPXEN_W::new(self, 12)
     }
 }

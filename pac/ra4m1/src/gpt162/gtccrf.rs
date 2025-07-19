@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Compare Capture Register F
     #[inline(always)]
-    pub fn gtccrf(&mut self) -> GTCCRF_W<GTCCRF_SPEC> {
+    pub fn gtccrf(&mut self) -> GTCCRF_W<'_, GTCCRF_SPEC> {
         GTCCRF_W::new(self, 0)
     }
 }

@@ -441,37 +441,37 @@ impl R {
 impl W {
     ///Bit 0 - Receive Data Ready flag(Valid only in asynchronous mode(including multi-processor) and FIFO selected)
     #[inline(always)]
-    pub fn dr(&mut self) -> DR_W<SSR_FIFO_SPEC> {
+    pub fn dr(&mut self) -> DR_W<'_, SSR_FIFO_SPEC> {
         DR_W::new(self, 0)
     }
     ///Bit 2 - Transmit End Flag
     #[inline(always)]
-    pub fn tend(&mut self) -> TEND_W<SSR_FIFO_SPEC> {
+    pub fn tend(&mut self) -> TEND_W<'_, SSR_FIFO_SPEC> {
         TEND_W::new(self, 2)
     }
     ///Bit 3 - Parity Error Flag
     #[inline(always)]
-    pub fn per(&mut self) -> PER_W<SSR_FIFO_SPEC> {
+    pub fn per(&mut self) -> PER_W<'_, SSR_FIFO_SPEC> {
         PER_W::new(self, 3)
     }
     ///Bit 4 - Framing Error Flag
     #[inline(always)]
-    pub fn fer(&mut self) -> FER_W<SSR_FIFO_SPEC> {
+    pub fn fer(&mut self) -> FER_W<'_, SSR_FIFO_SPEC> {
         FER_W::new(self, 4)
     }
     ///Bit 5 - Overrun Error Flag
     #[inline(always)]
-    pub fn orer(&mut self) -> ORER_W<SSR_FIFO_SPEC> {
+    pub fn orer(&mut self) -> ORER_W<'_, SSR_FIFO_SPEC> {
         ORER_W::new(self, 5)
     }
     ///Bit 6 - Receive FIFO data full flag
     #[inline(always)]
-    pub fn rdf(&mut self) -> RDF_W<SSR_FIFO_SPEC> {
+    pub fn rdf(&mut self) -> RDF_W<'_, SSR_FIFO_SPEC> {
         RDF_W::new(self, 6)
     }
     ///Bit 7 - Transmit FIFO data empty flag
     #[inline(always)]
-    pub fn tdfe(&mut self) -> TDFE_W<SSR_FIFO_SPEC> {
+    pub fn tdfe(&mut self) -> TDFE_W<'_, SSR_FIFO_SPEC> {
         TDFE_W::new(self, 7)
     }
 }

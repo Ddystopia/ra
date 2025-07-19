@@ -159,12 +159,12 @@ impl R {
 impl W {
     ///Bits 0:3 - Trace Clock operating frequency select
     #[inline(always)]
-    pub fn trck(&mut self) -> TRCK_W<TRCKCR_SPEC> {
+    pub fn trck(&mut self) -> TRCK_W<'_, TRCKCR_SPEC> {
         TRCK_W::new(self, 0)
     }
     ///Bit 7 - Trace Clock operating Enable
     #[inline(always)]
-    pub fn trcken(&mut self) -> TRCKEN_W<TRCKCR_SPEC> {
+    pub fn trcken(&mut self) -> TRCKEN_W<'_, TRCKCR_SPEC> {
         TRCKEN_W::new(self, 7)
     }
 }

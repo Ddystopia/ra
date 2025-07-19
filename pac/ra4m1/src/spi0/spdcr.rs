@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 4 - RSPI Receive/Transmit Data Selection
     #[inline(always)]
-    pub fn sprdtd(&mut self) -> SPRDTD_W<SPDCR_SPEC> {
+    pub fn sprdtd(&mut self) -> SPRDTD_W<'_, SPDCR_SPEC> {
         SPRDTD_W::new(self, 4)
     }
     ///Bit 5 - SPI Word Access/Halfword Access Specification
     #[inline(always)]
-    pub fn splw(&mut self) -> SPLW_W<SPDCR_SPEC> {
+    pub fn splw(&mut self) -> SPLW_W<'_, SPDCR_SPEC> {
         SPLW_W::new(self, 5)
     }
 }

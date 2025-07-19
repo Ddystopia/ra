@@ -187,17 +187,17 @@ impl R {
 impl W {
     ///Bit 0 - Management Message Processing Setting
     #[inline(always)]
-    pub fn man0(&mut self) -> MAN0_W<SYRFL2R_SPEC> {
+    pub fn man0(&mut self) -> MAN0_W<'_, SYRFL2R_SPEC> {
         MAN0_W::new(self, 0)
     }
     ///Bit 4 - Signaling Message Processing Setting
     #[inline(always)]
-    pub fn sig0(&mut self) -> SIG0_W<SYRFL2R_SPEC> {
+    pub fn sig0(&mut self) -> SIG0_W<'_, SYRFL2R_SPEC> {
         SIG0_W::new(self, 4)
     }
     ///Bit 28 - Illegal Message Processing Setting
     #[inline(always)]
-    pub fn ill0(&mut self) -> ILL0_W<SYRFL2R_SPEC> {
+    pub fn ill0(&mut self) -> ILL0_W<'_, SYRFL2R_SPEC> {
         ILL0_W::new(self, 28)
     }
 }

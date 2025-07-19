@@ -503,42 +503,42 @@ impl R {
 impl W {
     ///Bit 0 - Key interrupt flag 0
     #[inline(always)]
-    pub fn krf0(&mut self) -> KRF0_W<KRF_SPEC> {
+    pub fn krf0(&mut self) -> KRF0_W<'_, KRF_SPEC> {
         KRF0_W::new(self, 0)
     }
     ///Bit 1 - Key interrupt flag 1
     #[inline(always)]
-    pub fn krf1(&mut self) -> KRF1_W<KRF_SPEC> {
+    pub fn krf1(&mut self) -> KRF1_W<'_, KRF_SPEC> {
         KRF1_W::new(self, 1)
     }
     ///Bit 2 - Key interrupt flag 2
     #[inline(always)]
-    pub fn krf2(&mut self) -> KRF2_W<KRF_SPEC> {
+    pub fn krf2(&mut self) -> KRF2_W<'_, KRF_SPEC> {
         KRF2_W::new(self, 2)
     }
     ///Bit 3 - Key interrupt flag 3
     #[inline(always)]
-    pub fn krf3(&mut self) -> KRF3_W<KRF_SPEC> {
+    pub fn krf3(&mut self) -> KRF3_W<'_, KRF_SPEC> {
         KRF3_W::new(self, 3)
     }
     ///Bit 4 - Key interrupt flag 4
     #[inline(always)]
-    pub fn krf4(&mut self) -> KRF4_W<KRF_SPEC> {
+    pub fn krf4(&mut self) -> KRF4_W<'_, KRF_SPEC> {
         KRF4_W::new(self, 4)
     }
     ///Bit 5 - Key interrupt flag 5
     #[inline(always)]
-    pub fn krf5(&mut self) -> KRF5_W<KRF_SPEC> {
+    pub fn krf5(&mut self) -> KRF5_W<'_, KRF_SPEC> {
         KRF5_W::new(self, 5)
     }
     ///Bit 6 - Key interrupt flag 6
     #[inline(always)]
-    pub fn krf6(&mut self) -> KRF6_W<KRF_SPEC> {
+    pub fn krf6(&mut self) -> KRF6_W<'_, KRF_SPEC> {
         KRF6_W::new(self, 6)
     }
     ///Bit 7 - Key interrupt flag 7
     #[inline(always)]
-    pub fn krf7(&mut self) -> KRF7_W<KRF_SPEC> {
+    pub fn krf7(&mut self) -> KRF7_W<'_, KRF_SPEC> {
         KRF7_W::new(self, 7)
     }
 }

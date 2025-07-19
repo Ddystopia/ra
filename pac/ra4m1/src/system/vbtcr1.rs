@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Battery Power supply Switch Stop
     #[inline(always)]
-    pub fn bpwswstp(&mut self) -> BPWSWSTP_W<VBTCR1_SPEC> {
+    pub fn bpwswstp(&mut self) -> BPWSWSTP_W<'_, VBTCR1_SPEC> {
         BPWSWSTP_W::new(self, 0)
     }
 }

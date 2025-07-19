@@ -227,17 +227,17 @@ impl R {
 impl W {
     ///Bits 0:1 - Operating Mode Select
     #[inline(always)]
-    pub fn oms(&mut self) -> OMS_W<DOCR_SPEC> {
+    pub fn oms(&mut self) -> OMS_W<'_, DOCR_SPEC> {
         OMS_W::new(self, 0)
     }
     ///Bit 2 - Detection Condition Select
     #[inline(always)]
-    pub fn dcsel(&mut self) -> DCSEL_W<DOCR_SPEC> {
+    pub fn dcsel(&mut self) -> DCSEL_W<'_, DOCR_SPEC> {
         DCSEL_W::new(self, 2)
     }
     ///Bit 6 - DOPCF Clear
     #[inline(always)]
-    pub fn dopcfcl(&mut self) -> DOPCFCL_W<DOCR_SPEC> {
+    pub fn dopcfcl(&mut self) -> DOPCFCL_W<'_, DOCR_SPEC> {
         DOPCFCL_W::new(self, 6)
     }
 }

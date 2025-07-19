@@ -520,42 +520,42 @@ impl R {
 impl W {
     ///Bit 16 - GTADTRA Compare Match (Up-Counting) A/D Converter Start Request Interrupt Enable
     #[inline(always)]
-    pub fn adtrauen(&mut self) -> ADTRAUEN_W<GTINTAD_SPEC> {
+    pub fn adtrauen(&mut self) -> ADTRAUEN_W<'_, GTINTAD_SPEC> {
         ADTRAUEN_W::new(self, 16)
     }
     ///Bit 17 - GTADTRA Compare Match (Down-Counting) A/D Converter Start Request Interrupt Enable
     #[inline(always)]
-    pub fn adtraden(&mut self) -> ADTRADEN_W<GTINTAD_SPEC> {
+    pub fn adtraden(&mut self) -> ADTRADEN_W<'_, GTINTAD_SPEC> {
         ADTRADEN_W::new(self, 17)
     }
     ///Bit 18 - GTADTRB Compare Match (Up-Counting) A/D Converter Start Request Interrupt Enable
     #[inline(always)]
-    pub fn adtrbuen(&mut self) -> ADTRBUEN_W<GTINTAD_SPEC> {
+    pub fn adtrbuen(&mut self) -> ADTRBUEN_W<'_, GTINTAD_SPEC> {
         ADTRBUEN_W::new(self, 18)
     }
     ///Bit 19 - GTADTRB Compare Match (Down-Counting) A/D Converter Start Request Interrupt Enable
     #[inline(always)]
-    pub fn adtrbden(&mut self) -> ADTRBDEN_W<GTINTAD_SPEC> {
+    pub fn adtrbden(&mut self) -> ADTRBDEN_W<'_, GTINTAD_SPEC> {
         ADTRBDEN_W::new(self, 19)
     }
     ///Bits 24:25 - Output Disable Source Select
     #[inline(always)]
-    pub fn grp(&mut self) -> GRP_W<GTINTAD_SPEC> {
+    pub fn grp(&mut self) -> GRP_W<'_, GTINTAD_SPEC> {
         GRP_W::new(self, 24)
     }
     ///Bit 28 - Dead Time Error Output Disable Request Enable
     #[inline(always)]
-    pub fn grpdte(&mut self) -> GRPDTE_W<GTINTAD_SPEC> {
+    pub fn grpdte(&mut self) -> GRPDTE_W<'_, GTINTAD_SPEC> {
         GRPDTE_W::new(self, 28)
     }
     ///Bit 29 - Same Time Output Level High Disable Request Enable
     #[inline(always)]
-    pub fn grpabh(&mut self) -> GRPABH_W<GTINTAD_SPEC> {
+    pub fn grpabh(&mut self) -> GRPABH_W<'_, GTINTAD_SPEC> {
         GRPABH_W::new(self, 29)
     }
     ///Bit 30 - Same Time Output Level Low Disable Request Enable
     #[inline(always)]
-    pub fn grpabl(&mut self) -> GRPABL_W<GTINTAD_SPEC> {
+    pub fn grpabl(&mut self) -> GRPABL_W<'_, GTINTAD_SPEC> {
         GRPABL_W::new(self, 30)
     }
 }

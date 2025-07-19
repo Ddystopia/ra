@@ -34,17 +34,17 @@ impl R {
 impl W {
     ///Bits 0:7 - B value for background plane valid pixel areaUnsigned; 8-bit integer
     #[inline(always)]
-    pub fn b(&mut self) -> B_W<BG_BGC_SPEC> {
+    pub fn b(&mut self) -> B_W<'_, BG_BGC_SPEC> {
         B_W::new(self, 0)
     }
     ///Bits 8:15 - G value for background plane valid pixel areaUnsigned; 8-bit integer
     #[inline(always)]
-    pub fn g(&mut self) -> G_W<BG_BGC_SPEC> {
+    pub fn g(&mut self) -> G_W<'_, BG_BGC_SPEC> {
         G_W::new(self, 8)
     }
     ///Bits 16:23 - R value for background plane valid pixel area.Unsigned; 8-bit integer.
     #[inline(always)]
-    pub fn r(&mut self) -> R_W<BG_BGC_SPEC> {
+    pub fn r(&mut self) -> R_W<'_, BG_BGC_SPEC> {
         R_W::new(self, 16)
     }
 }

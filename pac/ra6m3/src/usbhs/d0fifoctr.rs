@@ -150,12 +150,12 @@ impl R {
 impl W {
     ///Bit 14 - CPU Buffer Clear
     #[inline(always)]
-    pub fn bclr(&mut self) -> BCLR_W<D0FIFOCTR_SPEC> {
+    pub fn bclr(&mut self) -> BCLR_W<'_, D0FIFOCTR_SPEC> {
         BCLR_W::new(self, 14)
     }
     ///Bit 15 - Buffer Memory Valid Flag
     #[inline(always)]
-    pub fn bval(&mut self) -> BVAL_W<D0FIFOCTR_SPEC> {
+    pub fn bval(&mut self) -> BVAL_W<'_, D0FIFOCTR_SPEC> {
         BVAL_W::new(self, 15)
     }
 }

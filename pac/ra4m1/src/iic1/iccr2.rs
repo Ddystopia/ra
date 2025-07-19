@@ -350,27 +350,27 @@ impl R {
 impl W {
     ///Bit 1 - Start Condition Issuance Request Set the ST bit to 1 (start condition issuance request) when the BBSY flag is set to 0 (bus free state).
     #[inline(always)]
-    pub fn st(&mut self) -> ST_W<ICCR2_SPEC> {
+    pub fn st(&mut self) -> ST_W<'_, ICCR2_SPEC> {
         ST_W::new(self, 1)
     }
     ///Bit 2 - Restart Condition Issuance Request Note: Do not set the RS bit to 1 while issuing a stop condition.
     #[inline(always)]
-    pub fn rs(&mut self) -> RS_W<ICCR2_SPEC> {
+    pub fn rs(&mut self) -> RS_W<'_, ICCR2_SPEC> {
         RS_W::new(self, 2)
     }
     ///Bit 3 - Stop Condition Issuance Request Note: Writing to the SP bit is not possible while the setting of the BBSY flag is 0 (bus free state). Note: Do not set the SP bit to 1 while a restart condition is being issued.
     #[inline(always)]
-    pub fn sp(&mut self) -> SP_W<ICCR2_SPEC> {
+    pub fn sp(&mut self) -> SP_W<'_, ICCR2_SPEC> {
         SP_W::new(self, 3)
     }
     ///Bit 5 - Transmit/Receive Mode
     #[inline(always)]
-    pub fn trs(&mut self) -> TRS_W<ICCR2_SPEC> {
+    pub fn trs(&mut self) -> TRS_W<'_, ICCR2_SPEC> {
         TRS_W::new(self, 5)
     }
     ///Bit 6 - Master/Slave Mode
     #[inline(always)]
-    pub fn mst(&mut self) -> MST_W<ICCR2_SPEC> {
+    pub fn mst(&mut self) -> MST_W<'_, ICCR2_SPEC> {
         MST_W::new(self, 6)
     }
 }

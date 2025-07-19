@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Cycle Setting Register
     #[inline(always)]
-    pub fn gtpr(&mut self) -> GTPR_W<GTPR_SPEC> {
+    pub fn gtpr(&mut self) -> GTPR_W<'_, GTPR_SPEC> {
         GTPR_W::new(self, 0)
     }
 }

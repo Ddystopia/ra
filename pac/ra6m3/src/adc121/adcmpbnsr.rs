@@ -302,12 +302,12 @@ impl R {
 impl W {
     ///Bits 0:5 - Compare window B channel selection bit.The channel that compares it on the condition of compare window B is selected.
     #[inline(always)]
-    pub fn cmpchb(&mut self) -> CMPCHB_W<ADCMPBNSR_SPEC> {
+    pub fn cmpchb(&mut self) -> CMPCHB_W<'_, ADCMPBNSR_SPEC> {
         CMPCHB_W::new(self, 0)
     }
     ///Bit 7 - Compare window B Compare condition setting bit.
     #[inline(always)]
-    pub fn cmplb(&mut self) -> CMPLB_W<ADCMPBNSR_SPEC> {
+    pub fn cmplb(&mut self) -> CMPLB_W<'_, ADCMPBNSR_SPEC> {
         CMPLB_W::new(self, 7)
     }
 }

@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - CTSU Channel Transmit/Receive Control 0CTSUCHTRC0\[0\] corresponds to TS00 and CTSUCHTRC0\[7\] corresponds to TS07. ( 0: Reception / 1: Transmission )
     #[inline(always)]
-    pub fn ctsuchtrc0(&mut self) -> CTSUCHTRC0_W<CTSUCHTRC0_SPEC> {
+    pub fn ctsuchtrc0(&mut self) -> CTSUCHTRC0_W<'_, CTSUCHTRC0_SPEC> {
         CTSUCHTRC0_W::new(self, 0)
     }
 }

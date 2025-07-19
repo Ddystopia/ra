@@ -42,7 +42,7 @@ where
 impl W {
     ///Bits 0:15 - Pmn Output Set
     #[inline(always)]
-    pub fn posr(&mut self) -> POSR_W<POSR_SPEC> {
+    pub fn posr(&mut self) -> POSR_W<'_, POSR_SPEC> {
         POSR_W::new(self, 0)
     }
 }

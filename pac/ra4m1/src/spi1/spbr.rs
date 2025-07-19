@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - SPBR sets the bit rate in master mode.
     #[inline(always)]
-    pub fn spr(&mut self) -> SPR_W<SPBR_SPEC> {
+    pub fn spr(&mut self) -> SPR_W<'_, SPBR_SPEC> {
         SPR_W::new(self, 0)
     }
 }

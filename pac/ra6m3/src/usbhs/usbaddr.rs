@@ -159,7 +159,7 @@ impl R {
 impl W {
     ///Bits 8:10 - Status Recovery
     #[inline(always)]
-    pub fn stsrecov0(&mut self) -> STSRECOV0_W<USBADDR_SPEC> {
+    pub fn stsrecov0(&mut self) -> STSRECOV0_W<'_, USBADDR_SPEC> {
         STSRECOV0_W::new(self, 8)
     }
 }

@@ -445,37 +445,37 @@ impl R {
 impl W {
     ///Bit 0 - FIFO Mode Select (Valid only in asynchronous mode(including multi-processor) or clock synchronous mode)
     #[inline(always)]
-    pub fn fm(&mut self) -> FM_W<FCR_SPEC> {
+    pub fn fm(&mut self) -> FM_W<'_, FCR_SPEC> {
         FM_W::new(self, 0)
     }
     ///Bit 1 - Receive FIFO Data Register Reset (Valid only in FCR.FM=1)
     #[inline(always)]
-    pub fn rfrst(&mut self) -> RFRST_W<FCR_SPEC> {
+    pub fn rfrst(&mut self) -> RFRST_W<'_, FCR_SPEC> {
         RFRST_W::new(self, 1)
     }
     ///Bit 2 - Transmit FIFO Data Register Reset (Valid only in FCR.FM=1)
     #[inline(always)]
-    pub fn tfrst(&mut self) -> TFRST_W<FCR_SPEC> {
+    pub fn tfrst(&mut self) -> TFRST_W<'_, FCR_SPEC> {
         TFRST_W::new(self, 2)
     }
     ///Bit 3 - Receive data ready error select bit (When detecting a reception data ready, the interrupt request is selected.)
     #[inline(always)]
-    pub fn dres(&mut self) -> DRES_W<FCR_SPEC> {
+    pub fn dres(&mut self) -> DRES_W<'_, FCR_SPEC> {
         DRES_W::new(self, 3)
     }
     ///Bits 4:7 - Transmit FIFO data trigger number (Valid only in asynchronous mode(including multi-processor) or clock synchronous mode)
     #[inline(always)]
-    pub fn ttrg(&mut self) -> TTRG_W<FCR_SPEC> {
+    pub fn ttrg(&mut self) -> TTRG_W<'_, FCR_SPEC> {
         TTRG_W::new(self, 4)
     }
     ///Bits 8:11 - Receive FIFO data trigger number (Valid only in asynchronous mode(including multi-processor) or clock synchronous mode)
     #[inline(always)]
-    pub fn rtrg(&mut self) -> RTRG_W<FCR_SPEC> {
+    pub fn rtrg(&mut self) -> RTRG_W<'_, FCR_SPEC> {
         RTRG_W::new(self, 8)
     }
     ///Bits 12:15 - RTS Output Active Trigger Number Select (Valid only in asynchronous mode(including multi-processor) or clock synchronous mode)
     #[inline(always)]
-    pub fn rstrg(&mut self) -> RSTRG_W<FCR_SPEC> {
+    pub fn rstrg(&mut self) -> RSTRG_W<'_, FCR_SPEC> {
         RSTRG_W::new(self, 12)
     }
 }

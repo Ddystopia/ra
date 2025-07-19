@@ -106,12 +106,12 @@ impl R {
 impl W {
     ///Bit 0 - Register Write Control
     #[inline(always)]
-    pub fn sramprcr(&mut self) -> SRAMPRCR_W<SRAMPRCR_SPEC> {
+    pub fn sramprcr(&mut self) -> SRAMPRCR_W<'_, SRAMPRCR_SPEC> {
         SRAMPRCR_W::new(self, 0)
     }
     ///Bits 1:7 - Write Key Code
     #[inline(always)]
-    pub fn kw(&mut self) -> KW_W<SRAMPRCR_SPEC> {
+    pub fn kw(&mut self) -> KW_W<'_, SRAMPRCR_SPEC> {
         KW_W::new(self, 1)
     }
 }

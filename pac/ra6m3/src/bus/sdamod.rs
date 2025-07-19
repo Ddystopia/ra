@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Continuous Access Enable
     #[inline(always)]
-    pub fn be(&mut self) -> BE_W<SDAMOD_SPEC> {
+    pub fn be(&mut self) -> BE_W<'_, SDAMOD_SPEC> {
         BE_W::new(self, 0)
     }
 }

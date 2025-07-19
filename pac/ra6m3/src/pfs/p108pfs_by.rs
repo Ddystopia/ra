@@ -290,22 +290,22 @@ impl R {
 impl W {
     ///Bit 0 - Port Output Data
     #[inline(always)]
-    pub fn podr(&mut self) -> PODR_W<P108PFS_BY_SPEC> {
+    pub fn podr(&mut self) -> PODR_W<'_, P108PFS_BY_SPEC> {
         PODR_W::new(self, 0)
     }
     ///Bit 2 - Port Direction
     #[inline(always)]
-    pub fn pdr(&mut self) -> PDR_W<P108PFS_BY_SPEC> {
+    pub fn pdr(&mut self) -> PDR_W<'_, P108PFS_BY_SPEC> {
         PDR_W::new(self, 2)
     }
     ///Bit 4 - Pull-up Control
     #[inline(always)]
-    pub fn pcr(&mut self) -> PCR_W<P108PFS_BY_SPEC> {
+    pub fn pcr(&mut self) -> PCR_W<'_, P108PFS_BY_SPEC> {
         PCR_W::new(self, 4)
     }
     ///Bit 6 - N-Channel Open Drain Control
     #[inline(always)]
-    pub fn ncodr(&mut self) -> NCODR_W<P108PFS_BY_SPEC> {
+    pub fn ncodr(&mut self) -> NCODR_W<'_, P108PFS_BY_SPEC> {
         NCODR_W::new(self, 6)
     }
 }

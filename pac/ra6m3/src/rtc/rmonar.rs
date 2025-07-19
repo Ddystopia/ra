@@ -85,17 +85,17 @@ impl R {
 impl W {
     ///Bits 0:3 - 1 Month Value for the ones place of months
     #[inline(always)]
-    pub fn mon1(&mut self) -> MON1_W<RMONAR_SPEC> {
+    pub fn mon1(&mut self) -> MON1_W<'_, RMONAR_SPEC> {
         MON1_W::new(self, 0)
     }
     ///Bit 4 - 10 Months Value for the tens place of months
     #[inline(always)]
-    pub fn mon10(&mut self) -> MON10_W<RMONAR_SPEC> {
+    pub fn mon10(&mut self) -> MON10_W<'_, RMONAR_SPEC> {
         MON10_W::new(self, 4)
     }
     ///Bit 7 - Compare enable
     #[inline(always)]
-    pub fn enb(&mut self) -> ENB_W<RMONAR_SPEC> {
+    pub fn enb(&mut self) -> ENB_W<'_, RMONAR_SPEC> {
         ENB_W::new(self, 7)
     }
 }

@@ -25,12 +25,12 @@ impl R {
 impl W {
     ///Bits 0:3 - 1-Day Count Counts from 0 to 9 once per day. When a carry is generated, 1 is added to the tens place.
     #[inline(always)]
-    pub fn date1(&mut self) -> DATE1_W<RDAYCNT_SPEC> {
+    pub fn date1(&mut self) -> DATE1_W<'_, RDAYCNT_SPEC> {
         DATE1_W::new(self, 0)
     }
     ///Bits 4:5 - 10-Day Count Counts from 0 to 3 once per carry from the ones place.
     #[inline(always)]
-    pub fn date10(&mut self) -> DATE10_W<RDAYCNT_SPEC> {
+    pub fn date10(&mut self) -> DATE10_W<'_, RDAYCNT_SPEC> {
         DATE10_W::new(self, 4)
     }
 }

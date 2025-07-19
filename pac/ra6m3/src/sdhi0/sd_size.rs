@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:9 - Transfer Data SizeThese bits specify a size between 1 and 512 bytes for the transfer of single blocks.In cases of multiple block transfer with automatic issuing of CMD12 (CMD18 and CMD25), the only specifiable transfer data size is 512 bytes. Furthermore, in cases of multiple block transfer without automatic issuing of CMD12, as well as 512 bytes, 32, 64, 128, and 256 bytes are specifiable. However, in the reading of 32, 64, 128, and 256 bytes for the transfer of multiple blocks, this is restricted to multiple block transfer by CMD53.Additionally, if a command accompanies data transfer, do not set these bits to 0.
     #[inline(always)]
-    pub fn len(&mut self) -> LEN_W<SD_SIZE_SPEC> {
+    pub fn len(&mut self) -> LEN_W<'_, SD_SIZE_SPEC> {
         LEN_W::new(self, 0)
     }
 }

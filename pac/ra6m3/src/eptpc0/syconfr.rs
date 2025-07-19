@@ -136,17 +136,17 @@ impl R {
 impl W {
     ///Bits 0:7 - PTP Message Transmission Interval SettingThese bits are used to set the time from the completion of one transmission to the start of the next in cycles of the transmission clock. A value n in these bits means that a transmission interval of n cycles will be secured.No interval is secured if the setting is 00h.We recommend the setting 28h (40 cycles).
     #[inline(always)]
-    pub fn tcyc(&mut self) -> TCYC_W<SYCONFR_SPEC> {
+    pub fn tcyc(&mut self) -> TCYC_W<'_, SYCONFR_SPEC> {
         TCYC_W::new(self, 0)
     }
     ///Bit 12 - Sync Message Transmission Bandwidth Securing Disable
     #[inline(always)]
-    pub fn sbdis(&mut self) -> SBDIS_W<SYCONFR_SPEC> {
+    pub fn sbdis(&mut self) -> SBDIS_W<'_, SYCONFR_SPEC> {
         SBDIS_W::new(self, 12)
     }
     ///Bit 16 - Receive Message domainNumber Filter Disable
     #[inline(always)]
-    pub fn fildis(&mut self) -> FILDIS_W<SYCONFR_SPEC> {
+    pub fn fildis(&mut self) -> FILDIS_W<'_, SYCONFR_SPEC> {
         FILDIS_W::new(self, 16)
     }
 }

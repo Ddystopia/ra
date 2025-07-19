@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - Upper Bytes of Vertical Image SizeIn decompression process, a downloaded value from the JPEG coded data is set. NOTE: Read-only in Decompression.
     #[inline(always)]
-    pub fn vszu(&mut self) -> VSZU_W<JCVSZU_SPEC> {
+    pub fn vszu(&mut self) -> VSZU_W<'_, JCVSZU_SPEC> {
         VSZU_W::new(self, 0)
     }
 }

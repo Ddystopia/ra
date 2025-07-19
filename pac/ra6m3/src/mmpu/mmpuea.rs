@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Region end address registerAddress where the region end, for use in region determination.NOTE: The low-order 2 bits are fixed to 1.
     #[inline(always)]
-    pub fn mmpuea(&mut self) -> MMPUEA_W<MMPUEA_SPEC> {
+    pub fn mmpuea(&mut self) -> MMPUEA_W<'_, MMPUEA_SPEC> {
         MMPUEA_W::new(self, 0)
     }
 }

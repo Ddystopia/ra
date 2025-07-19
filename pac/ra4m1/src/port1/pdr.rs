@@ -74,7 +74,7 @@ impl R {
 impl W {
     ///Bits 0:15 - Pmn Direction
     #[inline(always)]
-    pub fn pdr(&mut self) -> PDR_W<PDR_SPEC> {
+    pub fn pdr(&mut self) -> PDR_W<'_, PDR_SPEC> {
         PDR_W::new(self, 0)
     }
 }

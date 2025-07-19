@@ -506,32 +506,32 @@ impl R {
 impl W {
     ///Bit 0 - Response End Detection
     #[inline(always)]
-    pub fn rspend(&mut self) -> RSPEND_W<SD_INFO1_SPEC> {
+    pub fn rspend(&mut self) -> RSPEND_W<'_, SD_INFO1_SPEC> {
         RSPEND_W::new(self, 0)
     }
     ///Bit 2 - Access End
     #[inline(always)]
-    pub fn acend(&mut self) -> ACEND_W<SD_INFO1_SPEC> {
+    pub fn acend(&mut self) -> ACEND_W<'_, SD_INFO1_SPEC> {
         ACEND_W::new(self, 2)
     }
     ///Bit 3 - SDnCD Card Removal
     #[inline(always)]
-    pub fn sdcdrm(&mut self) -> SDCDRM_W<SD_INFO1_SPEC> {
+    pub fn sdcdrm(&mut self) -> SDCDRM_W<'_, SD_INFO1_SPEC> {
         SDCDRM_W::new(self, 3)
     }
     ///Bit 4 - SDnCD Card Insertion
     #[inline(always)]
-    pub fn sdcdin(&mut self) -> SDCDIN_W<SD_INFO1_SPEC> {
+    pub fn sdcdin(&mut self) -> SDCDIN_W<'_, SD_INFO1_SPEC> {
         SDCDIN_W::new(self, 4)
     }
     ///Bit 8 - SDnDAT3 Card Removal
     #[inline(always)]
-    pub fn sdd3rm(&mut self) -> SDD3RM_W<SD_INFO1_SPEC> {
+    pub fn sdd3rm(&mut self) -> SDD3RM_W<'_, SD_INFO1_SPEC> {
         SDD3RM_W::new(self, 8)
     }
     ///Bit 9 - SDnDAT3 Card Insertion
     #[inline(always)]
-    pub fn sdd3in(&mut self) -> SDD3IN_W<SD_INFO1_SPEC> {
+    pub fn sdd3in(&mut self) -> SDD3IN_W<'_, SD_INFO1_SPEC> {
         SDD3IN_W::new(self, 9)
     }
 }

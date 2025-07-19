@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Operation after Detection
     #[inline(always)]
-    pub fn oad(&mut self) -> OAD_W<ECCOAD_SPEC> {
+    pub fn oad(&mut self) -> OAD_W<'_, ECCOAD_SPEC> {
         OAD_W::new(self, 0)
     }
 }

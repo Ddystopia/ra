@@ -336,12 +336,12 @@ impl R {
 impl W {
     ///Bit 0 - Receive FIFO Enable
     #[inline(always)]
-    pub fn rfe(&mut self) -> RFE_W<RFCR_SPEC> {
+    pub fn rfe(&mut self) -> RFE_W<'_, RFCR_SPEC> {
         RFE_W::new(self, 0)
     }
     ///Bit 4 - Receive FIFO Message Lost Flag
     #[inline(always)]
-    pub fn rfmlf(&mut self) -> RFMLF_W<RFCR_SPEC> {
+    pub fn rfmlf(&mut self) -> RFMLF_W<'_, RFCR_SPEC> {
         RFMLF_W::new(self, 4)
     }
 }

@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - External Loopback Mode
     #[inline(always)]
-    pub fn elb(&mut self) -> ELB_W<IOSR_SPEC> {
+    pub fn elb(&mut self) -> ELB_W<'_, IOSR_SPEC> {
         ELB_W::new(self, 0)
     }
 }

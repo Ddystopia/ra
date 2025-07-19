@@ -460,37 +460,37 @@ impl R {
 impl W {
     ///Bits 0:1 - Clock Select
     #[inline(always)]
-    pub fn cks(&mut self) -> CKS_W<SMR_SPEC> {
+    pub fn cks(&mut self) -> CKS_W<'_, SMR_SPEC> {
         CKS_W::new(self, 0)
     }
     ///Bit 2 - Multi-Processor Mode(Valid only in asynchronous mode)
     #[inline(always)]
-    pub fn mp(&mut self) -> MP_W<SMR_SPEC> {
+    pub fn mp(&mut self) -> MP_W<'_, SMR_SPEC> {
         MP_W::new(self, 2)
     }
     ///Bit 3 - Stop Bit Length(Valid only in asynchronous mode)
     #[inline(always)]
-    pub fn stop(&mut self) -> STOP_W<SMR_SPEC> {
+    pub fn stop(&mut self) -> STOP_W<'_, SMR_SPEC> {
         STOP_W::new(self, 3)
     }
     ///Bit 4 - Parity Mode (Valid only when the PE bit is 1)
     #[inline(always)]
-    pub fn pm(&mut self) -> PM_W<SMR_SPEC> {
+    pub fn pm(&mut self) -> PM_W<'_, SMR_SPEC> {
         PM_W::new(self, 4)
     }
     ///Bit 5 - Parity Enable(Valid only in asynchronous mode)
     #[inline(always)]
-    pub fn pe(&mut self) -> PE_W<SMR_SPEC> {
+    pub fn pe(&mut self) -> PE_W<'_, SMR_SPEC> {
         PE_W::new(self, 5)
     }
     ///Bit 6 - Character Length(Valid only in asynchronous mode)
     #[inline(always)]
-    pub fn chr(&mut self) -> CHR_W<SMR_SPEC> {
+    pub fn chr(&mut self) -> CHR_W<'_, SMR_SPEC> {
         CHR_W::new(self, 6)
     }
     ///Bit 7 - Communications Mode
     #[inline(always)]
-    pub fn cm(&mut self) -> CM_W<SMR_SPEC> {
+    pub fn cm(&mut self) -> CM_W<'_, SMR_SPEC> {
         CM_W::new(self, 7)
     }
 }

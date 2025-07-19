@@ -627,52 +627,52 @@ impl R {
 impl W {
     ///Bit 0 - BEMP Interrupt Status for PIPE0
     #[inline(always)]
-    pub fn pipe0bemp(&mut self) -> PIPE0BEMP_W<BEMPSTS_SPEC> {
+    pub fn pipe0bemp(&mut self) -> PIPE0BEMP_W<'_, BEMPSTS_SPEC> {
         PIPE0BEMP_W::new(self, 0)
     }
     ///Bit 1 - BEMP Interrupt Status for PIPE1
     #[inline(always)]
-    pub fn pipe1bemp(&mut self) -> PIPE1BEMP_W<BEMPSTS_SPEC> {
+    pub fn pipe1bemp(&mut self) -> PIPE1BEMP_W<'_, BEMPSTS_SPEC> {
         PIPE1BEMP_W::new(self, 1)
     }
     ///Bit 2 - BEMP Interrupt Status for PIPE2
     #[inline(always)]
-    pub fn pipe2bemp(&mut self) -> PIPE2BEMP_W<BEMPSTS_SPEC> {
+    pub fn pipe2bemp(&mut self) -> PIPE2BEMP_W<'_, BEMPSTS_SPEC> {
         PIPE2BEMP_W::new(self, 2)
     }
     ///Bit 3 - BEMP Interrupt Status for PIPE3
     #[inline(always)]
-    pub fn pipe3bemp(&mut self) -> PIPE3BEMP_W<BEMPSTS_SPEC> {
+    pub fn pipe3bemp(&mut self) -> PIPE3BEMP_W<'_, BEMPSTS_SPEC> {
         PIPE3BEMP_W::new(self, 3)
     }
     ///Bit 4 - BEMP Interrupt Status for PIPE4
     #[inline(always)]
-    pub fn pipe4bemp(&mut self) -> PIPE4BEMP_W<BEMPSTS_SPEC> {
+    pub fn pipe4bemp(&mut self) -> PIPE4BEMP_W<'_, BEMPSTS_SPEC> {
         PIPE4BEMP_W::new(self, 4)
     }
     ///Bit 5 - BEMP Interrupt Status for PIPE5
     #[inline(always)]
-    pub fn pipe5bemp(&mut self) -> PIPE5BEMP_W<BEMPSTS_SPEC> {
+    pub fn pipe5bemp(&mut self) -> PIPE5BEMP_W<'_, BEMPSTS_SPEC> {
         PIPE5BEMP_W::new(self, 5)
     }
     ///Bit 6 - BEMP Interrupt Status for PIPE6
     #[inline(always)]
-    pub fn pipe6bemp(&mut self) -> PIPE6BEMP_W<BEMPSTS_SPEC> {
+    pub fn pipe6bemp(&mut self) -> PIPE6BEMP_W<'_, BEMPSTS_SPEC> {
         PIPE6BEMP_W::new(self, 6)
     }
     ///Bit 7 - BEMP Interrupt Status for PIPE7
     #[inline(always)]
-    pub fn pipe7bemp(&mut self) -> PIPE7BEMP_W<BEMPSTS_SPEC> {
+    pub fn pipe7bemp(&mut self) -> PIPE7BEMP_W<'_, BEMPSTS_SPEC> {
         PIPE7BEMP_W::new(self, 7)
     }
     ///Bit 8 - BEMP Interrupt Status for PIPE8
     #[inline(always)]
-    pub fn pipe8bemp(&mut self) -> PIPE8BEMP_W<BEMPSTS_SPEC> {
+    pub fn pipe8bemp(&mut self) -> PIPE8BEMP_W<'_, BEMPSTS_SPEC> {
         PIPE8BEMP_W::new(self, 8)
     }
     ///Bit 9 - BEMP Interrupt Status for PIPE9
     #[inline(always)]
-    pub fn pipe9bemp(&mut self) -> PIPE9BEMP_W<BEMPSTS_SPEC> {
+    pub fn pipe9bemp(&mut self) -> PIPE9BEMP_W<'_, BEMPSTS_SPEC> {
         PIPE9BEMP_W::new(self, 9)
     }
 }

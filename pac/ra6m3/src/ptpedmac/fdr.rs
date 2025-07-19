@@ -139,12 +139,12 @@ impl R {
 impl W {
     ///Bits 0:4 - Transmit FIFO Depth
     #[inline(always)]
-    pub fn rfd(&mut self) -> RFD_W<FDR_SPEC> {
+    pub fn rfd(&mut self) -> RFD_W<'_, FDR_SPEC> {
         RFD_W::new(self, 0)
     }
     ///Bits 8:12 - Receive FIFO Depth
     #[inline(always)]
-    pub fn tfd(&mut self) -> TFD_W<FDR_SPEC> {
+    pub fn tfd(&mut self) -> TFD_W<'_, FDR_SPEC> {
         TFD_W::new(self, 8)
     }
 }

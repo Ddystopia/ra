@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 8 - Transaction Counter ClearSetting this bit to 1 allows clearing the transaction counter to 0.
     #[inline(always)]
-    pub fn trclr(&mut self) -> TRCLR_W<PIPETRE_SPEC> {
+    pub fn trclr(&mut self) -> TRCLR_W<'_, PIPETRE_SPEC> {
         TRCLR_W::new(self, 8)
     }
     ///Bit 9 - Transaction Counter EnableEnables or disables the transaction counter function.
     #[inline(always)]
-    pub fn trenb(&mut self) -> TRENB_W<PIPETRE_SPEC> {
+    pub fn trenb(&mut self) -> TRENB_W<'_, PIPETRE_SPEC> {
         TRENB_W::new(self, 9)
     }
 }

@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 6 - D/A Amplifier Stabilization Wait 0
     #[inline(always)]
-    pub fn daasw0(&mut self) -> DAASW0_W<DAASWCR_SPEC> {
+    pub fn daasw0(&mut self) -> DAASW0_W<'_, DAASWCR_SPEC> {
         DAASW0_W::new(self, 6)
     }
     ///Bit 7 - D/A Amplifier Stabilization Wait 1
     #[inline(always)]
-    pub fn daasw1(&mut self) -> DAASW1_W<DAASWCR_SPEC> {
+    pub fn daasw1(&mut self) -> DAASW1_W<'_, DAASWCR_SPEC> {
         DAASW1_W::new(self, 7)
     }
 }

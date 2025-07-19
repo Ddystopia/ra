@@ -5,7 +5,7 @@ pub type CLADDR_W<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl W {
     ///Bits 0:7 - Texture CLUT start address for indexed texture format
     #[inline(always)]
-    pub fn claddr(&mut self) -> CLADDR_W<TEXCLADDR_SPEC> {
+    pub fn claddr(&mut self) -> CLADDR_W<'_, TEXCLADDR_SPEC> {
         CLADDR_W::new(self, 0)
     }
 }

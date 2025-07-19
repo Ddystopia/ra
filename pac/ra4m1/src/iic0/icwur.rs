@@ -307,27 +307,27 @@ impl R {
 impl W {
     ///Bit 0 - Wakeup Analog Filter Additional Selection
     #[inline(always)]
-    pub fn wuafa(&mut self) -> WUAFA_W<ICWUR_SPEC> {
+    pub fn wuafa(&mut self) -> WUAFA_W<'_, ICWUR_SPEC> {
         WUAFA_W::new(self, 0)
     }
     ///Bit 4 - ACK bit for Wakeup Mode
     #[inline(always)]
-    pub fn wuack(&mut self) -> WUACK_W<ICWUR_SPEC> {
+    pub fn wuack(&mut self) -> WUACK_W<'_, ICWUR_SPEC> {
         WUACK_W::new(self, 4)
     }
     ///Bit 5 - Wakeup Event Occurrence Flag
     #[inline(always)]
-    pub fn wuf(&mut self) -> WUF_W<ICWUR_SPEC> {
+    pub fn wuf(&mut self) -> WUF_W<'_, ICWUR_SPEC> {
         WUF_W::new(self, 5)
     }
     ///Bit 6 - Wakeup Interrupt Request Enable
     #[inline(always)]
-    pub fn wuie(&mut self) -> WUIE_W<ICWUR_SPEC> {
+    pub fn wuie(&mut self) -> WUIE_W<'_, ICWUR_SPEC> {
         WUIE_W::new(self, 6)
     }
     ///Bit 7 - Wakeup Function Enable
     #[inline(always)]
-    pub fn wue(&mut self) -> WUE_W<ICWUR_SPEC> {
+    pub fn wue(&mut self) -> WUE_W<'_, ICWUR_SPEC> {
         WUE_W::new(self, 7)
     }
 }

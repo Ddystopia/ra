@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - Number of Input Image Lines to Be ReadThe lower three bits should be set to 0. These bits are read as0.Number of input image data lines to be read, in 8-line units.
     #[inline(always)]
-    pub fn lines(&mut self) -> LINES_W<JIFDDLC_SPEC> {
+    pub fn lines(&mut self) -> LINES_W<'_, JIFDDLC_SPEC> {
         LINES_W::new(self, 0)
     }
 }

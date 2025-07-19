@@ -247,22 +247,22 @@ impl R {
 impl W {
     ///Bit 1 - VBATWIO0 Output VBATWIO1 Trigger Enable
     #[inline(always)]
-    pub fn ch0vch1te(&mut self) -> CH0VCH1TE_W<VBTWCH0OTSR_SPEC> {
+    pub fn ch0vch1te(&mut self) -> CH0VCH1TE_W<'_, VBTWCH0OTSR_SPEC> {
         CH0VCH1TE_W::new(self, 1)
     }
     ///Bit 2 - VBATWIO0 Output VBATWIO2 Trigger Enable
     #[inline(always)]
-    pub fn ch0vch2te(&mut self) -> CH0VCH2TE_W<VBTWCH0OTSR_SPEC> {
+    pub fn ch0vch2te(&mut self) -> CH0VCH2TE_W<'_, VBTWCH0OTSR_SPEC> {
         CH0VCH2TE_W::new(self, 2)
     }
     ///Bit 3 - VBATWIO0 Output RTC Periodic Signal Enable
     #[inline(always)]
-    pub fn ch0vrtcte(&mut self) -> CH0VRTCTE_W<VBTWCH0OTSR_SPEC> {
+    pub fn ch0vrtcte(&mut self) -> CH0VRTCTE_W<'_, VBTWCH0OTSR_SPEC> {
         CH0VRTCTE_W::new(self, 3)
     }
     ///Bit 4 - VBATWIO0 Output RTC Alarm Signal Enable
     #[inline(always)]
-    pub fn ch0vrtcate(&mut self) -> CH0VRTCATE_W<VBTWCH0OTSR_SPEC> {
+    pub fn ch0vrtcate(&mut self) -> CH0VRTCATE_W<'_, VBTWCH0OTSR_SPEC> {
         CH0VRTCATE_W::new(self, 4)
     }
 }

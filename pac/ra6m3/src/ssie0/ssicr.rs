@@ -1491,102 +1491,102 @@ impl R {
 impl W {
     ///Bit 0 - Receive Enable
     #[inline(always)]
-    pub fn ren(&mut self) -> REN_W<SSICR_SPEC> {
+    pub fn ren(&mut self) -> REN_W<'_, SSICR_SPEC> {
         REN_W::new(self, 0)
     }
     ///Bit 1 - Transmit Enable
     #[inline(always)]
-    pub fn ten(&mut self) -> TEN_W<SSICR_SPEC> {
+    pub fn ten(&mut self) -> TEN_W<'_, SSICR_SPEC> {
         TEN_W::new(self, 1)
     }
     ///Bit 3 - Mute EnableNOTE: When this module is muted, the value of outputting serial data is rewritten to 0 but data transmission is not stopped. Write dummy data to the SSIFTDR not to generate a transmit underflow because the number of data in the transmit FIFO is decreasing.
     #[inline(always)]
-    pub fn muen(&mut self) -> MUEN_W<SSICR_SPEC> {
+    pub fn muen(&mut self) -> MUEN_W<'_, SSICR_SPEC> {
         MUEN_W::new(self, 3)
     }
     ///Bits 4:7 - Serial Oversampling Clock Division Ratio
     #[inline(always)]
-    pub fn ckdv(&mut self) -> CKDV_W<SSICR_SPEC> {
+    pub fn ckdv(&mut self) -> CKDV_W<'_, SSICR_SPEC> {
         CKDV_W::new(self, 4)
     }
     ///Bit 8 - Serial Data Delay
     #[inline(always)]
-    pub fn del(&mut self) -> DEL_W<SSICR_SPEC> {
+    pub fn del(&mut self) -> DEL_W<'_, SSICR_SPEC> {
         DEL_W::new(self, 8)
     }
     ///Bit 9 - Parallel Data Alignment
     #[inline(always)]
-    pub fn pdta(&mut self) -> PDTA_W<SSICR_SPEC> {
+    pub fn pdta(&mut self) -> PDTA_W<'_, SSICR_SPEC> {
         PDTA_W::new(self, 9)
     }
     ///Bit 10 - Serial Data Alignment
     #[inline(always)]
-    pub fn sdta(&mut self) -> SDTA_W<SSICR_SPEC> {
+    pub fn sdta(&mut self) -> SDTA_W<'_, SSICR_SPEC> {
         SDTA_W::new(self, 10)
     }
     ///Bit 11 - Serial Padding Polarity
     #[inline(always)]
-    pub fn spdp(&mut self) -> SPDP_W<SSICR_SPEC> {
+    pub fn spdp(&mut self) -> SPDP_W<'_, SSICR_SPEC> {
         SPDP_W::new(self, 11)
     }
     ///Bit 12 - Serial WS Polarity
     #[inline(always)]
-    pub fn swsp(&mut self) -> SWSP_W<SSICR_SPEC> {
+    pub fn swsp(&mut self) -> SWSP_W<'_, SSICR_SPEC> {
         SWSP_W::new(self, 12)
     }
     ///Bit 13 - Serial Bit Clock Polarity
     #[inline(always)]
-    pub fn sckp(&mut self) -> SCKP_W<SSICR_SPEC> {
+    pub fn sckp(&mut self) -> SCKP_W<'_, SSICR_SPEC> {
         SCKP_W::new(self, 13)
     }
     ///Bit 14 - Serial WS Direction NOTE: Only the following settings are allowed: (SCKD, SWSD) = (0, 0) and (1, 1). Other settings are prohibited.
     #[inline(always)]
-    pub fn swsd(&mut self) -> SWSD_W<SSICR_SPEC> {
+    pub fn swsd(&mut self) -> SWSD_W<'_, SSICR_SPEC> {
         SWSD_W::new(self, 14)
     }
     ///Bits 16:18 - System Word LengthSet the system word length to the bit clock frequency/2 fs.
     #[inline(always)]
-    pub fn swl(&mut self) -> SWL_W<SSICR_SPEC> {
+    pub fn swl(&mut self) -> SWL_W<'_, SSICR_SPEC> {
         SWL_W::new(self, 16)
     }
     ///Bits 19:21 - Data Word Length
     #[inline(always)]
-    pub fn dwl(&mut self) -> DWL_W<SSICR_SPEC> {
+    pub fn dwl(&mut self) -> DWL_W<'_, SSICR_SPEC> {
         DWL_W::new(self, 19)
     }
     ///Bits 22:23 - Channels
     #[inline(always)]
-    pub fn chnl(&mut self) -> CHNL_W<SSICR_SPEC> {
+    pub fn chnl(&mut self) -> CHNL_W<'_, SSICR_SPEC> {
         CHNL_W::new(self, 22)
     }
     ///Bit 25 - Idle Mode Interrupt Enable
     #[inline(always)]
-    pub fn iien(&mut self) -> IIEN_W<SSICR_SPEC> {
+    pub fn iien(&mut self) -> IIEN_W<'_, SSICR_SPEC> {
         IIEN_W::new(self, 25)
     }
     ///Bit 26 - Receive Overflow Interrupt Enable
     #[inline(always)]
-    pub fn roien(&mut self) -> ROIEN_W<SSICR_SPEC> {
+    pub fn roien(&mut self) -> ROIEN_W<'_, SSICR_SPEC> {
         ROIEN_W::new(self, 26)
     }
     ///Bit 27 - Receive Underflow Interrupt Enable
     #[inline(always)]
-    pub fn ruien(&mut self) -> RUIEN_W<SSICR_SPEC> {
+    pub fn ruien(&mut self) -> RUIEN_W<'_, SSICR_SPEC> {
         RUIEN_W::new(self, 27)
     }
     ///Bit 28 - Transmit Overflow Interrupt Enable
     #[inline(always)]
-    pub fn toien(&mut self) -> TOIEN_W<SSICR_SPEC> {
+    pub fn toien(&mut self) -> TOIEN_W<'_, SSICR_SPEC> {
         TOIEN_W::new(self, 28)
     }
     ///Bit 29 - Transmit Underflow Interrupt Enable
     #[inline(always)]
-    pub fn tuien(&mut self) -> TUIEN_W<SSICR_SPEC> {
+    pub fn tuien(&mut self) -> TUIEN_W<'_, SSICR_SPEC> {
         TUIEN_W::new(self, 29)
     }
     ///Bit 30 - Oversampling Clock Select
     #[inline(always)]
-    pub fn cks(&mut self) -> CKS_W<SSICR_SPEC> {
+    pub fn cks(&mut self) -> CKS_W<'_, SSICR_SPEC> {
         CKS_W::new(self, 30)
     }
 }

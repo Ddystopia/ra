@@ -369,32 +369,32 @@ impl R {
 impl W {
     ///Bit 0 - SSn# Pin Function Enable
     #[inline(always)]
-    pub fn sse(&mut self) -> SSE_W<SPMR_SPEC> {
+    pub fn sse(&mut self) -> SSE_W<'_, SPMR_SPEC> {
         SSE_W::new(self, 0)
     }
     ///Bit 1 - CTS Enable
     #[inline(always)]
-    pub fn ctse(&mut self) -> CTSE_W<SPMR_SPEC> {
+    pub fn ctse(&mut self) -> CTSE_W<'_, SPMR_SPEC> {
         CTSE_W::new(self, 1)
     }
     ///Bit 2 - Master or slave mode selection
     #[inline(always)]
-    pub fn mss(&mut self) -> MSS_W<SPMR_SPEC> {
+    pub fn mss(&mut self) -> MSS_W<'_, SPMR_SPEC> {
         MSS_W::new(self, 2)
     }
     ///Bit 4 - Mode Fault Flag
     #[inline(always)]
-    pub fn mff(&mut self) -> MFF_W<SPMR_SPEC> {
+    pub fn mff(&mut self) -> MFF_W<'_, SPMR_SPEC> {
         MFF_W::new(self, 4)
     }
     ///Bit 6 - Clock Polarity Select
     #[inline(always)]
-    pub fn ckpol(&mut self) -> CKPOL_W<SPMR_SPEC> {
+    pub fn ckpol(&mut self) -> CKPOL_W<'_, SPMR_SPEC> {
         CKPOL_W::new(self, 6)
     }
     ///Bit 7 - Clock Phase Select
     #[inline(always)]
-    pub fn ckph(&mut self) -> CKPH_W<SPMR_SPEC> {
+    pub fn ckph(&mut self) -> CKPH_W<'_, SPMR_SPEC> {
         CKPH_W::new(self, 7)
     }
 }

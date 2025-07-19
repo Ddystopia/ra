@@ -499,37 +499,37 @@ impl R {
 impl W {
     ///Bits 0:5 - Command IndexThese bits specify Command Format\[45:40\] (command index).\[Examples\]CMD6: SD_CMD\[7:0\] = 8'b00_000110CMD18: SD_CMD\[7:0\] = 8'b00_010010ACMD13: SD_CMD\[7:0\] = 8'b01_001101
     #[inline(always)]
-    pub fn cmdidx(&mut self) -> CMDIDX_W<SD_CMD_SPEC> {
+    pub fn cmdidx(&mut self) -> CMDIDX_W<'_, SD_CMD_SPEC> {
         CMDIDX_W::new(self, 0)
     }
     ///Bits 6:7 - Command Type Select
     #[inline(always)]
-    pub fn acmd(&mut self) -> ACMD_W<SD_CMD_SPEC> {
+    pub fn acmd(&mut self) -> ACMD_W<'_, SD_CMD_SPEC> {
         ACMD_W::new(self, 6)
     }
     ///Bits 8:10 - Mode/Response TypeNOTE: As some commands cannot be used in normal mode, see section 1.4.10, Example of SD_CMD Register Setting to select mode/response type.
     #[inline(always)]
-    pub fn rsptp(&mut self) -> RSPTP_W<SD_CMD_SPEC> {
+    pub fn rsptp(&mut self) -> RSPTP_W<'_, SD_CMD_SPEC> {
         RSPTP_W::new(self, 8)
     }
     ///Bit 11 - Data Mode (Command Type)
     #[inline(always)]
-    pub fn cmdtp(&mut self) -> CMDTP_W<SD_CMD_SPEC> {
+    pub fn cmdtp(&mut self) -> CMDTP_W<'_, SD_CMD_SPEC> {
         CMDTP_W::new(self, 11)
     }
     ///Bit 12 - Write/Read Mode (enabled when the command with data is handled)
     #[inline(always)]
-    pub fn cmdrw(&mut self) -> CMDRW_W<SD_CMD_SPEC> {
+    pub fn cmdrw(&mut self) -> CMDRW_W<'_, SD_CMD_SPEC> {
         CMDRW_W::new(self, 12)
     }
     ///Bit 13 - Single/Multiple Block Transfer (enabled when the command with data is handled)
     #[inline(always)]
-    pub fn trstp(&mut self) -> TRSTP_W<SD_CMD_SPEC> {
+    pub fn trstp(&mut self) -> TRSTP_W<'_, SD_CMD_SPEC> {
         TRSTP_W::new(self, 13)
     }
     ///Bits 14:15 - Multiple Block Transfer Mode (enabled at multiple block transfer)
     #[inline(always)]
-    pub fn cmd12at(&mut self) -> CMD12AT_W<SD_CMD_SPEC> {
+    pub fn cmd12at(&mut self) -> CMD12AT_W<'_, SD_CMD_SPEC> {
         CMD12AT_W::new(self, 14)
     }
 }

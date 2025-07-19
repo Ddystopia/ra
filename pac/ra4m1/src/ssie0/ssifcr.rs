@@ -427,37 +427,37 @@ impl R {
 impl W {
     ///Bit 0 - Receive FIFO Data Register Reset
     #[inline(always)]
-    pub fn rfrst(&mut self) -> RFRST_W<SSIFCR_SPEC> {
+    pub fn rfrst(&mut self) -> RFRST_W<'_, SSIFCR_SPEC> {
         RFRST_W::new(self, 0)
     }
     ///Bit 1 - Transmit FIFO Data Register Reset
     #[inline(always)]
-    pub fn tfrst(&mut self) -> TFRST_W<SSIFCR_SPEC> {
+    pub fn tfrst(&mut self) -> TFRST_W<'_, SSIFCR_SPEC> {
         TFRST_W::new(self, 1)
     }
     ///Bit 2 - Receive Data Full Interrupt Output Enable
     #[inline(always)]
-    pub fn rie(&mut self) -> RIE_W<SSIFCR_SPEC> {
+    pub fn rie(&mut self) -> RIE_W<'_, SSIFCR_SPEC> {
         RIE_W::new(self, 2)
     }
     ///Bit 3 - Transmit Data Empty Interrupt Output Enable
     #[inline(always)]
-    pub fn tie(&mut self) -> TIE_W<SSIFCR_SPEC> {
+    pub fn tie(&mut self) -> TIE_W<'_, SSIFCR_SPEC> {
         TIE_W::new(self, 3)
     }
     ///Bit 11 - Byte Swap Enable
     #[inline(always)]
-    pub fn bsw(&mut self) -> BSW_W<SSIFCR_SPEC> {
+    pub fn bsw(&mut self) -> BSW_W<'_, SSIFCR_SPEC> {
         BSW_W::new(self, 11)
     }
     ///Bit 16 - Software Reset
     #[inline(always)]
-    pub fn ssirst(&mut self) -> SSIRST_W<SSIFCR_SPEC> {
+    pub fn ssirst(&mut self) -> SSIRST_W<'_, SSIFCR_SPEC> {
         SSIRST_W::new(self, 16)
     }
     ///Bit 31 - AUDIO_MCK Enable in Mastermode Communication
     #[inline(always)]
-    pub fn aucke(&mut self) -> AUCKE_W<SSIFCR_SPEC> {
+    pub fn aucke(&mut self) -> AUCKE_W<'_, SSIFCR_SPEC> {
         AUCKE_W::new(self, 31)
     }
 }

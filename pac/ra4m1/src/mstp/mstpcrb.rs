@@ -607,52 +607,52 @@ impl R {
 impl W {
     ///Bit 2 - Controller Area Network Module Stop
     #[inline(always)]
-    pub fn mstpb2(&mut self) -> MSTPB2_W<MSTPCRB_SPEC> {
+    pub fn mstpb2(&mut self) -> MSTPB2_W<'_, MSTPCRB_SPEC> {
         MSTPB2_W::new(self, 2)
     }
     ///Bit 8 - I2C Bus Interface 1 Module Stop
     #[inline(always)]
-    pub fn mstpb8(&mut self) -> MSTPB8_W<MSTPCRB_SPEC> {
+    pub fn mstpb8(&mut self) -> MSTPB8_W<'_, MSTPCRB_SPEC> {
         MSTPB8_W::new(self, 8)
     }
     ///Bit 9 - I2C Bus Interface 0 Module Stop
     #[inline(always)]
-    pub fn mstpb9(&mut self) -> MSTPB9_W<MSTPCRB_SPEC> {
+    pub fn mstpb9(&mut self) -> MSTPB9_W<'_, MSTPCRB_SPEC> {
         MSTPB9_W::new(self, 9)
     }
     ///Bit 11 - Universal Serial Bus 2.0 FS Interface Module Stop
     #[inline(always)]
-    pub fn mstpb11(&mut self) -> MSTPB11_W<MSTPCRB_SPEC> {
+    pub fn mstpb11(&mut self) -> MSTPB11_W<'_, MSTPCRB_SPEC> {
         MSTPB11_W::new(self, 11)
     }
     ///Bit 18 - Serial Peripheral Interface 1 Module Stop
     #[inline(always)]
-    pub fn mstpb18(&mut self) -> MSTPB18_W<MSTPCRB_SPEC> {
+    pub fn mstpb18(&mut self) -> MSTPB18_W<'_, MSTPCRB_SPEC> {
         MSTPB18_W::new(self, 18)
     }
     ///Bit 19 - Serial Peripheral Interface 0 Module Stop
     #[inline(always)]
-    pub fn mstpb19(&mut self) -> MSTPB19_W<MSTPCRB_SPEC> {
+    pub fn mstpb19(&mut self) -> MSTPB19_W<'_, MSTPCRB_SPEC> {
         MSTPB19_W::new(self, 19)
     }
     ///Bit 22 - Serial Communication Interface 9 Module Stop
     #[inline(always)]
-    pub fn mstpb22(&mut self) -> MSTPB22_W<MSTPCRB_SPEC> {
+    pub fn mstpb22(&mut self) -> MSTPB22_W<'_, MSTPCRB_SPEC> {
         MSTPB22_W::new(self, 22)
     }
     ///Bit 29 - Serial Communication Interface 2 Module Stop
     #[inline(always)]
-    pub fn mstpb29(&mut self) -> MSTPB29_W<MSTPCRB_SPEC> {
+    pub fn mstpb29(&mut self) -> MSTPB29_W<'_, MSTPCRB_SPEC> {
         MSTPB29_W::new(self, 29)
     }
     ///Bit 30 - Serial Communication Interface 1 Module Stop
     #[inline(always)]
-    pub fn mstpb30(&mut self) -> MSTPB30_W<MSTPCRB_SPEC> {
+    pub fn mstpb30(&mut self) -> MSTPB30_W<'_, MSTPCRB_SPEC> {
         MSTPB30_W::new(self, 30)
     }
     ///Bit 31 - Serial Communication Interface 0 Module Stop
     #[inline(always)]
-    pub fn mstpb31(&mut self) -> MSTPB31_W<MSTPCRB_SPEC> {
+    pub fn mstpb31(&mut self) -> MSTPB31_W<'_, MSTPCRB_SPEC> {
         MSTPB31_W::new(self, 31)
     }
 }

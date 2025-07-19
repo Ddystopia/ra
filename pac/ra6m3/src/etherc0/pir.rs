@@ -92,17 +92,17 @@ impl R {
 impl W {
     ///Bit 0 - MII/RMII Management Data ClockThe MDC bit value is output from the ETn_MDC pin to supply the management data clock to the MII or RMII.
     #[inline(always)]
-    pub fn mdc(&mut self) -> MDC_W<PIR_SPEC> {
+    pub fn mdc(&mut self) -> MDC_W<'_, PIR_SPEC> {
         MDC_W::new(self, 0)
     }
     ///Bit 1 - MII/RMII Management Mode
     #[inline(always)]
-    pub fn mmd(&mut self) -> MMD_W<PIR_SPEC> {
+    pub fn mmd(&mut self) -> MMD_W<'_, PIR_SPEC> {
         MMD_W::new(self, 1)
     }
     ///Bit 2 - MII/RMII Management Data-OutThe MDO bit value is output from the ETn_MDIO pin when the MMD bit is 1 (write). The value is not output when the MMD bit is 0 (read).
     #[inline(always)]
-    pub fn mdo(&mut self) -> MDO_W<PIR_SPEC> {
+    pub fn mdo(&mut self) -> MDO_W<'_, PIR_SPEC> {
         MDO_W::new(self, 2)
     }
 }

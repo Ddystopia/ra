@@ -113,12 +113,12 @@ impl R {
 impl W {
     ///Bits 0:10 - STHx1 second change timing.Sets the signal assertion width.
     #[inline(always)]
-    pub fn hw(&mut self) -> HW_W<TCON_STH1_SPEC> {
+    pub fn hw(&mut self) -> HW_W<'_, TCON_STH1_SPEC> {
         HW_W::new(self, 0)
     }
     ///Bits 16:26 - STHx1 first change timing
     #[inline(always)]
-    pub fn hs(&mut self) -> HS_W<TCON_STH1_SPEC> {
+    pub fn hs(&mut self) -> HS_W<'_, TCON_STH1_SPEC> {
         HS_W::new(self, 16)
     }
 }

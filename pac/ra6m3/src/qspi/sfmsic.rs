@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - Serial ROM instruction code to substitute
     #[inline(always)]
-    pub fn sfmcic(&mut self) -> SFMCIC_W<SFMSIC_SPEC> {
+    pub fn sfmcic(&mut self) -> SFMCIC_W<'_, SFMSIC_SPEC> {
         SFMCIC_W::new(self, 0)
     }
 }

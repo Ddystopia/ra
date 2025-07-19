@@ -535,42 +535,42 @@ impl R {
 impl W {
     ///Bits 0:2 - Read-Access CS Extension Cycle Select
     #[inline(always)]
-    pub fn csroff(&mut self) -> CSROFF_W<CSWCR2_SPEC> {
+    pub fn csroff(&mut self) -> CSROFF_W<'_, CSWCR2_SPEC> {
         CSROFF_W::new(self, 0)
     }
     ///Bits 4:6 - Write-Access CS Extension Cycle Select
     #[inline(always)]
-    pub fn cswoff(&mut self) -> CSWOFF_W<CSWCR2_SPEC> {
+    pub fn cswoff(&mut self) -> CSWOFF_W<'_, CSWCR2_SPEC> {
         CSWOFF_W::new(self, 4)
     }
     ///Bits 8:10 - Write Data Output Extension Cycle Select
     #[inline(always)]
-    pub fn wdoff(&mut self) -> WDOFF_W<CSWCR2_SPEC> {
+    pub fn wdoff(&mut self) -> WDOFF_W<'_, CSWCR2_SPEC> {
         WDOFF_W::new(self, 8)
     }
     ///Bits 12:13 - Address Cycle Wait Select
     #[inline(always)]
-    pub fn await_(&mut self) -> AWAIT_W<CSWCR2_SPEC> {
+    pub fn await_(&mut self) -> AWAIT_W<'_, CSWCR2_SPEC> {
         AWAIT_W::new(self, 12)
     }
     ///Bits 16:18 - RD Assert Wait Select
     #[inline(always)]
-    pub fn rdon(&mut self) -> RDON_W<CSWCR2_SPEC> {
+    pub fn rdon(&mut self) -> RDON_W<'_, CSWCR2_SPEC> {
         RDON_W::new(self, 16)
     }
     ///Bits 20:22 - WR Assert Wait Select
     #[inline(always)]
-    pub fn wron(&mut self) -> WRON_W<CSWCR2_SPEC> {
+    pub fn wron(&mut self) -> WRON_W<'_, CSWCR2_SPEC> {
         WRON_W::new(self, 20)
     }
     ///Bits 24:26 - Write Data Output Wait Select
     #[inline(always)]
-    pub fn wdon(&mut self) -> WDON_W<CSWCR2_SPEC> {
+    pub fn wdon(&mut self) -> WDON_W<'_, CSWCR2_SPEC> {
         WDON_W::new(self, 24)
     }
     ///Bits 28:30 - CS Assert Wait Select
     #[inline(always)]
-    pub fn cson(&mut self) -> CSON_W<CSWCR2_SPEC> {
+    pub fn cson(&mut self) -> CSON_W<'_, CSWCR2_SPEC> {
         CSON_W::new(self, 28)
     }
 }

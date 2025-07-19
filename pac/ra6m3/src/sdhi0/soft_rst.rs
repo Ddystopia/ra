@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - Software Reset of SD I/F Unit
     #[inline(always)]
-    pub fn sdrst(&mut self) -> SDRST_W<SOFT_RST_SPEC> {
+    pub fn sdrst(&mut self) -> SDRST_W<'_, SOFT_RST_SPEC> {
         SDRST_W::new(self, 0)
     }
 }

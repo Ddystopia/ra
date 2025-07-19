@@ -466,32 +466,32 @@ impl R {
 impl W {
     ///Bits 0:1 - Data delay in serial RGB format (based on OUTCLK)
     #[inline(always)]
-    pub fn phase(&mut self) -> PHASE_W<OUT_SET_SPEC> {
+    pub fn phase(&mut self) -> PHASE_W<'_, OUT_SET_SPEC> {
         PHASE_W::new(self, 0)
     }
     ///Bit 4 - Invalid data position control in serial RGB format
     #[inline(always)]
-    pub fn dirsel(&mut self) -> DIRSEL_W<OUT_SET_SPEC> {
+    pub fn dirsel(&mut self) -> DIRSEL_W<'_, OUT_SET_SPEC> {
         DIRSEL_W::new(self, 4)
     }
     ///Bits 8:9 - Clock frequency division control
     #[inline(always)]
-    pub fn frqsel(&mut self) -> FRQSEL_W<OUT_SET_SPEC> {
+    pub fn frqsel(&mut self) -> FRQSEL_W<'_, OUT_SET_SPEC> {
         FRQSEL_W::new(self, 8)
     }
     ///Bits 12:13 - Output format select
     #[inline(always)]
-    pub fn format(&mut self) -> FORMAT_W<OUT_SET_SPEC> {
+    pub fn format(&mut self) -> FORMAT_W<'_, OUT_SET_SPEC> {
         FORMAT_W::new(self, 12)
     }
     ///Bit 24 - Pixel order control
     #[inline(always)]
-    pub fn swapon(&mut self) -> SWAPON_W<OUT_SET_SPEC> {
+    pub fn swapon(&mut self) -> SWAPON_W<'_, OUT_SET_SPEC> {
         SWAPON_W::new(self, 24)
     }
     ///Bit 28 - Bit endian change control
     #[inline(always)]
-    pub fn endianon(&mut self) -> ENDIANON_W<OUT_SET_SPEC> {
+    pub fn endianon(&mut self) -> ENDIANON_W<'_, OUT_SET_SPEC> {
         ENDIANON_W::new(self, 28)
     }
 }

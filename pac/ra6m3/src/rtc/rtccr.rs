@@ -236,12 +236,12 @@ impl R {
 impl W {
     ///Bits 0:1 - Time Capture Control
     #[inline(always)]
-    pub fn tcct(&mut self) -> TCCT_W<RTCCR_SPEC> {
+    pub fn tcct(&mut self) -> TCCT_W<'_, RTCCR_SPEC> {
         TCCT_W::new(self, 0)
     }
     ///Bits 4:5 - Time Capture Noise Filter Control
     #[inline(always)]
-    pub fn tcnf(&mut self) -> TCNF_W<RTCCR_SPEC> {
+    pub fn tcnf(&mut self) -> TCNF_W<'_, RTCCR_SPEC> {
         TCNF_W::new(self, 4)
     }
 }

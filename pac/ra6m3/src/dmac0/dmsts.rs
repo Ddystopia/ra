@@ -174,12 +174,12 @@ impl R {
 impl W {
     ///Bit 0 - Transfer Escape End Interrupt Flag
     #[inline(always)]
-    pub fn esif(&mut self) -> ESIF_W<DMSTS_SPEC> {
+    pub fn esif(&mut self) -> ESIF_W<'_, DMSTS_SPEC> {
         ESIF_W::new(self, 0)
     }
     ///Bit 4 - Transfer End Interrupt Flag
     #[inline(always)]
-    pub fn dtif(&mut self) -> DTIF_W<DMSTS_SPEC> {
+    pub fn dtif(&mut self) -> DTIF_W<'_, DMSTS_SPEC> {
         DTIF_W::new(self, 4)
     }
 }

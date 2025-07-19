@@ -187,17 +187,17 @@ impl R {
 impl W {
     ///Bit 0 - LVD1 Edge Select
     #[inline(always)]
-    pub fn dlvd1ieg(&mut self) -> DLVD1IEG_W<DPSIEGR2_SPEC> {
+    pub fn dlvd1ieg(&mut self) -> DLVD1IEG_W<'_, DPSIEGR2_SPEC> {
         DLVD1IEG_W::new(self, 0)
     }
     ///Bit 1 - LVD2 Edge Select
     #[inline(always)]
-    pub fn dlvd2ieg(&mut self) -> DLVD2IEG_W<DPSIEGR2_SPEC> {
+    pub fn dlvd2ieg(&mut self) -> DLVD2IEG_W<'_, DPSIEGR2_SPEC> {
         DLVD2IEG_W::new(self, 1)
     }
     ///Bit 4 - NMI Pin Edge Select
     #[inline(always)]
-    pub fn dnmieg(&mut self) -> DNMIEG_W<DPSIEGR2_SPEC> {
+    pub fn dnmieg(&mut self) -> DNMIEG_W<'_, DPSIEGR2_SPEC> {
         DNMIEG_W::new(self, 4)
     }
 }

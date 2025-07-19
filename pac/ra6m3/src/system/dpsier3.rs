@@ -187,17 +187,17 @@ impl R {
 impl W {
     ///Bit 0 - USBFS Suspend/Resume Deep Standby Cancel Signal Enable
     #[inline(always)]
-    pub fn dusbfsie(&mut self) -> DUSBFSIE_W<DPSIER3_SPEC> {
+    pub fn dusbfsie(&mut self) -> DUSBFSIE_W<'_, DPSIER3_SPEC> {
         DUSBFSIE_W::new(self, 0)
     }
     ///Bit 1 - USBHS Suspend/Resume Deep Standby Cancel Signal Enable
     #[inline(always)]
-    pub fn dusbhsie(&mut self) -> DUSBHSIE_W<DPSIER3_SPEC> {
+    pub fn dusbhsie(&mut self) -> DUSBHSIE_W<'_, DPSIER3_SPEC> {
         DUSBHSIE_W::new(self, 1)
     }
     ///Bit 2 - AGT1 Underflow Deep Standby Cancel Signal Enable
     #[inline(always)]
-    pub fn dagt1ie(&mut self) -> DAGT1IE_W<DPSIER3_SPEC> {
+    pub fn dagt1ie(&mut self) -> DAGT1IE_W<'_, DPSIER3_SPEC> {
         DAGT1IE_W::new(self, 2)
     }
 }

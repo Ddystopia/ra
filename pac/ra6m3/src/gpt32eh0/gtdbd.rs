@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Dead Time Buffer Register D
     #[inline(always)]
-    pub fn gtdbd(&mut self) -> GTDBD_W<GTDBD_SPEC> {
+    pub fn gtdbd(&mut self) -> GTDBD_W<'_, GTDBD_SPEC> {
         GTDBD_W::new(self, 0)
     }
 }

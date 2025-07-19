@@ -398,22 +398,22 @@ impl R {
 impl W {
     ///Bit 0 - CACREF Pin Input Enable
     #[inline(always)]
-    pub fn cacrefe(&mut self) -> CACREFE_W<CACR1_SPEC> {
+    pub fn cacrefe(&mut self) -> CACREFE_W<'_, CACR1_SPEC> {
         CACREFE_W::new(self, 0)
     }
     ///Bits 1:3 - Measurement Target Clock Select
     #[inline(always)]
-    pub fn fmcs(&mut self) -> FMCS_W<CACR1_SPEC> {
+    pub fn fmcs(&mut self) -> FMCS_W<'_, CACR1_SPEC> {
         FMCS_W::new(self, 1)
     }
     ///Bits 4:5 - Measurement Target Clock Frequency Division Ratio Select
     #[inline(always)]
-    pub fn tcss(&mut self) -> TCSS_W<CACR1_SPEC> {
+    pub fn tcss(&mut self) -> TCSS_W<'_, CACR1_SPEC> {
         TCSS_W::new(self, 4)
     }
     ///Bits 6:7 - Valid Edge Select
     #[inline(always)]
-    pub fn edges(&mut self) -> EDGES_W<CACR1_SPEC> {
+    pub fn edges(&mut self) -> EDGES_W<'_, CACR1_SPEC> {
         EDGES_W::new(self, 6)
     }
 }

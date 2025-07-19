@@ -487,42 +487,42 @@ impl R {
 impl W {
     ///Bit 0 - Timeout Function Enable
     #[inline(always)]
-    pub fn tmoe(&mut self) -> TMOE_W<ICFER_SPEC> {
+    pub fn tmoe(&mut self) -> TMOE_W<'_, ICFER_SPEC> {
         TMOE_W::new(self, 0)
     }
     ///Bit 1 - Master Arbitration-Lost Detection Enable
     #[inline(always)]
-    pub fn male(&mut self) -> MALE_W<ICFER_SPEC> {
+    pub fn male(&mut self) -> MALE_W<'_, ICFER_SPEC> {
         MALE_W::new(self, 1)
     }
     ///Bit 2 - NACK Transmission Arbitration-Lost Detection Enable
     #[inline(always)]
-    pub fn nale(&mut self) -> NALE_W<ICFER_SPEC> {
+    pub fn nale(&mut self) -> NALE_W<'_, ICFER_SPEC> {
         NALE_W::new(self, 2)
     }
     ///Bit 3 - Slave Arbitration-Lost Detection Enable
     #[inline(always)]
-    pub fn sale(&mut self) -> SALE_W<ICFER_SPEC> {
+    pub fn sale(&mut self) -> SALE_W<'_, ICFER_SPEC> {
         SALE_W::new(self, 3)
     }
     ///Bit 4 - NACK Reception Transfer Suspension Enable
     #[inline(always)]
-    pub fn nacke(&mut self) -> NACKE_W<ICFER_SPEC> {
+    pub fn nacke(&mut self) -> NACKE_W<'_, ICFER_SPEC> {
         NACKE_W::new(self, 4)
     }
     ///Bit 5 - Digital Noise Filter Circuit Enable
     #[inline(always)]
-    pub fn nfe(&mut self) -> NFE_W<ICFER_SPEC> {
+    pub fn nfe(&mut self) -> NFE_W<'_, ICFER_SPEC> {
         NFE_W::new(self, 5)
     }
     ///Bit 6 - SCL Synchronous Circuit Enable
     #[inline(always)]
-    pub fn scle(&mut self) -> SCLE_W<ICFER_SPEC> {
+    pub fn scle(&mut self) -> SCLE_W<'_, ICFER_SPEC> {
         SCLE_W::new(self, 6)
     }
     ///Bit 7 - Fast-mode Plus Enable
     #[inline(always)]
-    pub fn fmpe(&mut self) -> FMPE_W<ICFER_SPEC> {
+    pub fn fmpe(&mut self) -> FMPE_W<'_, ICFER_SPEC> {
         FMPE_W::new(self, 7)
     }
 }

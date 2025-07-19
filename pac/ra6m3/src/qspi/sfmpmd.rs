@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 2 - Specify level of WP pin
     #[inline(always)]
-    pub fn sfmwpl(&mut self) -> SFMWPL_W<SFMPMD_SPEC> {
+    pub fn sfmwpl(&mut self) -> SFMWPL_W<'_, SFMPMD_SPEC> {
         SFMWPL_W::new(self, 2)
     }
 }

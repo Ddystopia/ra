@@ -5,7 +5,7 @@ pub type RFPCR_W<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl W {
     ///Bits 0:7 - The CPU-side pointer for the receive FIFO is incremented by writing FFh to RFPCR.
     #[inline(always)]
-    pub fn rfpcr(&mut self) -> RFPCR_W<RFPCR_SPEC> {
+    pub fn rfpcr(&mut self) -> RFPCR_W<'_, RFPCR_SPEC> {
         RFPCR_W::new(self, 0)
     }
 }

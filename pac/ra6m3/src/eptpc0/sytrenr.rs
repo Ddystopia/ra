@@ -247,22 +247,22 @@ impl R {
 impl W {
     ///Bit 0 - Announce Message Transmission Enable
     #[inline(always)]
-    pub fn ance(&mut self) -> ANCE_W<SYTRENR_SPEC> {
+    pub fn ance(&mut self) -> ANCE_W<'_, SYTRENR_SPEC> {
         ANCE_W::new(self, 0)
     }
     ///Bit 4 - Sync Message Transmission Enable
     #[inline(always)]
-    pub fn sync(&mut self) -> SYNC_W<SYTRENR_SPEC> {
+    pub fn sync(&mut self) -> SYNC_W<'_, SYTRENR_SPEC> {
         SYNC_W::new(self, 4)
     }
     ///Bit 8 - Delay_Req Message Transmission Enable
     #[inline(always)]
-    pub fn drq(&mut self) -> DRQ_W<SYTRENR_SPEC> {
+    pub fn drq(&mut self) -> DRQ_W<'_, SYTRENR_SPEC> {
         DRQ_W::new(self, 8)
     }
     ///Bit 12 - Pdelay_Req Message Transmission Enable
     #[inline(always)]
-    pub fn pdrq(&mut self) -> PDRQ_W<SYTRENR_SPEC> {
+    pub fn pdrq(&mut self) -> PDRQ_W<'_, SYTRENR_SPEC> {
         PDRQ_W::new(self, 12)
     }
 }

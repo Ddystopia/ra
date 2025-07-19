@@ -487,42 +487,42 @@ impl R {
 impl W {
     ///Bit 0 - Key interrupt mode control 0
     #[inline(always)]
-    pub fn krm0(&mut self) -> KRM0_W<KRM_SPEC> {
+    pub fn krm0(&mut self) -> KRM0_W<'_, KRM_SPEC> {
         KRM0_W::new(self, 0)
     }
     ///Bit 1 - Key interrupt mode control 1
     #[inline(always)]
-    pub fn krm1(&mut self) -> KRM1_W<KRM_SPEC> {
+    pub fn krm1(&mut self) -> KRM1_W<'_, KRM_SPEC> {
         KRM1_W::new(self, 1)
     }
     ///Bit 2 - Key interrupt mode control 2
     #[inline(always)]
-    pub fn krm2(&mut self) -> KRM2_W<KRM_SPEC> {
+    pub fn krm2(&mut self) -> KRM2_W<'_, KRM_SPEC> {
         KRM2_W::new(self, 2)
     }
     ///Bit 3 - Key interrupt mode control 3
     #[inline(always)]
-    pub fn krm3(&mut self) -> KRM3_W<KRM_SPEC> {
+    pub fn krm3(&mut self) -> KRM3_W<'_, KRM_SPEC> {
         KRM3_W::new(self, 3)
     }
     ///Bit 4 - Key interrupt mode control 4
     #[inline(always)]
-    pub fn krm4(&mut self) -> KRM4_W<KRM_SPEC> {
+    pub fn krm4(&mut self) -> KRM4_W<'_, KRM_SPEC> {
         KRM4_W::new(self, 4)
     }
     ///Bit 5 - Key interrupt mode control 5
     #[inline(always)]
-    pub fn krm5(&mut self) -> KRM5_W<KRM_SPEC> {
+    pub fn krm5(&mut self) -> KRM5_W<'_, KRM_SPEC> {
         KRM5_W::new(self, 5)
     }
     ///Bit 6 - Key interrupt mode control 6
     #[inline(always)]
-    pub fn krm6(&mut self) -> KRM6_W<KRM_SPEC> {
+    pub fn krm6(&mut self) -> KRM6_W<'_, KRM_SPEC> {
         KRM6_W::new(self, 6)
     }
     ///Bit 7 - Key interrupt mode control 7
     #[inline(always)]
-    pub fn krm7(&mut self) -> KRM7_W<KRM_SPEC> {
+    pub fn krm7(&mut self) -> KRM7_W<'_, KRM_SPEC> {
         KRM7_W::new(self, 7)
     }
 }

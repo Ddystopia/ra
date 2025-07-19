@@ -145,22 +145,22 @@ impl R {
 impl W {
     ///Bits 0:3 - 1-Hour Count Value for the ones place of hours
     #[inline(always)]
-    pub fn hr1(&mut self) -> HR1_W<RHRAR_SPEC> {
+    pub fn hr1(&mut self) -> HR1_W<'_, RHRAR_SPEC> {
         HR1_W::new(self, 0)
     }
     ///Bits 4:5 - 10-Hour Count Value for the tens place of hours
     #[inline(always)]
-    pub fn hr10(&mut self) -> HR10_W<RHRAR_SPEC> {
+    pub fn hr10(&mut self) -> HR10_W<'_, RHRAR_SPEC> {
         HR10_W::new(self, 4)
     }
     ///Bit 6 - Time Counter Setting for a.m./p.m.
     #[inline(always)]
-    pub fn pm(&mut self) -> PM_W<RHRAR_SPEC> {
+    pub fn pm(&mut self) -> PM_W<'_, RHRAR_SPEC> {
         PM_W::new(self, 6)
     }
     ///Bit 7 - Compare enable
     #[inline(always)]
-    pub fn enb(&mut self) -> ENB_W<RHRAR_SPEC> {
+    pub fn enb(&mut self) -> ENB_W<'_, RHRAR_SPEC> {
         ENB_W::new(self, 7)
     }
 }

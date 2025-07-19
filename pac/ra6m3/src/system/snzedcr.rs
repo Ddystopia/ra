@@ -487,42 +487,42 @@ impl R {
 impl W {
     ///Bit 0 - AGT1 underflow Snooze End Enable
     #[inline(always)]
-    pub fn agt1unfed(&mut self) -> AGT1UNFED_W<SNZEDCR_SPEC> {
+    pub fn agt1unfed(&mut self) -> AGT1UNFED_W<'_, SNZEDCR_SPEC> {
         AGT1UNFED_W::new(self, 0)
     }
     ///Bit 1 - Last DTC transmission completion Snooze End Enable
     #[inline(always)]
-    pub fn dtczred(&mut self) -> DTCZRED_W<SNZEDCR_SPEC> {
+    pub fn dtczred(&mut self) -> DTCZRED_W<'_, SNZEDCR_SPEC> {
         DTCZRED_W::new(self, 1)
     }
     ///Bit 2 - Not Last DTC transmission completion Snooze End Enable
     #[inline(always)]
-    pub fn dtcnzred(&mut self) -> DTCNZRED_W<SNZEDCR_SPEC> {
+    pub fn dtcnzred(&mut self) -> DTCNZRED_W<'_, SNZEDCR_SPEC> {
         DTCNZRED_W::new(self, 2)
     }
     ///Bit 3 - AD compare match 0 Snooze End Enable
     #[inline(always)]
-    pub fn ad0mated(&mut self) -> AD0MATED_W<SNZEDCR_SPEC> {
+    pub fn ad0mated(&mut self) -> AD0MATED_W<'_, SNZEDCR_SPEC> {
         AD0MATED_W::new(self, 3)
     }
     ///Bit 4 - AD compare mismatch 0 Snooze End Enable
     #[inline(always)]
-    pub fn ad0umted(&mut self) -> AD0UMTED_W<SNZEDCR_SPEC> {
+    pub fn ad0umted(&mut self) -> AD0UMTED_W<'_, SNZEDCR_SPEC> {
         AD0UMTED_W::new(self, 4)
     }
     ///Bit 5 - AD compare match 1 Snooze End Enable
     #[inline(always)]
-    pub fn ad1mated(&mut self) -> AD1MATED_W<SNZEDCR_SPEC> {
+    pub fn ad1mated(&mut self) -> AD1MATED_W<'_, SNZEDCR_SPEC> {
         AD1MATED_W::new(self, 5)
     }
     ///Bit 6 - AD compare mismatch 1 Snooze End Enable
     #[inline(always)]
-    pub fn ad1umted(&mut self) -> AD1UMTED_W<SNZEDCR_SPEC> {
+    pub fn ad1umted(&mut self) -> AD1UMTED_W<'_, SNZEDCR_SPEC> {
         AD1UMTED_W::new(self, 6)
     }
     ///Bit 7 - SCI0 address unmatch Snooze End EnableNote: Do not set to 1 other than in asynchronous mode.
     #[inline(always)]
-    pub fn sci0umted(&mut self) -> SCI0UMTED_W<SNZEDCR_SPEC> {
+    pub fn sci0umted(&mut self) -> SCI0UMTED_W<'_, SNZEDCR_SPEC> {
         SCI0UMTED_W::new(self, 7)
     }
 }

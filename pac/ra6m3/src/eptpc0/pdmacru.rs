@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:23 - These bits hold the setting for the higher-order 24 bits of the destination MAC address for PTP-pdelay messages.
     #[inline(always)]
-    pub fn pdmacru(&mut self) -> PDMACRU_W<PDMACRU_SPEC> {
+    pub fn pdmacru(&mut self) -> PDMACRU_W<'_, PDMACRU_SPEC> {
         PDMACRU_W::new(self, 0)
     }
 }

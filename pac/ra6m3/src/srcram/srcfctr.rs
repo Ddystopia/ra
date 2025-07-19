@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:21 - Stores a filter coefficient value.
     #[inline(always)]
-    pub fn srcfcoe(&mut self) -> SRCFCOE_W<SRCFCTR_SPEC> {
+    pub fn srcfcoe(&mut self) -> SRCFCOE_W<'_, SRCFCTR_SPEC> {
         SRCFCOE_W::new(self, 0)
     }
 }

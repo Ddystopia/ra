@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - Amount of Input Coded Data to be Read (in 8-byte units) The lower three bits should be set to 0.
     #[inline(always)]
-    pub fn jdatas(&mut self) -> JDATAS_W<JIFDSDC_SPEC> {
+    pub fn jdatas(&mut self) -> JDATAS_W<'_, JIFDSDC_SPEC> {
         JDATAS_W::new(self, 0)
     }
 }

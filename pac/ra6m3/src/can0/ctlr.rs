@@ -739,52 +739,52 @@ impl R {
 impl W {
     ///Bit 0 - CAN Mailbox Mode Select
     #[inline(always)]
-    pub fn mbm(&mut self) -> MBM_W<CTLR_SPEC> {
+    pub fn mbm(&mut self) -> MBM_W<'_, CTLR_SPEC> {
         MBM_W::new(self, 0)
     }
     ///Bits 1:2 - ID Format Mode Select
     #[inline(always)]
-    pub fn idfm(&mut self) -> IDFM_W<CTLR_SPEC> {
+    pub fn idfm(&mut self) -> IDFM_W<'_, CTLR_SPEC> {
         IDFM_W::new(self, 1)
     }
     ///Bit 3 - Message Lost Mode Select
     #[inline(always)]
-    pub fn mlm(&mut self) -> MLM_W<CTLR_SPEC> {
+    pub fn mlm(&mut self) -> MLM_W<'_, CTLR_SPEC> {
         MLM_W::new(self, 3)
     }
     ///Bit 4 - Transmission Priority Mode Select
     #[inline(always)]
-    pub fn tpm(&mut self) -> TPM_W<CTLR_SPEC> {
+    pub fn tpm(&mut self) -> TPM_W<'_, CTLR_SPEC> {
         TPM_W::new(self, 4)
     }
     ///Bit 5 - Time Stamp Counter Reset Command
     #[inline(always)]
-    pub fn tsrc(&mut self) -> TSRC_W<CTLR_SPEC> {
+    pub fn tsrc(&mut self) -> TSRC_W<'_, CTLR_SPEC> {
         TSRC_W::new(self, 5)
     }
     ///Bits 6:7 - Time Stamp Prescaler Select
     #[inline(always)]
-    pub fn tsps(&mut self) -> TSPS_W<CTLR_SPEC> {
+    pub fn tsps(&mut self) -> TSPS_W<'_, CTLR_SPEC> {
         TSPS_W::new(self, 6)
     }
     ///Bits 8:9 - CAN Operating Mode Select
     #[inline(always)]
-    pub fn canm(&mut self) -> CANM_W<CTLR_SPEC> {
+    pub fn canm(&mut self) -> CANM_W<'_, CTLR_SPEC> {
         CANM_W::new(self, 8)
     }
     ///Bit 10 - CAN Sleep Mode
     #[inline(always)]
-    pub fn slpm(&mut self) -> SLPM_W<CTLR_SPEC> {
+    pub fn slpm(&mut self) -> SLPM_W<'_, CTLR_SPEC> {
         SLPM_W::new(self, 10)
     }
     ///Bits 11:12 - Bus-Off Recovery Mode by a program request
     #[inline(always)]
-    pub fn bom(&mut self) -> BOM_W<CTLR_SPEC> {
+    pub fn bom(&mut self) -> BOM_W<'_, CTLR_SPEC> {
         BOM_W::new(self, 11)
     }
     ///Bit 13 - Forcible Return From Bus-Off
     #[inline(always)]
-    pub fn rboc(&mut self) -> RBOC_W<CTLR_SPEC> {
+    pub fn rboc(&mut self) -> RBOC_W<'_, CTLR_SPEC> {
         RBOC_W::new(self, 13)
     }
 }

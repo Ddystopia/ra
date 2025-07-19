@@ -73,7 +73,7 @@ impl R {
 impl W {
     ///Bits 0:4 - GTIOCnB Output Rising Edge Delay Setting
     #[inline(always)]
-    pub fn dly(&mut self) -> DLY_W<GTDLYRB_SPEC> {
+    pub fn dly(&mut self) -> DLY_W<'_, GTDLYRB_SPEC> {
         DLY_W::new(self, 0)
     }
 }

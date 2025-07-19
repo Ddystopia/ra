@@ -307,27 +307,27 @@ impl R {
 impl W {
     ///Bit 0 - A/D-Converted Value Addition/Average Channel AN016 Select
     #[inline(always)]
-    pub fn ads16(&mut self) -> ADS16_W<ADADS1_SPEC> {
+    pub fn ads16(&mut self) -> ADS16_W<'_, ADADS1_SPEC> {
         ADS16_W::new(self, 0)
     }
     ///Bit 1 - A/D-Converted Value Addition/Average Channel AN017 Select
     #[inline(always)]
-    pub fn ads17(&mut self) -> ADS17_W<ADADS1_SPEC> {
+    pub fn ads17(&mut self) -> ADS17_W<'_, ADADS1_SPEC> {
         ADS17_W::new(self, 1)
     }
     ///Bit 2 - A/D-Converted Value Addition/Average Channel AN018 Select
     #[inline(always)]
-    pub fn ads18(&mut self) -> ADS18_W<ADADS1_SPEC> {
+    pub fn ads18(&mut self) -> ADS18_W<'_, ADADS1_SPEC> {
         ADS18_W::new(self, 2)
     }
     ///Bit 3 - A/D-Converted Value Addition/Average Channel AN019 Select
     #[inline(always)]
-    pub fn ads19(&mut self) -> ADS19_W<ADADS1_SPEC> {
+    pub fn ads19(&mut self) -> ADS19_W<'_, ADADS1_SPEC> {
         ADS19_W::new(self, 3)
     }
     ///Bit 4 - A/D-Converted Value Addition/Average Channel AN020 Select
     #[inline(always)]
-    pub fn ads20(&mut self) -> ADS20_W<ADADS1_SPEC> {
+    pub fn ads20(&mut self) -> ADS20_W<'_, ADADS1_SPEC> {
         ADS20_W::new(self, 4)
     }
 }

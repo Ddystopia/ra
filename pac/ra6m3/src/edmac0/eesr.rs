@@ -1352,107 +1352,107 @@ impl R {
 impl W {
     ///Bit 0 - CRC Error Flag
     #[inline(always)]
-    pub fn cerf(&mut self) -> CERF_W<EESR_SPEC> {
+    pub fn cerf(&mut self) -> CERF_W<'_, EESR_SPEC> {
         CERF_W::new(self, 0)
     }
     ///Bit 1 - PHY-LSI Receive Error Flag
     #[inline(always)]
-    pub fn pre(&mut self) -> PRE_W<EESR_SPEC> {
+    pub fn pre(&mut self) -> PRE_W<'_, EESR_SPEC> {
         PRE_W::new(self, 1)
     }
     ///Bit 2 - Frame-Too-Short Error Flag
     #[inline(always)]
-    pub fn rtsf(&mut self) -> RTSF_W<EESR_SPEC> {
+    pub fn rtsf(&mut self) -> RTSF_W<'_, EESR_SPEC> {
         RTSF_W::new(self, 2)
     }
     ///Bit 3 - Frame-Too-Long Error Flag
     #[inline(always)]
-    pub fn rtlf(&mut self) -> RTLF_W<EESR_SPEC> {
+    pub fn rtlf(&mut self) -> RTLF_W<'_, EESR_SPEC> {
         RTLF_W::new(self, 3)
     }
     ///Bit 4 - Alignment Error Flag
     #[inline(always)]
-    pub fn rrf(&mut self) -> RRF_W<EESR_SPEC> {
+    pub fn rrf(&mut self) -> RRF_W<'_, EESR_SPEC> {
         RRF_W::new(self, 4)
     }
     ///Bit 7 - Multicast Address Frame Receive Flag
     #[inline(always)]
-    pub fn rmaf(&mut self) -> RMAF_W<EESR_SPEC> {
+    pub fn rmaf(&mut self) -> RMAF_W<'_, EESR_SPEC> {
         RMAF_W::new(self, 7)
     }
     ///Bit 8 - Transmit Retry Over Flag
     #[inline(always)]
-    pub fn tro(&mut self) -> TRO_W<EESR_SPEC> {
+    pub fn tro(&mut self) -> TRO_W<'_, EESR_SPEC> {
         TRO_W::new(self, 8)
     }
     ///Bit 9 - Late Collision Detect Flag
     #[inline(always)]
-    pub fn cd(&mut self) -> CD_W<EESR_SPEC> {
+    pub fn cd(&mut self) -> CD_W<'_, EESR_SPEC> {
         CD_W::new(self, 9)
     }
     ///Bit 10 - Loss of Carrier Detect Flag
     #[inline(always)]
-    pub fn dlc(&mut self) -> DLC_W<EESR_SPEC> {
+    pub fn dlc(&mut self) -> DLC_W<'_, EESR_SPEC> {
         DLC_W::new(self, 10)
     }
     ///Bit 11 - Carrier Not Detect Flag
     #[inline(always)]
-    pub fn cnd(&mut self) -> CND_W<EESR_SPEC> {
+    pub fn cnd(&mut self) -> CND_W<'_, EESR_SPEC> {
         CND_W::new(self, 11)
     }
     ///Bit 16 - Receive FIFO Overflow Flag
     #[inline(always)]
-    pub fn rfof(&mut self) -> RFOF_W<EESR_SPEC> {
+    pub fn rfof(&mut self) -> RFOF_W<'_, EESR_SPEC> {
         RFOF_W::new(self, 16)
     }
     ///Bit 17 - Receive Descriptor Empty Flag
     #[inline(always)]
-    pub fn rde(&mut self) -> RDE_W<EESR_SPEC> {
+    pub fn rde(&mut self) -> RDE_W<'_, EESR_SPEC> {
         RDE_W::new(self, 17)
     }
     ///Bit 18 - Frame Receive Flag
     #[inline(always)]
-    pub fn fr(&mut self) -> FR_W<EESR_SPEC> {
+    pub fn fr(&mut self) -> FR_W<'_, EESR_SPEC> {
         FR_W::new(self, 18)
     }
     ///Bit 19 - Transmit FIFO Underflow Flag
     #[inline(always)]
-    pub fn tfuf(&mut self) -> TFUF_W<EESR_SPEC> {
+    pub fn tfuf(&mut self) -> TFUF_W<'_, EESR_SPEC> {
         TFUF_W::new(self, 19)
     }
     ///Bit 20 - Transmit Descriptor Empty Flag
     #[inline(always)]
-    pub fn tde(&mut self) -> TDE_W<EESR_SPEC> {
+    pub fn tde(&mut self) -> TDE_W<'_, EESR_SPEC> {
         TDE_W::new(self, 20)
     }
     ///Bit 21 - Frame Transfer Complete Flag
     #[inline(always)]
-    pub fn tc(&mut self) -> TC_W<EESR_SPEC> {
+    pub fn tc(&mut self) -> TC_W<'_, EESR_SPEC> {
         TC_W::new(self, 21)
     }
     ///Bit 23 - Address Error Flag
     #[inline(always)]
-    pub fn ade(&mut self) -> ADE_W<EESR_SPEC> {
+    pub fn ade(&mut self) -> ADE_W<'_, EESR_SPEC> {
         ADE_W::new(self, 23)
     }
     ///Bit 24 - Receive Frame Counter Overflow Flag
     #[inline(always)]
-    pub fn rfcof(&mut self) -> RFCOF_W<EESR_SPEC> {
+    pub fn rfcof(&mut self) -> RFCOF_W<'_, EESR_SPEC> {
         RFCOF_W::new(self, 24)
     }
     ///Bit 25 - Receive Abort Detect Flag
     #[inline(always)]
-    pub fn rabt(&mut self) -> RABT_W<EESR_SPEC> {
+    pub fn rabt(&mut self) -> RABT_W<'_, EESR_SPEC> {
         RABT_W::new(self, 25)
     }
     ///Bit 26 - Transmit Abort Detect Flag
     #[inline(always)]
-    pub fn tabt(&mut self) -> TABT_W<EESR_SPEC> {
+    pub fn tabt(&mut self) -> TABT_W<'_, EESR_SPEC> {
         TABT_W::new(self, 26)
     }
     ///Bit 30 - Write-Back Complete Flag
     #[inline(always)]
-    pub fn twb(&mut self) -> TWB_W<EESR_SPEC> {
+    pub fn twb(&mut self) -> TWB_W<'_, EESR_SPEC> {
         TWB_W::new(self, 30)
     }
 }

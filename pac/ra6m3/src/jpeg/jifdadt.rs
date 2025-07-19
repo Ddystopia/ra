@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - Setting of the alpha value for output in ARGB8888 format.
     #[inline(always)]
-    pub fn alpha(&mut self) -> ALPHA_W<JIFDADT_SPEC> {
+    pub fn alpha(&mut self) -> ALPHA_W<'_, JIFDADT_SPEC> {
         ALPHA_W::new(self, 0)
     }
 }

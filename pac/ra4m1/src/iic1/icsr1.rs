@@ -375,32 +375,32 @@ impl R {
 impl W {
     ///Bit 0 - Slave Address 0 Detection Flag
     #[inline(always)]
-    pub fn aas0(&mut self) -> AAS0_W<ICSR1_SPEC> {
+    pub fn aas0(&mut self) -> AAS0_W<'_, ICSR1_SPEC> {
         AAS0_W::new(self, 0)
     }
     ///Bit 1 - Slave Address 1 Detection Flag
     #[inline(always)]
-    pub fn aas1(&mut self) -> AAS1_W<ICSR1_SPEC> {
+    pub fn aas1(&mut self) -> AAS1_W<'_, ICSR1_SPEC> {
         AAS1_W::new(self, 1)
     }
     ///Bit 2 - Slave Address 2 Detection Flag
     #[inline(always)]
-    pub fn aas2(&mut self) -> AAS2_W<ICSR1_SPEC> {
+    pub fn aas2(&mut self) -> AAS2_W<'_, ICSR1_SPEC> {
         AAS2_W::new(self, 2)
     }
     ///Bit 3 - General Call Address Detection Flag
     #[inline(always)]
-    pub fn gca(&mut self) -> GCA_W<ICSR1_SPEC> {
+    pub fn gca(&mut self) -> GCA_W<'_, ICSR1_SPEC> {
         GCA_W::new(self, 3)
     }
     ///Bit 5 - Device-ID Address Detection Flag
     #[inline(always)]
-    pub fn did(&mut self) -> DID_W<ICSR1_SPEC> {
+    pub fn did(&mut self) -> DID_W<'_, ICSR1_SPEC> {
         DID_W::new(self, 5)
     }
     ///Bit 7 - Host Address Detection Flag
     #[inline(always)]
-    pub fn hoa(&mut self) -> HOA_W<ICSR1_SPEC> {
+    pub fn hoa(&mut self) -> HOA_W<'_, ICSR1_SPEC> {
         HOA_W::new(self, 7)
     }
 }

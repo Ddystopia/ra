@@ -190,7 +190,7 @@ impl R {
 impl W {
     ///Bits 0:3 - Pipe Window Select
     #[inline(always)]
-    pub fn pipesel(&mut self) -> PIPESEL_W<PIPESEL_SPEC> {
+    pub fn pipesel(&mut self) -> PIPESEL_W<'_, PIPESEL_SPEC> {
         PIPESEL_W::new(self, 0)
     }
 }

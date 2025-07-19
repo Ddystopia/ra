@@ -247,22 +247,22 @@ impl R {
 impl W {
     ///Bit 0 - CTSU Measurement Operation Start
     #[inline(always)]
-    pub fn ctsustrt(&mut self) -> CTSUSTRT_W<CTSUCR0_SPEC> {
+    pub fn ctsustrt(&mut self) -> CTSUSTRT_W<'_, CTSUCR0_SPEC> {
         CTSUSTRT_W::new(self, 0)
     }
     ///Bit 1 - CTSU Measurement Operation Start Trigger Select
     #[inline(always)]
-    pub fn ctsucap(&mut self) -> CTSUCAP_W<CTSUCR0_SPEC> {
+    pub fn ctsucap(&mut self) -> CTSUCAP_W<'_, CTSUCR0_SPEC> {
         CTSUCAP_W::new(self, 1)
     }
     ///Bit 2 - CTSU Wait State Power-Saving Enable
     #[inline(always)]
-    pub fn ctsusnz(&mut self) -> CTSUSNZ_W<CTSUCR0_SPEC> {
+    pub fn ctsusnz(&mut self) -> CTSUSNZ_W<'_, CTSUCR0_SPEC> {
         CTSUSNZ_W::new(self, 2)
     }
     ///Bit 4 - CTSU Control Block Initialization
     #[inline(always)]
-    pub fn ctsuinit(&mut self) -> CTSUINIT_W<CTSUCR0_SPEC> {
+    pub fn ctsuinit(&mut self) -> CTSUINIT_W<'_, CTSUCR0_SPEC> {
         CTSUINIT_W::new(self, 4)
     }
 }

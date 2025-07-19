@@ -463,32 +463,32 @@ impl R {
 impl W {
     ///Bits 0:3 - CFIFO Port Access Pipe Specification
     #[inline(always)]
-    pub fn curpipe(&mut self) -> CURPIPE_W<CFIFOSEL_SPEC> {
+    pub fn curpipe(&mut self) -> CURPIPE_W<'_, CFIFOSEL_SPEC> {
         CURPIPE_W::new(self, 0)
     }
     ///Bit 5 - CFIFO Port Access Direction When DCP is Selected
     #[inline(always)]
-    pub fn isel(&mut self) -> ISEL_W<CFIFOSEL_SPEC> {
+    pub fn isel(&mut self) -> ISEL_W<'_, CFIFOSEL_SPEC> {
         ISEL_W::new(self, 5)
     }
     ///Bit 8 - CFIFO Port Endian Control
     #[inline(always)]
-    pub fn bigend(&mut self) -> BIGEND_W<CFIFOSEL_SPEC> {
+    pub fn bigend(&mut self) -> BIGEND_W<'_, CFIFOSEL_SPEC> {
         BIGEND_W::new(self, 8)
     }
     ///Bit 10 - CFIFO Port Access Bit Width
     #[inline(always)]
-    pub fn mbw(&mut self) -> MBW_W<CFIFOSEL_SPEC> {
+    pub fn mbw(&mut self) -> MBW_W<'_, CFIFOSEL_SPEC> {
         MBW_W::new(self, 10)
     }
     ///Bit 14 - Buffer Pointer Rewind
     #[inline(always)]
-    pub fn rew(&mut self) -> REW_W<CFIFOSEL_SPEC> {
+    pub fn rew(&mut self) -> REW_W<'_, CFIFOSEL_SPEC> {
         REW_W::new(self, 14)
     }
     ///Bit 15 - Read Count Mode
     #[inline(always)]
-    pub fn rcnt(&mut self) -> RCNT_W<CFIFOSEL_SPEC> {
+    pub fn rcnt(&mut self) -> RCNT_W<'_, CFIFOSEL_SPEC> {
         RCNT_W::new(self, 15)
     }
 }

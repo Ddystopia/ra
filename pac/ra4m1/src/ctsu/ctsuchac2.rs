@@ -60,7 +60,7 @@ impl R {
 impl W {
     ///Bits 0:7 - CTSU Channel Enable Control 2. 0: Not measurement target 1: Measurement target Note: CTSUCHAC2\[0\] corresponds to TS16 and CTSUCHAC2\[7\] corresponds to TS23.
     #[inline(always)]
-    pub fn ctsuchac2(&mut self) -> CTSUCHAC2_W<CTSUCHAC2_SPEC> {
+    pub fn ctsuchac2(&mut self) -> CTSUCHAC2_W<'_, CTSUCHAC2_SPEC> {
         CTSUCHAC2_W::new(self, 0)
     }
 }

@@ -727,62 +727,62 @@ impl R {
 impl W {
     ///Bit 4 - PTP v2 Packet Receive Interrupt Request Enable
     #[inline(always)]
-    pub fn pverip(&mut self) -> PVERIP_W<EESIPR_SPEC> {
+    pub fn pverip(&mut self) -> PVERIP_W<'_, EESIPR_SPEC> {
         PVERIP_W::new(self, 4)
     }
     ///Bit 8 - MAC Address Mismatch Interrupt Request Enable
     #[inline(always)]
-    pub fn maceip(&mut self) -> MACEIP_W<EESIPR_SPEC> {
+    pub fn maceip(&mut self) -> MACEIP_W<'_, EESIPR_SPEC> {
         MACEIP_W::new(self, 8)
     }
     ///Bit 16 - Receive FIFO Overflow Interrupt Request Enable
     #[inline(always)]
-    pub fn rfofip(&mut self) -> RFOFIP_W<EESIPR_SPEC> {
+    pub fn rfofip(&mut self) -> RFOFIP_W<'_, EESIPR_SPEC> {
         RFOFIP_W::new(self, 16)
     }
     ///Bit 17 - Receive Descriptor Empty Interrupt Request Enable
     #[inline(always)]
-    pub fn rdeip(&mut self) -> RDEIP_W<EESIPR_SPEC> {
+    pub fn rdeip(&mut self) -> RDEIP_W<'_, EESIPR_SPEC> {
         RDEIP_W::new(self, 17)
     }
     ///Bit 18 - Frame Receive Interrupt Request Enable
     #[inline(always)]
-    pub fn frip(&mut self) -> FRIP_W<EESIPR_SPEC> {
+    pub fn frip(&mut self) -> FRIP_W<'_, EESIPR_SPEC> {
         FRIP_W::new(self, 18)
     }
     ///Bit 19 - Transmit FIFO Underflow Interrupt Request Enable
     #[inline(always)]
-    pub fn tfufip(&mut self) -> TFUFIP_W<EESIPR_SPEC> {
+    pub fn tfufip(&mut self) -> TFUFIP_W<'_, EESIPR_SPEC> {
         TFUFIP_W::new(self, 19)
     }
     ///Bit 20 - Transmit Descriptor Empty Interrupt Request Enable
     #[inline(always)]
-    pub fn tdeip(&mut self) -> TDEIP_W<EESIPR_SPEC> {
+    pub fn tdeip(&mut self) -> TDEIP_W<'_, EESIPR_SPEC> {
         TDEIP_W::new(self, 20)
     }
     ///Bit 21 - Frame Transfer Complete Interrupt Request Enable
     #[inline(always)]
-    pub fn tcip(&mut self) -> TCIP_W<EESIPR_SPEC> {
+    pub fn tcip(&mut self) -> TCIP_W<'_, EESIPR_SPEC> {
         TCIP_W::new(self, 21)
     }
     ///Bit 23 - Address Error Interrupt Request Enable
     #[inline(always)]
-    pub fn adeip(&mut self) -> ADEIP_W<EESIPR_SPEC> {
+    pub fn adeip(&mut self) -> ADEIP_W<'_, EESIPR_SPEC> {
         ADEIP_W::new(self, 23)
     }
     ///Bit 24 - Receive Frame Counter Overflow Interrupt Request Enable
     #[inline(always)]
-    pub fn rfcofip(&mut self) -> RFCOFIP_W<EESIPR_SPEC> {
+    pub fn rfcofip(&mut self) -> RFCOFIP_W<'_, EESIPR_SPEC> {
         RFCOFIP_W::new(self, 24)
     }
     ///Bit 26 - Transmit Abort Detect Interrupt Request Enable
     #[inline(always)]
-    pub fn tabtip(&mut self) -> TABTIP_W<EESIPR_SPEC> {
+    pub fn tabtip(&mut self) -> TABTIP_W<'_, EESIPR_SPEC> {
         TABTIP_W::new(self, 26)
     }
     ///Bit 30 - Write-Back Complete Interrupt Request Enable
     #[inline(always)]
-    pub fn twbip(&mut self) -> TWBIP_W<EESIPR_SPEC> {
+    pub fn twbip(&mut self) -> TWBIP_W<'_, EESIPR_SPEC> {
         TWBIP_W::new(self, 30)
     }
 }

@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - DACS D/A conversion store data note: When 8-bit D/A Converter output is selected as the reference input for the ACMPLP in the COMPSEL1 register, and ACMPLP operation is enabled (COMPMDR.CnENB = 1), changing the DACS\[7:0\] bits for the channel in use is prohibited.
     #[inline(always)]
-    pub fn dacs(&mut self) -> DACS_W<DACS_SPEC> {
+    pub fn dacs(&mut self) -> DACS_W<'_, DACS_SPEC> {
         DACS_W::new(self, 0)
     }
 }

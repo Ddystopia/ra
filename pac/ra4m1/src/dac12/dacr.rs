@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 6 - D/A Output Enable 0
     #[inline(always)]
-    pub fn daoe0(&mut self) -> DAOE0_W<DACR_SPEC> {
+    pub fn daoe0(&mut self) -> DAOE0_W<'_, DACR_SPEC> {
         DAOE0_W::new(self, 6)
     }
 }

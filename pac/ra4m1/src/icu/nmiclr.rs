@@ -401,62 +401,62 @@ where
 impl W {
     ///Bit 0 - IWDT Clear
     #[inline(always)]
-    pub fn iwdtclr(&mut self) -> IWDTCLR_W<NMICLR_SPEC> {
+    pub fn iwdtclr(&mut self) -> IWDTCLR_W<'_, NMICLR_SPEC> {
         IWDTCLR_W::new(self, 0)
     }
     ///Bit 1 - WDT Clear
     #[inline(always)]
-    pub fn wdtclr(&mut self) -> WDTCLR_W<NMICLR_SPEC> {
+    pub fn wdtclr(&mut self) -> WDTCLR_W<'_, NMICLR_SPEC> {
         WDTCLR_W::new(self, 1)
     }
     ///Bit 2 - LVD1 Clear
     #[inline(always)]
-    pub fn lvd1clr(&mut self) -> LVD1CLR_W<NMICLR_SPEC> {
+    pub fn lvd1clr(&mut self) -> LVD1CLR_W<'_, NMICLR_SPEC> {
         LVD1CLR_W::new(self, 2)
     }
     ///Bit 3 - LVD2 Clear
     #[inline(always)]
-    pub fn lvd2clr(&mut self) -> LVD2CLR_W<NMICLR_SPEC> {
+    pub fn lvd2clr(&mut self) -> LVD2CLR_W<'_, NMICLR_SPEC> {
         LVD2CLR_W::new(self, 3)
     }
     ///Bit 4 - VBATT Clear
     #[inline(always)]
-    pub fn vbattclr(&mut self) -> VBATTCLR_W<NMICLR_SPEC> {
+    pub fn vbattclr(&mut self) -> VBATTCLR_W<'_, NMICLR_SPEC> {
         VBATTCLR_W::new(self, 4)
     }
     ///Bit 6 - OST Clear
     #[inline(always)]
-    pub fn ostclr(&mut self) -> OSTCLR_W<NMICLR_SPEC> {
+    pub fn ostclr(&mut self) -> OSTCLR_W<'_, NMICLR_SPEC> {
         OSTCLR_W::new(self, 6)
     }
     ///Bit 7 - NMI Clear
     #[inline(always)]
-    pub fn nmiclr(&mut self) -> NMICLR_W<NMICLR_SPEC> {
+    pub fn nmiclr(&mut self) -> NMICLR_W<'_, NMICLR_SPEC> {
         NMICLR_W::new(self, 7)
     }
     ///Bit 8 - SRAM Parity Error Clear
     #[inline(always)]
-    pub fn rpeclr(&mut self) -> RPECLR_W<NMICLR_SPEC> {
+    pub fn rpeclr(&mut self) -> RPECLR_W<'_, NMICLR_SPEC> {
         RPECLR_W::new(self, 8)
     }
     ///Bit 9 - SRAM ECC Error Clear
     #[inline(always)]
-    pub fn reccclr(&mut self) -> RECCCLR_W<NMICLR_SPEC> {
+    pub fn reccclr(&mut self) -> RECCCLR_W<'_, NMICLR_SPEC> {
         RECCCLR_W::new(self, 9)
     }
     ///Bit 10 - Bus Slave Error Clear
     #[inline(always)]
-    pub fn bussclr(&mut self) -> BUSSCLR_W<NMICLR_SPEC> {
+    pub fn bussclr(&mut self) -> BUSSCLR_W<'_, NMICLR_SPEC> {
         BUSSCLR_W::new(self, 10)
     }
     ///Bit 11 - Bus Master Error Clear
     #[inline(always)]
-    pub fn busmclr(&mut self) -> BUSMCLR_W<NMICLR_SPEC> {
+    pub fn busmclr(&mut self) -> BUSMCLR_W<'_, NMICLR_SPEC> {
         BUSMCLR_W::new(self, 11)
     }
     ///Bit 12 - CPU Stack Pointer Monitor Interrupt Clear
     #[inline(always)]
-    pub fn speclr(&mut self) -> SPECLR_W<NMICLR_SPEC> {
+    pub fn speclr(&mut self) -> SPECLR_W<'_, NMICLR_SPEC> {
         SPECLR_W::new(self, 12)
     }
 }

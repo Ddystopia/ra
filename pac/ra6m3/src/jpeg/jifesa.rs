@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Input Image Data Source Address (in 8-byte units) The lower three bits should be set to 0.
     #[inline(always)]
-    pub fn esa(&mut self) -> ESA_W<JIFESA_SPEC> {
+    pub fn esa(&mut self) -> ESA_W<'_, JIFESA_SPEC> {
         ESA_W::new(self, 0)
     }
 }

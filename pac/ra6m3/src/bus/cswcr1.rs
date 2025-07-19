@@ -271,22 +271,22 @@ impl R {
 impl W {
     ///Bits 0:2 - Page Write Cycle Wait SelectNOTE: The CSPWWAIT value is valid only when the PWENB bit in CSnMOD is set to 1.
     #[inline(always)]
-    pub fn cspwwait(&mut self) -> CSPWWAIT_W<CSWCR1_SPEC> {
+    pub fn cspwwait(&mut self) -> CSPWWAIT_W<'_, CSWCR1_SPEC> {
         CSPWWAIT_W::new(self, 0)
     }
     ///Bits 8:10 - Page Read Cycle Wait SelectNOTE: The CSPRWAIT value is valid only when the PRENB bit in CSnMOD is set to 1.
     #[inline(always)]
-    pub fn csprwait(&mut self) -> CSPRWAIT_W<CSWCR1_SPEC> {
+    pub fn csprwait(&mut self) -> CSPRWAIT_W<'_, CSWCR1_SPEC> {
         CSPRWAIT_W::new(self, 8)
     }
     ///Bits 16:20 - Normal Write Cycle Wait Select
     #[inline(always)]
-    pub fn cswwait(&mut self) -> CSWWAIT_W<CSWCR1_SPEC> {
+    pub fn cswwait(&mut self) -> CSWWAIT_W<'_, CSWCR1_SPEC> {
         CSWWAIT_W::new(self, 16)
     }
     ///Bits 24:28 - Normal Read Cycle Wait Select
     #[inline(always)]
-    pub fn csrwait(&mut self) -> CSRWAIT_W<CSWCR1_SPEC> {
+    pub fn csrwait(&mut self) -> CSRWAIT_W<'_, CSWCR1_SPEC> {
         CSRWAIT_W::new(self, 24)
     }
 }

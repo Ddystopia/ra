@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:23 - These bits hold the setting for the higher-order 24 bits of the local MAC address.
     #[inline(always)]
-    pub fn symacru(&mut self) -> SYMACRU_W<SYMACRU_SPEC> {
+    pub fn symacru(&mut self) -> SYMACRU_W<'_, SYMACRU_SPEC> {
         SYMACRU_W::new(self, 0)
     }
 }

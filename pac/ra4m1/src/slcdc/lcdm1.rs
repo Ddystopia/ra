@@ -367,32 +367,32 @@ impl R {
 impl W {
     ///Bit 0 - Voltage Boosting Pin Initial Value Switching Control
     #[inline(always)]
-    pub fn lcdvlm(&mut self) -> LCDVLM_W<LCDM1_SPEC> {
+    pub fn lcdvlm(&mut self) -> LCDVLM_W<'_, LCDM1_SPEC> {
         LCDVLM_W::new(self, 0)
     }
     ///Bit 3 - Display data area control
     #[inline(always)]
-    pub fn lcdsel(&mut self) -> LCDSEL_W<LCDM1_SPEC> {
+    pub fn lcdsel(&mut self) -> LCDSEL_W<'_, LCDM1_SPEC> {
         LCDSEL_W::new(self, 3)
     }
     ///Bit 4 - Display data area control
     #[inline(always)]
-    pub fn blon(&mut self) -> BLON_W<LCDM1_SPEC> {
+    pub fn blon(&mut self) -> BLON_W<'_, LCDM1_SPEC> {
         BLON_W::new(self, 4)
     }
     ///Bit 5 - Voltage boost circuit or capacitor split circuit operation enable/disable
     #[inline(always)]
-    pub fn vlcon(&mut self) -> VLCON_W<LCDM1_SPEC> {
+    pub fn vlcon(&mut self) -> VLCON_W<'_, LCDM1_SPEC> {
         VLCON_W::new(self, 5)
     }
     ///Bit 6 - LCD Display Enable/Disable
     #[inline(always)]
-    pub fn scoc(&mut self) -> SCOC_W<LCDM1_SPEC> {
+    pub fn scoc(&mut self) -> SCOC_W<'_, LCDM1_SPEC> {
         SCOC_W::new(self, 6)
     }
     ///Bit 7 - LCD Display Enable/Disable
     #[inline(always)]
-    pub fn lcdon(&mut self) -> LCDON_W<LCDM1_SPEC> {
+    pub fn lcdon(&mut self) -> LCDON_W<'_, LCDM1_SPEC> {
         LCDON_W::new(self, 7)
     }
 }

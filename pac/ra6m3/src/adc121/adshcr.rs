@@ -196,22 +196,22 @@ impl R {
 impl W {
     ///Bits 0:7 - Channel-Dedicated Sample-and-Hold Circuit Sampling Time Setting Set the sampling time (4 to 255 states)
     #[inline(always)]
-    pub fn sstsh(&mut self) -> SSTSH_W<ADSHCR_SPEC> {
+    pub fn sstsh(&mut self) -> SSTSH_W<'_, ADSHCR_SPEC> {
         SSTSH_W::new(self, 0)
     }
     ///Bit 8 - AN100 sample-and-hold circuit Select
     #[inline(always)]
-    pub fn shans0(&mut self) -> SHANS0_W<ADSHCR_SPEC> {
+    pub fn shans0(&mut self) -> SHANS0_W<'_, ADSHCR_SPEC> {
         SHANS0_W::new(self, 8)
     }
     ///Bit 9 - AN101 sample-and-hold circuit Select
     #[inline(always)]
-    pub fn shans1(&mut self) -> SHANS1_W<ADSHCR_SPEC> {
+    pub fn shans1(&mut self) -> SHANS1_W<'_, ADSHCR_SPEC> {
         SHANS1_W::new(self, 9)
     }
     ///Bit 10 - AN102 sample-and-hold circuit Select
     #[inline(always)]
-    pub fn shans2(&mut self) -> SHANS2_W<ADSHCR_SPEC> {
+    pub fn shans2(&mut self) -> SHANS2_W<'_, ADSHCR_SPEC> {
         SHANS2_W::new(self, 10)
     }
 }

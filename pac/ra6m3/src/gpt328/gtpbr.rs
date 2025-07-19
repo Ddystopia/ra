@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Cycle Setting Buffer Register
     #[inline(always)]
-    pub fn gtpbr(&mut self) -> GTPBR_W<GTPBR_SPEC> {
+    pub fn gtpbr(&mut self) -> GTPBR_W<'_, GTPBR_SPEC> {
         GTPBR_W::new(self, 0)
     }
 }

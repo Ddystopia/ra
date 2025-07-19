@@ -371,22 +371,22 @@ impl R {
 impl W {
     ///Bits 0:1 - LCD Display Bias Method Select
     #[inline(always)]
-    pub fn lbas(&mut self) -> LBAS_W<LCDM0_SPEC> {
+    pub fn lbas(&mut self) -> LBAS_W<'_, LCDM0_SPEC> {
         LBAS_W::new(self, 0)
     }
     ///Bits 2:4 - Time Slice of LCD Display Select
     #[inline(always)]
-    pub fn ldty(&mut self) -> LDTY_W<LCDM0_SPEC> {
+    pub fn ldty(&mut self) -> LDTY_W<'_, LCDM0_SPEC> {
         LDTY_W::new(self, 2)
     }
     ///Bit 5 - LCD display waveform selection
     #[inline(always)]
-    pub fn lwave(&mut self) -> LWAVE_W<LCDM0_SPEC> {
+    pub fn lwave(&mut self) -> LWAVE_W<'_, LCDM0_SPEC> {
         LWAVE_W::new(self, 5)
     }
     ///Bits 6:7 - LCD drive voltage generator selection
     #[inline(always)]
-    pub fn mdset(&mut self) -> MDSET_W<LCDM0_SPEC> {
+    pub fn mdset(&mut self) -> MDSET_W<'_, LCDM0_SPEC> {
         MDSET_W::new(self, 6)
     }
 }

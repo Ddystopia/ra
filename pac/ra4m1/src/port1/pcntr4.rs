@@ -141,12 +141,12 @@ impl R {
 impl W {
     ///Bits 0:15 - Pmn Event Output Set
     #[inline(always)]
-    pub fn eosr(&mut self) -> EOSR_W<PCNTR4_SPEC> {
+    pub fn eosr(&mut self) -> EOSR_W<'_, PCNTR4_SPEC> {
         EOSR_W::new(self, 0)
     }
     ///Bits 16:31 - Pmn Event Output Reset
     #[inline(always)]
-    pub fn eorr(&mut self) -> EORR_W<PCNTR4_SPEC> {
+    pub fn eorr(&mut self) -> EORR_W<'_, PCNTR4_SPEC> {
         EORR_W::new(self, 16)
     }
 }

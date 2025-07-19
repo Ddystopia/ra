@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 7 - Debugger Enable bit
     #[inline(always)]
-    pub fn dbgen(&mut self) -> DBGEN_W<SYOCDCR_SPEC> {
+    pub fn dbgen(&mut self) -> DBGEN_W<'_, SYOCDCR_SPEC> {
         DBGEN_W::new(self, 7)
     }
 }

@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - These bits hold the setting for the higher-order 16 bits of the integer portion of the initial value for the local timer counter.
     #[inline(always)]
-    pub fn lcivru(&mut self) -> LCIVRU_W<LCIVRU_SPEC> {
+    pub fn lcivru(&mut self) -> LCIVRU_W<'_, LCIVRU_SPEC> {
         LCIVRU_W::new(self, 0)
     }
 }

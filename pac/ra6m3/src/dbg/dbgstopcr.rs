@@ -256,27 +256,27 @@ impl R {
 impl W {
     ///Bit 0 - Mask bit for IWDT reset/interrupt
     #[inline(always)]
-    pub fn dbgstop_iwdt(&mut self) -> DBGSTOP_IWDT_W<DBGSTOPCR_SPEC> {
+    pub fn dbgstop_iwdt(&mut self) -> DBGSTOP_IWDT_W<'_, DBGSTOPCR_SPEC> {
         DBGSTOP_IWDT_W::new(self, 0)
     }
     ///Bit 1 - Mask bit for WDT reset/interrupt
     #[inline(always)]
-    pub fn dbgstop_wdt(&mut self) -> DBGSTOP_WDT_W<DBGSTOPCR_SPEC> {
+    pub fn dbgstop_wdt(&mut self) -> DBGSTOP_WDT_W<'_, DBGSTOPCR_SPEC> {
         DBGSTOP_WDT_W::new(self, 1)
     }
     ///Bits 16:18 - b18: Mask bit for LVD2 reset/interrupt (0:enable / 1:Mask)b17: Mask bit for LVD1 reset/interrupt (0:enable / 1:Mask)b16: Mask bit for LVD0 reset (0:enable / 1:Mask)
     #[inline(always)]
-    pub fn dbgstop_lvd(&mut self) -> DBGSTOP_LVD_W<DBGSTOPCR_SPEC> {
+    pub fn dbgstop_lvd(&mut self) -> DBGSTOP_LVD_W<'_, DBGSTOPCR_SPEC> {
         DBGSTOP_LVD_W::new(self, 16)
     }
     ///Bit 24 - Mask bit for RAM parity error reset/interrupt
     #[inline(always)]
-    pub fn dbgstop_rper(&mut self) -> DBGSTOP_RPER_W<DBGSTOPCR_SPEC> {
+    pub fn dbgstop_rper(&mut self) -> DBGSTOP_RPER_W<'_, DBGSTOPCR_SPEC> {
         DBGSTOP_RPER_W::new(self, 24)
     }
     ///Bit 25 - Mask bit for RAM ECC error reset/interrupt
     #[inline(always)]
-    pub fn dbgstop_reccr(&mut self) -> DBGSTOP_RECCR_W<DBGSTOPCR_SPEC> {
+    pub fn dbgstop_reccr(&mut self) -> DBGSTOP_RECCR_W<'_, DBGSTOPCR_SPEC> {
         DBGSTOP_RECCR_W::new(self, 25)
     }
 }

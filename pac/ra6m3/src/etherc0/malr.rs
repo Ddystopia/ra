@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - MAC Address Lower Bit RegisterThe MALR register sets the lower 16 bits of the 48-bit MAC address.
     #[inline(always)]
-    pub fn malr(&mut self) -> MALR_W<MALR_SPEC> {
+    pub fn malr(&mut self) -> MALR_W<'_, MALR_SPEC> {
         MALR_W::new(self, 0)
     }
 }

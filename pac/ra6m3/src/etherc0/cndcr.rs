@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Carrier Not Detect Counter RegisterThe CNDCR register is a counter indicating the number of times a carrier is not detected during preamble transmission.
     #[inline(always)]
-    pub fn cndcr(&mut self) -> CNDCR_W<CNDCR_SPEC> {
+    pub fn cndcr(&mut self) -> CNDCR_W<'_, CNDCR_SPEC> {
         CNDCR_W::new(self, 0)
     }
 }

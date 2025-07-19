@@ -129,12 +129,12 @@ impl R {
 impl W {
     ///Bit 0 - DMA Software Start
     #[inline(always)]
-    pub fn swreq(&mut self) -> SWREQ_W<DMREQ_SPEC> {
+    pub fn swreq(&mut self) -> SWREQ_W<'_, DMREQ_SPEC> {
         SWREQ_W::new(self, 0)
     }
     ///Bit 4 - DMA Software Start Bit Auto Clear Select
     #[inline(always)]
-    pub fn clrs(&mut self) -> CLRS_W<DMREQ_SPEC> {
+    pub fn clrs(&mut self) -> CLRS_W<'_, DMREQ_SPEC> {
         CLRS_W::new(self, 4)
     }
 }

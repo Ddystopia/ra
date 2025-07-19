@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - These bits hold the setting for the lower-order 32 bits of the clock-ID of the master clock.
     #[inline(always)]
-    pub fn mtcidl(&mut self) -> MTCIDL_W<MTCIDL_SPEC> {
+    pub fn mtcidl(&mut self) -> MTCIDL_W<'_, MTCIDL_SPEC> {
         MTCIDL_W::new(self, 0)
     }
 }

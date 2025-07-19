@@ -172,12 +172,12 @@ impl R {
 impl W {
     ///Bits 0:2 - LCD Source Clock (LCDSRCCLK) Select
     #[inline(always)]
-    pub fn lcdscksel(&mut self) -> LCDSCKSEL_W<SLCDSCKCR_SPEC> {
+    pub fn lcdscksel(&mut self) -> LCDSCKSEL_W<'_, SLCDSCKCR_SPEC> {
         LCDSCKSEL_W::new(self, 0)
     }
     ///Bit 7 - LCD Source Clock Out Enable
     #[inline(always)]
-    pub fn lcdscken(&mut self) -> LCDSCKEN_W<SLCDSCKCR_SPEC> {
+    pub fn lcdscken(&mut self) -> LCDSCKEN_W<'_, SLCDSCKCR_SPEC> {
         LCDSCKEN_W::new(self, 7)
     }
 }

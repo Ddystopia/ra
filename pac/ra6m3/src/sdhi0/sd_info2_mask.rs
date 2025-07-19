@@ -607,52 +607,52 @@ impl R {
 impl W {
     ///Bit 0 - Command Error Interrupt Request Mask
     #[inline(always)]
-    pub fn cmdem(&mut self) -> CMDEM_W<SD_INFO2_MASK_SPEC> {
+    pub fn cmdem(&mut self) -> CMDEM_W<'_, SD_INFO2_MASK_SPEC> {
         CMDEM_W::new(self, 0)
     }
     ///Bit 1 - CRC Error Interrupt Request Mask
     #[inline(always)]
-    pub fn crcem(&mut self) -> CRCEM_W<SD_INFO2_MASK_SPEC> {
+    pub fn crcem(&mut self) -> CRCEM_W<'_, SD_INFO2_MASK_SPEC> {
         CRCEM_W::new(self, 1)
     }
     ///Bit 2 - End Bit Error Interrupt Request Mask
     #[inline(always)]
-    pub fn endem(&mut self) -> ENDEM_W<SD_INFO2_MASK_SPEC> {
+    pub fn endem(&mut self) -> ENDEM_W<'_, SD_INFO2_MASK_SPEC> {
         ENDEM_W::new(self, 2)
     }
     ///Bit 3 - Data Timeout Interrupt Request Mask
     #[inline(always)]
-    pub fn dtom(&mut self) -> DTOM_W<SD_INFO2_MASK_SPEC> {
+    pub fn dtom(&mut self) -> DTOM_W<'_, SD_INFO2_MASK_SPEC> {
         DTOM_W::new(self, 3)
     }
     ///Bit 4 - SD_BUF Register Illegal Write Interrupt Request Mask
     #[inline(always)]
-    pub fn ilwm(&mut self) -> ILWM_W<SD_INFO2_MASK_SPEC> {
+    pub fn ilwm(&mut self) -> ILWM_W<'_, SD_INFO2_MASK_SPEC> {
         ILWM_W::new(self, 4)
     }
     ///Bit 5 - SD_BUF Register Illegal Read Interrupt Request Mask
     #[inline(always)]
-    pub fn ilrm(&mut self) -> ILRM_W<SD_INFO2_MASK_SPEC> {
+    pub fn ilrm(&mut self) -> ILRM_W<'_, SD_INFO2_MASK_SPEC> {
         ILRM_W::new(self, 5)
     }
     ///Bit 6 - Response Timeout Interrupt Request Mask
     #[inline(always)]
-    pub fn rsptom(&mut self) -> RSPTOM_W<SD_INFO2_MASK_SPEC> {
+    pub fn rsptom(&mut self) -> RSPTOM_W<'_, SD_INFO2_MASK_SPEC> {
         RSPTOM_W::new(self, 6)
     }
     ///Bit 8 - BRE Interrupt Request Mask
     #[inline(always)]
-    pub fn brem(&mut self) -> BREM_W<SD_INFO2_MASK_SPEC> {
+    pub fn brem(&mut self) -> BREM_W<'_, SD_INFO2_MASK_SPEC> {
         BREM_W::new(self, 8)
     }
     ///Bit 9 - BWE Interrupt Request Mask
     #[inline(always)]
-    pub fn bwem(&mut self) -> BWEM_W<SD_INFO2_MASK_SPEC> {
+    pub fn bwem(&mut self) -> BWEM_W<'_, SD_INFO2_MASK_SPEC> {
         BWEM_W::new(self, 9)
     }
     ///Bit 15 - Illegal Access Error Interrupt Request Mask
     #[inline(always)]
-    pub fn ilam(&mut self) -> ILAM_W<SD_INFO2_MASK_SPEC> {
+    pub fn ilam(&mut self) -> ILAM_W<'_, SD_INFO2_MASK_SPEC> {
         ILAM_W::new(self, 15)
     }
 }

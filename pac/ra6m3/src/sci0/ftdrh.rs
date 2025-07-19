@@ -38,12 +38,12 @@ where
 impl W {
     ///Bit 0 - Serial transmit data (b8) (Valid only in asynchronous mode(including multi-processor) or clock synchronous mode, and FIFO selected)
     #[inline(always)]
-    pub fn tdath(&mut self) -> TDATH_W<FTDRH_SPEC> {
+    pub fn tdath(&mut self) -> TDATH_W<'_, FTDRH_SPEC> {
         TDATH_W::new(self, 0)
     }
     ///Bit 1 - Multi-processor transfer bit flag(Valid only in asynchronous mode and SMR.MP=1 and FIFO selected)
     #[inline(always)]
-    pub fn mpbt(&mut self) -> MPBT_W<FTDRH_SPEC> {
+    pub fn mpbt(&mut self) -> MPBT_W<'_, FTDRH_SPEC> {
         MPBT_W::new(self, 1)
     }
 }

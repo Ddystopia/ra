@@ -754,17 +754,17 @@ impl R {
 impl W {
     ///Bits 0:3 - PGA P000 gain setting bit.The gain magnification of (ADPGSDCR0.P000GEN=0b) when the shingle end is input and each PGA P000 is set. When the differential motion is input, (ADPGSDCR0.P000GEN=1b) sets the gain magnification when the differential motion is input by the combination with ADPGSDCR0.P000DG 1:0.
     #[inline(always)]
-    pub fn p000gain(&mut self) -> P000GAIN_W<ADPGAGS0_SPEC> {
+    pub fn p000gain(&mut self) -> P000GAIN_W<'_, ADPGAGS0_SPEC> {
         P000GAIN_W::new(self, 0)
     }
     ///Bits 4:7 - PGA P001 gain setting bit.The gain magnification of (ADPGSDCR0.P001GEN=0b) when the shingle end is input and each PGA P001 is set. When the differential motion is input, (ADPGSDCR0.P001GEN=1b) sets the gain magnification when the differential motion is input by the combination with ADPGSDCR0.P001DG 1:0.
     #[inline(always)]
-    pub fn p001gain(&mut self) -> P001GAIN_W<ADPGAGS0_SPEC> {
+    pub fn p001gain(&mut self) -> P001GAIN_W<'_, ADPGAGS0_SPEC> {
         P001GAIN_W::new(self, 4)
     }
     ///Bits 8:11 - PGA P002 gain setting bit.The gain magnification of (ADPGSDCR0.P002GEN=0b) when the shingle end is input and each PGA P002 is set. When the differential motion is input, (ADPGSDCR0.P002GEN=1b) sets the gain magnification when the differential motion is input by the combination with ADPGSDCR0.P002DG 1:0.
     #[inline(always)]
-    pub fn p002gain(&mut self) -> P002GAIN_W<ADPGAGS0_SPEC> {
+    pub fn p002gain(&mut self) -> P002GAIN_W<'_, ADPGAGS0_SPEC> {
         P002GAIN_W::new(self, 8)
     }
 }

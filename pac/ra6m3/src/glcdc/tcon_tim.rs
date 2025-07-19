@@ -113,12 +113,12 @@ impl R {
 impl W {
     ///Bits 0:10 - Horizontal synchronization signal generation reference timingSets the offset from the assertion of the internal horizontal synchronization signal in terms of pixels.
     #[inline(always)]
-    pub fn offset(&mut self) -> OFFSET_W<TCON_TIM_SPEC> {
+    pub fn offset(&mut self) -> OFFSET_W<'_, TCON_TIM_SPEC> {
         OFFSET_W::new(self, 0)
     }
     ///Bits 16:26 - Vertical synchronization signal generation change timing Sets the delay from the assertion of the internal horizontal synchronization signal in terms of pixels.
     #[inline(always)]
-    pub fn half(&mut self) -> HALF_W<TCON_TIM_SPEC> {
+    pub fn half(&mut self) -> HALF_W<'_, TCON_TIM_SPEC> {
         HALF_W::new(self, 16)
     }
 }

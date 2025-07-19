@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 2 - Master Group A Read protection
     #[inline(always)]
-    pub fn rpgrpa(&mut self) -> RPGRPA_W<SMPUMBIU_SPEC> {
+    pub fn rpgrpa(&mut self) -> RPGRPA_W<'_, SMPUMBIU_SPEC> {
         RPGRPA_W::new(self, 2)
     }
     ///Bit 3 - Master Group A Write protection
     #[inline(always)]
-    pub fn wpgrpa(&mut self) -> WPGRPA_W<SMPUMBIU_SPEC> {
+    pub fn wpgrpa(&mut self) -> WPGRPA_W<'_, SMPUMBIU_SPEC> {
         WPGRPA_W::new(self, 3)
     }
 }

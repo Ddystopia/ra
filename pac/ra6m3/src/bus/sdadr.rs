@@ -100,7 +100,7 @@ impl R {
 impl W {
     ///Bits 0:1 - Address Multiplex Select
     #[inline(always)]
-    pub fn mxc(&mut self) -> MXC_W<SDADR_SPEC> {
+    pub fn mxc(&mut self) -> MXC_W<'_, SDADR_SPEC> {
         MXC_W::new(self, 0)
     }
 }

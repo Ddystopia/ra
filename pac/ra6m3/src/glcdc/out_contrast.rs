@@ -166,17 +166,17 @@ impl R {
 impl W {
     ///Bits 0:7 - Contrast (GAIN) adjustment of R signalUnsigned; 8 bits fixed point
     #[inline(always)]
-    pub fn contr(&mut self) -> CONTR_W<OUT_CONTRAST_SPEC> {
+    pub fn contr(&mut self) -> CONTR_W<'_, OUT_CONTRAST_SPEC> {
         CONTR_W::new(self, 0)
     }
     ///Bits 8:15 - Contrast (GAIN) adjustment of B signalUnsigned; 8 bits fixed point
     #[inline(always)]
-    pub fn contb(&mut self) -> CONTB_W<OUT_CONTRAST_SPEC> {
+    pub fn contb(&mut self) -> CONTB_W<'_, OUT_CONTRAST_SPEC> {
         CONTB_W::new(self, 8)
     }
     ///Bits 16:23 - Contrast (GAIN) adjustment of G signalUnsigned; 8 bits fixed point.
     #[inline(always)]
-    pub fn contg(&mut self) -> CONTG_W<OUT_CONTRAST_SPEC> {
+    pub fn contg(&mut self) -> CONTG_W<'_, OUT_CONTRAST_SPEC> {
         CONTG_W::new(self, 16)
     }
 }

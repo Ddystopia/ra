@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - BRR is an 8-bit register that adjusts the bit rate.
     #[inline(always)]
-    pub fn brr(&mut self) -> BRR_W<BRR_SPEC> {
+    pub fn brr(&mut self) -> BRR_W<'_, BRR_SPEC> {
         BRR_W::new(self, 0)
     }
 }

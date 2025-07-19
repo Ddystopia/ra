@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 0 - USB Reference Power Supply Circuit On/Off Control
     #[inline(always)]
-    pub fn vddusbe(&mut self) -> VDDUSBE_W<USBMC_SPEC> {
+    pub fn vddusbe(&mut self) -> VDDUSBE_W<'_, USBMC_SPEC> {
         VDDUSBE_W::new(self, 0)
     }
     ///Bit 7 - USB Regulator On/Off Control
     #[inline(always)]
-    pub fn vdcen(&mut self) -> VDCEN_W<USBMC_SPEC> {
+    pub fn vdcen(&mut self) -> VDCEN_W<'_, USBMC_SPEC> {
         VDCEN_W::new(self, 7)
     }
 }

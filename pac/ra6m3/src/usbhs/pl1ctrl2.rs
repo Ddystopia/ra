@@ -134,12 +134,12 @@ impl R {
 impl W {
     ///Bits 8:11 - HIRD Value Monitor
     #[inline(always)]
-    pub fn hirdmon(&mut self) -> HIRDMON_W<PL1CTRL2_SPEC> {
+    pub fn hirdmon(&mut self) -> HIRDMON_W<'_, PL1CTRL2_SPEC> {
         HIRDMON_W::new(self, 8)
     }
     ///Bit 12 - RWE Value Monitor
     #[inline(always)]
-    pub fn rwemon(&mut self) -> RWEMON_W<PL1CTRL2_SPEC> {
+    pub fn rwemon(&mut self) -> RWEMON_W<'_, PL1CTRL2_SPEC> {
         RWEMON_W::new(self, 12)
     }
 }

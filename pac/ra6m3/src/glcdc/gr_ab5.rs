@@ -113,12 +113,12 @@ impl R {
 impl W {
     ///Bits 0:10 - Horizontal width of rectangular area alpha blending image area.
     #[inline(always)]
-    pub fn archw(&mut self) -> ARCHW_W<GR_AB5_SPEC> {
+    pub fn archw(&mut self) -> ARCHW_W<'_, GR_AB5_SPEC> {
         ARCHW_W::new(self, 0)
     }
     ///Bits 16:26 - Horizontal start position of rectangular area alpha blending image area.
     #[inline(always)]
-    pub fn archs(&mut self) -> ARCHS_W<GR_AB5_SPEC> {
+    pub fn archs(&mut self) -> ARCHS_W<'_, GR_AB5_SPEC> {
         ARCHS_W::new(self, 16)
     }
 }

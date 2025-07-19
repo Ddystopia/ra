@@ -5,7 +5,7 @@ pub type LSTART_W<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
 impl W {
     ///Bits 0:31 - Start value of the n'th limiter(n=1-6)
     #[inline(always)]
-    pub fn lstart(&mut self) -> LSTART_W<LSTART_SPEC> {
+    pub fn lstart(&mut self) -> LSTART_W<'_, LSTART_SPEC> {
         LSTART_W::new(self, 0)
     }
 }

@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:11 - Receive Frame Maximum LengthThe set value becomes the maximum frame length. The minimum value that can be set is 1,518 bytes, and the maximum value that can be set is 2,048 bytes. Values that are less than 1,518 bytes are regarded as 1,518 bytes, and values larger than 2,048 bytes are regarded as 2,048 bytes.
     #[inline(always)]
-    pub fn rfl(&mut self) -> RFL_W<RFLR_SPEC> {
+    pub fn rfl(&mut self) -> RFL_W<'_, RFLR_SPEC> {
         RFL_W::new(self, 0)
     }
 }

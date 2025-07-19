@@ -5,7 +5,7 @@ pub type DLISTSTART_W<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
 impl W {
     ///Bits 0:31 - Display list start address
     #[inline(always)]
-    pub fn dliststart(&mut self) -> DLISTSTART_W<DLISTSTART_SPEC> {
+    pub fn dliststart(&mut self) -> DLISTSTART_W<'_, DLISTSTART_SPEC> {
         DLISTSTART_W::new(self, 0)
     }
 }

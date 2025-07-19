@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - CRC Error Frame Receive Counter RegisterThe CEFCR register is a counter indicating the number of received frames where a CRC error has been detected.
     #[inline(always)]
-    pub fn cefcr(&mut self) -> CEFCR_W<CEFCR_SPEC> {
+    pub fn cefcr(&mut self) -> CEFCR_W<'_, CEFCR_SPEC> {
         CEFCR_W::new(self, 0)
     }
 }

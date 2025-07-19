@@ -113,12 +113,12 @@ impl R {
 impl W {
     ///Bits 0:10 - Background plane vertical valid pixel width on the basis of line
     #[inline(always)]
-    pub fn vw(&mut self) -> VW_W<BG_VSIZE_SPEC> {
+    pub fn vw(&mut self) -> VW_W<'_, BG_VSIZE_SPEC> {
         VW_W::new(self, 0)
     }
     ///Bits 16:26 - Background plane vertical valid pixel start position on the basis of line
     #[inline(always)]
-    pub fn vp(&mut self) -> VP_W<BG_VSIZE_SPEC> {
+    pub fn vp(&mut self) -> VP_W<'_, BG_VSIZE_SPEC> {
         VP_W::new(self, 16)
     }
 }

@@ -487,42 +487,42 @@ impl R {
 impl W {
     ///Bit 0 - STCA Status Interrupt Request Permission
     #[inline(always)]
-    pub fn st(&mut self) -> ST_W<MIEIPR_SPEC> {
+    pub fn st(&mut self) -> ST_W<'_, MIEIPR_SPEC> {
         ST_W::new(self, 0)
     }
     ///Bit 1 - SYNFP0 Status Interrupt Request Permission
     #[inline(always)]
-    pub fn sy0(&mut self) -> SY0_W<MIEIPR_SPEC> {
+    pub fn sy0(&mut self) -> SY0_W<'_, MIEIPR_SPEC> {
         SY0_W::new(self, 1)
     }
     ///Bit 16 - Pulse Output Timer 0 Rising Edge Detection Interrupt Request Permission
     #[inline(always)]
-    pub fn cyc0(&mut self) -> CYC0_W<MIEIPR_SPEC> {
+    pub fn cyc0(&mut self) -> CYC0_W<'_, MIEIPR_SPEC> {
         CYC0_W::new(self, 16)
     }
     ///Bit 17 - Pulse Output Timer 1 Rising Edge Detection Interrupt Request Permission
     #[inline(always)]
-    pub fn cyc1(&mut self) -> CYC1_W<MIEIPR_SPEC> {
+    pub fn cyc1(&mut self) -> CYC1_W<'_, MIEIPR_SPEC> {
         CYC1_W::new(self, 17)
     }
     ///Bit 18 - Pulse Output Timer 2 Rising Edge Detection Interrupt Request Permission
     #[inline(always)]
-    pub fn cyc2(&mut self) -> CYC2_W<MIEIPR_SPEC> {
+    pub fn cyc2(&mut self) -> CYC2_W<'_, MIEIPR_SPEC> {
         CYC2_W::new(self, 18)
     }
     ///Bit 19 - Pulse Output Timer 3 Rising Edge Detection Interrupt Request Permission
     #[inline(always)]
-    pub fn cyc3(&mut self) -> CYC3_W<MIEIPR_SPEC> {
+    pub fn cyc3(&mut self) -> CYC3_W<'_, MIEIPR_SPEC> {
         CYC3_W::new(self, 19)
     }
     ///Bit 20 - Pulse Output Timer 4 Rising Edge Detection Interrupt Request Permission
     #[inline(always)]
-    pub fn cyc4(&mut self) -> CYC4_W<MIEIPR_SPEC> {
+    pub fn cyc4(&mut self) -> CYC4_W<'_, MIEIPR_SPEC> {
         CYC4_W::new(self, 20)
     }
     ///Bit 21 - Pulse Output Timer 5 Rising Edge Detection Interrupt Request Permission
     #[inline(always)]
-    pub fn cyc5(&mut self) -> CYC5_W<MIEIPR_SPEC> {
+    pub fn cyc5(&mut self) -> CYC5_W<'_, MIEIPR_SPEC> {
         CYC5_W::new(self, 21)
     }
 }

@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - SD Buffer RegisterWhen writing to the SD card, the write data is written to this register. When reading from the SD card, the read data is read from this register. This register is internally connected to two 512-byte buffers.If both buffers are not empty when executing multiple block read, SD/MMC clock is stopped to suspend receiving data. When one of buffers is empty, SD/MMC clock is supplied to resume receiving data.
     #[inline(always)]
-    pub fn sd_buf(&mut self) -> SD_BUF_W<SD_BUF0_SPEC> {
+    pub fn sd_buf(&mut self) -> SD_BUF_W<'_, SD_BUF0_SPEC> {
         SD_BUF_W::new(self, 0)
     }
 }

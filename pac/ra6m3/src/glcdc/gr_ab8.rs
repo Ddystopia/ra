@@ -34,17 +34,17 @@ impl R {
 impl W {
     ///Bits 0:7 - R signal for RGB-index chroma-key processingUnsigned; 8 bits.
     #[inline(always)]
-    pub fn ckkr(&mut self) -> CKKR_W<GR_AB8_SPEC> {
+    pub fn ckkr(&mut self) -> CKKR_W<'_, GR_AB8_SPEC> {
         CKKR_W::new(self, 0)
     }
     ///Bits 8:15 - B signal for RGB-index chroma-key processingUnsigned; 8 bits.
     #[inline(always)]
-    pub fn ckkb(&mut self) -> CKKB_W<GR_AB8_SPEC> {
+    pub fn ckkb(&mut self) -> CKKB_W<'_, GR_AB8_SPEC> {
         CKKB_W::new(self, 8)
     }
     ///Bits 16:23 - G signal for RGB-index chroma-key processingUnsigned; 8 bits.
     #[inline(always)]
-    pub fn ckkg(&mut self) -> CKKG_W<GR_AB8_SPEC> {
+    pub fn ckkg(&mut self) -> CKKG_W<'_, GR_AB8_SPEC> {
         CKKG_W::new(self, 16)
     }
 }

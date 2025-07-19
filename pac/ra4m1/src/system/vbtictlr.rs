@@ -187,17 +187,17 @@ impl R {
 impl W {
     ///Bit 0 - VBATT Wakeup I/O 0 Input Enable
     #[inline(always)]
-    pub fn vch0inen(&mut self) -> VCH0INEN_W<VBTICTLR_SPEC> {
+    pub fn vch0inen(&mut self) -> VCH0INEN_W<'_, VBTICTLR_SPEC> {
         VCH0INEN_W::new(self, 0)
     }
     ///Bit 1 - VBATT Wakeup I/O 1 Input Enable
     #[inline(always)]
-    pub fn vch1inen(&mut self) -> VCH1INEN_W<VBTICTLR_SPEC> {
+    pub fn vch1inen(&mut self) -> VCH1INEN_W<'_, VBTICTLR_SPEC> {
         VCH1INEN_W::new(self, 1)
     }
     ///Bit 2 - VBATT Wakeup I/O 2 Input Enable
     #[inline(always)]
-    pub fn vch2inen(&mut self) -> VCH2INEN_W<VBTICTLR_SPEC> {
+    pub fn vch2inen(&mut self) -> VCH2INEN_W<'_, VBTICTLR_SPEC> {
         VCH2INEN_W::new(self, 2)
     }
 }

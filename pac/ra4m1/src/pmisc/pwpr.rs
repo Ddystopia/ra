@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 6 - PFS Register Write Enable
     #[inline(always)]
-    pub fn pfswe(&mut self) -> PFSWE_W<PWPR_SPEC> {
+    pub fn pfswe(&mut self) -> PFSWE_W<'_, PWPR_SPEC> {
         PFSWE_W::new(self, 6)
     }
     ///Bit 7 - PFSWE Bit Write Disable
     #[inline(always)]
-    pub fn b0wi(&mut self) -> B0WI_W<PWPR_SPEC> {
+    pub fn b0wi(&mut self) -> B0WI_W<'_, PWPR_SPEC> {
         B0WI_W::new(self, 7)
     }
 }

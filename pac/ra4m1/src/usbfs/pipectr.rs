@@ -512,27 +512,27 @@ impl R {
 impl W {
     ///Bits 0:1 - Response PID
     #[inline(always)]
-    pub fn pid(&mut self) -> PID_W<PIPECTR_SPEC> {
+    pub fn pid(&mut self) -> PID_W<'_, PIPECTR_SPEC> {
         PID_W::new(self, 0)
     }
     ///Bit 7 - Sequence Toggle Bit Set
     #[inline(always)]
-    pub fn sqset(&mut self) -> SQSET_W<PIPECTR_SPEC> {
+    pub fn sqset(&mut self) -> SQSET_W<'_, PIPECTR_SPEC> {
         SQSET_W::new(self, 7)
     }
     ///Bit 8 - Sequence Toggle Bit Clear
     #[inline(always)]
-    pub fn sqclr(&mut self) -> SQCLR_W<PIPECTR_SPEC> {
+    pub fn sqclr(&mut self) -> SQCLR_W<'_, PIPECTR_SPEC> {
         SQCLR_W::new(self, 8)
     }
     ///Bit 9 - Auto Buffer Clear Mode
     #[inline(always)]
-    pub fn aclrm(&mut self) -> ACLRM_W<PIPECTR_SPEC> {
+    pub fn aclrm(&mut self) -> ACLRM_W<'_, PIPECTR_SPEC> {
         ACLRM_W::new(self, 9)
     }
     ///Bit 10 - Auto Response Mode
     #[inline(always)]
-    pub fn atrepm(&mut self) -> ATREPM_W<PIPECTR_SPEC> {
+    pub fn atrepm(&mut self) -> ATREPM_W<'_, PIPECTR_SPEC> {
         ATREPM_W::new(self, 10)
     }
 }

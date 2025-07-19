@@ -85,17 +85,17 @@ impl R {
 impl W {
     ///Bits 0:3 - 1-Minute Count Value for the ones place of minutes
     #[inline(always)]
-    pub fn min1(&mut self) -> MIN1_W<RMINAR_SPEC> {
+    pub fn min1(&mut self) -> MIN1_W<'_, RMINAR_SPEC> {
         MIN1_W::new(self, 0)
     }
     ///Bits 4:6 - 10-Minute Count Value for the tens place of minutes
     #[inline(always)]
-    pub fn min10(&mut self) -> MIN10_W<RMINAR_SPEC> {
+    pub fn min10(&mut self) -> MIN10_W<'_, RMINAR_SPEC> {
         MIN10_W::new(self, 4)
     }
     ///Bit 7 - Compare enable
     #[inline(always)]
-    pub fn enb(&mut self) -> ENB_W<RMINAR_SPEC> {
+    pub fn enb(&mut self) -> ENB_W<'_, RMINAR_SPEC> {
         ENB_W::new(self, 7)
     }
 }

@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - LOCO User Trimming 1000_0000 : -128 1000_0001 : -127 1000_0010 : -126 . . . 1111_1111 : -1 0000_0000 : Center Code 0000_0001 : +1 . . . 0111_1101 : +125 0111_1110 : +126 0111_1111 : +127These bits are added to original LOCO trimming bits
     #[inline(always)]
-    pub fn locoutrm(&mut self) -> LOCOUTRM_W<LOCOUTCR_SPEC> {
+    pub fn locoutrm(&mut self) -> LOCOUTRM_W<'_, LOCOUTCR_SPEC> {
         LOCOUTRM_W::new(self, 0)
     }
 }

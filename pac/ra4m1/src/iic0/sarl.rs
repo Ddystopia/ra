@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - A slave address is set. 7-Bit Address = SVA\[7:1\] 10-Bit Address = { SVA9,SVA8,SVA\[7:0\] }
     #[inline(always)]
-    pub fn sva(&mut self) -> SVA_W<SARL_SPEC> {
+    pub fn sva(&mut self) -> SVA_W<'_, SARL_SPEC> {
         SVA_W::new(self, 0)
     }
 }

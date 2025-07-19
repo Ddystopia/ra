@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - CTSU Sensor Stabilization Wait ControlNOTE: The value of these bits should be fixed to 00010000b.
     #[inline(always)]
-    pub fn ctsusst(&mut self) -> CTSUSST_W<CTSUSST_SPEC> {
+    pub fn ctsusst(&mut self) -> CTSUSST_W<'_, CTSUSST_SPEC> {
         CTSUSST_W::new(self, 0)
     }
 }

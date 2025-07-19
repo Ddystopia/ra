@@ -522,27 +522,27 @@ impl R {
 impl W {
     ///Bit 0 - USB DP Interrupt Enable/Clear
     #[inline(always)]
-    pub fn dpinte0(&mut self) -> DPINTE0_W<DPUSR1R_SPEC> {
+    pub fn dpinte0(&mut self) -> DPINTE0_W<'_, DPUSR1R_SPEC> {
         DPINTE0_W::new(self, 0)
     }
     ///Bit 1 - USB DM Interrupt Enable/Clear
     #[inline(always)]
-    pub fn dminte0(&mut self) -> DMINTE0_W<DPUSR1R_SPEC> {
+    pub fn dminte0(&mut self) -> DMINTE0_W<'_, DPUSR1R_SPEC> {
         DMINTE0_W::new(self, 1)
     }
     ///Bit 4 - USB OVRCURA Interrupt Enable/Clear
     #[inline(always)]
-    pub fn dovrcrae0(&mut self) -> DOVRCRAE0_W<DPUSR1R_SPEC> {
+    pub fn dovrcrae0(&mut self) -> DOVRCRAE0_W<'_, DPUSR1R_SPEC> {
         DOVRCRAE0_W::new(self, 4)
     }
     ///Bit 5 - USB OVRCURB Interrupt Enable/Clear
     #[inline(always)]
-    pub fn dovrcrbe0(&mut self) -> DOVRCRBE0_W<DPUSR1R_SPEC> {
+    pub fn dovrcrbe0(&mut self) -> DOVRCRBE0_W<'_, DPUSR1R_SPEC> {
         DOVRCRBE0_W::new(self, 5)
     }
     ///Bit 7 - USB VBUS Interrupt Enable/Clear
     #[inline(always)]
-    pub fn dvbse0(&mut self) -> DVBSE0_W<DPUSR1R_SPEC> {
+    pub fn dvbse0(&mut self) -> DVBSE0_W<'_, DPUSR1R_SPEC> {
         DVBSE0_W::new(self, 7)
     }
 }

@@ -134,12 +134,12 @@ impl R {
 impl W {
     ///Bits 0:6 - USB AddressWhen the function controller is selected, these bits indicate the USB address assigned by the host when the SET_ADDRESS request is successfully processed.
     #[inline(always)]
-    pub fn usbaddr(&mut self) -> USBADDR_W<USBADDR_SPEC> {
+    pub fn usbaddr(&mut self) -> USBADDR_W<'_, USBADDR_SPEC> {
         USBADDR_W::new(self, 0)
     }
     ///Bits 8:11 - Status Recovery
     #[inline(always)]
-    pub fn stsrecov(&mut self) -> STSRECOV_W<USBADDR_SPEC> {
+    pub fn stsrecov(&mut self) -> STSRECOV_W<'_, USBADDR_SPEC> {
         STSRECOV_W::new(self, 8)
     }
 }

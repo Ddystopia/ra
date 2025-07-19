@@ -160,12 +160,12 @@ impl R {
 impl W {
     ///Bit 0 - CAN Test Mode Enable
     #[inline(always)]
-    pub fn tste(&mut self) -> TSTE_W<TCR_SPEC> {
+    pub fn tste(&mut self) -> TSTE_W<'_, TCR_SPEC> {
         TSTE_W::new(self, 0)
     }
     ///Bits 1:2 - CAN Test Mode Select
     #[inline(always)]
-    pub fn tstm(&mut self) -> TSTM_W<TCR_SPEC> {
+    pub fn tstm(&mut self) -> TSTM_W<'_, TCR_SPEC> {
         TSTM_W::new(self, 1)
     }
 }

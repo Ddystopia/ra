@@ -74,7 +74,7 @@ impl R {
 impl W {
     ///Bits 0:1 - SSTBY condition bit
     #[inline(always)]
-    pub fn stcon(&mut self) -> STCON_W<STCONR_SPEC> {
+    pub fn stcon(&mut self) -> STCON_W<'_, STCONR_SPEC> {
         STCON_W::new(self, 0)
     }
 }

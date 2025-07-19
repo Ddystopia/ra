@@ -367,32 +367,32 @@ impl R {
 impl W {
     ///Bit 0 - Pulse Output Timer 0 Event Generation Disable
     #[inline(always)]
-    pub fn eltdis0(&mut self) -> ELTDIS0_W<ELTSELR_SPEC> {
+    pub fn eltdis0(&mut self) -> ELTDIS0_W<'_, ELTSELR_SPEC> {
         ELTDIS0_W::new(self, 0)
     }
     ///Bit 1 - Pulse Output Timer 1 Event Generation Disable
     #[inline(always)]
-    pub fn eltdis1(&mut self) -> ELTDIS1_W<ELTSELR_SPEC> {
+    pub fn eltdis1(&mut self) -> ELTDIS1_W<'_, ELTSELR_SPEC> {
         ELTDIS1_W::new(self, 1)
     }
     ///Bit 2 - Pulse Output Timer 2 Event Generation Disable
     #[inline(always)]
-    pub fn eltdis2(&mut self) -> ELTDIS2_W<ELTSELR_SPEC> {
+    pub fn eltdis2(&mut self) -> ELTDIS2_W<'_, ELTSELR_SPEC> {
         ELTDIS2_W::new(self, 2)
     }
     ///Bit 3 - Pulse Output Timer 3 Event Generation Disable
     #[inline(always)]
-    pub fn eltdis3(&mut self) -> ELTDIS3_W<ELTSELR_SPEC> {
+    pub fn eltdis3(&mut self) -> ELTDIS3_W<'_, ELTSELR_SPEC> {
         ELTDIS3_W::new(self, 3)
     }
     ///Bit 4 - Pulse Output Timer 4 Event Generation Disable
     #[inline(always)]
-    pub fn eltdis4(&mut self) -> ELTDIS4_W<ELTSELR_SPEC> {
+    pub fn eltdis4(&mut self) -> ELTDIS4_W<'_, ELTSELR_SPEC> {
         ELTDIS4_W::new(self, 4)
     }
     ///Bit 5 - Pulse Output Timer 5 Event Generation Disable
     #[inline(always)]
-    pub fn eltdis5(&mut self) -> ELTDIS5_W<ELTSELR_SPEC> {
+    pub fn eltdis5(&mut self) -> ELTDIS5_W<'_, ELTSELR_SPEC> {
         ELTDIS5_W::new(self, 5)
     }
 }

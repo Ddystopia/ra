@@ -145,22 +145,22 @@ impl R {
 impl W {
     ///Bits 0:17 - Extended ID
     #[inline(always)]
-    pub fn eid(&mut self) -> EID_W<MB_ID_SPEC> {
+    pub fn eid(&mut self) -> EID_W<'_, MB_ID_SPEC> {
         EID_W::new(self, 0)
     }
     ///Bits 18:28 - Standard ID
     #[inline(always)]
-    pub fn sid(&mut self) -> SID_W<MB_ID_SPEC> {
+    pub fn sid(&mut self) -> SID_W<'_, MB_ID_SPEC> {
         SID_W::new(self, 18)
     }
     ///Bit 30 - Remote Transmission Request
     #[inline(always)]
-    pub fn rtr(&mut self) -> RTR_W<MB_ID_SPEC> {
+    pub fn rtr(&mut self) -> RTR_W<'_, MB_ID_SPEC> {
         RTR_W::new(self, 30)
     }
     ///Bit 31 - ID Extension
     #[inline(always)]
-    pub fn ide(&mut self) -> IDE_W<MB_ID_SPEC> {
+    pub fn ide(&mut self) -> IDE_W<'_, MB_ID_SPEC> {
         IDE_W::new(self, 31)
     }
 }

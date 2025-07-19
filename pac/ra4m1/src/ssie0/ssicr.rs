@@ -1479,97 +1479,97 @@ impl R {
 impl W {
     ///Bit 0 - Receive Enable
     #[inline(always)]
-    pub fn ren(&mut self) -> REN_W<SSICR_SPEC> {
+    pub fn ren(&mut self) -> REN_W<'_, SSICR_SPEC> {
         REN_W::new(self, 0)
     }
     ///Bit 1 - Transmit Enable
     #[inline(always)]
-    pub fn ten(&mut self) -> TEN_W<SSICR_SPEC> {
+    pub fn ten(&mut self) -> TEN_W<'_, SSICR_SPEC> {
         TEN_W::new(self, 1)
     }
     ///Bit 3 - Mute Enable
     #[inline(always)]
-    pub fn muen(&mut self) -> MUEN_W<SSICR_SPEC> {
+    pub fn muen(&mut self) -> MUEN_W<'_, SSICR_SPEC> {
         MUEN_W::new(self, 3)
     }
     ///Bits 4:7 - Selects Bit Clock Division Ratio
     #[inline(always)]
-    pub fn ckdv(&mut self) -> CKDV_W<SSICR_SPEC> {
+    pub fn ckdv(&mut self) -> CKDV_W<'_, SSICR_SPEC> {
         CKDV_W::new(self, 4)
     }
     ///Bit 8 - Selects Serial Data Delay
     #[inline(always)]
-    pub fn del(&mut self) -> DEL_W<SSICR_SPEC> {
+    pub fn del(&mut self) -> DEL_W<'_, SSICR_SPEC> {
         DEL_W::new(self, 8)
     }
     ///Bit 9 - Selects Placement Data Alignment
     #[inline(always)]
-    pub fn pdta(&mut self) -> PDTA_W<SSICR_SPEC> {
+    pub fn pdta(&mut self) -> PDTA_W<'_, SSICR_SPEC> {
         PDTA_W::new(self, 9)
     }
     ///Bit 10 - Selects Serial Data Alignment
     #[inline(always)]
-    pub fn sdta(&mut self) -> SDTA_W<SSICR_SPEC> {
+    pub fn sdta(&mut self) -> SDTA_W<'_, SSICR_SPEC> {
         SDTA_W::new(self, 10)
     }
     ///Bit 11 - Selects Serial Padding Polarity
     #[inline(always)]
-    pub fn spdp(&mut self) -> SPDP_W<SSICR_SPEC> {
+    pub fn spdp(&mut self) -> SPDP_W<'_, SSICR_SPEC> {
         SPDP_W::new(self, 11)
     }
     ///Bit 12 - Selects the Initial Value and Polarity of LR Clock/Frame Synchronization Signal
     #[inline(always)]
-    pub fn lrckp(&mut self) -> LRCKP_W<SSICR_SPEC> {
+    pub fn lrckp(&mut self) -> LRCKP_W<'_, SSICR_SPEC> {
         LRCKP_W::new(self, 12)
     }
     ///Bit 13 - Selects Bit Clock Polarity
     #[inline(always)]
-    pub fn bckp(&mut self) -> BCKP_W<SSICR_SPEC> {
+    pub fn bckp(&mut self) -> BCKP_W<'_, SSICR_SPEC> {
         BCKP_W::new(self, 13)
     }
     ///Bit 14 - Master Enable
     #[inline(always)]
-    pub fn mst(&mut self) -> MST_W<SSICR_SPEC> {
+    pub fn mst(&mut self) -> MST_W<'_, SSICR_SPEC> {
         MST_W::new(self, 14)
     }
     ///Bits 16:18 - Selects System Word Length
     #[inline(always)]
-    pub fn swl(&mut self) -> SWL_W<SSICR_SPEC> {
+    pub fn swl(&mut self) -> SWL_W<'_, SSICR_SPEC> {
         SWL_W::new(self, 16)
     }
     ///Bits 19:21 - Selects Data Word Length
     #[inline(always)]
-    pub fn dwl(&mut self) -> DWL_W<SSICR_SPEC> {
+    pub fn dwl(&mut self) -> DWL_W<'_, SSICR_SPEC> {
         DWL_W::new(self, 19)
     }
     ///Bit 25 - Idle Mode Interrupt Output Enable
     #[inline(always)]
-    pub fn iien(&mut self) -> IIEN_W<SSICR_SPEC> {
+    pub fn iien(&mut self) -> IIEN_W<'_, SSICR_SPEC> {
         IIEN_W::new(self, 25)
     }
     ///Bit 26 - Receive Overflow Interrupt Output Enable
     #[inline(always)]
-    pub fn roien(&mut self) -> ROIEN_W<SSICR_SPEC> {
+    pub fn roien(&mut self) -> ROIEN_W<'_, SSICR_SPEC> {
         ROIEN_W::new(self, 26)
     }
     ///Bit 27 - Receive Underflow Interrupt Output Enable
     #[inline(always)]
-    pub fn ruien(&mut self) -> RUIEN_W<SSICR_SPEC> {
+    pub fn ruien(&mut self) -> RUIEN_W<'_, SSICR_SPEC> {
         RUIEN_W::new(self, 27)
     }
     ///Bit 28 - Transmit Overflow Interrupt Output Enable
     #[inline(always)]
-    pub fn toien(&mut self) -> TOIEN_W<SSICR_SPEC> {
+    pub fn toien(&mut self) -> TOIEN_W<'_, SSICR_SPEC> {
         TOIEN_W::new(self, 28)
     }
     ///Bit 29 - Transmit Underflow Interrupt Output Enable
     #[inline(always)]
-    pub fn tuien(&mut self) -> TUIEN_W<SSICR_SPEC> {
+    pub fn tuien(&mut self) -> TUIEN_W<'_, SSICR_SPEC> {
         TUIEN_W::new(self, 29)
     }
     ///Bit 30 - Selects an Audio Clock for Master-mode Communication
     #[inline(always)]
-    pub fn cks(&mut self) -> CKS_W<SSICR_SPEC> {
+    pub fn cks(&mut self) -> CKS_W<'_, SSICR_SPEC> {
         CKS_W::new(self, 30)
     }
 }

@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 0 - Temperature sensor output Compare selection bit.
     #[inline(always)]
-    pub fn cmptsa(&mut self) -> CMPTSA_W<ADCMPANSER_SPEC> {
+    pub fn cmptsa(&mut self) -> CMPTSA_W<'_, ADCMPANSER_SPEC> {
         CMPTSA_W::new(self, 0)
     }
     ///Bit 1 - Internal reference voltage Compare selection bit.
     #[inline(always)]
-    pub fn cmpoca(&mut self) -> CMPOCA_W<ADCMPANSER_SPEC> {
+    pub fn cmpoca(&mut self) -> CMPOCA_W<'_, ADCMPANSER_SPEC> {
         CMPOCA_W::new(self, 1)
     }
 }

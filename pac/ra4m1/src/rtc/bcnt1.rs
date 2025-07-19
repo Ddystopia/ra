@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:7 - The BCNT1 counter is a readable/writable 32-bit binary counter b15 to b8.
     #[inline(always)]
-    pub fn bcnt1(&mut self) -> BCNT1_W<BCNT1_SPEC> {
+    pub fn bcnt1(&mut self) -> BCNT1_W<'_, BCNT1_SPEC> {
         BCNT1_W::new(self, 0)
     }
 }

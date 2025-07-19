@@ -367,32 +367,32 @@ impl R {
 impl W {
     ///Bit 0 - RAM0 Module Stop
     #[inline(always)]
-    pub fn mstpa0(&mut self) -> MSTPA0_W<MSTPCRA_SPEC> {
+    pub fn mstpa0(&mut self) -> MSTPA0_W<'_, MSTPCRA_SPEC> {
         MSTPA0_W::new(self, 0)
     }
     ///Bit 1 - RAM1 Module Stop
     #[inline(always)]
-    pub fn mstpa1(&mut self) -> MSTPA1_W<MSTPCRA_SPEC> {
+    pub fn mstpa1(&mut self) -> MSTPA1_W<'_, MSTPCRA_SPEC> {
         MSTPA1_W::new(self, 1)
     }
     ///Bit 5 - High-Speed RAM Module Stop
     #[inline(always)]
-    pub fn mstpa5(&mut self) -> MSTPA5_W<MSTPCRA_SPEC> {
+    pub fn mstpa5(&mut self) -> MSTPA5_W<'_, MSTPCRA_SPEC> {
         MSTPA5_W::new(self, 5)
     }
     ///Bit 6 - ECCRAM Module Stop
     #[inline(always)]
-    pub fn mstpa6(&mut self) -> MSTPA6_W<MSTPCRA_SPEC> {
+    pub fn mstpa6(&mut self) -> MSTPA6_W<'_, MSTPCRA_SPEC> {
         MSTPA6_W::new(self, 6)
     }
     ///Bit 7 - Standny RAM Module Stop
     #[inline(always)]
-    pub fn mstpa7(&mut self) -> MSTPA7_W<MSTPCRA_SPEC> {
+    pub fn mstpa7(&mut self) -> MSTPA7_W<'_, MSTPCRA_SPEC> {
         MSTPA7_W::new(self, 7)
     }
     ///Bit 22 - DMA Controller/Data Transfer Controller Module Stop
     #[inline(always)]
-    pub fn mstpa22(&mut self) -> MSTPA22_W<MSTPCRA_SPEC> {
+    pub fn mstpa22(&mut self) -> MSTPA22_W<'_, MSTPCRA_SPEC> {
         MSTPA22_W::new(self, 22)
     }
 }

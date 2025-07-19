@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:31 - Output Image Data Destination Address (in 8-byte units) The lower three bits should be set to 0.
     #[inline(always)]
-    pub fn dda(&mut self) -> DDA_W<JIFDDA_SPEC> {
+    pub fn dda(&mut self) -> DDA_W<'_, JIFDDA_SPEC> {
         DDA_W::new(self, 0)
     }
 }

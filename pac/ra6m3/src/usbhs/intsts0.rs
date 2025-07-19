@@ -708,32 +708,32 @@ impl R {
 impl W {
     ///Bit 3 - USB Request Reception
     #[inline(always)]
-    pub fn valid(&mut self) -> VALID_W<INTSTS0_SPEC> {
+    pub fn valid(&mut self) -> VALID_W<'_, INTSTS0_SPEC> {
         VALID_W::new(self, 3)
     }
     ///Bit 11 - Control Transfer Stage Transition Interrupt Status
     #[inline(always)]
-    pub fn ctrt(&mut self) -> CTRT_W<INTSTS0_SPEC> {
+    pub fn ctrt(&mut self) -> CTRT_W<'_, INTSTS0_SPEC> {
         CTRT_W::new(self, 11)
     }
     ///Bit 12 - Device State Transition Interrupt Status
     #[inline(always)]
-    pub fn dvst(&mut self) -> DVST_W<INTSTS0_SPEC> {
+    pub fn dvst(&mut self) -> DVST_W<'_, INTSTS0_SPEC> {
         DVST_W::new(self, 12)
     }
     ///Bit 13 - Frame Number Refresh Interrupt Status
     #[inline(always)]
-    pub fn sofr(&mut self) -> SOFR_W<INTSTS0_SPEC> {
+    pub fn sofr(&mut self) -> SOFR_W<'_, INTSTS0_SPEC> {
         SOFR_W::new(self, 13)
     }
     ///Bit 14 - Resume Interrupt Status
     #[inline(always)]
-    pub fn resm(&mut self) -> RESM_W<INTSTS0_SPEC> {
+    pub fn resm(&mut self) -> RESM_W<'_, INTSTS0_SPEC> {
         RESM_W::new(self, 14)
     }
     ///Bit 15 - VBUS Interrupt Status
     #[inline(always)]
-    pub fn vbint(&mut self) -> VBINT_W<INTSTS0_SPEC> {
+    pub fn vbint(&mut self) -> VBINT_W<'_, INTSTS0_SPEC> {
         VBINT_W::new(self, 15)
     }
 }

@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - AGT Compare Match A RegisterNOTE : When 1 is written to the TSTOP bit in the AGTCRn register, set to FFFFH
     #[inline(always)]
-    pub fn agtcma(&mut self) -> AGTCMA_W<AGTCMA_SPEC> {
+    pub fn agtcma(&mut self) -> AGTCMA_W<'_, AGTCMA_SPEC> {
         AGTCMA_W::new(self, 0)
     }
 }

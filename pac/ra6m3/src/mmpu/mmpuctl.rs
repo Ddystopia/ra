@@ -166,17 +166,17 @@ impl R {
 impl W {
     ///Bit 0 - Master Group enable
     #[inline(always)]
-    pub fn enable(&mut self) -> ENABLE_W<MMPUCTL_SPEC> {
+    pub fn enable(&mut self) -> ENABLE_W<'_, MMPUCTL_SPEC> {
         ENABLE_W::new(self, 0)
     }
     ///Bit 1 - Operation after detection
     #[inline(always)]
-    pub fn oad(&mut self) -> OAD_W<MMPUCTL_SPEC> {
+    pub fn oad(&mut self) -> OAD_W<'_, MMPUCTL_SPEC> {
         OAD_W::new(self, 1)
     }
     ///Bits 8:15 - Write Keyword The data written to these bits are not stored.
     #[inline(always)]
-    pub fn key(&mut self) -> KEY_W<MMPUCTL_SPEC> {
+    pub fn key(&mut self) -> KEY_W<'_, MMPUCTL_SPEC> {
         KEY_W::new(self, 8)
     }
 }

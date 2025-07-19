@@ -189,17 +189,17 @@ impl R {
 impl W {
     ///Bit 0 - Background plane generation module operation enable
     #[inline(always)]
-    pub fn en(&mut self) -> EN_W<BG_EN_SPEC> {
+    pub fn en(&mut self) -> EN_W<'_, BG_EN_SPEC> {
         EN_W::new(self, 0)
     }
     ///Bit 8 - Control of LCDC internal register value reflection to internal operations
     #[inline(always)]
-    pub fn ven(&mut self) -> VEN_W<BG_EN_SPEC> {
+    pub fn ven(&mut self) -> VEN_W<'_, BG_EN_SPEC> {
         VEN_W::new(self, 8)
     }
     ///Bit 16 - Entire module SW reset control
     #[inline(always)]
-    pub fn swrst(&mut self) -> SWRST_W<BG_EN_SPEC> {
+    pub fn swrst(&mut self) -> SWRST_W<'_, BG_EN_SPEC> {
         SWRST_W::new(self, 16)
     }
 }

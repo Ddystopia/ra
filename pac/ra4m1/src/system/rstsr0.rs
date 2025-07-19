@@ -255,22 +255,22 @@ impl R {
 impl W {
     ///Bit 0 - Power-On Reset Detect Flag Note: Only 0 can be written to clear the flag. The reset flag must be written with 0 after the reset flag is read as 1.
     #[inline(always)]
-    pub fn porf(&mut self) -> PORF_W<RSTSR0_SPEC> {
+    pub fn porf(&mut self) -> PORF_W<'_, RSTSR0_SPEC> {
         PORF_W::new(self, 0)
     }
     ///Bit 1 - Voltage Monitor 0 Reset Detect Flag Note: Only 0 can be written to clear the flag. The reset flag must be written with 0 after the reset flag is read as 1.
     #[inline(always)]
-    pub fn lvd0rf(&mut self) -> LVD0RF_W<RSTSR0_SPEC> {
+    pub fn lvd0rf(&mut self) -> LVD0RF_W<'_, RSTSR0_SPEC> {
         LVD0RF_W::new(self, 1)
     }
     ///Bit 2 - Voltage Monitor 1 Reset Detect Flag Note: Only 0 can be written to clear the flag. The reset flag must be written with 0 after the reset flag is read as 1.
     #[inline(always)]
-    pub fn lvd1rf(&mut self) -> LVD1RF_W<RSTSR0_SPEC> {
+    pub fn lvd1rf(&mut self) -> LVD1RF_W<'_, RSTSR0_SPEC> {
         LVD1RF_W::new(self, 2)
     }
     ///Bit 3 - Voltage Monitor 2 Reset Detect Flag Note: Only 0 can be written to clear the flag. The reset flag must be written with 0 after the reset flag is read as 1.
     #[inline(always)]
-    pub fn lvd2rf(&mut self) -> LVD2RF_W<RSTSR0_SPEC> {
+    pub fn lvd2rf(&mut self) -> LVD2RF_W<'_, RSTSR0_SPEC> {
         LVD2RF_W::new(self, 3)
     }
 }

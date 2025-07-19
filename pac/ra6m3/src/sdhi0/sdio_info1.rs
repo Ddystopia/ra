@@ -91,17 +91,17 @@ impl R {
 impl W {
     ///Bit 0 - SDIO Interrupt Status
     #[inline(always)]
-    pub fn ioirq(&mut self) -> IOIRQ_W<SDIO_INFO1_SPEC> {
+    pub fn ioirq(&mut self) -> IOIRQ_W<'_, SDIO_INFO1_SPEC> {
         IOIRQ_W::new(self, 0)
     }
     ///Bit 14 - EXPUB52 Status FlagNOTE: See manual
     #[inline(always)]
-    pub fn expub52(&mut self) -> EXPUB52_W<SDIO_INFO1_SPEC> {
+    pub fn expub52(&mut self) -> EXPUB52_W<'_, SDIO_INFO1_SPEC> {
         EXPUB52_W::new(self, 14)
     }
     ///Bit 15 - EXWT Status FlagNOTE: See manual
     #[inline(always)]
-    pub fn exwt(&mut self) -> EXWT_W<SDIO_INFO1_SPEC> {
+    pub fn exwt(&mut self) -> EXWT_W<'_, SDIO_INFO1_SPEC> {
         EXWT_W::new(self, 15)
     }
 }

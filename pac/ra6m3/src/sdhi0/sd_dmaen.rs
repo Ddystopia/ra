@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 1 - SD_BUF Read/Write DMA Transfer
     #[inline(always)]
-    pub fn dmaen(&mut self) -> DMAEN_W<SD_DMAEN_SPEC> {
+    pub fn dmaen(&mut self) -> DMAEN_W<'_, SD_DMAEN_SPEC> {
         DMAEN_W::new(self, 1)
     }
 }

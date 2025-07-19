@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 7 - Compare enable
     #[inline(always)]
-    pub fn enb(&mut self) -> ENB_W<RYRAREN_SPEC> {
+    pub fn enb(&mut self) -> ENB_W<'_, RYRAREN_SPEC> {
         ENB_W::new(self, 7)
     }
 }

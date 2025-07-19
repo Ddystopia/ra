@@ -73,7 +73,7 @@ impl R {
 impl W {
     ///Bits 0:15 - Specifies the number of block transfer operations or repeat transfer operations.
     #[inline(always)]
-    pub fn dmcrb(&mut self) -> DMCRB_W<DMCRB_SPEC> {
+    pub fn dmcrb(&mut self) -> DMCRB_W<'_, DMCRB_SPEC> {
         DMCRB_W::new(self, 0)
     }
 }

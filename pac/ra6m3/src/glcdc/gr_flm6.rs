@@ -152,7 +152,7 @@ impl R {
 impl W {
     ///Bits 28:30 - Data format for accessing graphics data (frame buffer data).
     #[inline(always)]
-    pub fn format(&mut self) -> FORMAT_W<GR_FLM6_SPEC> {
+    pub fn format(&mut self) -> FORMAT_W<'_, GR_FLM6_SPEC> {
         FORMAT_W::new(self, 28)
     }
 }

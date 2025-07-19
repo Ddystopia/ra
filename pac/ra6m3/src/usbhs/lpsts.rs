@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 14 - UTMI SuspendM Control
     #[inline(always)]
-    pub fn suspendm(&mut self) -> SUSPENDM_W<LPSTS_SPEC> {
+    pub fn suspendm(&mut self) -> SUSPENDM_W<'_, LPSTS_SPEC> {
         SUSPENDM_W::new(self, 14)
     }
 }

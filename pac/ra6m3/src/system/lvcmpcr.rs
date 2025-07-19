@@ -127,12 +127,12 @@ impl R {
 impl W {
     ///Bit 5 - Voltage Detection 1 Enable
     #[inline(always)]
-    pub fn lvd1e(&mut self) -> LVD1E_W<LVCMPCR_SPEC> {
+    pub fn lvd1e(&mut self) -> LVD1E_W<'_, LVCMPCR_SPEC> {
         LVD1E_W::new(self, 5)
     }
     ///Bit 6 - Voltage Detection 2 Enable
     #[inline(always)]
-    pub fn lvd2e(&mut self) -> LVD2E_W<LVCMPCR_SPEC> {
+    pub fn lvd2e(&mut self) -> LVD2E_W<'_, LVCMPCR_SPEC> {
         LVD2E_W::new(self, 6)
     }
 }

@@ -67,7 +67,7 @@ impl R {
 impl W {
     ///Bit 0 - MOCO Stop
     #[inline(always)]
-    pub fn mcstp(&mut self) -> MCSTP_W<MOCOCR_SPEC> {
+    pub fn mcstp(&mut self) -> MCSTP_W<'_, MOCOCR_SPEC> {
         MCSTP_W::new(self, 0)
     }
 }

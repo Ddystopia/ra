@@ -55,12 +55,12 @@ impl R {
 impl W {
     ///Bits 7:22 - Specifies the memory mirror address.NOTE: A value cannot be set in the low-order 7 bits. These bits are fixed to 0.
     #[inline(always)]
-    pub fn memmiraddr(&mut self) -> MEMMIRADDR_W<MMSFR_SPEC> {
+    pub fn memmiraddr(&mut self) -> MEMMIRADDR_W<'_, MMSFR_SPEC> {
         MEMMIRADDR_W::new(self, 7)
     }
     ///Bits 24:31 - MMSFR Key Code
     #[inline(always)]
-    pub fn key(&mut self) -> KEY_W<MMSFR_SPEC> {
+    pub fn key(&mut self) -> KEY_W<'_, MMSFR_SPEC> {
         KEY_W::new(self, 24)
     }
 }

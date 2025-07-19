@@ -16,7 +16,7 @@ impl R {
 impl W {
     ///Bits 0:15 - Value These bits store the USB request Value value.
     #[inline(always)]
-    pub fn wvalue(&mut self) -> WVALUE_W<USBVAL_SPEC> {
+    pub fn wvalue(&mut self) -> WVALUE_W<'_, USBVAL_SPEC> {
         WVALUE_W::new(self, 0)
     }
 }

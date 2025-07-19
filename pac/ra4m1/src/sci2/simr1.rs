@@ -133,12 +133,12 @@ impl R {
 impl W {
     ///Bit 0 - Simple I2C Mode Select
     #[inline(always)]
-    pub fn iicm(&mut self) -> IICM_W<SIMR1_SPEC> {
+    pub fn iicm(&mut self) -> IICM_W<'_, SIMR1_SPEC> {
         IICM_W::new(self, 0)
     }
     ///Bits 3:7 - SDA Delay Output Select Cycles below are of the clock signal from the on-chip baud rate generator.
     #[inline(always)]
-    pub fn iicdl(&mut self) -> IICDL_W<SIMR1_SPEC> {
+    pub fn iicdl(&mut self) -> IICDL_W<'_, SIMR1_SPEC> {
         IICDL_W::new(self, 3)
     }
 }

@@ -247,22 +247,22 @@ impl R {
 impl W {
     ///Bit 0 - CPU Read protection
     #[inline(always)]
-    pub fn rpcpu(&mut self) -> RPCPU_W<SMPUFBIU_SPEC> {
+    pub fn rpcpu(&mut self) -> RPCPU_W<'_, SMPUFBIU_SPEC> {
         RPCPU_W::new(self, 0)
     }
     ///Bit 1 - CPU Write protection
     #[inline(always)]
-    pub fn wpcpu(&mut self) -> WPCPU_W<SMPUFBIU_SPEC> {
+    pub fn wpcpu(&mut self) -> WPCPU_W<'_, SMPUFBIU_SPEC> {
         WPCPU_W::new(self, 1)
     }
     ///Bit 2 - Master Group A Read protection
     #[inline(always)]
-    pub fn rpgrpa(&mut self) -> RPGRPA_W<SMPUFBIU_SPEC> {
+    pub fn rpgrpa(&mut self) -> RPGRPA_W<'_, SMPUFBIU_SPEC> {
         RPGRPA_W::new(self, 2)
     }
     ///Bit 3 - Master Group A Write protection
     #[inline(always)]
-    pub fn wpgrpa(&mut self) -> WPGRPA_W<SMPUFBIU_SPEC> {
+    pub fn wpgrpa(&mut self) -> WPGRPA_W<'_, SMPUFBIU_SPEC> {
         WPGRPA_W::new(self, 3)
     }
 }

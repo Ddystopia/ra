@@ -307,27 +307,27 @@ impl R {
 impl W {
     ///Bit 0 - AN116 Select
     #[inline(always)]
-    pub fn cmpcha16(&mut self) -> CMPCHA16_W<ADCMPANSR1_SPEC> {
+    pub fn cmpcha16(&mut self) -> CMPCHA16_W<'_, ADCMPANSR1_SPEC> {
         CMPCHA16_W::new(self, 0)
     }
     ///Bit 1 - AN117 Select
     #[inline(always)]
-    pub fn cmpcha17(&mut self) -> CMPCHA17_W<ADCMPANSR1_SPEC> {
+    pub fn cmpcha17(&mut self) -> CMPCHA17_W<'_, ADCMPANSR1_SPEC> {
         CMPCHA17_W::new(self, 1)
     }
     ///Bit 2 - AN118 Select
     #[inline(always)]
-    pub fn cmpcha18(&mut self) -> CMPCHA18_W<ADCMPANSR1_SPEC> {
+    pub fn cmpcha18(&mut self) -> CMPCHA18_W<'_, ADCMPANSR1_SPEC> {
         CMPCHA18_W::new(self, 2)
     }
     ///Bit 3 - AN119 Select
     #[inline(always)]
-    pub fn cmpcha19(&mut self) -> CMPCHA19_W<ADCMPANSR1_SPEC> {
+    pub fn cmpcha19(&mut self) -> CMPCHA19_W<'_, ADCMPANSR1_SPEC> {
         CMPCHA19_W::new(self, 3)
     }
     ///Bit 4 - AN120 Select
     #[inline(always)]
-    pub fn cmpcha20(&mut self) -> CMPCHA20_W<ADCMPANSR1_SPEC> {
+    pub fn cmpcha20(&mut self) -> CMPCHA20_W<'_, ADCMPANSR1_SPEC> {
         CMPCHA20_W::new(self, 4)
     }
 }

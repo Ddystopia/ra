@@ -446,37 +446,37 @@ impl R {
 impl W {
     ///Bits 0:1 - Clock Enable
     #[inline(always)]
-    pub fn cke(&mut self) -> CKE_W<SCR_SPEC> {
+    pub fn cke(&mut self) -> CKE_W<'_, SCR_SPEC> {
         CKE_W::new(self, 0)
     }
     ///Bit 2 - Transmit End Interrupt Enable
     #[inline(always)]
-    pub fn teie(&mut self) -> TEIE_W<SCR_SPEC> {
+    pub fn teie(&mut self) -> TEIE_W<'_, SCR_SPEC> {
         TEIE_W::new(self, 2)
     }
     ///Bit 3 - Multi-Processor Interrupt Enable (Valid in asynchronous mode when SMR.MP = 1)
     #[inline(always)]
-    pub fn mpie(&mut self) -> MPIE_W<SCR_SPEC> {
+    pub fn mpie(&mut self) -> MPIE_W<'_, SCR_SPEC> {
         MPIE_W::new(self, 3)
     }
     ///Bit 4 - Receive Enable
     #[inline(always)]
-    pub fn re(&mut self) -> RE_W<SCR_SPEC> {
+    pub fn re(&mut self) -> RE_W<'_, SCR_SPEC> {
         RE_W::new(self, 4)
     }
     ///Bit 5 - Transmit Enable
     #[inline(always)]
-    pub fn te(&mut self) -> TE_W<SCR_SPEC> {
+    pub fn te(&mut self) -> TE_W<'_, SCR_SPEC> {
         TE_W::new(self, 5)
     }
     ///Bit 6 - Receive Interrupt Enable
     #[inline(always)]
-    pub fn rie(&mut self) -> RIE_W<SCR_SPEC> {
+    pub fn rie(&mut self) -> RIE_W<'_, SCR_SPEC> {
         RIE_W::new(self, 6)
     }
     ///Bit 7 - Transmit Interrupt Enable
     #[inline(always)]
-    pub fn tie(&mut self) -> TIE_W<SCR_SPEC> {
+    pub fn tie(&mut self) -> TIE_W<'_, SCR_SPEC> {
         TIE_W::new(self, 7)
     }
 }
