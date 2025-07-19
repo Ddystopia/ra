@@ -6,15 +6,15 @@ macro_rules! const_c_dyn {
     ) => {
         const {
             use $p as srcpath;
-            static CTRL: srcpath::for_c_dyn_macro_Instance =
-                srcpath::for_c_dyn_macro_Instance::new();
-            static CONF: srcpath::for_c_dyn_macro_Config = $cfg.c_conf();
+            use srcpath::_for_c_dyn_macro as macro_export;
+            static CTRL: macro_export::Instance = macro_export::Instance::new();
+            static CONF: macro_export::Config = $cfg.c_conf();
 
             // SAFETY: CTRL is private to that scope, thus no other mutable
             //         references will be used and will not cause data races
             let static_mut = unsafe { &mut *CTRL.ptr().cast() };
 
-            srcpath::c_dyn(::core::pin::Pin::static_mut(static_mut), &CONF)
+            macro_export::c_dyn(::core::pin::Pin::static_mut(static_mut), &CONF)
         }
     };
 }

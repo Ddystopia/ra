@@ -33,11 +33,24 @@ pub struct EtherPhyConfig {
 }
 
 #[doc(hidden)]
-#[allow(non_camel_case_types)]
-pub type for_c_dyn_macro_Config = ether_phy_cfg_t;
-#[doc(hidden)]
-#[allow(non_camel_case_types)]
-pub type for_c_dyn_macro_Instance = EtherPhyInstance;
+pub mod _for_c_dyn_macro {
+    #![allow(non_camel_case_types)]
+
+    use super::*;
+
+    pub type Config = ether_phy_cfg_t;
+    pub type Instance = EtherPhyInstance;
+    pub const fn c_dyn(
+        this: Pin<&mut EtherPhyInstance>,
+        conf: &'static ether_phy_cfg_t,
+    ) -> ether_phy_instance_t {
+        ether_phy_instance_t {
+            p_ctrl: get_mut(this),
+            p_cfg: conf,
+            p_api: &raw const g_ether_phy_on_ether_phy,
+        }
+    }
+}
 
 pub unsafe trait EtherPhy {
     fn open(self: Pin<&mut Self>, conf: &'static ether_phy_cfg_t) -> Result<(), fsp_err_t>;
@@ -70,7 +83,7 @@ unsafe impl EtherPhy for EtherPhyInstance {
         }
     }
     fn c_dyn(self: Pin<&mut Self>, conf: &'static ether_phy_cfg_t) -> ether_phy_instance_t {
-        c_dyn(self, conf)
+        _for_c_dyn_macro::c_dyn(self, conf)
     }
 }
 

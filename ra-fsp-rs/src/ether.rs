@@ -40,7 +40,7 @@ use ra_fsp_sys::generated::{
     R_ETHER_CallbackSet, R_ETHER_Close, R_ETHER_LinkProcess, R_ETHER_Open, R_ETHER_Read,
     R_ETHER_RxBufferUpdate, R_ETHER_TxStatusGet, R_ETHER_WakeOnLANEnable, R_ETHER_Write,
     e_ether_padding, ether_extended_cfg_t, ether_instance_descriptor_t, ether_phy_instance_t,
-    fsp_err_t, st_ether_instance_ctrl,
+    fsp_err_t
 };
 
 pub use ra_fsp_sys::generated::{
@@ -112,6 +112,27 @@ pub struct EtherConfig<const BUF_SIZE: usize> {
 
     c_ext_cfg: UnsafePinned<MaybeUninit<ether_extended_cfg_t>>,
     c_cfg: UnsafePinned<MaybeUninit<ether_cfg_t>>,
+}
+
+// fixme: add generics support for macro
+#[doc(hidden)]
+pub mod _for_c_dyn_macro {
+    #![allow(non_camel_case_types)]
+
+    use super::*;
+
+    pub type Config = ether_cfg_t;
+    pub type Instance<const BUF_SIZE: usize> = EtherInstance<BUF_SIZE>;
+    pub const fn c_dyn<const BUF_SIZE: usize>(
+        this: Pin<&mut EtherInstance<BUF_SIZE>>,
+        conf: &'static ether_cfg_t,
+    ) -> ether_instance_t {
+        ether_instance_t {
+            p_ctrl: get_mut(this),
+            p_cfg: conf,
+            p_api: &raw const g_ether_on_ether,
+        }
+    }
 }
 
 unsafe extern "C" {

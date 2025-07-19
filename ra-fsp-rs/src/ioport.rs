@@ -1,10 +1,10 @@
 #![allow(non_upper_case_globals)]
 
-use core::{mem::MaybeUninit, pin::Pin, ptr};
+use core::{mem::MaybeUninit, pin::Pin};
 
 use crate::unsafe_pinned::UnsafePinned;
 
-use ra_fsp_sys::generated::{fsp_err_t, st_ioport_instance_ctrl, R_IOPORT_Close, R_IOPORT_Open};
+use ra_fsp_sys::generated::{R_IOPORT_Close, R_IOPORT_Open, fsp_err_t};
 
 pub use ra_fsp_sys::generated::{
     e_bsp_io_port_pin_t, //
@@ -23,12 +23,27 @@ pub struct IoPortInstance(UnsafePinned<ioport_instance_ctrl_t>);
 #[derive(Debug, Copy, Clone)]
 pub struct IoPortConfig(pub &'static [ioport_pin_cfg_t]);
 
+// Could be a trait if const members are allowed
 #[doc(hidden)]
-#[allow(non_camel_case_types)]
-pub type for_c_dyn_macro_Config = ioport_cfg_t;
-#[doc(hidden)]
-#[allow(non_camel_case_types)]
-pub type for_c_dyn_macro_Instance = IoPortInstance;
+pub mod _for_c_dyn_macro {
+    #![allow(non_camel_case_types)]
+
+    use super::*;
+
+    pub type Config = ioport_cfg_t;
+    pub type Instance = IoPortInstance;
+
+    pub const fn c_dyn(
+        this: Pin<&mut IoPortInstance>,
+        conf: &'static ioport_cfg_t,
+    ) -> ioport_instance_t {
+        ioport_instance_t {
+            p_ctrl: get_mut(this),
+            p_cfg: conf,
+            p_api: &raw const g_ioport_on_ioport,
+        }
+    }
+}
 
 // todo: ensure that drivers to not store `p_ctrl`, or else we need
 //       to ensure `'static` lifetime of `self`, but still allow `&mut`.
@@ -38,17 +53,6 @@ pub unsafe trait IoPort {
     fn open(self: Pin<&mut Self>, conf: &'static ioport_cfg_t) -> Result<(), fsp_err_t>;
     fn close(self: Pin<&mut Self>) -> Result<(), fsp_err_t>;
     fn c_dyn(self: Pin<&mut Self>, conf: &'static ioport_cfg_t) -> ioport_instance_t;
-}
-
-pub const fn c_dyn(
-    this: Pin<&mut IoPortInstance>,
-    conf: &'static ioport_cfg_t,
-) -> ioport_instance_t {
-    ioport_instance_t {
-        p_ctrl: get_mut(this),
-        p_cfg: conf,
-        p_api: &raw const g_ioport_on_ioport,
-    }
 }
 
 unsafe impl IoPort for IoPortInstance {
@@ -65,7 +69,7 @@ unsafe impl IoPort for IoPortInstance {
         }
     }
     fn c_dyn(self: Pin<&mut Self>, conf: &'static ioport_cfg_t) -> ioport_instance_t {
-        c_dyn(self, conf)
+        _for_c_dyn_macro::c_dyn(self, conf)
     }
 }
 
