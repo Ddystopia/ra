@@ -15,13 +15,14 @@ This crate should be used *instead* of `cortex-m-rt`, but it makes a best effort
 - `FSP_CFG` env variable with header files to configure FSP.
   - Contains all `r_.*_cfg.h` coniguration files.
   - Containst `/bsp` directory witb bsp configurations, like `bsp_cfg.h`, `board_cfg.h`, `bsp_clock_cfg.h` etc.
-- `memory.x`.
-- Use [PAC](https://github.com/Ddystopia/ra/tree/main/pac) crate, which will have `device.x` and export IV.
-- Add `-C link-arg=-Tra-fsp-sys.x` (as `-Tlink.x` with `cortex-m-rt`).
 - `FSP_PATH` env variable provides the source code for FSP.
 - `CMSIS_PATH` env variable provides the source code for CMSIS.
+- `memory.x`.
+- `fsp_base.ld`, linker script provided by FSP for your MCU.
+- Use [PAC](https://github.com/Ddystopia/ra/tree/main/pac) crate, which will have `device.x` and export IV.
+- Add `-C link-arg=-Tra-fsp-sys.x` (as `-Tlink.x` with `cortex-m-rt`).
 
-## Security Considerations
+## Footgun
 
 Renesas devices support ID code protection via the OSIS register:
 
