@@ -1,7 +1,6 @@
 #![no_std]
 #![feature(ptr_metadata)]
 
-// todo: set stackoverflow protection: splim
 // todo: study bsp_cfg.h in more depth
 // BSP_FEATURE_ICU_FIXED_IELSR_COUNT
 
