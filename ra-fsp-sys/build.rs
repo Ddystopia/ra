@@ -98,22 +98,22 @@ pub fn wrap_component(modules: &[&str]) {
     // compile fsp library
 
     let bsp_stems = [
+        "bsp_clocks",
+        "bsp_common",
+        "bsp_delay",
+        "bsp_group_irq", // NMI_Handler
+        "bsp_guard",
+        "bsp_io",
+        "bsp_irq",
+        "bsp_linker",
+        "bsp_macl",
+        "bsp_power",
+        "bsp_register_protection",
+        "bsp_rom_registers",
+        "bsp_sbrk",
+        "bsp_security",
         "startup",
         "system",
-        "bsp_linker",
-        "bsp_io",
-        "bsp_clocks",
-        "bsp_delay",
-        "bsp_irq",
-        "bsp_common",
-        "bsp_register_protection",
-        "bsp_power",
-        "bsp_security",
-        "bsp_macl",
-        "bsp_group_irq", // NMI_Handler
-        "bsp_rom_registers",
-        "bsp_guard",
-        "bsp_sbrk",
     ];
     let mut build = cc::Build::new();
 
