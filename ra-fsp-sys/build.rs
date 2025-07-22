@@ -100,6 +100,7 @@ pub fn wrap_component(modules: &[&str]) {
     let bsp_stems = [
         "startup",
         "system",
+        "bsp_linker",
         "bsp_io",
         "bsp_clocks",
         "bsp_delay",
