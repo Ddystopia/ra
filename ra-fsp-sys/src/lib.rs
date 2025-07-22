@@ -1,9 +1,6 @@
 #![no_std]
 #![feature(ptr_metadata)]
 
-// todo: study bsp_cfg.h in more depth
-// BSP_FEATURE_ICU_FIXED_IELSR_COUNT
-
 pub mod generated {
     #![allow(non_camel_case_types)]
     #![allow(non_upper_case_globals)]
