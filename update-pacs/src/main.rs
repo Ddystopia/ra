@@ -9,8 +9,8 @@ use svd2rust::config::IdentFormatsTheme;
 
 const MANIFEST_TEMPLATE: &str = r#"
 [package]
-name = "@name@-fsp-pac"
-description = "Peripheral access API for @NAME@ microcontrollers (generated using svd2rust)"
+name = "%name%-fsp-pac"
+description = "Peripheral access API for %NAME% microcontrollers (generated using svd2rust)"
 version = { workspace = true }
 authors = [
     "Nathan Larsen <n8tlarsen@gmail.com>",
@@ -61,7 +61,7 @@ It is designed to preserve the familiar `cortex-m-rt` interface while handling `
 ## Features
 
 - **`rt`**: Includes IV in ".application_vectors" section. Does not enable any runtime. Either use `ra-fsp-sys` or `cortex-m-rt/device`.
-- **`fsp`**: places IV in ".application_vectors" section. You still need to add `ra-fsp-sys/@name@` or `ra-fsp-rs/@name@` crate to your dependencies.
+- **`fsp`**: places IV in ".application_vectors" section. You still need to add `ra-fsp-sys/%name%` or `ra-fsp-rs/%name%` crate to your dependencies.
 - **`cortex-m-rt-device`**: places IV in ".vector_table.interrupts" section and enables `cortex-m-rt/device` feature.
 
 [`ra-fsp-sys`]: https://docs.rs/ra-fsp-sys/
@@ -78,9 +78,14 @@ Add this crate to your `Cargo.toml`:
 To enable the FSP‑based runtime:
 
 ```toml
+# If you want to use `ra-fsp-rs`
+[dependencies]
+ra-fsp-rs = { version = "0.*", features = ["%name%"] }
+
+# If you want to use bare bindings
 [dependencies]
 %name%_pac = { version = "0.*", features = ["rt", "fsp"] }
-ra_fsp-sys = { version = "0.*", features = ["@name@"] }
+ra-fsp-sys = { version = "0.*", features = ["%name%"] }
 ```
 
 ## Usage
@@ -254,8 +259,8 @@ fn generate_pac(pac_dir: &Path, name: &str, svd_file: &Path) -> Result<()> {
     let output = pac_dir.join("src");
 
     let manifest = MANIFEST_TEMPLATE
-        .replace("@name@", &name)
-        .replace("@NAME@", &name_upper);
+        .replace("%name%", &name)
+        .replace("%NAME%", &name_upper);
 
     fs::write(pac_dir.join("Cargo.toml"), manifest).context("Failed to write Cargo.toml")?;
 
