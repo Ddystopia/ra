@@ -7,6 +7,7 @@ macro_rules! const_c_dyn {
         const {
             use $p as srcpath;
             use srcpath::_for_c_dyn_macro as macro_export;
+
             use ::core::ffi::c_void;
 
             static CTRL: macro_export::Instance = macro_export::Instance::new();

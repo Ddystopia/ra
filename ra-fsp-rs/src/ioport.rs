@@ -1,21 +1,22 @@
-#![allow(non_upper_case_globals)]
+use {
+    crate::unsafe_pinned::UnsafePinned,
+    core::{mem::MaybeUninit, pin::Pin},
+    ra_fsp_sys::generated::{R_IOPORT_Close, R_IOPORT_Open, fsp_err_t},
+};
 
-use core::{mem::MaybeUninit, pin::Pin};
-
-use crate::unsafe_pinned::UnsafePinned;
-
-use ra_fsp_sys::generated::{R_IOPORT_Close, R_IOPORT_Open, fsp_err_t};
-
-pub use ra_fsp_sys::generated::{
-    e_bsp_io_port_pin_t, //
-    e_ioport_cfg_options,
-    e_ioport_peripheral,
-    g_ioport_on_ioport,
-    ioport_api_t,
-    ioport_cfg_t,
-    ioport_instance_ctrl_t,
-    ioport_instance_t,
-    ioport_pin_cfg_t,
+pub use {
+    crate::fsp_driver_interfaces::ioport::IoPort,
+    ra_fsp_sys::generated::{
+        e_bsp_io_port_pin_t, //
+        e_ioport_cfg_options,
+        e_ioport_peripheral,
+        g_ioport_on_ioport,
+        ioport_api_t,
+        ioport_cfg_t,
+        ioport_instance_ctrl_t,
+        ioport_instance_t,
+        ioport_pin_cfg_t,
+    },
 };
 
 pub struct IoPortInstance(UnsafePinned<ioport_instance_ctrl_t>);
@@ -36,18 +37,6 @@ pub mod _for_c_dyn_macro {
     pub type CApi = ioport_api_t;
 
     pub const C_API: &CApi = unsafe { &g_ioport_on_ioport };
-}
-
-// todo: ensure that drivers to not store `p_ctrl`, or else we need
-//       to ensure `'static` lifetime of `self`, but still allow `&mut`.
-//       If that stored pointer is used concurrently with `&mut`, would this
-//       introduce races? It's okay to alias `&mut` due to `UnsafePinned`.
-pub unsafe trait IoPort {
-    fn open(self: Pin<&mut Self>, conf: &'static ioport_cfg_t) -> Result<(), fsp_err_t>;
-    fn close(self: Pin<&mut Self>) -> Result<(), fsp_err_t>;
-    fn c_api(&self) -> &'static ioport_api_t {
-        unsafe { &*&raw const g_ioport_on_ioport }
-    }
 }
 
 unsafe impl IoPort for IoPortInstance {

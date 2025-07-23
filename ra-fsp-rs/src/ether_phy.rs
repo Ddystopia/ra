@@ -1,16 +1,24 @@
 #![allow(non_upper_case_globals)]
-
-use core::{mem::MaybeUninit, pin::Pin, ptr};
-
-use crate::unsafe_pinned::UnsafePinned;
-
-use ra_fsp_sys::generated::{
-    R_ETHER_PHY_Close, R_ETHER_PHY_Open, fsp_err_t, st_ether_phy_instance_ctrl,
+use {
+    crate::unsafe_pinned::UnsafePinned,
+    core::{mem::MaybeUninit, pin::Pin, ptr},
+    ra_fsp_sys::generated::{
+        R_ETHER_PHY_Close, R_ETHER_PHY_Open, fsp_err_t, st_ether_phy_instance_ctrl,
+    },
 };
 
-pub use ra_fsp_sys::generated::{
-    e_ether_phy_flow_control, e_ether_phy_lsi_type, e_ether_phy_mii_type, ether_phy_api_t,
-    ether_phy_cfg_t, ether_phy_instance_ctrl_t, ether_phy_instance_t, g_ether_phy_on_ether_phy,
+pub use {
+    crate::fsp_driver_interfaces::ether_phy::EtherPhy,
+    ra_fsp_sys::generated::{
+        e_ether_phy_flow_control, //
+        e_ether_phy_lsi_type,
+        e_ether_phy_mii_type,
+        ether_phy_api_t,
+        ether_phy_cfg_t,
+        ether_phy_instance_ctrl_t,
+        ether_phy_instance_t,
+        g_ether_phy_on_ether_phy,
+    },
 };
 
 pub struct EtherPhyInstance(UnsafePinned<ether_phy_instance_ctrl_t>);
@@ -38,12 +46,6 @@ pub mod _for_c_dyn_macro {
     pub type CApi = ether_phy_api_t;
 
     pub const C_API: &CApi = unsafe { &g_ether_phy_on_ether_phy };
-}
-
-pub unsafe trait EtherPhy {
-    fn open(self: Pin<&mut Self>, conf: &'static ether_phy_cfg_t) -> Result<(), fsp_err_t>;
-    fn close(self: Pin<&mut Self>) -> Result<(), fsp_err_t>;
-    fn c_api(&self) -> &'static ether_phy_api_t;
 }
 
 unsafe impl EtherPhy for EtherPhyInstance {

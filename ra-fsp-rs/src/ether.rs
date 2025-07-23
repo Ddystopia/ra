@@ -1,11 +1,36 @@
 #![allow(non_upper_case_globals)]
+use {
+    crate::{log, pac::Interrupt, unsafe_pinned::UnsafePinned},
+    core::{
+        marker::PhantomData,
+        mem::MaybeUninit,
+        ops::{Deref, DerefMut},
+        pin::Pin,
+        ptr,
+    },
+};
 
-use core::marker::PhantomData;
-use core::mem::MaybeUninit;
-use core::ops::{Deref, DerefMut};
-use core::{pin::Pin, ptr};
+pub use ra_fsp_sys::{
+    generated::{
+        FSP_ERR_ETHER_ERROR_LINK,
+        FSP_ERR_ETHER_ERROR_NO_DATA,
+        ether_api_t, //
+        ether_callback_args_t,
+        ether_cfg_t,
+        ether_instance_ctrl_t,
+        ether_instance_t,
+        g_ether_on_ether,
+    },
+    r_ether::{InterruptCause, interrupt_cause},
+};
 
-use crate::log;
+use ra_fsp_sys::generated::{
+    ETHER_LINK_ESTABLISH_STATUS_UP, ETHER_ZEROCOPY_DISABLE, ETHER_ZEROCOPY_ENABLE,
+    R_ETHER_CallbackSet, R_ETHER_Close, R_ETHER_LinkProcess, R_ETHER_Open, R_ETHER_Read,
+    R_ETHER_RxBufferUpdate, R_ETHER_TxStatusGet, R_ETHER_WakeOnLANEnable, R_ETHER_Write,
+    e_ether_padding, ether_extended_cfg_t, ether_instance_descriptor_t, ether_phy_instance_t,
+    fsp_err_t,
+};
 
 /*
 
@@ -31,30 +56,6 @@ Read:
 
 
 */
-
-pub use ra_fsp_sys::r_ether::{InterruptCause, interrupt_cause};
-
-use crate::pac::Interrupt;
-use crate::unsafe_pinned::UnsafePinned;
-
-use ra_fsp_sys::generated::{
-    ETHER_LINK_ESTABLISH_STATUS_UP, ETHER_ZEROCOPY_DISABLE, ETHER_ZEROCOPY_ENABLE,
-    R_ETHER_CallbackSet, R_ETHER_Close, R_ETHER_LinkProcess, R_ETHER_Open, R_ETHER_Read,
-    R_ETHER_RxBufferUpdate, R_ETHER_TxStatusGet, R_ETHER_WakeOnLANEnable, R_ETHER_Write,
-    e_ether_padding, ether_extended_cfg_t, ether_instance_descriptor_t, ether_phy_instance_t,
-    fsp_err_t,
-};
-
-pub use ra_fsp_sys::generated::{
-    FSP_ERR_ETHER_ERROR_LINK,
-    FSP_ERR_ETHER_ERROR_NO_DATA,
-    ether_api_t, //
-    ether_callback_args_t,
-    ether_cfg_t,
-    ether_instance_ctrl_t,
-    ether_instance_t,
-    g_ether_on_ether,
-};
 
 pub struct EtherInstance<const BUF_SIZE: usize> {
     inst: UnsafePinned<ether_instance_ctrl_t>,
