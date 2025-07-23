@@ -162,6 +162,7 @@ pub fn wrap_component(modules: &[&str]) {
                 #include "renesas.h"
                 #include "bsp_elc.h"
                 #include "bsp_irq.h"
+                #include "fsp_version.h"
             "#,
         )
         .header_contents(
@@ -200,6 +201,7 @@ pub fn wrap_component(modules: &[&str]) {
         .allowlist_item("fsp_err_t")
         .rustified_enum(&format!("e_elc_event_{mcu_group}"))
         .allowlist_item("BSP_ICU_VECTOR_MAX_ENTRIES")
+        .allowlist_item("FSP_VERSION_.*")
         // -
         ;
 

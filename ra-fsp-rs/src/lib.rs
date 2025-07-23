@@ -1,11 +1,17 @@
 #![cfg_attr(not(test), no_std)]
 
-mod pacs;
-mod macros;
 mod log;
+mod macros;
+mod pacs;
 
-pub use ra_fsp_sys;
+pub const FSP_VERSION: (u32, u32, u32) = (
+    ra_fsp_sys::generated::FSP_VERSION_MAJOR,
+    ra_fsp_sys::generated::FSP_VERSION_MINOR,
+    ra_fsp_sys::generated::FSP_VERSION_PATCH,
+);
+
 pub use pacs::pac;
+pub use ra_fsp_sys;
 
 pub use ra_fsp_sys::generated::e_elc_event;
 
