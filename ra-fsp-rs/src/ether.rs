@@ -40,7 +40,7 @@ use ra_fsp_sys::generated::{
     R_ETHER_CallbackSet, R_ETHER_Close, R_ETHER_LinkProcess, R_ETHER_Open, R_ETHER_Read,
     R_ETHER_RxBufferUpdate, R_ETHER_TxStatusGet, R_ETHER_WakeOnLANEnable, R_ETHER_Write,
     e_ether_padding, ether_extended_cfg_t, ether_instance_descriptor_t, ether_phy_instance_t,
-    fsp_err_t
+    fsp_err_t,
 };
 
 pub use ra_fsp_sys::generated::{
@@ -126,9 +126,8 @@ pub mod _for_c_dyn_macro {
     pub type CInstance = ether_instance_t;
     pub type CApi = ether_api_t;
 
-    pub const C_API: &'static CApi = unsafe { &*&raw const g_ether_on_ether };
+    pub const C_API: &CApi = unsafe { &g_ether_on_ether };
 }
-
 unsafe extern "C" {
     pub safe fn ether_eint_isr();
 }

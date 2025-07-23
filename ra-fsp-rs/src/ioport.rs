@@ -35,7 +35,7 @@ pub mod _for_c_dyn_macro {
     pub type CInstance = ioport_instance_t;
     pub type CApi = ioport_api_t;
 
-    pub const C_API: &'static CApi = unsafe { &*&raw const g_ioport_on_ioport };
+    pub const C_API: &CApi = unsafe { &g_ioport_on_ioport };
 }
 
 // todo: ensure that drivers to not store `p_ctrl`, or else we need

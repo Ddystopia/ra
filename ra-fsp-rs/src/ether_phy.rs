@@ -37,7 +37,7 @@ pub mod _for_c_dyn_macro {
     pub type CInstance = ether_phy_instance_t;
     pub type CApi = ether_phy_api_t;
 
-    pub const C_API: &'static CApi = unsafe { &*&raw const g_ether_phy_on_ether_phy };
+    pub const C_API: &CApi = unsafe { &g_ether_phy_on_ether_phy };
 }
 
 pub unsafe trait EtherPhy {
