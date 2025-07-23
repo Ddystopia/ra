@@ -5,6 +5,8 @@ use core::mem::MaybeUninit;
 use core::ops::{Deref, DerefMut};
 use core::{pin::Pin, ptr};
 
+use crate::log;
+
 /*
 
 Write:
