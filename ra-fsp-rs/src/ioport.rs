@@ -32,17 +32,10 @@ pub mod _for_c_dyn_macro {
 
     pub type Config = ioport_cfg_t;
     pub type Instance = IoPortInstance;
+    pub type CInstance = ioport_instance_t;
+    pub type CApi = ioport_api_t;
 
-    pub const fn c_dyn(
-        this: Pin<&mut IoPortInstance>,
-        conf: &'static ioport_cfg_t,
-    ) -> ioport_instance_t {
-        ioport_instance_t {
-            p_ctrl: get_mut(this),
-            p_cfg: conf,
-            p_api: &raw const g_ioport_on_ioport,
-        }
-    }
+    pub const C_API: &'static CApi = unsafe { &*&raw const g_ioport_on_ioport };
 }
 
 // todo: ensure that drivers to not store `p_ctrl`, or else we need
@@ -52,7 +45,9 @@ pub mod _for_c_dyn_macro {
 pub unsafe trait IoPort {
     fn open(self: Pin<&mut Self>, conf: &'static ioport_cfg_t) -> Result<(), fsp_err_t>;
     fn close(self: Pin<&mut Self>) -> Result<(), fsp_err_t>;
-    fn c_dyn(self: Pin<&mut Self>, conf: &'static ioport_cfg_t) -> ioport_instance_t;
+    fn c_api(&self) -> &'static ioport_api_t {
+        unsafe { &*&raw const g_ioport_on_ioport }
+    }
 }
 
 unsafe impl IoPort for IoPortInstance {
@@ -68,8 +63,8 @@ unsafe impl IoPort for IoPortInstance {
             err => Err(err),
         }
     }
-    fn c_dyn(self: Pin<&mut Self>, conf: &'static ioport_cfg_t) -> ioport_instance_t {
-        _for_c_dyn_macro::c_dyn(self, conf)
+    fn c_api(&self) -> &'static ioport_api_t {
+        _for_c_dyn_macro::C_API
     }
 }
 

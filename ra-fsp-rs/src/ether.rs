@@ -123,16 +123,10 @@ pub mod _for_c_dyn_macro {
 
     pub type Config = ether_cfg_t;
     pub type Instance<const BUF_SIZE: usize> = EtherInstance<BUF_SIZE>;
-    pub const fn c_dyn<const BUF_SIZE: usize>(
-        this: Pin<&mut EtherInstance<BUF_SIZE>>,
-        conf: &'static ether_cfg_t,
-    ) -> ether_instance_t {
-        ether_instance_t {
-            p_ctrl: get_mut(this),
-            p_cfg: conf,
-            p_api: &raw const g_ether_on_ether,
-        }
-    }
+    pub type CInstance = ether_instance_t;
+    pub type CApi = ether_api_t;
+
+    pub const C_API: &'static CApi = unsafe { &*&raw const g_ether_on_ether };
 }
 
 unsafe extern "C" {
