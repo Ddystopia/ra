@@ -137,7 +137,7 @@ fn main() -> Result<()> {
 
     eprintln!("Generating PACs");
 
-    if !fs::exists("svd/vendor") {
+    if !fs::exists("svd/vendor").unwrap_or(false) {
         return Err(anyhow::anyhow!("`./svd/vendor` directory does not exist."));
     }
 
