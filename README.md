@@ -12,9 +12,10 @@ Order should be:
 2. PACs
 3. `ra-fsp-rs`
 
-When generating PACs and bumping versions, `ra-fsp-rs` should be temporary removed from the workspace, because it depends on the PACs which are not yet publised.
-
-When publishing, remove all workspace deps and member of the workspace until they needed.
+- Bump workspace version in `Cargo.toml`, tag as new version.
+- Publish `ra-fsp-sys` and PACs concurrently.
+- Bump workspace dependencies versions (of the crates we just published).
+- Publish `ra-fsp-rs`.
 
 ```bash
 
