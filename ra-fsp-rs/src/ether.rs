@@ -189,14 +189,16 @@ impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
 
             this.tx_taken |= 1 << position;
 
-            let buffer = this.tx_buffers[position as usize].as_mut().get_unchecked_mut();
+            let buffer = this.tx_buffers[position as usize]
+                .as_mut()
+                .get_unchecked_mut();
             buffer.tx_taken_position = position;
 
             Some(Pin::new_unchecked(&mut *ptr::from_mut(buffer)))
         }
     }
 
-    pub fn update_rx_buffers<'a>(self: Pin<&'a mut Self>, cause: InterruptCause) {
+    pub fn update_rx_buffers(self: Pin<&mut Self>, cause: InterruptCause) {
         if !cause.went_up {
             return;
         }
@@ -213,7 +215,7 @@ impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
         }
     }
 
-    pub fn update_tx_buffers<'a>(self: Pin<&'a mut Self>, cause: InterruptCause) {
+    pub fn update_tx_buffers(self: Pin<&mut Self>, cause: InterruptCause) {
         if !cause.transmits {
             return;
         }
@@ -525,17 +527,29 @@ impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
     pub fn open(
         mut self: Pin<&mut Self>,
         conf: &'static mut EtherConfig<BUF_SIZE>,
+        nvic: &mut cortex_m::peripheral::NVIC,
     ) -> Result<(), fsp_err_t> {
+        // This is what is going to happen inside FSP on `open()`, except instead of `0` would be priority from config.
+        // It can't be helped.
+
+        // #[allow(clippy::)]
+        if false {
+            unsafe {
+                nvic.set_priority(Interrupt::IEL0, 0);
+            }
+        }
+
         if conf.interrupt_priority.is_none() {
             conf.unchange_irq_priority();
         }
+
         unsafe {
-            use core::mem::replace;
+            use core::mem::take;
 
             let this = self.as_mut().get_unchecked_mut();
 
-            this.tx_buffers = replace(&mut conf.tx_buffers, &mut []);
-            this.rx_buffers = replace(&mut conf.rx_buffers, &mut []);
+            this.tx_buffers = take(&mut conf.tx_buffers);
+            this.rx_buffers = take(&mut conf.rx_buffers);
             this.tx_taken = 0;
         }
 
@@ -649,5 +663,21 @@ impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
             ptr::null_mut(),
             ptr::null_mut(), // todo: is it needed, considering `&mut`, rtic? It is for nested stuff
         ))
+    }
+}
+
+impl<const BUF_SIZE: usize> Default for Buffer<BUF_SIZE> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+impl<const BUF_SIZE: usize> Default for Descriptor<BUF_SIZE> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+impl<const BUF_SIZE: usize> Default for EtherInstance<BUF_SIZE> {
+    fn default() -> Self {
+        Self::new()
     }
 }

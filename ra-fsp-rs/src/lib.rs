@@ -50,10 +50,10 @@ pub use ra6t1_pac as pac;
 pub use ra6t2_pac as pac;
 #[cfg(feature = "ra6t3")]
 pub use ra6t3_pac as pac;
-#[cfg(feature = "ra8m1")]
-pub use ra8m1_pac as pac;
 #[cfg(feature = "ra8d1")]
 pub use ra8d1_pac as pac;
+#[cfg(feature = "ra8m1")]
+pub use ra8m1_pac as pac;
 #[cfg(feature = "ra8t1")]
 pub use ra8t1_pac as pac;
 
@@ -65,6 +65,12 @@ pub mod ether;
 pub mod ether_phy;
 #[cfg(feature = "mod-r_ioport")]
 pub mod ioport;
+
+#[cfg(any(feature = "smoltcp-ether"))]
+pub mod smoltcp {
+    #[cfg(feature = "smoltcp-ether")]
+    pub mod ether;
+}
 
 mod macros;
 
@@ -93,4 +99,3 @@ mod unsafe_pinned {
         }
     }
 }
-

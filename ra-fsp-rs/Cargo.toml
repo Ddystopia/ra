@@ -17,10 +17,13 @@ log = { version = "0.4.27", default-features = false, optional = true }
 ra6m3-pac = { workspace = true, optional = true, features = ["fsp"] }
 ra4m1-pac = { workspace = true, optional = true, features = ["fsp"] }
 
+smoltcp = { version = "0.12.0", default-features = false, optional = true }
+
 [features]
 default = ["log"]
 
 log = ["dep:log"]
+smoltcp-ether = ["dep:smoltcp", "ra-fsp-sys/mod-r_ether", "smoltcp/medium-ethernet"]
 
 mod-r_dmac = ["ra-fsp-sys/mod-r_dmac"]
 mod-r_elc = ["ra-fsp-sys/mod-r_elc"]
