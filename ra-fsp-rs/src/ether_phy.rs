@@ -1,27 +1,27 @@
 #![allow(non_upper_case_globals)]
-use {
-    crate::unsafe_pinned::UnsafePinned,
-    core::{mem::MaybeUninit, pin::Pin, ptr},
-    ra_fsp_sys::generated::{
-        R_ETHER_PHY_Close, R_ETHER_PHY_Open, fsp_err_t, st_ether_phy_instance_ctrl,
-    },
+use {crate::unsafe_pinned::UnsafePinned, core::ptr};
+
+pub use ra_fsp_sys::generated::{
+    ETHER_PHY_CFG_PARAM_CHECKING_ENABLE, //
+    e_ether_phy_lsi_type,
+    e_ether_phy_mii_type,
+    ether_phy_api_t,
+    ether_phy_cfg_t,
+    ether_phy_instance_ctrl_t,
+    ether_phy_instance_t,
+    g_ether_phy_on_ether_phy,
 };
 
-pub use {
-    crate::fsp_driver_interfaces::ether_phy::EtherPhy,
-    ra_fsp_sys::generated::{
-        e_ether_phy_flow_control, //
-        e_ether_phy_lsi_type,
-        e_ether_phy_mii_type,
-        ether_phy_api_t,
-        ether_phy_cfg_t,
-        ether_phy_instance_ctrl_t,
-        ether_phy_instance_t,
-        g_ether_phy_on_ether_phy,
-    },
-};
+const _: () = assert!(
+    ETHER_PHY_CFG_PARAM_CHECKING_ENABLE == 1,
+    "The FSP configuration option ETHER_PHY_CFG_PARAM_CHECKING_ENABLE is required with this crate, please enable it"
+);
 
-pub struct EtherPhyInstance(UnsafePinned<ether_phy_instance_ctrl_t>);
+pub struct EtherPhyInstance {
+    ctrl: UnsafePinned<ether_phy_instance_ctrl_t>,
+    cfg: UnsafePinned<ether_phy_cfg_t>,
+    inst: ether_phy_instance_t,
+}
 
 #[derive(Debug, Copy, Clone)]
 pub struct EtherPhyConfig {
@@ -34,53 +34,35 @@ pub struct EtherPhyConfig {
     pub mii_type: e_ether_phy_mii_type,
 }
 
-#[doc(hidden)]
-pub mod _for_c_dyn_macro {
-    #![allow(non_camel_case_types)]
+unsafe impl crate::Block for EtherPhyInstance {
+    type CConfig = ether_phy_cfg_t;
+    type CInstance = ether_phy_instance_t;
+    type CApi = ether_phy_api_t;
 
-    use super::*;
+    const API: &ether_phy_api_t = unsafe { &g_ether_phy_on_ether_phy };
 
-    pub type Config = ether_phy_cfg_t;
-    pub type Instance = EtherPhyInstance;
-    pub type CInstance = ether_phy_instance_t;
-    pub type CApi = ether_phy_api_t;
-
-    pub const C_API: &CApi = unsafe { &g_ether_phy_on_ether_phy };
-}
-
-unsafe impl EtherPhy for EtherPhyInstance {
-    fn open(self: Pin<&mut Self>, conf: &'static ether_phy_cfg_t) -> Result<(), fsp_err_t> {
-        match unsafe { R_ETHER_PHY_Open(get_mut(self), conf) } {
-            0 => Ok(()),
-            err => Err(err),
-        }
+    fn instance(&mut self) -> &mut ether_phy_instance_t {
+        self.inst.p_cfg = self.cfg.get().cast_const();
+        self.inst.p_ctrl = self.ctrl.get().cast::<core::ffi::c_void>();
+        &mut self.inst
     }
-    fn close(self: Pin<&mut Self>) -> Result<(), fsp_err_t> {
-        match unsafe { R_ETHER_PHY_Close(get_mut(self)) } {
-            0 => Ok(()),
-            err => Err(err),
-        }
-    }
-    fn c_api(&self) -> &'static ether_phy_api_t {
-        _for_c_dyn_macro::C_API
-    }
-}
-
-#[inline(always)]
-const fn get_mut(this: Pin<&mut EtherPhyInstance>) -> *mut core::ffi::c_void {
-    unsafe { this.get_unchecked_mut().ptr().cast() }
 }
 
 impl EtherPhyInstance {
-    pub const fn new() -> Self {
-        let ctrl: st_ether_phy_instance_ctrl = unsafe { MaybeUninit::zeroed().assume_init() };
+    pub const fn new(edmac: crate::pac::EDMAC0, conf: EtherPhyConfig) -> Self {
+        _ = edmac;
 
-        Self(UnsafePinned::new(ctrl))
-    }
-
-    #[inline(always)]
-    pub const fn ptr(&self) -> *mut ether_phy_instance_ctrl_t {
-        UnsafePinned::raw_get(&raw const self.0)
+        unsafe {
+            Self {
+                ctrl: UnsafePinned::new(core::mem::zeroed()),
+                cfg: UnsafePinned::new(conf.c_conf()),
+                inst: ether_phy_instance_t {
+                    p_ctrl: ptr::null_mut(),
+                    p_cfg: ptr::null(),
+                    p_api: <Self as crate::Block>::API,
+                },
+            }
+        }
     }
 }
 
@@ -99,22 +81,3 @@ impl EtherPhyConfig {
         }
     }
 }
-
-// fsp_err_t R_ETHER_PHY_Open(ether_phy_ctrl_t * const p_ctrl, ether_phy_cfg_t const * const p_cfg) __attribute__((optimize("O0")));
-//
-// fsp_err_t R_ETHER_PHY_Close(ether_phy_ctrl_t * const p_ctrl);
-//
-// fsp_err_t R_ETHER_PHY_ChipInit(ether_phy_ctrl_t * const p_ctrl, ether_phy_cfg_t const * const p_cfg);
-//
-// fsp_err_t R_ETHER_PHY_Read(ether_phy_ctrl_t * const p_ctrl, uint32_t reg_addr, uint32_t * const p_data);
-//
-// fsp_err_t R_ETHER_PHY_Write(ether_phy_ctrl_t * const p_ctrl, uint32_t reg_addr, uint32_t data);
-//
-// fsp_err_t R_ETHER_PHY_StartAutoNegotiate(ether_phy_ctrl_t * const p_ctrl);
-//
-// fsp_err_t R_ETHER_PHY_LinkPartnerAbilityGet(ether_phy_ctrl_t * const p_ctrl,
-//                                             uint32_t * const         p_line_speed_duplex,
-//                                             uint32_t * const         p_local_pause,
-//                                             uint32_t * const         p_partner_pause);
-//
-// fsp_err_t R_ETHER_PHY_LinkStatusGet(ether_phy_ctrl_t * const p_ctrl);

@@ -15,15 +15,6 @@ pub use ra_fsp_sys;
 
 pub use ra_fsp_sys::generated::e_elc_event;
 
-pub mod fsp_driver_interfaces {
-    #[cfg(feature = "mod-r_ether")]
-    pub mod ether;
-    #[cfg(feature = "mod-r_ether_phy")]
-    pub mod ether_phy;
-    #[cfg(feature = "mod-r_ioport")]
-    pub mod ioport;
-}
-
 #[cfg(feature = "mod-r_ether")]
 pub mod ether;
 #[cfg(feature = "mod-r_ether_phy")]
@@ -60,5 +51,25 @@ mod unsafe_pinned {
         pub const fn raw_get(this: *const Self) -> *mut T {
             unsafe { UnsafeCell::raw_get(&raw const (*this).1) }
         }
+    }
+}
+
+pub unsafe trait DynBlock<API: 'static> {
+    fn c_api(&self) -> &'static API;
+}
+
+pub unsafe trait Block {
+    type CConfig: 'static;
+    type CInstance: 'static;
+    type CApi: 'static;
+
+    const API: &Self::CApi;
+
+    fn instance(&mut self) -> &mut Self::CInstance;
+}
+
+unsafe impl<T: Block> DynBlock<T::CApi> for T {
+    fn c_api(&self) -> &'static T::CApi {
+        T::API
     }
 }
