@@ -162,7 +162,12 @@ pub fn wrap_component(modules: &[&str]) {
                 #include "renesas.h"
                 #include "bsp_elc.h"
                 #include "bsp_irq.h"
+                #include "bsp_exceptions.h"
+                #include "bsp_common.h"
+                #include "fsp_common_api.h"
                 #include "fsp_version.h"
+
+_Static_assert(FSP_INVALID_VECTOR == ((IRQn_Type) - 33));
             "#,
         )
         .header_contents(
@@ -199,9 +204,12 @@ pub fn wrap_component(modules: &[&str]) {
         )
         .allowlist_item("e_elc_event_.*")
         .allowlist_item("fsp_err_t")
+        // todo: explore other enum styles
+        .default_enum_style(bindgen::EnumVariation::ModuleConsts)
         .rustified_enum(&format!("e_elc_event_{mcu_group}"))
-        .allowlist_item("BSP_ICU_VECTOR_MAX_ENTRIES")
-        .allowlist_item("FSP_VERSION_.*")
+        .allowlist_item("BSP_.*")
+        .allowlist_item("R_BSP_.*")
+        .allowlist_item("FSP_.*")
         // -
         ;
 

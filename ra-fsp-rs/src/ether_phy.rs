@@ -1,4 +1,6 @@
 #![allow(non_upper_case_globals)]
+use core::pin::Pin;
+
 use {crate::unsafe_pinned::UnsafePinned, core::ptr};
 
 pub use ra_fsp_sys::generated::{
@@ -20,7 +22,7 @@ const _: () = assert!(
 pub struct EtherPhyInstance {
     ctrl: UnsafePinned<ether_phy_instance_ctrl_t>,
     cfg: UnsafePinned<ether_phy_cfg_t>,
-    inst: ether_phy_instance_t,
+    inst: UnsafePinned<ether_phy_instance_t>,
 }
 
 #[derive(Debug, Copy, Clone)]
@@ -41,10 +43,16 @@ unsafe impl crate::Block for EtherPhyInstance {
 
     const API: &ether_phy_api_t = unsafe { &g_ether_phy_on_ether_phy };
 
-    fn instance(&mut self) -> &mut ether_phy_instance_t {
-        self.inst.p_cfg = self.cfg.get().cast_const();
-        self.inst.p_ctrl = self.ctrl.get().cast::<core::ffi::c_void>();
-        &mut self.inst
+    fn instance(self: Pin<&mut Self>) -> &ether_phy_instance_t {
+        unsafe {
+            let this = self.get_unchecked_mut();
+            // Can't write, tested with miri
+            if (*this.inst.get()).p_cfg.is_null() {
+                (*this.inst.get()).p_ctrl = this.ctrl.get().cast::<core::ffi::c_void>();
+                (*this.inst.get()).p_cfg = this.cfg.get().cast_const();
+            }
+            &*this.inst.get().cast_const()
+        }
     }
 }
 
@@ -56,11 +64,11 @@ impl EtherPhyInstance {
             Self {
                 ctrl: UnsafePinned::new(core::mem::zeroed()),
                 cfg: UnsafePinned::new(conf.c_conf()),
-                inst: ether_phy_instance_t {
+                inst: UnsafePinned::new(ether_phy_instance_t {
                     p_ctrl: ptr::null_mut(),
                     p_cfg: ptr::null(),
                     p_api: <Self as crate::Block>::API,
-                },
+                }),
             }
         }
     }

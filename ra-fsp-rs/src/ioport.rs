@@ -1,4 +1,4 @@
-use core::mem::MaybeUninit;
+use core::{mem::MaybeUninit, pin::Pin};
 
 use ra_fsp_sys::generated::IOPORT_CFG_PARAM_CHECKING_ENABLE;
 pub use ra_fsp_sys::generated::{
@@ -18,6 +18,8 @@ pub use ra_fsp_sys::generated::{
     ioport_pin_cfg_t,
 };
 
+use crate::unsafe_pinned::UnsafePinned;
+
 const _: () = assert!(
     IOPORT_CFG_PARAM_CHECKING_ENABLE == 1,
     "The FSP configuration option IOPORT_CFG_PARAM_CHECKING_ENABLE is required with this crate, please enable it"
@@ -25,8 +27,8 @@ const _: () = assert!(
 
 pub struct IoPortInstance {
     ctrl: ioport_instance_ctrl_t,
-    cfg: ioport_cfg_t,
-    inst: ioport_instance_t,
+    cfg: UnsafePinned<ioport_cfg_t>,
+    inst: UnsafePinned<ioport_instance_t>,
 }
 
 #[derive(Debug, Copy, Clone)]
@@ -39,10 +41,15 @@ unsafe impl crate::Block for IoPortInstance {
 
     const API: &ioport_api_t = unsafe { &g_ioport_on_ioport };
 
-    fn instance(&mut self) -> &mut ioport_instance_t {
-        self.inst.p_ctrl = (&raw mut self.ctrl).cast::<core::ffi::c_void>();
-        self.inst.p_cfg = &raw const self.cfg;
-        &mut self.inst
+    fn instance(self: Pin<&mut Self>) -> &ioport_instance_t {
+        unsafe {
+            let this = self.get_unchecked_mut();
+            if (*this.inst.get()).p_cfg.is_null() {
+                (*this.inst.get()).p_ctrl = (&raw mut this.ctrl).cast::<core::ffi::c_void>();
+                (*this.inst.get()).p_cfg = this.cfg.get().cast_const();
+            }
+            &*this.inst.get().cast_const()
+        }
     }
 }
 
@@ -55,28 +62,24 @@ impl IoPortInstance {
 
         Self {
             ctrl: unsafe { core::mem::zeroed() },
-            cfg: conf.c_conf(),
-            inst: ioport_instance_t {
+            cfg: UnsafePinned::new(conf.c_conf()),
+            inst: UnsafePinned::new(ioport_instance_t {
                 p_ctrl: core::ptr::null_mut(),
                 p_cfg: core::ptr::null(),
                 p_api: <Self as crate::Block>::API,
-            },
+            }),
         }
     }
     pub unsafe fn from_ptr<'a>(ptr: *mut ioport_instance_ctrl_t) -> &'a mut Self {
         unsafe { &mut *ptr.cast::<IoPortInstance>() }
     }
     pub fn open(&mut self) -> Result<(), fsp_err_t> {
-        match unsafe { R_IOPORT_Open((&mut self.ctrl) as *mut _ as *mut _, self.inst.p_cfg) } {
-            0 => Ok(()),
-            err => Err(err),
-        }
+        let ctrl = (&mut self.ctrl) as *mut _ as *mut _;
+        crate::fsp_try_unsafe!(R_IOPORT_Open(ctrl, self.cfg.get()))
     }
     pub fn close(&mut self) -> Result<(), fsp_err_t> {
-        match unsafe { R_IOPORT_Close((&mut self.ctrl) as *mut _ as *mut _) } {
-            0 => Ok(()),
-            err => Err(err),
-        }
+        let ctrl = (&mut self.ctrl) as *mut _ as *mut _;
+        crate::fsp_try_unsafe!(R_IOPORT_Close(ctrl))
     }
 }
 

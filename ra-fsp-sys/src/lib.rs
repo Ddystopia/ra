@@ -9,12 +9,17 @@ pub mod generated {
     #![allow(unused_imports)]
 
     include!(concat!(env!("OUT_DIR"), "/out.rs"));
+
+    // Complex macros like ((IRQn_Type) -33) are not supported by bindgen yet.
+    // https://github.com/rust-lang/rust-bindgen/pull/2369
+    pub const FSP_INVALID_VECTOR: IRQn_Type = -33;
 }
 
 #[cfg(feature = "mod-r_ether")]
 pub mod r_ether {
     use crate::generated::{
-        ether_callback_args_t, ETHER_EVENT_INTERRUPT, ETHER_EVENT_LINK_OFF, ETHER_EVENT_LINK_ON,
+        e_ether_event::{ETHER_EVENT_INTERRUPT, ETHER_EVENT_LINK_OFF, ETHER_EVENT_LINK_ON},
+        ether_callback_args_t,
     };
 
     #[derive(Debug)]

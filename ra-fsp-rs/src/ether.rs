@@ -1,5 +1,5 @@
 #![allow(non_upper_case_globals)]
-use crate::{ether_phy::EtherPhyInstance, Block};
+use crate::{Block, ether_phy::EtherPhyInstance, fsp_try_unsafe};
 
 use {
     crate::{log, pac::Interrupt, unsafe_pinned::UnsafePinned},
@@ -15,8 +15,11 @@ use {
 pub use ra_fsp_sys::{
     generated::{
         ETHER_CFG_PARAM_CHECKING_ENABLE,
-        FSP_ERR_ETHER_ERROR_LINK,
-        FSP_ERR_ETHER_ERROR_NO_DATA,
+        e_ether_link_establish_status::ETHER_LINK_ESTABLISH_STATUS_UP,
+        e_ether_zerocopy::{ETHER_ZEROCOPY_DISABLE, ETHER_ZEROCOPY_ENABLE},
+        e_fsp_err::FSP_ERR_ASSERTION,
+        e_fsp_err::FSP_ERR_ETHER_ERROR_LINK,
+        e_fsp_err::FSP_ERR_ETHER_ERROR_NO_DATA,
         ether_api_t, //
         ether_callback_args_t,
         ether_cfg_t,
@@ -28,9 +31,6 @@ pub use ra_fsp_sys::{
 };
 
 use ra_fsp_sys::generated::{
-    ETHER_LINK_ESTABLISH_STATUS_UP, //
-    ETHER_ZEROCOPY_DISABLE,
-    ETHER_ZEROCOPY_ENABLE,
     R_ETHER_CallbackSet,
     R_ETHER_Close,
     R_ETHER_LinkProcess,
@@ -40,7 +40,7 @@ use ra_fsp_sys::generated::{
     R_ETHER_TxStatusGet,
     R_ETHER_WakeOnLANEnable,
     R_ETHER_Write,
-    e_ether_padding,
+    e_ether_padding, //
     ether_extended_cfg_t,
     ether_instance_descriptor_t,
     ether_phy_instance_t,
@@ -84,7 +84,7 @@ Read:
 pub struct EtherInstance<const BUF_SIZE: usize> {
     ctrl: UnsafePinned<ether_instance_ctrl_t>,
     cfg: UnsafePinned<ether_cfg_t>,
-    inst: ether_instance_t,
+    inst: UnsafePinned<ether_instance_t>,
     tx_buffers: &'static mut [Pin<&'static mut Buffer<BUF_SIZE>>],
     rx_buffers: &'static mut [Pin<&'static mut Buffer<BUF_SIZE>>],
     tx_taken: u32,
@@ -142,15 +142,10 @@ pub struct EtherConfig<const BUF_SIZE: usize> {
     c_ext_cfg: UnsafePinned<MaybeUninit<ether_extended_cfg_t>>,
 }
 
-#[inline(always)]
-const fn get_mut<const BUF_SIZE: usize>(
-    this: Pin<&mut EtherInstance<BUF_SIZE>>,
-) -> *mut core::ffi::c_void {
-    unsafe { this.get_unchecked_mut().ptr().cast() }
-}
-
 unsafe impl<const BUF_SIZE: usize> Sync for EtherInstance<BUF_SIZE> {}
 unsafe impl<const BUF_SIZE: usize> Send for EtherInstance<BUF_SIZE> {}
+unsafe impl<const BUF_SIZE: usize> Sync for Descriptor<BUF_SIZE> {}
+unsafe impl<const BUF_SIZE: usize> Send for Descriptor<BUF_SIZE> {}
 
 unsafe impl<const BUF_SIZE: usize> crate::Block for EtherInstance<BUF_SIZE> {
     type CConfig = ether_cfg_t;
@@ -158,14 +153,24 @@ unsafe impl<const BUF_SIZE: usize> crate::Block for EtherInstance<BUF_SIZE> {
     type CApi = ether_api_t;
     const API: &ether_api_t = unsafe { &g_ether_on_ether };
 
-    fn instance(&mut self) -> &mut ether_instance_t {
-        self.inst.p_cfg = &raw const *self.cfg.get();
-        self.inst.p_ctrl = self.ctrl.get().cast::<core::ffi::c_void>();
-        &mut self.inst
+    fn instance(self: Pin<&mut Self>) -> &ether_instance_t {
+        unsafe {
+            let this = self.get_unchecked_mut();
+            if (*this.inst.get()).p_cfg.is_null() {
+                (*this.inst.get()).p_ctrl = this.ctrl.get().cast::<core::ffi::c_void>();
+                (*this.inst.get()).p_cfg = this.cfg.get().cast_const();
+            }
+            &*this.inst.get().cast_const()
+        }
     }
 }
 
 impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
+    #[inline(always)]
+    const fn ctrl_void(self: Pin<&mut EtherInstance<BUF_SIZE>>) -> *mut core::ffi::c_void {
+        unsafe { self.get_unchecked_mut().ctrl().cast() }
+    }
+
     pub const fn new(ether: crate::pac::ETHERC0) -> Self {
         _ = ether;
 
@@ -174,12 +179,12 @@ impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
             tx_buffers: &mut [],
             tx_taken: 0,
             rx_buffers: &mut [],
-            cfg: unsafe { ::core::mem::zeroed() },
-            inst: ether_instance_t {
+            cfg: UnsafePinned::new(unsafe { ::core::mem::zeroed() }),
+            inst: UnsafePinned::new(ether_instance_t {
                 p_ctrl: ptr::null_mut(),
                 p_cfg: ptr::null(),
                 p_api: <Self as crate::Block>::API,
-            },
+            }),
         }
     }
 
@@ -268,7 +273,7 @@ impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
     }
 
     #[inline(always)]
-    const fn ptr(&self) -> *mut ether_instance_ctrl_t {
+    const fn ctrl(&self) -> *mut ether_instance_ctrl_t {
         UnsafePinned::raw_get(&raw const self.ctrl)
     }
 }
@@ -301,6 +306,8 @@ impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
         const { assert!(BUF_SIZE <= 1514) };
         const { assert!(BUF_SIZE >= 60) };
 
+        let p_ether_phy_instance = Pin::static_mut(ether_phy_instance).instance();
+
         Self {
             channel: 0,
             zerocopy: false,
@@ -314,7 +321,7 @@ impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
             p_mac_address: &[0; 6],
             irq: Interrupt::IEL0,
             interrupt_priority: None,
-            p_ether_phy_instance: ether_phy_instance.instance(),
+            p_ether_phy_instance,
             callback: None,
             rx_descriptors: &[],
             tx_descriptors: &[],
@@ -528,15 +535,6 @@ impl<const BUF_SIZE: usize> DerefMut for Buffer<BUF_SIZE> {
     }
 }
 
-macro_rules! fsp_try {
-    ($call:expr) => {
-        match unsafe { $call } {
-            0 => Ok(()),
-            err => Err(err),
-        }
-    };
-}
-
 // fixme: not true on __CORTEX_M == 23
 #[allow(dead_code)] // used in assert, idk why it warns
 const fn fsp_prio_to_hw(priority: u32, nvic_prio_bits: u8) -> u8 {
@@ -566,6 +564,10 @@ impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
             }
         }
 
+        if self.as_mut().get_open() != 0 {
+            return Err(FSP_ERR_ASSERTION);
+        }
+
         if conf.interrupt_priority.is_none() {
             conf.unchange_irq_priority();
         }
@@ -583,31 +585,31 @@ impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
             this.cfg.get()
         };
 
-        fsp_try!(R_ETHER_Open(get_mut(self), p_cfg))
+        fsp_try_unsafe!(R_ETHER_Open(self.ctrl_void(), p_cfg))
     }
     pub fn close(self: Pin<&mut Self>) -> Result<(), fsp_err_t> {
-        fsp_try!(R_ETHER_Close(get_mut(self)))
+        fsp_try_unsafe!(R_ETHER_Close(self.ctrl_void()))
     }
     pub fn read_zerocopy(
         self: Pin<&mut Self>,
     ) -> Result<(Pin<&'static mut Buffer<BUF_SIZE>>, usize), fsp_err_t> {
         let zerocopy = unsafe { (*(*self.as_ref().get_ref().ctrl.get()).p_ether_cfg).zerocopy };
         if zerocopy != ETHER_ZEROCOPY_ENABLE {
-            return Err(ra_fsp_sys::generated::FSP_ERR_ASSERTION);
+            return Err(FSP_ERR_ASSERTION);
         }
 
         let mut p_buf: *mut Buffer<BUF_SIZE> = ptr::null_mut();
         let mut len = 0;
 
-        fsp_try!(R_ETHER_Read(
-            get_mut(self),
+        fsp_try_unsafe!(R_ETHER_Read(
+            self.ctrl_void(),
             ptr::from_mut(&mut p_buf).cast(),
             &mut len
         ))?;
 
         if !p_buf.is_aligned() || p_buf.is_null() {
             log::error!("ether(read): buffer is not aligned or null. p_buf: {p_buf:p}, len: {len}");
-            return Err(ra_fsp_sys::generated::FSP_ERR_ASSERTION);
+            return Err(FSP_ERR_ASSERTION);
         }
 
         Ok((unsafe { Pin::new_unchecked(&mut *p_buf) }, len as usize))
@@ -615,13 +617,13 @@ impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
     pub fn read_non_zerocopy(self: Pin<&mut Self>, buffer: &mut [u8]) -> Result<usize, fsp_err_t> {
         let zerocopy = unsafe { (*(*self.as_ref().get_ref().ctrl.get()).p_ether_cfg).zerocopy };
         if zerocopy != ETHER_ZEROCOPY_DISABLE {
-            return Err(ra_fsp_sys::generated::FSP_ERR_ASSERTION);
+            return Err(FSP_ERR_ASSERTION);
         }
 
         let p_buf = ptr::from_mut(buffer);
         let mut len = 0;
 
-        fsp_try!(R_ETHER_Read(get_mut(self), p_buf.cast(), &mut len))?;
+        fsp_try_unsafe!(R_ETHER_Read(self.ctrl_void(), p_buf.cast(), &mut len))?;
 
         Ok(len as usize)
     }
@@ -631,7 +633,7 @@ impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
     ) -> Result<(), fsp_err_t> {
         let ptr = unsafe { buffer.get_unchecked_mut().buf.get() };
 
-        fsp_try!(R_ETHER_RxBufferUpdate(get_mut(self), ptr.cast()))
+        fsp_try_unsafe!(R_ETHER_RxBufferUpdate(self.ctrl_void(), ptr.cast()))
     }
     pub fn write_zerocopy(
         mut self: Pin<&mut Self>,
@@ -640,14 +642,14 @@ impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
     ) -> Result<(), fsp_err_t> {
         let zerocopy = unsafe { (*(*self.as_ref().get_ref().ctrl.get()).p_ether_cfg).zerocopy };
         if zerocopy != ETHER_ZEROCOPY_ENABLE {
-            return Err(ra_fsp_sys::generated::FSP_ERR_ASSERTION);
+            return Err(FSP_ERR_ASSERTION);
         }
 
         let ptr = buffer.as_ref().get_ref().buf.get();
         let len = len.min(BUF_SIZE);
 
-        match fsp_try!(R_ETHER_Write(
-            get_mut(self.as_mut()),
+        match fsp_try_unsafe!(R_ETHER_Write(
+            self.as_mut().ctrl_void(),
             ptr.cast(),
             len as u32
         )) {
@@ -661,23 +663,23 @@ impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
     pub fn write_non_zerocopy(self: Pin<&mut Self>, buffer: &[u8]) -> Result<(), fsp_err_t> {
         let zerocopy = unsafe { (*(*self.as_ref().get_ref().ctrl.get()).p_ether_cfg).zerocopy };
         if zerocopy != ETHER_ZEROCOPY_DISABLE {
-            return Err(ra_fsp_sys::generated::FSP_ERR_ASSERTION);
+            return Err(FSP_ERR_ASSERTION);
         }
 
         let len = buffer.len().min(BUF_SIZE);
         let ptr = buffer.as_ptr().cast_mut();
-        fsp_try!(R_ETHER_Write(get_mut(self), ptr.cast(), len as u32))
+        fsp_try_unsafe!(R_ETHER_Write(self.ctrl_void(), ptr.cast(), len as u32))
     }
     pub fn link_process(self: Pin<&mut Self>) -> Result<(), fsp_err_t> {
-        fsp_try!(R_ETHER_LinkProcess(get_mut(self)))
+        fsp_try_unsafe!(R_ETHER_LinkProcess(self.ctrl_void()))
     }
     pub fn wake_on_lan_enable(self: Pin<&mut Self>) -> Result<(), fsp_err_t> {
-        fsp_try!(R_ETHER_WakeOnLANEnable(get_mut(self)))
+        fsp_try_unsafe!(R_ETHER_WakeOnLANEnable(self.ctrl_void()))
     }
     pub fn tx_status_get(self: Pin<&mut Self>) -> Result<(), fsp_err_t> {
         let mut ptr: *mut Buffer<BUF_SIZE> = ptr::null_mut();
-        fsp_try!(R_ETHER_TxStatusGet(
-            get_mut(self),
+        fsp_try_unsafe!(R_ETHER_TxStatusGet(
+            self.ctrl_void(),
             ptr::from_mut(&mut ptr).cast()
         ))?;
 
@@ -687,8 +689,8 @@ impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
         self: Pin<&mut Self>,
         callback: Option<extern "C" fn(&mut ether_callback_args_t)>,
     ) -> Result<(), fsp_err_t> {
-        fsp_try!(R_ETHER_CallbackSet(
-            get_mut(self),
+        fsp_try_unsafe!(R_ETHER_CallbackSet(
+            self.ctrl_void(),
             callback.map(cast_callback),
             ptr::null_mut(),
             ptr::null_mut(), // todo: is it needed, considering `&mut`, rtic? It is for nested stuff
