@@ -25,6 +25,7 @@ walkdir = "2"
 
 [features]
 default = [
+  "device",
   "log",
   "mod-r_dmac",
   "mod-r_elc",
@@ -34,6 +35,7 @@ default = [
   "mod-r_gpt",
 ]
 
+device = []
 log = ["dep:log"]
 
 mod-r_dmac = []

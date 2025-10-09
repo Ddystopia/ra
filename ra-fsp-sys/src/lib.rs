@@ -80,6 +80,7 @@ pub mod r_ether {
 
 #[doc(hidden)]
 #[no_mangle]
+#[cfg(feature = "device")]
 pub unsafe extern "C" fn SysTick_Handler() {
     unsafe extern "C" {
         fn SysTick();
@@ -88,6 +89,7 @@ pub unsafe extern "C" fn SysTick_Handler() {
 }
 
 #[unsafe(no_mangle)]
+#[cfg(feature = "device")]
 pub extern "C" fn __assert_func(file: *const u8, line: i32, func: *const u8, expr: *const u8) {
     let file = unsafe { core::ffi::CStr::from_ptr(file) };
     let func = unsafe { core::ffi::CStr::from_ptr(func) };

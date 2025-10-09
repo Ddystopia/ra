@@ -26,7 +26,9 @@ embassy-time-queue-utils = { version = "0.3.0", optional = true }
 embassy-time-driver = { version = "0.2.1", optional = true }
 
 [features]
-default = ["log"]
+default = ["log", "device"]
+
+device = ["ra-fsp-sys/device"]
 
 log = ["dep:log"]
 smoltcp-ether = ["dep:smoltcp", "ra-fsp-sys/mod-r_ether", "smoltcp/medium-ethernet"]
