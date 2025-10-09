@@ -26,6 +26,12 @@ pub mod rtic {
     pub mod gpt;
 }
 
+#[cfg(any(feature = "embassy-time-gpt"))]
+pub mod embassy {
+    #[cfg(any(feature = "embassy-time-gpt"))]
+    pub mod gpt;
+}
+
 use core::pin::Pin;
 pub use {
     pacs::pac,

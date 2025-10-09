@@ -31,6 +31,7 @@ default = [
   "mod-r_flash_hp",
   "mod-r_icu",
   "mod-r_ioport",
+  "mod-r_gpt",
 ]
 
 log = ["dep:log"]
@@ -42,6 +43,8 @@ mod-r_flash_hp = []
 
 mod-r_icu = []
 mod-r_ioport = []
+mod-r_gpt = ["mod-r_timer_api"]
+mod-r_timer_api = []
 mod-r_ether = ["mod-r_ether_phy"]
 mod-r_ether_phy = []
 mod-r_ether_phy_target_ics1894 = ["mod-r_ether_phy"]

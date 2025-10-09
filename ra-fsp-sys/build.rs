@@ -194,6 +194,15 @@ _Static_assert(FSP_INVALID_VECTOR == ((IRQn_Type) - 33));
                 ""
             },
         )
+        .header_contents(
+            "rs_gpt_wrapper.h",
+            if cfg!(feature = "mod-r_gpt") {
+                r#" #include "r_gpt.h"
+                    #include "r_gpt_cfg.h" "#
+            } else {
+                ""
+            },
+        )
         .use_core()
         .clang_arg(format!("-D{bsp_mcu_group}=1"))
         .clang_args(
@@ -248,6 +257,45 @@ _Static_assert(FSP_INVALID_VECTOR == ((IRQn_Type) - 33));
         bindgen
     };
 
+    let bindgen = if cfg!(feature = "mod-r_gpt") {
+        bindgen
+            .allowlist_item(".*gpt_.*")
+            .allowlist_item(".*GPT_.*")
+            // todo: verify they all can be rustified enums
+            .rustified_enum("e_gpt_io_pin")
+            .rustified_enum("e_gpt_buffer_force_push")
+            .rustified_enum("e_gpt_pin_level")
+            .rustified_enum("e_gpt_source")
+            .rustified_enum("e_gpt_capture_filter")
+            .rustified_enum("e_gpt_adc_trigger")
+            .rustified_enum("e_gpt_poeg_link")
+            .rustified_enum("e_gpt_output_disable")
+            .rustified_enum("e_gpt_gtioc_disable")
+            .rustified_enum("e_gpt_adc_compare_match")
+            .rustified_enum("e_gpt_interrupt_skip_source")
+            .rustified_enum("e_gpt_interrupt_skip_count")
+            .rustified_enum("e_gpt_interrupt_skip_adc")
+            .rustified_enum("e_gpt_pwm_output_delay_setting")
+            .rustified_enum("e_gpt_pwm_output_delay_edge")
+    } else {
+        bindgen
+    };
+
+    let bindgen = if cfg!(feature = "mod-r_timer_api") {
+        bindgen
+            .allowlist_item(".*timer_.*")
+            .allowlist_item(".*TIMER_.*")
+            .rustified_enum("e_timer_event")
+            .rustified_enum("e_timer_variant")
+            .constified_enum_module("e_timer_compare_match")
+            .rustified_enum("e_timer_state")
+            .rustified_enum("e_timer_mode")
+            .rustified_enum("e_timer_direction")
+            .rustified_enum("e_timer_source_div")
+    } else {
+        bindgen
+    };
+
     bindgen
         .derive_default(true)
         // .derive_debug(true)
@@ -298,6 +346,7 @@ fn main() {
     add_module!(modules, "mod-r_icu");
     add_module!(modules, "mod-r_flash_hp");
     add_module!(modules, "mod-r_ioport");
+    add_module!(modules, "mod-r_gpt");
     add_module!(modules, "mod-r_ether");
     add_module!(modules, "mod-r_ether_phy");
     add_module!(modules, "mod-r_ether_phy_target_ics1894");
