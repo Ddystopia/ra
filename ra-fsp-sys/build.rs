@@ -1,51 +1,42 @@
 use std::{
-    collections::HashMap,
+    env::VarError,
     fs,
-    io::{BufRead, Write},
+    io::Write,
     path::{self, Path, PathBuf},
 };
 
 use build_cfg::{build_cfg, build_cfg_main};
 
-pub fn load_env<P: AsRef<std::path::Path>>(path: P) -> HashMap<String, String> {
-    let mut res = HashMap::new();
-
-    let env_file = std::fs::File::open(path.as_ref())
-        .expect(format!("file '{}' must exist", path.as_ref().to_str().unwrap()).as_str());
-    let reader = std::io::BufReader::new(env_file);
-    for line in reader.lines() {
-        let line = line.unwrap();
-        let parts: Vec<&str> = line.splitn(2, "=").collect();
-        if parts.len() == 2 {
-            res.insert(
-                parts[0].to_string(),
-                parts[1].replace(";;", ";").to_string(),
-            );
-        } else {
-            eprintln!("Skip invalid line '{}' with {} parts", line, parts.len());
-        }
-    }
-
-    res
+fn get_env_paths<const N: usize>(paths: [&str; N]) -> [PathBuf; N] {
+    paths
+        .map(|var| match std::env::var(var) {
+            Ok(val) => PathBuf::from(val),
+            Err(VarError::NotPresent) => panic!(
+                "We require following environment variables to be set: {}.",
+                paths.join(", ")
+            ),
+            Err(VarError::NotUnicode(_os_str)) => panic!(
+                "We require following environment variables to contain unicode: {}.",
+                paths.join(", ")
+            ),
+        })
+        .map(|path| {
+            if !path.exists() || !path.is_dir() {
+                panic!(
+                    "We require paths from following environment variables to be directories: {}.",
+                    paths.join(", ")
+                );
+            }
+            path
+        })
 }
 
 pub fn wrap_component(modules: &[&str]) {
     let out_path = PathBuf::from(std::env::var("OUT_DIR").unwrap());
-    let fsp_cfg = PathBuf::from(std::env::var("FSP_CFG").expect("FSP_CFG must be set"));
-    let cmsis_dir = PathBuf::from(std::env::var("CMSIS_PATH").expect("`CMSIS_PATH` must be set"));
-    let ra_fsp_repo = PathBuf::from(std::env::var("FSP_PATH").expect("`FSP_PATH` must be set"));
+
+    let [fsp_cfg, cmsis_dir, ra_fsp_repo] = get_env_paths(["FSP_CFG", "CMSIS_PATH", "FSP_PATH"]);
+
     let linker_scripts = out_path.join("script");
-
-    if !fsp_cfg.exists() {
-        panic!("`FSP_CFG` must be set to a valid path");
-    }
-    if !cmsis_dir.exists() {
-        panic!("`CMSIS_PATH` must be set to a valid path");
-    }
-    if !ra_fsp_repo.exists() {
-        panic!("`FSP_PATH` must be set to a valid path");
-    }
-
     let fsp_dir = ra_fsp_repo.join("ra/fsp");
     let fsp_src = fsp_dir.join("src");
 
