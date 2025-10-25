@@ -85,6 +85,7 @@ pub struct EtherInstance<const BUF_SIZE: usize> {
     ctrl: UnsafePinned<ether_instance_ctrl_t>,
     cfg: UnsafePinned<ether_cfg_t>,
     inst: UnsafePinned<ether_instance_t>,
+    rust_cfg: Option<EtherConfig<BUF_SIZE>>,
     tx_buffers: &'static mut [Pin<&'static mut Buffer<BUF_SIZE>>],
     rx_buffers: &'static mut [Pin<&'static mut Buffer<BUF_SIZE>>],
     tx_taken: u32,
@@ -176,6 +177,7 @@ impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
 
         Self {
             ctrl: UnsafePinned::new(unsafe { ::core::mem::zeroed() }),
+            rust_cfg: None,
             tx_buffers: &mut [],
             tx_taken: 0,
             rx_buffers: &mut [],
@@ -363,33 +365,37 @@ impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
         self.interrupt_priority = Some(hw_prio_to_fsp(hw_priority, crate::pac::NVIC_PRIO_BITS));
     }
 
-    pub const fn c_conf(self) -> ether_cfg_t {
-        let num_tx_descriptors = self.tx_descriptors.len() as u8;
-        let num_rx_descriptors = self.rx_descriptors.len() as u8;
+    /// This function constructs a `ether_cfg_t` from this config struct.
+    /// Beware!!! `ether_cfg_t` returned has pointers into `self`, thus you
+    /// should make sure `this` will live long enough and no data races occur.
+    pub const fn c_conf(self: Pin<&mut Self>) -> ether_cfg_t {
+        let this = unsafe { self.get_unchecked_mut() };
+        let num_tx_descriptors = this.tx_descriptors.len() as u8;
+        let num_rx_descriptors = this.rx_descriptors.len() as u8;
 
         {
             let mut i = 0;
             while i < num_tx_descriptors as usize {
-                assert_descriptor_unused(&self.tx_descriptors[i]);
+                assert_descriptor_unused(&this.tx_descriptors[i]);
                 i += 1;
             }
             let mut i = 0;
             while i < num_rx_descriptors as usize {
-                assert_descriptor_unused(&self.rx_descriptors[i]);
+                assert_descriptor_unused(&this.rx_descriptors[i]);
                 i += 1;
             }
         }
 
-        let tx_desc = Descriptor::pinned_array(Pin::static_ref(self.tx_descriptors));
-        let rx_desc = Descriptor::pinned_array(Pin::static_ref(self.rx_descriptors));
+        let tx_desc = Descriptor::pinned_array(Pin::static_ref(this.tx_descriptors));
+        let rx_desc = Descriptor::pinned_array(Pin::static_ref(this.rx_descriptors));
 
         assert!(num_tx_descriptors != 0, "Descriptors cannot be empty");
         assert!(num_rx_descriptors != 0, "Descriptors cannot be empty");
         assert!(num_rx_descriptors <= 4, "Max 4 descriptors");
         assert!(num_tx_descriptors <= 4, "Max 4 descriptors");
 
-        if let Some(pp_ether_buffers) = &self.pp_ether_buffers {
-            if self.zerocopy  {
+        if let Some(pp_ether_buffers) = &this.pp_ether_buffers {
+            if this.zerocopy  {
                 assert!(pp_ether_buffers.len() as u8 == num_rx_descriptors);
             } else {
                 assert!(pp_ether_buffers.len() as u8 == num_tx_descriptors + num_rx_descriptors);
@@ -397,39 +403,38 @@ impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
         };
 
         let p_extend = unsafe {
-            (*self.c_ext_cfg.get()).write(ether_extended_cfg_t {
+            (*this.c_ext_cfg.get()).write(ether_extended_cfg_t {
                 p_tx_descriptors: tx_desc.get_ref().get().cast(),
                 p_rx_descriptors: rx_desc.get_ref().get().cast(),
             })
         };
 
-        let pp_ether_buffers = match &self.pp_ether_buffers {
-            // Shouldn't we use `UnafePinned::get` somewhere there?
-            Some(p) => ptr::from_ref(&**p).cast_mut().cast(),
+        let pp_ether_buffers = match this.pp_ether_buffers.take() {
+            Some(p) => ptr::from_mut(p).cast(),
             None => ptr::null_mut(),
         };
 
         ether_cfg_t {
-            channel: self.channel,
-            zerocopy: self.zerocopy as _,
-            multicast: self.multicast as _,
-            promiscuous: self.promiscuous as _,
-            flow_control: self.flow_control as _,
-            padding: self.padding,
-            padding_offset: self.padding_offset,
-            broadcast_filter: self.broadcast_filter,
-            p_mac_address: ptr::from_ref(self.p_mac_address).cast_mut().cast(),
+            channel: this.channel,
+            zerocopy: this.zerocopy as _,
+            multicast: this.multicast as _,
+            promiscuous: this.promiscuous as _,
+            flow_control: this.flow_control as _,
+            padding: this.padding,
+            padding_offset: this.padding_offset,
+            broadcast_filter: this.broadcast_filter,
+            p_mac_address: ptr::from_ref(this.p_mac_address).cast_mut().cast(),
             pp_ether_buffers,
             num_tx_descriptors,
             num_rx_descriptors,
             ether_buffer_size: BUF_SIZE as u32,
-            irq: self.irq as u16 as _,
-            interrupt_priority: self.interrupt_priority.expect("Interrupt priority is not set"),
-            p_callback: match self.callback {
+            irq: this.irq as u16 as _,
+            interrupt_priority: this.interrupt_priority.expect("Interrupt priority is not set"),
+            p_callback: match this.callback {
                 Some(c) => Some(cast_callback(c)),
                 None => None,
             },
-            p_ether_phy_instance: self.p_ether_phy_instance,
+            p_ether_phy_instance: this.p_ether_phy_instance,
             p_context: ptr::null(),
             p_extend: ptr::from_mut(p_extend).cast(),
         }
@@ -576,11 +581,14 @@ impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
             use core::mem::take;
 
             let this = self.as_mut().get_unchecked_mut();
-
+            let conf = {
+                this.rust_cfg = None;
+                this.rust_cfg.get_or_insert(conf)
+            };
             this.tx_buffers = take(&mut conf.tx_buffers);
             this.rx_buffers = take(&mut conf.rx_buffers);
             this.tx_taken = 0;
-            this.cfg = UnsafePinned::new(conf.c_conf());
+            this.cfg = UnsafePinned::new(Pin::new_unchecked(conf).c_conf());
 
             this.cfg.get()
         };
