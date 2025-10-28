@@ -57,6 +57,10 @@ impl GptInstance {
         }
     }
 
+    pub fn is_opened(&self) -> bool {
+        unsafe { (*self.ctrl.get()).open != 0 }
+    }
+
     pub fn open(self: Pin<&mut Self>) -> Result<()> {
         let p_cfg = self.cfg.get().cast_const();
 

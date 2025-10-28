@@ -1,7 +1,6 @@
 use core::{
     cell::{Cell, RefCell},
     ffi::c_void,
-    mem::MaybeUninit,
     pin::Pin,
     ptr::null_mut,
     sync::atomic::{self, AtomicPtr, AtomicU32, compiler_fence},
@@ -18,8 +17,15 @@ use crate::{
     timer_api::{CompareMatchChannel, TimerApi},
 };
 use ra_fsp_sys::generated::{
-    FSP_INVALID_VECTOR, R_BSP_IrqClearPending, R_BSP_IrqDisable, R_BSP_IrqEnable,
-    R_BSP_IrqEnableNoClear, R_GPT0_Type, e_timer_event, gpt_extended_cfg_t, timer_callback_args_t,
+    FSP_INVALID_VECTOR, //
+    R_BSP_IrqClearPending,
+    R_BSP_IrqDisable,
+    R_BSP_IrqEnable,
+    R_BSP_IrqEnableNoClear,
+    R_GPT0_Type,
+    e_timer_event,
+    gpt_extended_cfg_t,
+    timer_callback_args_t,
 };
 
 // Clock timekeeping works with something we call "periods", which are time intervals
@@ -48,14 +54,9 @@ time_driver_impl!(
 );
 
 static DRIVER: StaticCell<GptTimerDriver> = StaticCell::new();
-static ALLOC: StaticCell<Alloc> = StaticCell::new();
 
 struct AlarmState {
     timestamp: Cell<u64>,
-}
-
-struct Alloc {
-    cb_args: timer_callback_args_t,
 }
 
 pub struct GptTimerDriver {
@@ -72,7 +73,6 @@ pub struct GptTimerDriver {
 struct GptTimerDriverWrapper(AtomicPtr<GptTimerDriver>);
 
 unsafe impl Send for AlarmState {}
-unsafe impl Send for Alloc {}
 
 unsafe impl Send for GptTimerDriver {}
 unsafe impl Sync for GptTimerDriver {}
@@ -99,9 +99,10 @@ impl Driver for GptTimerDriverWrapper {
 
 pub fn init(gpt: &'static mut GptInstance) -> Result<()> {
     critical_section::with(|cs| unsafe {
-        let drv = DRIVER.init(GptTimerDriver::new(gpt));
-        drv.init(cs, ALLOC.uninit())?;
-        DRIVER_WRAPPER.0.store(drv, atomic::Ordering::SeqCst);
+        let drv = Pin::static_mut(DRIVER.init(GptTimerDriver::new(gpt)));
+        drv.as_ref().init(cs)?;
+        let ptr = core::ptr::from_mut(drv.get_unchecked_mut());
+        DRIVER_WRAPPER.0.store(ptr, atomic::Ordering::SeqCst);
         Ok(())
     })
 }
@@ -150,11 +151,7 @@ impl GptTimerDriver {
         }
     }
 
-    unsafe fn init(
-        &self,
-        cs: CriticalSection,
-        cb_args: &'static mut MaybeUninit<Alloc>,
-    ) -> Result<()> {
+    unsafe fn init(self: Pin<&Self>, cs: CriticalSection) -> Result<()> {
         let mut gpt = self.gpt.borrow(cs).borrow_mut();
 
         if gpt
@@ -179,10 +176,9 @@ impl GptTimerDriver {
                 .compare_match_set(0x80000000, CompareMatchChannel::A)?;
 
             let p_context = (&raw const *self).cast::<c_void>().cast_mut();
-            let args_alloc = &raw mut (*cb_args.as_mut_ptr()).cb_args;
 
             gpt.as_mut()
-                .callback_set(Some(Self::cb), p_context, args_alloc)?;
+                .callback_set(Some(Self::cb), p_context, core::ptr::null_mut())?;
 
             R_BSP_IrqEnable((*self.ext_cfg).capture_a_irq);
 
@@ -193,26 +189,17 @@ impl GptTimerDriver {
     }
 
     unsafe extern "C" fn cb(arg: *mut timer_callback_args_t) {
-        critical_section::with(|cs| -> Result<()> {
-            let timer: &GptTimerDriver =
-                unsafe { (*arg).p_context.cast::<GptTimerDriver>().as_ref().unwrap() };
+        critical_section::with(|cs| unsafe {
+            let timer: &GptTimerDriver = &*(*arg).p_context.cast::<GptTimerDriver>();
 
-            match unsafe { *arg }.event {
-                e_timer_event::TIMER_EVENT_CYCLE_END => {
-                    timer.next_period();
-                }
-                e_timer_event::TIMER_EVENT_COMPARE_A => {
-                    // R_BSP_IrqClearPending((*timer.ext_cfg).capture_a_irq);
-                    timer.next_period();
-                }
-                e_timer_event::TIMER_EVENT_COMPARE_B => {
-                    // R_BSP_IrqClearPending((*timer.ext_cfg).capture_b_irq);
-                    timer.trigger_alarm(cs)?;
-                }
-                _ => {}
+            match (*arg).event {
+                e_timer_event::TIMER_EVENT_CYCLE_END => Ok(timer.next_period()),
+                // R_BSP_IrqClearPending((*timer.ext_cfg).capture_a_irq);
+                e_timer_event::TIMER_EVENT_COMPARE_A => Ok(timer.next_period()),
+                // R_BSP_IrqClearPending((*timer.ext_cfg).capture_b_irq);
+                e_timer_event::TIMER_EVENT_COMPARE_B => timer.trigger_alarm(cs),
+                _ => Ok(()),
             }
-
-            Ok(())
         })
         .expect("Error in callback handler");
     }
