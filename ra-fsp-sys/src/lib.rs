@@ -15,6 +15,10 @@ pub mod generated {
     pub const FSP_INVALID_VECTOR: IRQn_Type = -33;
 }
 
+unsafe extern "C" {
+    pub static mut SystemCoreClock: u32;
+}
+
 #[cfg(feature = "mod-r_ether")]
 pub mod r_ether {
     use crate::generated::{

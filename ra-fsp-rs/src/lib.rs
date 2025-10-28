@@ -15,6 +15,12 @@ pub mod ioport;
 #[cfg(feature = "mod-r_timer_api")]
 pub mod timer_api;
 
+pub mod systick {
+    pub fn system_core_clock(_: critical_section::CriticalSection<'_>) -> u32 {
+        unsafe { ra_fsp_sys::SystemCoreClock }
+    }
+}
+
 #[cfg(any(feature = "smoltcp-ether"))]
 pub mod smoltcp {
     #[cfg(feature = "smoltcp-ether")]
