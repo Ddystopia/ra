@@ -21,7 +21,7 @@ ra4m1-pac = { workspace = true, optional = true, features = ["fsp", "critical-se
 smoltcp = { version = "0.12.0", default-features = false, optional = true }
 critical-section = "1.2.0"
 static_cell = "2.1.1"
-rtic-monotonic = { version = "1.0.0", default-features = false, optional = true }
+rtic-monotonics = { version = "2.1.0", default-features = false, optional = true }
 embassy-time-queue-utils = { version = "0.3.0", optional = true }
 embassy-time-driver = { version = "0.2.1", optional = true }
 
@@ -32,8 +32,8 @@ device = ["ra-fsp-sys/device"]
 
 log = ["dep:log"]
 smoltcp-ether = ["dep:smoltcp", "ra-fsp-sys/mod-r_ether", "smoltcp/medium-ethernet"]
-rtic-monotonic = ["dep:rtic-monotonic"]
-rtic-monotonic-gpt = ["mod-r_gpt", "rtic-monotonic"]
+rtic-monotonics = ["dep:rtic-monotonics"]
+rtic-monotonics-gpt = ["mod-r_gpt", "rtic-monotonics"]
 embassy-time = ["dep:embassy-time-queue-utils", "dep:embassy-time-driver"]
 embassy-time-gpt = ["embassy-time"]
 
