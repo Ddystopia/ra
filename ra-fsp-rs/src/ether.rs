@@ -94,7 +94,7 @@ pub struct EtherInstance<const BUF_SIZE: usize> {
 #[repr(C, align(32))]
 pub struct Buffer<const BUF_SIZE: usize> {
     buf: UnsafePinned<[u8; BUF_SIZE]>,
-    tx_taken_position: u8,
+    tx_taken_position: UnsafePinned<u8>,
 }
 
 pub struct Buffers<const BUF_SIZE: usize, const TX: usize, const RX: usize> {
@@ -229,7 +229,8 @@ impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
             let buffer = this.tx_buffers[position as usize]
                 .as_mut()
                 .get_unchecked_mut();
-            buffer.tx_taken_position = position;
+
+            ptr::write(buffer.tx_taken_position.get(), position);
 
             Some(Pin::new_unchecked(&mut *ptr::from_mut(buffer)))
         }
@@ -266,10 +267,12 @@ impl<const BUF_SIZE: usize> EtherInstance<BUF_SIZE> {
         self: Pin<&mut Self>,
         buffer: Pin<&'static mut Buffer<BUF_SIZE>>,
     ) -> Option<Pin<&'static mut Buffer<BUF_SIZE>>> {
-        let this = unsafe { self.get_unchecked_mut() };
-        let position = buffer.as_ref().tx_taken_position;
+        unsafe {
+            let this =  self.get_unchecked_mut() ;
+            let position = *buffer.as_ref().tx_taken_position.get();
 
-        this.tx_taken &= !(1 << position);
+            this.tx_taken &= !(1 << position);
+        }
 
         None
     }
@@ -502,7 +505,7 @@ impl<const BUF_SIZE: usize> Buffer<BUF_SIZE> {
     pub const fn new() -> Self {
         Self {
             buf: UnsafePinned::new([0; BUF_SIZE]),
-            tx_taken_position: 0,
+            tx_taken_position: UnsafePinned::new(0),
         }
     }
 
