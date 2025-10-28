@@ -1,7 +1,7 @@
 #ifndef VECTOR_DATA_H
 #define VECTOR_DATA_H
 
-// Usually there are generated stuff by RA tooling, but we are not using
-// that stuff, as well as other fsp modules do not.
+// RA Tooling generates this file automatically and fills with Vector table allocations.
+// In our case, vector table is provided by PAC, thus no need for this file.
 
 #endif /* VECTOR_DATA_H */

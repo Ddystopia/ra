@@ -29,8 +29,6 @@ impl<const MTU: usize> Dev<MTU> {
         eth: Pin<&'static mut EtherInstance<MTU>>,
         capabilities: DeviceCapabilities,
     ) -> Self {
-        log::info!("Ethernet open() -> Ok(())");
-
         assert!(
             capabilities.medium == Medium::Ethernet,
             "Ethernet device must have Ethernet medium"
@@ -56,7 +54,7 @@ impl<const MTU: usize> Dev<MTU> {
         self.eth().is_up()
     }
 
-    pub fn populate_rx_buffers(&mut self, cause: InterruptCause) {
+    pub fn populate_buffers(&mut self, cause: InterruptCause) {
         if cause.went_up {
             self.eth().as_mut().update_rx_buffers(cause);
         } else if cause.transmits {
@@ -78,6 +76,7 @@ impl<const MTU: usize> Device for Dev<MTU> {
 
     fn receive(&mut self, _: Instant) -> Option<(Self::RxToken<'_>, Self::TxToken<'_>)> {
         let tx = self.send_buffer()?;
+        // smoltcp never drops rx token, so it is fine to read it right away
         match self.eth().read_zerocopy() {
             Ok((buf, len)) => Some((
                 EthernetRxToken(Some(buf), len, &self.eth),

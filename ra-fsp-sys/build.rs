@@ -103,8 +103,10 @@ pub fn wrap_component(modules: &[&str]) {
         "bsp_rom_registers",
         "bsp_sbrk",
         "bsp_security",
-        "startup",
-        "system",
+    ];
+    let device = [
+        "startup", // Includes the vector table and a reset vector
+        "system",  // Includes `SystemInit`
     ];
     let mut build = cc::Build::new();
 
@@ -116,7 +118,9 @@ pub fn wrap_component(modules: &[&str]) {
         .filter(|e| e.file_name().to_str().unwrap().ends_with(".c"))
         .filter(|e| {
             let stem = e.path().file_stem().unwrap().to_str().unwrap();
-            bsp_stems.contains(&stem) || modules.iter().find(|m| stem == **m).is_some()
+            device.contains(&stem)
+                || bsp_stems.contains(&stem)
+                || modules.iter().find(|m| stem == **m).is_some()
         })
         .for_each(|e| {
             build.file(e.path());

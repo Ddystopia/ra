@@ -57,6 +57,12 @@ pub unsafe trait DynBlock<API: 'static> {
     fn c_api(&self) -> &'static API;
 }
 
+/// SAFETY: Implementors must ensure that all associated types are zero-initializable,
+///         `API` vtable contains valid entries callable with *any* payload and
+///         `instance` contains well-formed triplet of pointers to the control
+///         block valid for reads and writes for a duration of borrow, a configuration
+///         valid for reads for a duration of borrow and the same vtable that is
+///         associated to `API` constant.
 pub unsafe trait Block {
     type CConfig: 'static;
     type CInstance: 'static;
