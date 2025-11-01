@@ -3,11 +3,29 @@
 mod log;
 mod macros;
 mod pacs;
+mod utils;
 
+pub use pin_init;
+pub use utils::Irq;
+
+pub mod state_markers {
+    use core::any::TypeId;
+
+    pub struct Closed {}
+    pub struct Opened {}
+
+    pub const CLOSED_ID: TypeId = core::any::TypeId::of::<Closed>();
+    pub const OPENED_ID: TypeId = core::any::TypeId::of::<Opened>();
+}
+
+#[cfg(feature = "mod-r_display_api")]
+pub mod display_api;
 #[cfg(feature = "mod-r_ether")]
 pub mod ether;
 #[cfg(feature = "mod-r_ether_phy")]
 pub mod ether_phy;
+#[cfg(feature = "mod-r_glcdc")]
+pub mod glcdc;
 #[cfg(feature = "mod-r_gpt")]
 pub mod gpt;
 #[cfg(feature = "mod-r_ioport")]
@@ -21,14 +39,17 @@ pub mod systick {
     }
 }
 
+#[cfg(feature = "mod-r_gpt")]
+mod gpt_clock;
+
 #[cfg(any(feature = "smoltcp-ether"))]
 pub mod smoltcp {
     #[cfg(feature = "smoltcp-ether")]
     pub mod ether;
 }
-#[cfg(any(feature = "rtic-monotonic-gpt"))]
+#[cfg(any(feature = "rtic-monotonics-gpt"))]
 pub mod rtic {
-    #[cfg(any(feature = "rtic-monotonic-gpt"))]
+    #[cfg(any(feature = "rtic-monotonics-gpt"))]
     pub mod gpt;
 }
 
@@ -38,7 +59,6 @@ pub mod embassy {
     pub mod gpt;
 }
 
-use core::pin::Pin;
 pub use {
     pacs::pac,
     ra_fsp_sys,
@@ -64,17 +84,28 @@ pub unsafe trait DynBlock<API: 'static> {
 ///         valid for reads for a duration of borrow and the same vtable that is
 ///         associated to `API` constant.
 pub unsafe trait Block {
-    type CConfig: 'static;
-    type CInstance: 'static;
-    type CApi: 'static;
+    type Config: 'static;
+    type Instance: 'static;
+    type Api: 'static;
+    type Context;
 
-    const API: &Self::CApi;
+    type State;
 
-    fn instance(self: Pin<&mut Self>) -> &Self::CInstance;
+    const API: &Self::Api;
+
+    fn ctrl(&self) -> *mut core::ffi::c_void;
+    fn instance(&self) -> &Self::Instance;
 }
 
-unsafe impl<T: Block> DynBlock<T::CApi> for T {
-    fn c_api(&self) -> &'static T::CApi {
+// pub unsafe trait ExtensionConf {
+//     type CExtConfig: 'static;
+//     type Place: 'static;
+//
+//     fn ext_config() -> Self::CExtConfig;
+// }
+
+unsafe impl<T: Block> DynBlock<T::Api> for T {
+    fn c_api(&self) -> &'static T::Api {
         T::API
     }
 }
