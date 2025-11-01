@@ -1,74 +1,299 @@
-use core::pin::Pin;
+use core::{mem::zeroed, pin::Pin, ptr};
 
+use pin_init::{PinInit, pin_data, pin_init_from_closure};
 use ra_fsp_sys::generated::{
-    GPT_CFG_PARAM_CHECKING_ENABLE,
-    R_GPT_Close, //
+    self as api, // -
+    self as raw,
+    R_GPT_Close,
     R_GPT_Open,
     R_GPT0_Type,
-    g_timer_on_gpt,
+    e_fsp_err,
+    fsp_err_t,
+    gpt_extended_cfg_t,
     gpt_instance_ctrl_t,
     timer_api_t,
+    timer_callback_args_t,
     timer_cfg_t,
+    timer_ctrl_t,
     timer_instance_t,
 };
 
-use crate::{Result, fsp_try_unsafe, unsafe_pinned::UnsafePinned};
+use crate::{
+    Block, Irq, Result, fsp_try_unsafe, pac,
+    state_markers::{Closed, Opened},
+    timer_api::*,
+    unsafe_pinned::UnsafePinned,
+    utils,
+};
 
-const _: () = assert!(
-    GPT_CFG_PARAM_CHECKING_ENABLE == 1,
-    "The FSP configuration option GPT_CFG_PARAM_CHECKING_ENABLE is required with this crate, please enable it"
-);
+pub enum GptRegister {
+    GPT32EH0(pac::GPT32EH0),
+    GPT32EH1(pac::GPT32EH1),
+    GPT32EH2(pac::GPT32EH2),
+    GPT32EH3(pac::GPT32EH3),
 
-pub struct GptInstance {
+    GPT32E4(pac::GPT32E4),
+    GPT32E5(pac::GPT32E5),
+    GPT32E6(pac::GPT32E6),
+    GPT32E7(pac::GPT32E7),
+
+    GPT328(pac::GPT328),
+    GPT329(pac::GPT329),
+
+    GPT3210(pac::GPT3210),
+    GPT3211(pac::GPT3211),
+    GPT3212(pac::GPT3212),
+    GPT3213(pac::GPT3213),
+}
+
+/* todo:
+
+The problem is, I can't track the state using typestate because how would you
+transition the state of a pinned reference? You can cast it, but if it was a
+reborrow, user can simple drop it and still have a previous state. Something
+like `&own T` would've been needed.
+
+Additionally, all drivers anyway use used through the `Pin<&'static mut Gpt<'a, State, F>>`,
+So this handle won't create a new one really.
+
+I need to figure out how to implemet Block for that handle - should be easy,
+just think about ctrl block and &self or Pin<&mut Self>, as well as instance.
+
+*/
+pub struct GptHandle<'a, State: 'static, F>(Pin<&'static mut Gpt<'a, State, F>>);
+
+#[repr(C)] // `#[repr(C)]` is for `GptInstance::<Closed>::open`
+#[pin_data(PinnedDrop)]
+pub struct Gpt<'a, State: 'static, F> {
+    user_data: *const (),
+    cycle_end_irq: Option<pac::Interrupt>,
+    capture_a_irq: Option<pac::Interrupt>,
+    capture_b_irq: Option<pac::Interrupt>,
+    c_ext_cfg: core::mem::MaybeUninit<UnsafePinned<gpt_extended_cfg_t>>,
     ctrl: UnsafePinned<gpt_instance_ctrl_t>,
     cfg: UnsafePinned<timer_cfg_t>,
     inst: UnsafePinned<timer_instance_t>,
+    regs: GptRegister,
+    _marker: core::marker::PhantomData<(State, &'a F)>,
 }
 
-unsafe impl crate::Block for GptInstance {
-    type CConfig = timer_cfg_t;
-    type CInstance = timer_instance_t;
-    type CApi = timer_api_t;
+#[derive(Default)]
+pub struct GptExtendedConfig {
+    pub gtioca: raw::gpt_output_pin_t,
+    pub gtiocb: raw::gpt_output_pin_t,
+    pub start_source: raw::gpt_source_t,
+    pub stop_source: raw::gpt_source_t,
+    pub clear_source: raw::gpt_source_t,
+    pub capture_a_source: raw::gpt_source_t,
+    pub capture_b_source: raw::gpt_source_t,
 
-    const API: &Self::CApi = unsafe { &g_timer_on_gpt };
+    pub count_up_source: raw::gpt_source_t,
+    pub count_down_source: raw::gpt_source_t,
+    pub capture_filter_gtioca: raw::gpt_capture_filter_t,
+    pub capture_filter_gtiocb: raw::gpt_capture_filter_t,
 
-    fn instance(self: Pin<&mut Self>) -> &Self::CInstance {
+    pub capture_a: Option<Irq>,
+    pub capture_b: Option<Irq>,
+
+    pub compare_match_value: [u32; 2],
+    pub compare_match_status: u8,
+
+    // `p_pwm_cfg` is not implemented
+    // const * p_pwm_cfg: raw::gpt_extended_pwm_cfg_t,
+    pub gtior_setting: raw::gpt_gtior_setting_t,
+}
+
+const API: timer_api_t = timer_api_t {
+    open: Some(api::R_GPT_Open),
+    stop: Some(api::R_GPT_Stop),
+    start: Some(api::R_GPT_Start),
+    reset: Some(api::R_GPT_Reset),
+    enable: Some(api::R_GPT_Enable),
+    disable: Some(api::R_GPT_Disable),
+    periodSet: Some(api::R_GPT_PeriodSet),
+    dutyCycleSet: Some(api::R_GPT_DutyCycleSet),
+    compareMatchSet: Some(api::R_GPT_CompareMatchSet),
+    infoGet: Some(api::R_GPT_InfoGet),
+    statusGet: Some(api::R_GPT_StatusGet),
+    callbackSet: Some(api::R_GPT_CallbackSet),
+    close: Some(api::R_GPT_Close),
+};
+
+unsafe impl<S, F> Block for Gpt<'_, S, F> {
+    type Config = timer_cfg_t;
+    type Instance = timer_instance_t;
+    type Api = timer_api_t;
+    type State = S;
+    type Context = F;
+
+    const API: &'static Self::Api = &API;
+
+    fn ctrl(&self) -> *mut core::ffi::c_void {
+        UnsafePinned::raw_get(&raw const self.ctrl).cast()
+    }
+
+    fn instance(&self) -> &Self::Instance {
+        unsafe { &*self.inst.get() }
+    }
+}
+
+unsafe impl<S, F> Send for Gpt<'_, S, F> {}
+unsafe impl<S, F> Sync for Gpt<'_, S, F> {}
+
+impl<'a, F: Callback> Gpt<'a, Opened, F> {
+    pub fn new(
+        gpt: GptRegister,
+        cfg: TimerConf<GptExtendedConfig>,
+    ) -> impl PinInit<Gpt<'a, Opened, F>, fsp_err_t> {
+        unsafe {
+            pin_init_from_closure(|slot: *mut Gpt<'a, Opened, F>| {
+                init_open(slot.cast::<Gpt<'a, Opened, ()>>(), gpt, cfg)
+            })
+        }
+    }
+
+    // It may be generalized to the timer lever, but I don't see the clear
+    // reason to overcomplicate for now. In short, `F` would move to the trait.
+    pub fn callback_set(self: Pin<&mut Self>, context: &'a F) -> Result<()>
+    where
+        F: Callback<Block = Self>,
+    {
+        unsafe extern "C" fn trampoline<F: Callback>(args: *mut timer_callback_args_t)
+        where
+            F::Block: Block<Api = timer_api_t>,
+        {
+            unsafe {
+                let this = (*args).p_context.cast::<Gpt<Opened, F>>();
+                let context = (*this).user_data.cast::<F>();
+                let event = (*args).event;
+                let ctrl = UnsafePinned::raw_get(&raw const (*this).ctrl);
+                let mut timer = GenericTimer::<F::Block>::new(ctrl.cast());
+                let pinned = Pin::new(&mut timer);
+
+                debug_assert!(context != ptr::null());
+                F::call(&*context, pinned, event);
+            }
+        }
+
         unsafe {
             let this = self.get_unchecked_mut();
-            if (*this.inst.get()).p_cfg.is_null() {
-                (*this.inst.get()).p_ctrl = this.ctrl.get().cast::<core::ffi::c_void>();
-                (*this.inst.get()).p_cfg = this.cfg.get().cast_const();
-            }
-            &*this.inst.get().cast_const()
+            let ctrl = this.ctrl.get();
+
+            this.user_data = ptr::from_ref(context).cast();
+
+            fsp_try_unsafe!(api::R_GPT_CallbackSet(
+                ctrl.cast(),
+                Some(trampoline::<F>),
+                ptr::from_ref(this).cast::<core::ffi::c_void>(),
+                core::ptr::null_mut()
+            ))
         }
     }
 }
 
-impl GptInstance {
-    pub const fn new(cfg: timer_cfg_t) -> Self {
-        Self {
-            ctrl: UnsafePinned::new(unsafe { core::mem::zeroed() }),
-            cfg: UnsafePinned::new(cfg),
-            inst: UnsafePinned::new(timer_instance_t {
-                p_ctrl: core::ptr::null_mut(),
-                p_cfg: core::ptr::null(),
-                p_api: <Self as crate::Block>::API,
-            }),
+#[pin_init::pinned_drop]
+impl<S: 'static, F> PinnedDrop for Gpt<'_, S, F> {
+    fn drop(self: Pin<&mut Self>) {
+        // todo: ensure we did not preempt `trampoline` that was about to use
+        //       `p_context` for stuff.
+        if self.is_open() {
+            fsp_try_unsafe!(R_GPT_Close(self.ctrl_void())).expect("Error closing GPT timer");
         }
     }
+}
 
-    pub fn is_opened(&self) -> bool {
+unsafe fn init_open(
+    slot: *mut Gpt<'_, Opened, ()>,
+    gpt: GptRegister,
+    mut cfg: TimerConf<GptExtendedConfig>,
+) -> Result<()> {
+    if cfg.channel != gpt.channel() {
+        log::error!("GPT: channel mismatch");
+        return Err(e_fsp_err::FSP_ERR_ASSERTION);
+    }
+
+    unsafe {
+        (*slot).user_data = ptr::null();
+        (*slot).regs = gpt;
+        (*slot).cycle_end_irq = cfg.cycle_end.map(|i| i.int);
+        (*slot).capture_a_irq = cfg.extend.capture_a.map(|i| i.int);
+        (*slot).capture_b_irq = cfg.extend.capture_b.map(|i| i.int);
+        (*slot).ctrl = UnsafePinned::new(zeroed());
+        (*(*slot).inst.get()).p_ctrl = (*slot).ctrl.get().cast::<core::ffi::c_void>();
+        (*(*slot).inst.get()).p_cfg = (*slot).cfg.get().cast_const();
+        (*(*slot).inst.get()).p_api = ptr::from_ref(&API);
+
+        let p_extend = (*slot)
+            .c_ext_cfg
+            .write(UnsafePinned::new(cfg.extend.c_conf()))
+            .get()
+            .cast::<core::ffi::c_void>();
+
+        let mut timer_cfg = cfg.c_conf();
+        timer_cfg.p_extend = p_extend;
+        (*slot).cfg = UnsafePinned::new(timer_cfg);
+
+        let p_ctrl = UnsafePinned::raw_get(&raw const (*slot).ctrl);
+        let p_cfg = UnsafePinned::raw_get(&raw const (*slot).cfg);
+
+        // FSP needs to IRQs to setup contexts, but it will additionally
+        // unconditionally set priorities from cfg.
+        // Thus we read them and give to FSP. FSP will thus not change them.
+        // Critical section is for nothing to change priorities between out
+        // read and FSP's write.
+        critical_section::with(|_| {
+            utils::try_read_priority_into(cfg.cycle_end, &raw mut (*p_cfg).cycle_end_ipl);
+
+            let p_extend = (*p_cfg).p_extend.cast::<gpt_extended_cfg_t>().cast_mut();
+            utils::try_read_priority_into(cfg.extend.capture_a, &raw mut (*p_extend).capture_a_ipl);
+            utils::try_read_priority_into(cfg.extend.capture_a, &raw mut (*p_extend).capture_a_ipl);
+
+            fsp_try_unsafe!(R_GPT_Open(p_ctrl.cast::<timer_ctrl_t>(), p_cfg))
+        })
+    }
+}
+
+impl<F> Gpt<'_, Closed, F> {
+    pub fn new(regs: GptRegister) -> Self {
+        Self {
+            user_data: ptr::null_mut(),
+            regs,
+            capture_a_irq: None,
+            capture_b_irq: None,
+            cycle_end_irq: None,
+            c_ext_cfg: core::mem::MaybeUninit::zeroed(),
+            ctrl: UnsafePinned::new(unsafe { zeroed() }),
+            cfg: UnsafePinned::new(unsafe { zeroed() }),
+            inst: UnsafePinned::new(unsafe { zeroed() }),
+            _marker: core::marker::PhantomData,
+        }
+    }
+    pub fn open(
+        self: Pin<&mut Self>,
+        cfg: TimerConf<GptExtendedConfig>,
+    ) -> Result<Pin<&mut Gpt<'_, Opened, F>>> {
+        unsafe {
+            let this = ptr::from_mut(self.get_unchecked_mut());
+            let regs = ptr::read(&(*this).regs);
+
+            if (*(*this).ctrl.get()).open != 0 {
+                return Err(e_fsp_err::FSP_ERR_ALREADY_OPEN);
+            }
+
+            let this = this.cast::<Gpt<Opened, ()>>();
+            init_open(this, regs, cfg)?;
+            Ok(Pin::new_unchecked(&mut *this.cast::<Gpt<Opened, F>>()))
+        }
+    }
+}
+
+impl<S, F> Gpt<'_, S, F> {
+    pub fn is_open(&self) -> bool {
         unsafe { (*self.ctrl.get()).open != 0 }
     }
 
-    pub fn open(self: Pin<&mut Self>) -> Result<()> {
-        let p_cfg = self.cfg.get().cast_const();
-
-        fsp_try_unsafe!(R_GPT_Open(self.ctrl_void(), p_cfg))
-    }
-
     #[inline(always)]
-    fn ctrl_void(self: Pin<&mut GptInstance>) -> *mut core::ffi::c_void {
+    fn ctrl_void(self: Pin<&mut Self>) -> *mut core::ffi::c_void {
         self.ctrl().cast()
     }
 
@@ -77,18 +302,75 @@ impl GptInstance {
         UnsafePinned::raw_get(&raw const self.ctrl)
     }
 
+    pub fn cycle_end_irq(&self) -> Option<pac::Interrupt> {
+        self.cycle_end_irq
+    }
+    pub fn capture_a_irq(&self) -> Option<pac::Interrupt> {
+        self.capture_a_irq
+    }
+    pub fn capture_b_irq(&self) -> Option<pac::Interrupt> {
+        self.capture_b_irq
+    }
+
     #[inline(always)]
-    pub const fn regs(&self) -> *mut R_GPT0_Type {
+    pub const fn c_regs(&self) -> *mut R_GPT0_Type {
         unsafe { *self.ctrl.get() }.p_reg
+    }
+
+    #[inline(always)]
+    pub const fn regs_ptr(&self) -> *mut pac::gpt328::RegisterBlock {
+        unsafe { *self.ctrl.get() }.p_reg.cast()
+    }
+
+    #[inline(always)]
+    pub const fn regs_full(&self) -> &GptRegister {
+        &self.regs
     }
 }
 
-unsafe impl Send for GptInstance {}
-unsafe impl Sync for GptInstance {}
+impl GptExtendedConfig {
+    pub const fn c_conf(&self) -> gpt_extended_cfg_t {
+        gpt_extended_cfg_t {
+            gtioca: self.gtioca,
+            gtiocb: self.gtiocb,
+            start_source: self.start_source,
+            stop_source: self.stop_source,
+            clear_source: self.clear_source,
+            capture_a_source: self.capture_a_source,
+            capture_b_source: self.capture_b_source,
+            count_up_source: self.count_up_source,
+            count_down_source: self.count_down_source,
+            capture_filter_gtioca: self.capture_filter_gtioca,
+            capture_filter_gtiocb: self.capture_filter_gtiocb,
+            capture_a_ipl: Irq::extract_ipl(self.capture_a),
+            capture_b_ipl: Irq::extract_ipl(self.capture_b),
+            capture_a_irq: Irq::extract_irq(self.capture_a),
+            capture_b_irq: Irq::extract_irq(self.capture_b),
+            compare_match_value: self.compare_match_value,
+            compare_match_status: self.compare_match_status,
+            p_pwm_cfg: ptr::null(),
+            gtior_setting: self.gtior_setting,
+        }
+    }
+}
 
-impl Drop for GptInstance {
-    fn drop(&mut self) {
-        let this = unsafe { Pin::new_unchecked(self) };
-        fsp_try_unsafe!(R_GPT_Close(this.ctrl_void())).expect("Error closing GPT timer");
+impl GptRegister {
+    pub const fn channel(&self) -> u8 {
+        match self {
+            GptRegister::GPT32EH0(_) => 0,
+            GptRegister::GPT32EH1(_) => 1,
+            GptRegister::GPT32EH2(_) => 2,
+            GptRegister::GPT32EH3(_) => 3,
+            GptRegister::GPT32E4(_) => 4,
+            GptRegister::GPT32E5(_) => 5,
+            GptRegister::GPT32E6(_) => 6,
+            GptRegister::GPT32E7(_) => 7,
+            GptRegister::GPT328(_) => 8,
+            GptRegister::GPT329(_) => 9,
+            GptRegister::GPT3210(_) => 10,
+            GptRegister::GPT3211(_) => 11,
+            GptRegister::GPT3212(_) => 12,
+            GptRegister::GPT3213(_) => 13,
+        }
     }
 }
