@@ -82,6 +82,30 @@ pub mod r_ether {
     }
 }
 
+#[cfg(feature = "mod-r_display_api")]
+mod display_api_impls {
+    impl Default for crate::generated::e_display_in_format {
+        fn default() -> Self {
+            crate::generated::e_display_in_format::DISPLAY_IN_FORMAT_32BITS_ARGB8888
+        }
+    }
+}
+
+#[cfg(feature = "mod-r_gpt")]
+mod gpt_impls {
+    use super::generated::*;
+    impl Default for e_gpt_source {
+        fn default() -> Self {
+            e_gpt_source::GPT_SOURCE_NONE
+        }
+    }
+    impl Default for e_gpt_capture_filter {
+        fn default() -> Self {
+            e_gpt_capture_filter::GPT_CAPTURE_FILTER_NONE
+        }
+    }
+}
+
 #[doc(hidden)]
 #[no_mangle]
 #[cfg(feature = "device")]

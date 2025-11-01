@@ -69,21 +69,23 @@ pub fn wrap_component(modules: &[&str]) {
     };
 
     let include_dirs = vec![
-        // User defined configs
-        fsp_cfg.to_path_buf(),
-        fsp_cfg.join("bsp"),
+        // Other stuff
+        ra_fsp_repo.to_path_buf(),
+        Path::new("include").to_path_buf(),
         // FSP includes
         fsp_dir.join("inc"),
         fsp_dir.join("inc/api"),
         fsp_dir.join("inc/instances"),
         fsp_dir.join("inc/drivers"),
         fsp_dir.join("src/bsp/cmsis/Device/RENESAS/Include"),
+        #[cfg(debug_assertions)]
+        PathBuf::from("/home/ddystopia/job/ra/ra-fsp-sys/debug_inc/"),
         fsp_dir.join("src/bsp/mcu").join(mcu_group),
         fsp_dir.join("src/bsp/mcu/all"),
         cmsis_dir.join("CMSIS/Core/Include/"),
-        // Other stuff
-        ra_fsp_repo.to_path_buf(),
-        Path::new("include").to_path_buf(),
+        // User defined configs
+        fsp_cfg.to_path_buf(),
+        fsp_cfg.join("bsp"),
     ];
 
     // compile fsp library
@@ -168,7 +170,8 @@ _Static_assert(FSP_INVALID_VECTOR == ((IRQn_Type) - 33));
         .header_contents(
             "rs_ether_wrapper.h",
             if cfg!(feature = "mod-r_ether") {
-                r#" #include "r_ether.h" #include "r_ether_api.h" "#
+                r#" #include "r_ether.h"
+                    #include "r_ether_api.h" "#
             } else {
                 ""
             },
@@ -176,7 +179,8 @@ _Static_assert(FSP_INVALID_VECTOR == ((IRQn_Type) - 33));
         .header_contents(
             "rs_ether_phy_wrapper.h",
             if cfg!(feature = "mod-r_ether_phy") {
-                r#" #include "r_ether_phy.h" #include "r_ether_phy_api.h" "#
+                r#" #include "r_ether_phy.h"
+                    #include "r_ether_phy_api.h" "#
             } else {
                 ""
             },
@@ -184,7 +188,8 @@ _Static_assert(FSP_INVALID_VECTOR == ((IRQn_Type) - 33));
         .header_contents(
             "rs_ioport_wrapper.h",
             if cfg!(feature = "mod-r_ioport") {
-                r#" #include "r_ioport.h" #include "r_ioport_api.h" "#
+                r#" #include "r_ioport.h"
+                    #include "r_ioport_api.h" "#
             } else {
                 ""
             },
@@ -192,8 +197,34 @@ _Static_assert(FSP_INVALID_VECTOR == ((IRQn_Type) - 33));
         .header_contents(
             "rs_gpt_wrapper.h",
             if cfg!(feature = "mod-r_gpt") {
-                r#" #include "r_gpt.h"
-                    #include "r_gpt_cfg.h" "#
+                r#" #include "r_gpt.h" 
+                    #include "r_gpt_cfg.h"
+                    "#
+            } else {
+                ""
+            },
+        )
+        .header_contents(
+            "rs_timer_api_wrapper.h",
+            if cfg!(feature = "mod-r_timer_api") {
+                r#" #include "r_timer_api.h" "#
+            } else {
+                ""
+            },
+        )
+        .header_contents(
+            "rs_glcdc_wrapper.h",
+            if cfg!(feature = "mod-r_glcdc") {
+                r#" #include "r_glcdc.h"
+                    #include "r_glcdc_cfg.h" "#
+            } else {
+                ""
+            },
+        )
+        .header_contents(
+            "rs_display_api_wrapper.h",
+            if cfg!(feature = "mod-r_display_api") {
+                r#" #include "r_display_api.h" "#
             } else {
                 ""
             },
@@ -291,6 +322,43 @@ _Static_assert(FSP_INVALID_VECTOR == ((IRQn_Type) - 33));
         bindgen
     };
 
+    let bindgen = if cfg!(feature = "mod-r_glcdc") {
+        bindgen
+            .allowlist_item(".*glcdc_.*")
+            .allowlist_item(".*GLCDC_.*")
+            .rustified_enum("e_glcdc_layer")
+            .rustified_enum("e_glcdc_error")
+            .rustified_enum("e_glcdc_color_matrix")
+            .rustified_enum("e_glcdc_output_mode")
+            .rustified_enum("e_glcdc_input_color_format")
+            .rustified_enum("e_glcdc_alpha_calculation_mode")
+            .rustified_enum("e_glcdc_blend_mode")
+            .rustified_enum("e_glcdc_interrupt_type")
+    } else {
+        bindgen
+    };
+
+    let bindgen = if cfg!(feature = "mod-r_display_api") {
+        bindgen
+            .allowlist_item(".*display_.*")
+            .allowlist_item(".*DISPLAY_.*")
+            // .rustified_enum("e_display_frame_layer")
+            // .rustified_enum("e_display_state")
+            // .rustified_enum("e_display_event")
+            .rustified_enum("e_display_in_format")
+            // .rustified_enum("e_display_out_format")
+            // .rustified_enum("e_display_endian")
+            // .rustified_enum("e_display_color_order")
+            // .rustified_enum("e_display_signal_polarity")
+            // .rustified_enum("e_display_sync_edge")
+            // .rustified_enum("e_display_fade_control")
+            // .rustified_enum("e_display_fade_status")
+            // .rustified_enum("e_display_color_keying")
+            // .rustified_enum("e_display_data_swap")
+    } else {
+        bindgen
+    };
+
     bindgen
         .derive_default(true)
         // .derive_debug(true)
@@ -342,6 +410,8 @@ fn main() {
     add_module!(modules, "mod-r_flash_hp");
     add_module!(modules, "mod-r_ioport");
     add_module!(modules, "mod-r_gpt");
+    add_module!(modules, "mod-r_timer_api");
+    add_module!(modules, "mod-r_glcdc");
     add_module!(modules, "mod-r_ether");
     add_module!(modules, "mod-r_ether_phy");
     add_module!(modules, "mod-r_ether_phy_target_ics1894");
