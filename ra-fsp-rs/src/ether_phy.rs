@@ -1,7 +1,15 @@
 #![allow(non_upper_case_globals)]
-use core::pin::Pin;
+#![allow(unused_imports)]
 
-use {crate::unsafe_pinned::UnsafePinned, core::ptr};
+use core::{marker::PhantomData, pin::Pin, ptr};
+use pin_init::{PinInit, pin_data, pin_init_from_closure};
+use ra_fsp_sys::generated::fsp_err_t;
+
+use crate::{
+    pac,
+    state_markers::{Closed, Opened},
+    unsafe_pinned::UnsafePinned,
+};
 
 pub use ra_fsp_sys::generated::{
     ETHER_PHY_CFG_PARAM_CHECKING_ENABLE, //
@@ -19,10 +27,13 @@ const _: () = assert!(
     "The FSP configuration option ETHER_PHY_CFG_PARAM_CHECKING_ENABLE is required with this crate, please enable it"
 );
 
-pub struct EtherPhyInstance {
+#[pin_data]
+pub struct EtherPhy<S: 'static> {
     ctrl: UnsafePinned<ether_phy_instance_ctrl_t>,
     cfg: UnsafePinned<ether_phy_cfg_t>,
     inst: UnsafePinned<ether_phy_instance_t>,
+    regs: pac::EDMAC0,
+    _marker: PhantomData<S>,
 }
 
 #[derive(Debug, Copy, Clone)]
@@ -36,40 +47,43 @@ pub struct EtherPhyConfig {
     pub mii_type: e_ether_phy_mii_type,
 }
 
-unsafe impl crate::Block for EtherPhyInstance {
-    type CConfig = ether_phy_cfg_t;
-    type CInstance = ether_phy_instance_t;
-    type CApi = ether_phy_api_t;
+unsafe impl<S> crate::Block for EtherPhy<S> {
+    type Config = ether_phy_cfg_t;
+    type Instance = ether_phy_instance_t;
+    type Api = ether_phy_api_t;
+    type Context = ();
+    type State = S;
 
     const API: &ether_phy_api_t = unsafe { &g_ether_phy_on_ether_phy };
 
-    fn instance(self: Pin<&mut Self>) -> &ether_phy_instance_t {
-        unsafe {
-            let this = self.get_unchecked_mut();
-            // Can't write, tested with miri
-            if (*this.inst.get()).p_cfg.is_null() {
-                (*this.inst.get()).p_ctrl = this.ctrl.get().cast::<core::ffi::c_void>();
-                (*this.inst.get()).p_cfg = this.cfg.get().cast_const();
-            }
-            &*this.inst.get().cast_const()
-        }
+    fn ctrl(&self) -> *mut core::ffi::c_void {
+        UnsafePinned::raw_get(&raw const self.ctrl).cast()
+    }
+
+    fn instance(&self) -> &Self::Instance {
+        unsafe { &*self.inst.get() }
     }
 }
 
-impl EtherPhyInstance {
-    pub const fn new(edmac: crate::pac::EDMAC0, conf: EtherPhyConfig) -> Self {
-        _ = edmac;
-
+impl EtherPhy<Closed> {
+    pub const fn new(edmac: pac::EDMAC0, conf: EtherPhyConfig) -> impl PinInit<Self> {
         unsafe {
-            Self {
-                ctrl: UnsafePinned::new(core::mem::zeroed()),
-                cfg: UnsafePinned::new(conf.c_conf()),
-                inst: UnsafePinned::new(ether_phy_instance_t {
-                    p_ctrl: ptr::null_mut(),
-                    p_cfg: ptr::null(),
-                    p_api: <Self as crate::Block>::API,
-                }),
-            }
+            pin_init_from_closure(move |slot: *mut Self| {
+                *slot = Self {
+                    ctrl: UnsafePinned::new(core::mem::zeroed()),
+                    cfg: UnsafePinned::new(conf.c_conf()),
+                    regs: edmac,
+                    inst: UnsafePinned::new(ether_phy_instance_t {
+                        p_ctrl: ptr::null_mut(),
+                        p_cfg: ptr::null(),
+                        p_api: <Self as crate::Block>::API,
+                    }),
+                    _marker: PhantomData,
+                };
+                (*(*slot).inst.get()).p_ctrl = (*slot).ctrl.get().cast();
+                (*(*slot).inst.get()).p_cfg = (*slot).cfg.get().cast_const().cast();
+                Ok(())
+            })
         }
     }
 }
