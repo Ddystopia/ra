@@ -219,7 +219,6 @@ unsafe fn init_open<const BUF_SIZE: usize>(
     mut cfg: EtherConfig<BUF_SIZE>,
 ) -> Result<()> {
     unsafe {
-        // (*slot).user_data = ptr::null();
         (*slot).regs = gpt;
         (*slot).ctrl = UnsafePinned::new(zeroed());
         (*(*slot).inst.get()).p_ctrl = (*slot).ctrl.get().cast::<core::ffi::c_void>();
