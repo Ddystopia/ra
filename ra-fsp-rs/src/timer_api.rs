@@ -1,9 +1,8 @@
 use core::{mem::MaybeUninit, pin::Pin};
 
 use ra_fsp_sys::generated::{
-    e_timer_event, //
+    // -
     timer_api_t,
-    timer_callback_args_t,
     timer_cfg_t,
     timer_compare_match_t,
     timer_info_t,
@@ -13,26 +12,7 @@ use ra_fsp_sys::generated::{
     timer_status_t,
 };
 
-use crate::{Block, Irq, Result, fsp_try_unsafe, state_markers, utils};
-
-pub trait Callback {
-    type Block;
-
-    fn call(
-        context: &Self,
-        timer: Pin<&mut GenericTimer<Self::Block>>,
-        event: e_timer_event,
-    );
-}
-
-// Ideally, it would be generic over API table const, but Rust doesn't yet support that.
-// We can define another trait etc, but it is already too much for that problem
-pub struct GenericTimer<T> {
-    ctrl: *mut (),
-    _marker: core::marker::PhantomData<T>,
-}
-
-impl<T> Unpin for GenericTimer<T> {}
+use crate::{Block, Irq, Result, fsp_try_unsafe, state_markers};
 
 pub struct TimerConf<Extended> {
     pub mode: timer_mode_t,
@@ -41,7 +21,6 @@ pub struct TimerConf<Extended> {
     pub duty_cycle_counts: u32,
     pub channel: u8,
     pub cycle_end: Option<Irq>,
-    pub callback: Option<extern "C" fn(p_args: &mut timer_callback_args_t)>,
     pub extend: Extended,
 }
 
@@ -55,10 +34,7 @@ impl<Extended> TimerConf<Extended> {
             channel: self.channel,
             cycle_end_irq: Irq::extract_irq(self.cycle_end),
             cycle_end_ipl: Irq::extract_ipl(self.cycle_end),
-            p_callback: match self.callback {
-                Some(cb) => Some(utils::cast_callback(cb)),
-                None => None,
-            },
+            p_callback: None,
             p_context: core::ptr::null_mut(),
             p_extend: core::ptr::null(),
         }
@@ -181,32 +157,4 @@ where
             .expect("Error closing timer");
     }
     */
-}
-
-unsafe impl<T: Block<Api = timer_api_t>> Block for GenericTimer<T> {
-    type Config = ();
-    type Instance = timer_instance_t;
-    type Api = timer_api_t;
-    type Context = ();
-
-    type State = state_markers::Opened;
-
-    const API: &Self::Api = T::API;
-
-    fn ctrl(&self) -> *mut core::ffi::c_void {
-        self.ctrl.cast()
-    }
-
-    fn instance(&self) -> &Self::Instance {
-        unimplemented!()
-    }
-}
-
-impl<T> GenericTimer<T> {
-    pub(crate) unsafe fn new(ctrl: *mut ()) -> Self {
-        Self {
-            ctrl,
-            _marker: core::marker::PhantomData,
-        }
-    }
 }

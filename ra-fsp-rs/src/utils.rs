@@ -31,29 +31,6 @@ impl Irq {
     }
 }
 
-// Cast is safe because it returns an `unsafe` function pointer, which cannot
-// be safely called. So we are shifting the unsafety to the caller.
-pub const fn cast_callback<T>(callback: extern "C" fn(&mut T)) -> unsafe extern "C" fn(*mut T) {
-    unsafe {
-        core::mem::transmute::<
-            // C code will pass `*mut T` and rust code will receive `&mut T`
-            extern "C" fn(&mut T),
-            unsafe extern "C" fn(*mut T),
-        >(callback)
-    }
-}
-
-// Cast is safe because it returns an `unsafe` function pointer, which cannot
-// be safely called. So we are shifting the unsafety to the caller.
-pub const fn cast_callback_opt<T>(
-    callback: Option<extern "C" fn(&mut T)>,
-) -> Option<unsafe extern "C" fn(*mut T)> {
-    match callback {
-        Some(callback) => Some(cast_callback(callback)),
-        None => None,
-    }
-}
-
 // fixme: not true on __CORTEX_M == 23
 #[allow(dead_code)] // used in assert, idk why it warns
 pub const fn fsp_prio_to_hw(priority: u8, nvic_prio_bits: u8) -> u8 {

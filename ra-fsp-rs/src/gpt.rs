@@ -15,11 +15,12 @@ use ra_fsp_sys::generated::{
     timer_callback_args_t,
     timer_cfg_t,
     timer_ctrl_t,
+    timer_event_t,
     timer_instance_t,
 };
 
 use crate::{
-    Block, Irq, Result, fsp_try_unsafe, pac,
+    Block, Callback, Irq, Result, fsp_try_unsafe, pac,
     state_markers::{Closed, Opened},
     timer_api::*,
     unsafe_pinned::UnsafePinned,
@@ -60,7 +61,8 @@ I need to figure out how to implemet Block for that handle - should be easy,
 just think about ctrl block and &self or Pin<&mut Self>, as well as instance.
 
 */
-pub struct GptHandle<'a, State: 'static, F>(Pin<&'static mut Gpt<'a, State, F>>);
+#[allow(dead_code)]
+pub struct GptHandle<'a, 'f, State: 'static, F>(Pin<&'a mut Gpt<'f, State, F>>);
 
 #[repr(C)] // `#[repr(C)]` is for `GptInstance::<Closed>::open`
 #[pin_data(PinnedDrop)]
@@ -140,7 +142,7 @@ unsafe impl<S, F> Block for Gpt<'_, S, F> {
 unsafe impl<S, F> Send for Gpt<'_, S, F> {}
 unsafe impl<S, F> Sync for Gpt<'_, S, F> {}
 
-impl<'a, F: Callback> Gpt<'a, Opened, F> {
+impl<'a, F: Callback<timer_event_t>> Gpt<'a, Opened, F> {
     pub fn new(
         gpt: GptRegister,
         cfg: TimerConf<GptExtendedConfig>,
@@ -156,22 +158,18 @@ impl<'a, F: Callback> Gpt<'a, Opened, F> {
     // reason to overcomplicate for now. In short, `F` would move to the trait.
     pub fn callback_set(self: Pin<&mut Self>, context: &'a F) -> Result<()>
     where
-        F: Callback<Block = Self>,
+        F: Callback<timer_event_t>,
     {
-        unsafe extern "C" fn trampoline<F: Callback>(args: *mut timer_callback_args_t)
-        where
-            F::Block: Block<Api = timer_api_t>,
-        {
+        unsafe extern "C" fn trampoline<F: Callback<timer_event_t>>(
+            args: *mut timer_callback_args_t,
+        ) {
             unsafe {
                 let this = (*args).p_context.cast::<Gpt<Opened, F>>();
                 let context = (*this).user_data.cast::<F>();
                 let event = (*args).event;
-                let ctrl = UnsafePinned::raw_get(&raw const (*this).ctrl);
-                let mut timer = GenericTimer::<F::Block>::new(ctrl.cast());
-                let pinned = Pin::new(&mut timer);
 
                 debug_assert!(context != ptr::null());
-                F::call(&*context, pinned, event);
+                F::call(&*context, event);
             }
         }
 

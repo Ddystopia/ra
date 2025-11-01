@@ -8,16 +8,11 @@ use atomic_once_cell::AtomicOnceCell;
 use cortex_m::peripheral::NVIC;
 use critical_section::{CriticalSection, Mutex};
 
-use crate::{
-    Result,
-    gpt::Gpt,
-    pac,
-    state_markers::Opened,
-    timer_api::{Callback, TimerApi},
-};
+use crate::{Callback, Result, gpt::Gpt, pac, state_markers::Opened, timer_api::TimerApi};
+
 #[allow(unused_imports)]
 use ra_fsp_sys::generated::R_GPT0_Type;
-use ra_fsp_sys::generated::{e_fsp_err, e_timer_compare_match};
+use ra_fsp_sys::generated::{e_fsp_err, e_timer_compare_match, timer_event_t};
 
 // Clock timekeeping works with something we call "periods", which are time intervals
 // of 2^31 ticks. The Clock counter value is 32 bits, so one "overflow cycle" is 2 periods.
@@ -74,7 +69,7 @@ pub fn start<Ext: Storage>(
     gpt: Pin<&'static mut Gpt<'static, Opened, TimerState<Ext>>>,
 ) -> Result<()>
 where
-    TimerState<Ext>: Callback<Block = Gpt<'static, Opened, TimerState<Ext>>>,
+    TimerState<Ext>: Callback<timer_event_t>,
 {
     if gpt.capture_a_irq().is_none() {
         log::error!("cycle_end_irq invalid");
@@ -241,28 +236,6 @@ impl<E> TimerState<E> {
 
         // We're confident the alarm will ring in the future.
         Ok(true)
-    }
-}
-
-impl Callback for TimerState<()> {
-    type Block = Gpt<'static, Opened, Self>;
-
-    fn call(
-        _context: &Self,
-        _timer: Pin<&mut crate::timer_api::GenericTimer<Self::Block>>,
-        _event: ra_fsp_sys::generated::e_timer_event,
-    ) {
-    }
-}
-
-impl Callback for TimerState<core::convert::Infallible> {
-    type Block = Gpt<'static, Opened, Self>;
-
-    fn call(
-        _context: &Self,
-        _timer: Pin<&mut crate::timer_api::GenericTimer<Self::Block>>,
-        _event: ra_fsp_sys::generated::e_timer_event,
-    ) {
     }
 }
 

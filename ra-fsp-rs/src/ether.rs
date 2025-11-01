@@ -8,16 +8,16 @@ use core::{
 };
 
 use crate::{
-    Block, Irq, Result,
+    Block, Callback, Irq, Result,
     ether_phy::EtherPhy,
-    fsp_try_unsafe, log, pac,
-    pac::Interrupt,
+    fsp_try_unsafe, log,
+    pac::{self, Interrupt},
     state_markers::{Closed, Opened},
     unsafe_pinned::UnsafePinned,
-    utils::{self, cast_callback, cast_callback_opt},
+    utils::{self},
 };
 
-use pin_init::{pin_data, PinInit, pin_init_from_closure};
+use pin_init::{PinInit, pin_data, pin_init_from_closure};
 
 pub use ra_fsp_sys::{
     generated::{
@@ -35,7 +35,7 @@ pub use ra_fsp_sys::{
         ether_instance_t,
         g_ether_on_ether,
     },
-    r_ether::{InterruptCause, interrupt_cause},
+    r_ether::InterruptCause,
 };
 
 use ra_fsp_sys::generated::{
@@ -84,6 +84,7 @@ pub struct Ether<const BUF_SIZE: usize, S: 'static> {
     ctrl: UnsafePinned<ether_instance_ctrl_t>,
     cfg: UnsafePinned<ether_cfg_t>,
     inst: UnsafePinned<ether_instance_t>,
+    user_data: *const (),
     c_ext_cfg: MaybeUninit<UnsafePinned<ether_extended_cfg_t>>,
     tx_buffers: &'static mut [Pin<&'static mut Buffer<BUF_SIZE>>],
     rx_buffers: &'static mut [Pin<&'static mut Buffer<BUF_SIZE>>],
@@ -130,7 +131,6 @@ pub struct EtherConfig<const BUF_SIZE: usize> {
     pub irq: Irq,
     pub p_ether_phy_instance: &'static ether_phy_instance_t,
 
-    pub callback: Option<extern "C" fn(&mut ether_callback_args_t)>,
     pub tx_descriptors: &'static [Descriptor<BUF_SIZE>],
     pub rx_descriptors: &'static [Descriptor<BUF_SIZE>],
     pub tx_buffers: &'static mut [Pin<&'static mut Buffer<BUF_SIZE>>],
@@ -177,6 +177,7 @@ impl<const BUF_SIZE: usize> Ether<BUF_SIZE, Closed> {
     pub const fn new(ether: crate::pac::ETHERC0) -> Self {
         Self {
             regs: ether,
+            user_data: ptr::null(),
             ctrl: UnsafePinned::new(unsafe { ::core::mem::zeroed() }),
             c_ext_cfg: MaybeUninit::zeroed(),
             tx_buffers: &mut [],
@@ -228,6 +229,7 @@ unsafe fn init_open<const BUF_SIZE: usize>(
         (*slot).tx_buffers = take(&mut cfg.tx_buffers);
         (*slot).rx_buffers = take(&mut cfg.rx_buffers);
         (*slot).tx_taken = 0;
+        (*slot).user_data = ptr::null();
         (*slot).cfg = {
             let c_ext_projection = Pin::new_unchecked(&mut (*slot).c_ext_cfg);
             UnsafePinned::new(cfg.c_conf(c_ext_projection))
@@ -266,6 +268,39 @@ impl<const BUF_SIZE: usize> Ether<BUF_SIZE, Opened> {
             pin_init_from_closure(|slot: *mut Ether<BUF_SIZE, Opened>| {
                 init_open(slot.cast::<Ether<BUF_SIZE, Opened>>(), gpt, cfg)
             })
+        }
+    }
+
+    pub fn callback_set<F>(self: Pin<&mut Self>, context: &'static F) -> Result<()>
+    where
+        F: Callback<InterruptCause>,
+    {
+        unsafe extern "C" fn trampoline<const BUF_SIZE: usize, F: Callback<InterruptCause>>(
+            args: *mut ether_callback_args_t,
+        ) {
+            unsafe {
+                let p_context = (*args).p_context;
+                let this = p_context.cast::<Ether<BUF_SIZE, Opened>>();
+                let context = (*this).user_data.cast::<F>();
+                let cause = InterruptCause::from_event(&mut *args);
+
+                debug_assert!(context != ptr::null());
+                F::call(&*context, cause);
+            }
+        }
+
+        unsafe {
+            let this = self.get_unchecked_mut();
+            let ctrl = this.ctrl.get();
+
+            this.user_data = ptr::from_ref(context).cast();
+
+            fsp_try_unsafe!(R_ETHER_CallbackSet(
+                ctrl.cast(),
+                Some(trampoline::<BUF_SIZE, F>),
+                ptr::from_ref(this).cast::<core::ffi::c_void>(),
+                core::ptr::null_mut()
+            ))
         }
     }
 
@@ -367,17 +402,6 @@ impl<const BUF_SIZE: usize> Ether<BUF_SIZE, Opened> {
         ))?;
 
         Ok(())
-    }
-    pub fn callback_set(
-        self: Pin<&mut Self>,
-        callback: Option<extern "C" fn(&mut ether_callback_args_t)>,
-    ) -> Result<()> {
-        fsp_try_unsafe!(R_ETHER_CallbackSet(
-            self.ctrl_void(),
-            callback.map(cast_callback),
-            ptr::null_mut(),
-            ptr::null_mut(), // todo: is it needed, considering `&mut`, rtic? It is for nested stuff
-        ))
     }
 
     /// Takes the buffer out of the current tx descriptor. Returns `None` if
@@ -497,11 +521,11 @@ const fn assert_descriptor_unused<const BUF_SIZE: usize>(descriptor: &Descriptor
 
 #[rustfmt::skip]
 impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
-    pub fn new(ether_phy_instance: &'static mut EtherPhy<Closed>) -> Self {
+    pub fn new(ether_phy_instance: Pin<&'static mut EtherPhy<Closed>>) -> Self {
         const { assert!(BUF_SIZE <= 1514) };
         const { assert!(BUF_SIZE >= 60) };
 
-        let p_ether_phy_instance = Pin::static_mut(ether_phy_instance).into_ref().get_ref().instance();
+        let p_ether_phy_instance = ether_phy_instance.into_ref().get_ref().instance();
 
         Self {
             channel: 0,
@@ -516,7 +540,6 @@ impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
             p_mac_address: &[0; 6],
             irq: Irq::new(Interrupt::IEL0, None),
             p_ether_phy_instance,
-            callback: None,
             rx_descriptors: &[],
             tx_descriptors: &[],
             tx_buffers: &mut [],
@@ -533,7 +556,6 @@ impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
     pub const fn broadcast_filter(mut self, filter: u32) -> Self { self.broadcast_filter = filter; self }
     pub const fn mac(mut self, mac: &'static [u8; 6]) -> Self { self.p_mac_address = mac; self }
     pub const fn irq(mut self, irq: Irq) -> Self { self.irq = irq;  self }
-    pub const fn callback(mut self, callback: extern "C" fn(&mut ether_callback_args_t)) -> Self { self.callback = Some(callback); self }
     pub const fn ether_buffers(mut self, buffers: &'static mut [&'static mut Buffer<BUF_SIZE>]) -> Self { self.pp_ether_buffers = Some(buffers); self }
     pub const fn rx_descriptors(mut self, descriptors: &'static [Descriptor<BUF_SIZE>]) -> Self { self.rx_descriptors = descriptors; self }
     pub const fn tx_descriptors(mut self, descriptors: &'static [Descriptor<BUF_SIZE>]) -> Self { self.tx_descriptors = descriptors; self }
@@ -612,7 +634,7 @@ impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
             ether_buffer_size: BUF_SIZE as u32,
             irq: self.irq.int as u16 as _, 
             interrupt_priority: self.irq.prio.expect("Interrupt priority is not set") as u32,
-            p_callback: cast_callback_opt(self.callback),
+            p_callback: None,
             p_ether_phy_instance: self.p_ether_phy_instance,
             p_context: ptr::null(),
             p_extend: ptr::from_mut(p_extend).cast(),

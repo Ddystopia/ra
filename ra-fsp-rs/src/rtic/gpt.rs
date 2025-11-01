@@ -1,14 +1,13 @@
 use core::pin::Pin;
 
-use ra_fsp_sys::generated::e_timer_event;
+use ra_fsp_sys::generated::{e_timer_event, timer_event_t};
 use rtic_monotonics::{TimerQueueBackend, rtic_time::timer_queue::TimerQueue};
 
 use crate::{
-    Result,
+    Callback, Result,
     gpt::Gpt,
     gpt_clock::{self, GptTimerDriver, Storage, TimerState},
     state_markers::Opened,
-    timer_api::{Callback, GenericTimer},
 };
 
 static TIMER_QUEUE: TimerQueue<TimerBackend> = TimerQueue::new();
@@ -80,12 +79,9 @@ impl TimerQueueBackend for TimerBackend {
     }
 }
 
-impl Callback for TimerState<RticGptExtension> {
-    // The `GenericTimer` does not support working with callback, thus no lifetimes here.
-    type Block = Gpt<'static, Opened, Self>;
-
+impl Callback<timer_event_t> for TimerState<RticGptExtension> {
     #[inline(always)]
-    fn call(timer: &Self, _block: Pin<&mut GenericTimer<Self::Block>>, event: e_timer_event) {
+    fn call(timer: &Self, event: e_timer_event) {
         match event {
             e_timer_event::TIMER_EVENT_CYCLE_END => timer.next_period(),
             // R_BSP_IrqClearPending((*timer.ext_cfg).capture_a_irq);

@@ -254,7 +254,6 @@ _Static_assert(FSP_INVALID_VECTOR == ((IRQn_Type) - 33));
             // .allowlist_item("^ETHER_(?!PHY_).*")
             .allowlist_item(".*ether_.*")
             .allowlist_item(".*ETHER_.*")
-            .parse_callbacks(Box::new(EtherCallbackArgs))
     } else {
         bindgen
     };
@@ -377,21 +376,6 @@ _Static_assert(FSP_INVALID_VECTOR == ((IRQn_Type) - 33));
         "\npub type e_elc_event = e_elc_event_{mcu_group};\n"
     )
     .unwrap();
-}
-
-#[derive(Debug)]
-struct EtherCallbackArgs;
-impl bindgen::callbacks::ParseCallbacks for EtherCallbackArgs {
-    fn field_visibility(
-        &self,
-        info: bindgen::callbacks::FieldInfo<'_>,
-    ) -> Option<bindgen::FieldVisibilityKind> {
-        if info.type_name == "st_ether_callback_args" {
-            Some(bindgen::FieldVisibilityKind::PublicCrate)
-        } else {
-            None
-        }
-    }
 }
 
 macro_rules! add_module {

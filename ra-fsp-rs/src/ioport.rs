@@ -1,4 +1,4 @@
-use core::{cell::UnsafeCell, mem::MaybeUninit, ptr};
+use core::{cell::UnsafeCell, mem::MaybeUninit, pin::Pin, ptr};
 
 use pin_init::{PinInit, pin_init_from_closure};
 use ra_fsp_sys::generated::IOPORT_CFG_PARAM_CHECKING_ENABLE;
@@ -80,12 +80,12 @@ impl IoPort {
     pub unsafe fn from_ptr<'a>(ptr: *mut ioport_instance_ctrl_t) -> &'a mut Self {
         unsafe { &mut *ptr.cast::<IoPort>() }
     }
-    pub fn open(&mut self) -> Result<(), fsp_err_t> {
-        let ctrl = (&mut self.ctrl) as *mut _ as *mut _;
+    pub fn open(self: Pin<&mut Self>) -> Result<(), fsp_err_t> {
+        let ctrl = self.ctrl.get().cast();
         crate::fsp_try_unsafe!(R_IOPORT_Open(ctrl, self.cfg.get()))
     }
-    pub fn close(&mut self) -> Result<(), fsp_err_t> {
-        let ctrl = (&mut self.ctrl) as *mut _ as *mut _;
+    pub fn close(self: Pin<&mut Self>) -> Result<(), fsp_err_t> {
+        let ctrl = self.ctrl.get().cast();
         crate::fsp_try_unsafe!(R_IOPORT_Close(ctrl))
     }
     pub const fn ports(&self) -> &pac::PORT0 {

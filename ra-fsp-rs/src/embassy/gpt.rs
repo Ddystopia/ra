@@ -3,14 +3,14 @@ use core::{cell::RefCell, pin::Pin};
 use critical_section::{CriticalSection, Mutex};
 use embassy_time_driver::{Driver, TICK_HZ, time_driver_impl};
 use embassy_time_queue_utils::Queue;
-use ra_fsp_sys::generated::e_timer_event;
+use ra_fsp_sys::generated::{e_fsp_err, e_timer_event, timer_event_t};
 
 use crate::{
-    Result,
+    Callback, Result,
     gpt::Gpt,
     gpt_clock::{self, GptTimerDriver, Storage, TimerState},
     state_markers::Opened,
-    timer_api::{Callback, GenericTimer, TimerApi},
+    timer_api::TimerApi,
 };
 
 time_driver_impl!(
@@ -26,12 +26,11 @@ struct EmbassyGptStorage(Mutex<RefCell<Queue>>);
 pub fn start(mut gpt: Pin<&'static mut EmbassyGpt<Opened>>) -> Result<()> {
     if gpt.as_mut().info_get()?.clock_frequency as u64 != TICK_HZ {
         log::error!("GPT frequency not matching selected tick-hz-* feature");
-        return Err(ra_fsp_sys::generated::e_fsp_err::FSP_ERR_ASSERTION);
+        return Err(e_fsp_err::FSP_ERR_ASSERTION);
     }
 
     gpt_clock::start::<EmbassyGptStorage>(gpt)
 }
-
 
 impl Default for EmbassyGptStorage {
     fn default() -> Self {
@@ -111,18 +110,17 @@ impl Driver for GptTimerDriver<EmbassyGptStorage> {
     }
 }
 
-impl Callback for TimerState<EmbassyGptStorage> {
-    // The `GenericTimer` does not support working with callback, thus no lifetimes here.
-    type Block = Gpt<'static, Opened, Self>;
-
+impl Callback<timer_event_t> for TimerState<EmbassyGptStorage> {
     #[inline(always)]
-    fn call(timer: &Self,block: Pin<&mut GenericTimer<Self::Block>>, event: e_timer_event) {
+    fn call(timer: &Self, event: e_timer_event) {
         critical_section::with(|cs| match event {
             e_timer_event::TIMER_EVENT_CYCLE_END => Ok(timer.next_period()),
             // R_BSP_IrqClearPending((*timer.ext_cfg).capture_a_irq);
             e_timer_event::TIMER_EVENT_COMPARE_A => Ok(timer.next_period()),
             // R_BSP_IrqClearPending((*timer.ext_cfg).capture_b_irq);
-            e_timer_event::TIMER_EVENT_COMPARE_B => timer.trigger_alarm(cs, block),
+            e_timer_event::TIMER_EVENT_COMPARE_B => {
+                timer.trigger_alarm(cs, DRIVER.gpt.borrow_ref_mut(cs).as_mut().unwrap().as_mut())
+            }
             _ => Ok(()),
         })
         .expect("Error in callback handler");

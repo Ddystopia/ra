@@ -77,12 +77,10 @@ pub unsafe trait DynBlock<API: 'static> {
     fn c_api(&self) -> &'static API;
 }
 
-/// SAFETY: Implementors must ensure that all associated types are zero-initializable,
-///         `API` vtable contains valid entries callable with *any* payload and
-///         `instance` contains well-formed triplet of pointers to the control
-///         block valid for reads and writes for a duration of borrow, a configuration
-///         valid for reads for a duration of borrow and the same vtable that is
-///         associated to `API` constant.
+/// # SAFETY
+/// - `API` vtable is exactly the same as provided by FSP for a given HAL block.
+/// - `ctrl` returns a writable pointer to the ctrl block, valid until the `Block` is dropped.
+/// - `instance` retuns a reference to FSP instance with pointers valid as in previous requirement.
 pub unsafe trait Block {
     type Config: 'static;
     type Instance: 'static;
@@ -97,12 +95,15 @@ pub unsafe trait Block {
     fn instance(&self) -> &Self::Instance;
 }
 
-// pub unsafe trait ExtensionConf {
-//     type CExtConfig: 'static;
-//     type Place: 'static;
-//
-//     fn ext_config() -> Self::CExtConfig;
-// }
+pub trait Callback<Event> {
+    fn call(context: &Self, event: Event);
+}
+
+impl<F: Fn(Event), Event> Callback<Event> for F {
+    fn call(context: &F, event: Event) {
+        (context)(event)
+    }
+}
 
 unsafe impl<T: Block> DynBlock<T::Api> for T {
     fn c_api(&self) -> &'static T::Api {

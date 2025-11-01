@@ -29,56 +29,60 @@ pub mod r_ether {
     #[derive(Debug)]
     #[non_exhaustive]
     pub struct InterruptCause {
+        pub channel: u32,
         pub went_up: bool,
         pub went_down: bool,
         pub receive: bool,
         pub transmits: bool,
     }
 
-    pub fn interrupt_cause(args: &mut ether_callback_args_t) -> InterruptCause {
-        const EVENT_TAKEN: u32 = u32::MAX;
+    impl InterruptCause {
+        /// # Safety
+        /// You can't use this function, it is a private API
+        #[doc(hidden)]
+        pub unsafe fn from_event(args: &mut ether_callback_args_t) -> Self {
+            /* Transmit Complete. (all pending transmissions) */
+            const ETHER_EDMAC_INTERRUPT_FACTOR_TC: u32 = 1 << 21;
+            /* Frame Receive. */
+            const ETHER_EDMAC_INTERRUPT_FACTOR_FR: u32 = 1 << 18;
 
-        /* Transmit Complete. (all pending transmissions) */
-        const ETHER_EDMAC_INTERRUPT_FACTOR_TC: u32 = 1 << 21;
-        /* Frame Receive. */
-        const ETHER_EDMAC_INTERRUPT_FACTOR_FR: u32 = 1 << 18;
+            let mut cause = InterruptCause {
+                channel: args.channel,
+                receive: false,
+                transmits: false,
+                went_up: false,
+                went_down: false,
+            };
 
-        let mut cause = InterruptCause {
-            receive: false,
-            transmits: false,
-            went_up: false,
-            went_down: false,
-        };
+            match args.event {
+                ETHER_EVENT_INTERRUPT => {
+                    let receive_mask = ETHER_EDMAC_INTERRUPT_FACTOR_FR;
+                    let trasmit_mask = ETHER_EDMAC_INTERRUPT_FACTOR_TC;
 
-        match core::mem::replace(&mut args.event, EVENT_TAKEN) {
-            EVENT_TAKEN => (),
-            ETHER_EVENT_INTERRUPT => {
-                let receive_mask = ETHER_EDMAC_INTERRUPT_FACTOR_FR;
-                let trasmit_mask = ETHER_EDMAC_INTERRUPT_FACTOR_TC;
+                    /* Packet received. */
+                    if receive_mask == (args.status_eesr & receive_mask) {
+                        cause.receive = true;
+                    }
 
-                /* Packet received. */
-                if receive_mask == (args.status_eesr & receive_mask) {
-                    cause.receive = true;
+                    if trasmit_mask == (args.status_eesr & trasmit_mask) {
+                        cause.transmits = true;
+                    }
                 }
-
-                if trasmit_mask == (args.status_eesr & trasmit_mask) {
-                    cause.transmits = true;
+                ETHER_EVENT_LINK_ON => {
+                    cause.went_up = true;
                 }
-            }
-            ETHER_EVENT_LINK_ON => {
-                cause.went_up = true;
-            }
-            ETHER_EVENT_LINK_OFF => {
-                cause.went_down = true;
+                ETHER_EVENT_LINK_OFF => {
+                    cause.went_down = true;
 
-                /*
-                 * When the link is re-established, the Ethernet driver will reset all of the buffer descriptors.
-                 */
-            }
-            _ => {}
-        };
+                    /*
+                     * When the link is re-established, the Ethernet driver will reset all of the buffer descriptors.
+                     */
+                }
+                _ => {}
+            };
 
-        cause
+            cause
+        }
     }
 }
 
