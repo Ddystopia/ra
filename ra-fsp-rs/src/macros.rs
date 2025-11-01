@@ -41,10 +41,11 @@ macro_rules! event_link_select {
 
 #[macro_export]
 macro_rules! fsp_try_unsafe {
-    ($expr:expr) => {
+    ($expr:expr) => {{
+        #[allow(unused_unsafe)]
         match unsafe { $expr } {
             ::ra_fsp_sys::generated::e_fsp_err::FSP_SUCCESS => Ok(()),
             err_code => Err(err_code),
         }
-    };
+    }};
 }
