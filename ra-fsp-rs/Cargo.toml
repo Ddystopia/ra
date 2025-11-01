@@ -24,6 +24,11 @@ static_cell = "2.1.1"
 rtic-monotonics = { version = "2.1.0", default-features = false, optional = true }
 embassy-time-queue-utils = { version = "0.3.0", optional = true }
 embassy-time-driver = { version = "0.2.1", optional = true }
+# pin-init = { version = "0.2.0", default-features = false }
+# pin-init = { git = "https://github.com/Rust-for-Linux/pin-init", default-features = false }
+pin-init = { path = "/home/ddystopia/job/pin-init/", default-features = false }
+atomic_refcell = "0.1.13"
+atomic_once_cell = "0.2.0"
 
 [features]
 default = ["log", "device"]
@@ -35,7 +40,7 @@ smoltcp-ether = ["dep:smoltcp", "ra-fsp-sys/mod-r_ether", "smoltcp/medium-ethern
 rtic-monotonics = ["dep:rtic-monotonics"]
 rtic-monotonics-gpt = ["mod-r_gpt", "rtic-monotonics"]
 embassy-time = ["dep:embassy-time-queue-utils", "dep:embassy-time-driver"]
-embassy-time-gpt = ["embassy-time"]
+embassy-time-gpt = ["embassy-time", "mod-r_gpt"]
 
 mod-r_dmac = ["ra-fsp-sys/mod-r_dmac"]
 mod-r_elc = ["ra-fsp-sys/mod-r_elc"]
@@ -46,6 +51,8 @@ mod-r_icu = ["ra-fsp-sys/mod-r_icu"]
 mod-r_ioport = ["ra-fsp-sys/mod-r_ioport"]
 mod-r_gpt = ["ra-fsp-sys/mod-r_gpt", "mod-r_timer_api"]
 mod-r_timer_api = ["ra-fsp-sys/mod-r_timer_api"]
+mod-r_glcdc = ["ra-fsp-sys/mod-r_glcdc", "mod-r_display_api"]
+mod-r_display_api = ["ra-fsp-sys/mod-r_display_api"]
 mod-r_ether = ["ra-fsp-sys/mod-r_ether"]
 mod-r_ether_phy = ["ra-fsp-sys/mod-r_ether_phy"]
 mod-r_ether_phy_target_ics1894 = ["ra-fsp-sys/mod-r_ether_phy_target_ics1894"]
