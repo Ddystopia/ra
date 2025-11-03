@@ -51,7 +51,6 @@ unsafe impl<S> crate::Block for EtherPhy<S> {
     type Config = ether_phy_cfg_t;
     type Instance = ether_phy_instance_t;
     type Api = ether_phy_api_t;
-    type Context = ();
     type State = S;
 
     const API: &ether_phy_api_t = unsafe { &g_ether_phy_on_ether_phy };

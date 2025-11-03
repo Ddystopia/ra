@@ -1,7 +1,9 @@
 use {
-    crate::{ether::{self, Buffer, Ether}, state_markers::Opened},
+    crate::{
+        ether::{self, Buffer, Ether, InterruptCause},
+        state_markers::Opened,
+    },
     core::{cell::RefCell, pin::Pin},
-    ra_fsp_sys::r_ether::InterruptCause,
     smoltcp::{
         phy::{Device, DeviceCapabilities, Medium, RxToken, TxToken},
         time::Instant,

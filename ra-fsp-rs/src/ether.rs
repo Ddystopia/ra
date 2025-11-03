@@ -1,7 +1,7 @@
 #![allow(non_upper_case_globals)]
 use core::{
     marker::PhantomData,
-    mem::{MaybeUninit, take, zeroed},
+    mem::{MaybeUninit, replace, take, zeroed},
     ops::{Deref, DerefMut},
     pin::Pin,
     ptr,
@@ -19,24 +19,32 @@ use crate::{
 
 use pin_init::{PinInit, pin_data, pin_init_from_closure};
 
-pub use ra_fsp_sys::{
-    generated::{
-        self as api,
-        ETHER_CFG_PARAM_CHECKING_ENABLE,
-        e_ether_link_establish_status::ETHER_LINK_ESTABLISH_STATUS_UP,
-        e_ether_zerocopy::{ETHER_ZEROCOPY_DISABLE, ETHER_ZEROCOPY_ENABLE},
-        e_fsp_err::FSP_ERR_ASSERTION,
-        e_fsp_err::FSP_ERR_ETHER_ERROR_LINK,
-        e_fsp_err::FSP_ERR_ETHER_ERROR_NO_DATA,
-        ether_api_t, //
-        ether_callback_args_t,
-        ether_cfg_t,
-        ether_instance_ctrl_t,
-        ether_instance_t,
-        g_ether_on_ether,
-    },
-    r_ether::InterruptCause,
+pub use ra_fsp_sys::generated::{
+    self as api,
+    ETHER_CFG_PARAM_CHECKING_ENABLE,
+    e_ether_event::{ETHER_EVENT_INTERRUPT, ETHER_EVENT_LINK_OFF, ETHER_EVENT_LINK_ON},
+    e_ether_link_establish_status::ETHER_LINK_ESTABLISH_STATUS_UP,
+    e_ether_zerocopy::{ETHER_ZEROCOPY_DISABLE, ETHER_ZEROCOPY_ENABLE},
+    e_fsp_err::FSP_ERR_ASSERTION,
+    e_fsp_err::FSP_ERR_ETHER_ERROR_LINK,
+    e_fsp_err::FSP_ERR_ETHER_ERROR_NO_DATA,
+    ether_api_t, //
+    ether_callback_args_t,
+    ether_cfg_t,
+    ether_instance_ctrl_t,
+    ether_instance_t,
+    g_ether_on_ether,
 };
+
+#[derive(Debug)]
+#[non_exhaustive]
+pub struct InterruptCause {
+    pub channel: u32,
+    pub went_up: bool,
+    pub went_down: bool,
+    pub receive: bool,
+    pub transmits: bool,
+}
 
 use ra_fsp_sys::generated::{
     R_ETHER_CallbackSet, R_ETHER_Close, R_ETHER_LinkProcess, R_ETHER_Open, R_ETHER_Read,
@@ -72,10 +80,8 @@ Write:
                     required this TD0_TACT to be 0 too
 
 => For write descriptor we can see, that if `TD0_TACT == 0`, we can return
-`Pin<&'static UnsafePinned<[u8]>>` to the user.
-
-Read:
-
+`Pin<&'static mut Buffer<BUF_SIZE>>` to the user, when he wants to take the buffer
+for the purpous of writing
 
 */
 
@@ -104,15 +110,9 @@ pub struct Buffers<const BUF_SIZE: usize, const TX: usize, const RX: usize> {
     rx_buffers: [Pin<&'static mut Buffer<BUF_SIZE>>; RX],
 }
 
-// Is it okay to even have references to this stuct? Hardware can r/w `status`
-// etc, and it is `volatile` in C code, and we are doing volatile reads. But,
-// like, reference is basically a read, but it is okay to read those fields.
-#[repr(transparent)]
-struct RawDescripor(ether_instance_descriptor_t);
-
 #[repr(C, align(16))]
 pub struct Descriptor<const BUF_SIZE: usize>(
-    UnsafePinned<RawDescripor>,
+    ether_instance_descriptor_t,
     PhantomData<[u8; BUF_SIZE]>,
 );
 
@@ -128,11 +128,11 @@ pub struct EtherConfig<const BUF_SIZE: usize> {
     pub p_mac_address: &'static [u8; 6],
 
     pub pp_ether_buffers: Option<&'static mut [&'static mut Buffer<BUF_SIZE>]>,
-    pub irq: Irq,
+    pub irq: Option<Irq>,
     pub p_ether_phy_instance: &'static ether_phy_instance_t,
 
-    pub tx_descriptors: &'static [Descriptor<BUF_SIZE>],
-    pub rx_descriptors: &'static [Descriptor<BUF_SIZE>],
+    pub tx_descriptors: &'static mut [Descriptor<BUF_SIZE>],
+    pub rx_descriptors: &'static mut [Descriptor<BUF_SIZE>],
     pub tx_buffers: &'static mut [Pin<&'static mut Buffer<BUF_SIZE>>],
     pub rx_buffers: &'static mut [Pin<&'static mut Buffer<BUF_SIZE>>],
 }
@@ -159,8 +159,7 @@ unsafe impl<const BUF_SIZE: usize, S> crate::Block for Ether<BUF_SIZE, S> {
     type Config = ether_cfg_t;
     type Instance = ether_instance_t;
     type Api = ether_api_t;
-    type State = crate::state_markers::Opened;
-    type Context = S;
+    type State = S;
 
     const API: &ether_api_t = &API;
 
@@ -174,7 +173,7 @@ unsafe impl<const BUF_SIZE: usize, S> crate::Block for Ether<BUF_SIZE, S> {
 }
 
 impl<const BUF_SIZE: usize> Ether<BUF_SIZE, Closed> {
-    pub const fn new(ether: crate::pac::ETHERC0) -> Self {
+    pub const fn new(ether: pac::ETHERC0) -> Self {
         Self {
             regs: ether,
             user_data: ptr::null(),
@@ -245,7 +244,7 @@ unsafe fn init_open<const BUF_SIZE: usize>(
         critical_section::with(|_| {
             (*p_cfg).interrupt_priority = 0;
             let ipl = &raw mut (*p_cfg).interrupt_priority;
-            utils::try_read_priority_into(Some(cfg.irq), ipl.cast::<u8>());
+            utils::try_read_priority_into(cfg.irq, ipl.cast::<u8>());
 
             fsp_try_unsafe!(R_ETHER_Open(p_ctrl.cast::<ether_ctrl_t>(), p_cfg))
         })
@@ -281,7 +280,7 @@ impl<const BUF_SIZE: usize> Ether<BUF_SIZE, Opened> {
                 let p_context = (*args).p_context;
                 let this = p_context.cast::<Ether<BUF_SIZE, Opened>>();
                 let context = (*this).user_data.cast::<F>();
-                let cause = InterruptCause::from_event(&mut *args);
+                let cause = InterruptCause::from_event(&*args);
 
                 debug_assert!(context != ptr::null());
                 F::call(&*context, cause);
@@ -507,17 +506,6 @@ impl<const BUF_SIZE: usize, S> Ether<BUF_SIZE, S> {
     }
 }
 
-const fn assert_descriptor_unused<const BUF_SIZE: usize>(descriptor: &Descriptor<BUF_SIZE>) {
-    let descriptor = descriptor.0.get().cast_const() as *const ether_instance_descriptor_t;
-
-    let buffer_size = unsafe {
-        // hw is not writing to that field, thus it is fine to make normal load.
-        (*descriptor).buffer_size
-    };
-
-    assert!(buffer_size == 0, "Descriptor already in use");
-}
-
 #[rustfmt::skip]
 impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
     pub fn new(ether_phy_instance: Pin<&'static mut EtherPhy<Closed>>) -> Self {
@@ -537,10 +525,10 @@ impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
             broadcast_filter: 0,
             pp_ether_buffers: None,
             p_mac_address: &[0; 6],
-            irq: Irq::new(Interrupt::IEL0, None),
+            irq: None,
             p_ether_phy_instance,
-            rx_descriptors: &[],
-            tx_descriptors: &[],
+            rx_descriptors: &mut [],
+            tx_descriptors: &mut [],
             tx_buffers: &mut [],
             rx_buffers: &mut [],
         }
@@ -554,10 +542,10 @@ impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
     pub const fn padding(mut self, padding: e_ether_padding, offset: u32) -> Self { self.padding = padding; self.padding_offset = offset; self }
     pub const fn broadcast_filter(mut self, filter: u32) -> Self { self.broadcast_filter = filter; self }
     pub const fn mac(mut self, mac: &'static [u8; 6]) -> Self { self.p_mac_address = mac; self }
-    pub const fn irq(mut self, irq: Irq) -> Self { self.irq = irq;  self }
+    pub const fn irq(mut self, irq: Irq) -> Self { self.irq = Some(irq);  self }
     pub const fn ether_buffers(mut self, buffers: &'static mut [&'static mut Buffer<BUF_SIZE>]) -> Self { self.pp_ether_buffers = Some(buffers); self }
-    pub const fn rx_descriptors(mut self, descriptors: &'static [Descriptor<BUF_SIZE>]) -> Self { self.rx_descriptors = descriptors; self }
-    pub const fn tx_descriptors(mut self, descriptors: &'static [Descriptor<BUF_SIZE>]) -> Self { self.tx_descriptors = descriptors; self }
+    pub const fn rx_descriptors(mut self, descriptors: &'static mut [Descriptor<BUF_SIZE>]) -> Self { self.rx_descriptors = descriptors; self }
+    pub const fn tx_descriptors(mut self, descriptors: &'static mut [Descriptor<BUF_SIZE>]) -> Self { self.tx_descriptors = descriptors; self }
     pub const fn buffers<const TX: usize, const RX: usize>(mut self, buffers: &'static mut Buffers<BUF_SIZE, TX, RX>) -> Self { 
         self.rx_buffers = &mut buffers.rx_buffers;
         self.tx_buffers = &mut buffers.tx_buffers; 
@@ -573,29 +561,13 @@ impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
     /// Beware!!! `ether_cfg_t` returned has pointer with `ext`'s address and provenance.
     /// Using those pointers is unsafe thus this function is still safe.
     pub const fn c_conf(&mut self, ext: Pin<&mut MaybeUninit<UnsafePinned<ether_extended_cfg_t>>>) -> ether_cfg_t {
+        assert!(self.tx_descriptors.len() != 0, "Descriptors cannot be empty");
+        assert!(self.rx_descriptors.len() != 0, "Descriptors cannot be empty");
+        assert!(self.rx_descriptors.len() <= 4, "Max 4 descriptors");
+        assert!(self.tx_descriptors.len() <= 4, "Max 4 descriptors");
+
         let num_tx_descriptors = self.tx_descriptors.len() as u8;
         let num_rx_descriptors = self.rx_descriptors.len() as u8;
-
-        {
-            let mut i = 0;
-            while i < num_tx_descriptors as usize {
-                assert_descriptor_unused(&self.tx_descriptors[i]);
-                i += 1;
-            }
-            let mut i = 0;
-            while i < num_rx_descriptors as usize {
-                assert_descriptor_unused(&self.rx_descriptors[i]);
-                i += 1;
-            }
-        }
-
-        let tx_desc = Descriptor::pinned_array(Pin::static_ref(self.tx_descriptors));
-        let rx_desc = Descriptor::pinned_array(Pin::static_ref(self.rx_descriptors));
-
-        assert!(num_tx_descriptors != 0, "Descriptors cannot be empty");
-        assert!(num_rx_descriptors != 0, "Descriptors cannot be empty");
-        assert!(num_rx_descriptors <= 4, "Max 4 descriptors");
-        assert!(num_tx_descriptors <= 4, "Max 4 descriptors");
 
         if let Some(pp_ether_buffers) = &self.pp_ether_buffers {
             if self.zerocopy  {
@@ -607,8 +579,8 @@ impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
 
         let p_extend = unsafe {
             ext.get_unchecked_mut().write(UnsafePinned::new(ether_extended_cfg_t {
-                p_tx_descriptors: tx_desc.get_ref().get().cast(),
-                p_rx_descriptors: rx_desc.get_ref().get().cast(),
+                p_tx_descriptors: replace(&mut self.tx_descriptors, &mut []).as_mut_ptr().cast(),
+                p_rx_descriptors: replace(&mut self.rx_descriptors, &mut []).as_mut_ptr().cast(),
             }))
         };
 
@@ -644,13 +616,13 @@ impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
 impl<const BUF_SIZE: usize> Descriptor<BUF_SIZE> {
     pub const fn new() -> Self {
         Self(
-            UnsafePinned::new(RawDescripor(ether_instance_descriptor_t {
+            ether_instance_descriptor_t {
                 status: 0,
                 size: 0,
                 p_buffer: ptr::null_mut(),
                 buffer_size: 0,
                 p_next: ptr::null_mut(),
-            })),
+            },
             PhantomData,
         )
     }
@@ -674,13 +646,6 @@ impl<const BUF_SIZE: usize> Descriptor<BUF_SIZE> {
             // TD0 (or RD0) == 1 means that hardware is working on it.
             status & ETHER_TD0_TACT == 0
         }
-    }
-
-    #[inline(always)]
-    const fn pinned_array(array: Pin<&[Self]>) -> Pin<&UnsafePinned<[RawDescripor]>> {
-        let ptr = ptr::from_ref(array.get_ref()) as *const UnsafePinned<[RawDescripor]>;
-
-        unsafe { Pin::new_unchecked(&*ptr) }
     }
 }
 
@@ -724,6 +689,52 @@ impl<const BUF_SIZE: usize, const TX: usize, const RX: usize> Buffers<BUF_SIZE, 
             // rx_buffers: rx_buffers.map(Pin::static_mut),
             // rx_buffers: rx_buffers.map(Pin::static_mut),
         }
+    }
+}
+
+impl InterruptCause {
+    pub fn from_event(args: &ether_callback_args_t) -> Self {
+        /* Transmit Complete. (all pending transmissions) */
+        const ETHER_EDMAC_INTERRUPT_FACTOR_TC: u32 = 1 << 21;
+        /* Frame Receive. */
+        const ETHER_EDMAC_INTERRUPT_FACTOR_FR: u32 = 1 << 18;
+
+        let mut cause = InterruptCause {
+            channel: args.channel,
+            receive: false,
+            transmits: false,
+            went_up: false,
+            went_down: false,
+        };
+
+        match args.event {
+            ETHER_EVENT_INTERRUPT => {
+                let receive_mask = ETHER_EDMAC_INTERRUPT_FACTOR_FR;
+                let trasmit_mask = ETHER_EDMAC_INTERRUPT_FACTOR_TC;
+
+                /* Packet received. */
+                if receive_mask == (args.status_eesr & receive_mask) {
+                    cause.receive = true;
+                }
+
+                if trasmit_mask == (args.status_eesr & trasmit_mask) {
+                    cause.transmits = true;
+                }
+            }
+            ETHER_EVENT_LINK_ON => {
+                cause.went_up = true;
+            }
+            ETHER_EVENT_LINK_OFF => {
+                cause.went_down = true;
+
+                /*
+                 * When the link is re-established, the Ethernet driver will reset all of the buffer descriptors.
+                 */
+            }
+            _ => {}
+        };
+
+        cause
     }
 }
 
