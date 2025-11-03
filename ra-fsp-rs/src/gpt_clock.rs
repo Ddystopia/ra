@@ -57,7 +57,7 @@ pub struct TimerState<Ext> {
 }
 
 pub struct GptTimerDriver<Ext: 'static> {
-    pub gpt: Mutex<RefCell<Option<Pin<&'static mut Gpt<'static, Opened, TimerState<Ext>>>>>>,
+    pub gpt: Mutex<RefCell<Option<Pin<&'static mut Gpt<'static, Opened>>>>>,
     pub timer_state: AtomicOnceCell<TimerState<Ext>>,
 }
 
@@ -65,9 +65,7 @@ pub struct GptTimerDriver<Ext: 'static> {
 unsafe impl<E: Send> Send for GptTimerDriver<E> {}
 unsafe impl<E: Sync> Sync for GptTimerDriver<E> {}
 
-pub fn start<Ext: Storage>(
-    gpt: Pin<&'static mut Gpt<'static, Opened, TimerState<Ext>>>,
-) -> Result<()>
+pub fn start<Ext: Storage>(gpt: Pin<&'static mut Gpt<'static, Opened>>) -> Result<()>
 where
     TimerState<Ext>: Callback<timer_event_t>,
 {

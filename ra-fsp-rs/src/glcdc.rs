@@ -32,6 +32,10 @@ use crate::{
     utils,
 };
 
+unsafe extern "C" {
+    pub safe fn glcdc_line_detect_isr();
+}
+
 pub fn example() {
     const HEIGHT: usize = 480;
     const WIDTH: usize = 800;
@@ -45,6 +49,14 @@ pub fn example() {
 
     static F: static_cell::ConstStaticCell<FrameBuffer<BUFFER_SIZE>> =
         static_cell::ConstStaticCell::new(FrameBuffer::new());
+
+    // SAFETY: By setting IEL15 priority to 10 we declare that we don't break anything
+    // let line_detect = Some(unsafe { crate::Irq::new_prio(pac::Interrupt::IEL15, 10) });
+    unsafe {
+        cortex_m::peripheral::Peripherals::steal()
+            .NVIC
+            .set_priority(pac::Interrupt::IEL15, 10);
+    }
 
     let conf = DisplayConf {
         input_buffers: [Some(F.take().to_mut()), None],
@@ -108,10 +120,7 @@ pub fn example() {
                 fade_speed: 0,
             },
         ],
-        line_detect: Some(crate::Irq {
-            int: pac::Interrupt::IEL15,
-            prio: Some(10),
-        }),
+        line_detect: Some(crate::Irq::new(pac::Interrupt::IEL15)),
         underflow_1: None,
         underflow_2: None,
         callback: Some({
@@ -194,7 +203,6 @@ unsafe impl<S> Block for Glcdc<S> {
     type Instance = display_instance_t;
     type Api = display_api_t;
     type State = S;
-    type Context = ();
 
     const API: &'static Self::Api = &API;
 

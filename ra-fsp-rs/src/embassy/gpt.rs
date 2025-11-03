@@ -17,13 +17,9 @@ time_driver_impl!(
     static DRIVER: GptTimerDriver<EmbassyGptStorage> = GptTimerDriver::new()
 );
 
-#[allow(private_interfaces)]
-pub type EmbassyGpt<State> = Gpt<'static, State, TimerState<EmbassyGptStorage>>;
-
 struct EmbassyGptStorage(Mutex<RefCell<Queue>>);
 
-#[allow(private_interfaces)]
-pub fn start(mut gpt: Pin<&'static mut EmbassyGpt<Opened>>) -> Result<()> {
+pub fn start(mut gpt: Pin<&'static mut Gpt<Opened>>) -> Result<()> {
     if gpt.as_mut().info_get()?.clock_frequency as u64 != TICK_HZ {
         log::error!("GPT frequency not matching selected tick-hz-* feature");
         return Err(e_fsp_err::FSP_ERR_ASSERTION);

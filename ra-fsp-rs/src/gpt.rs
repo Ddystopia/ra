@@ -27,6 +27,20 @@ use crate::{
     utils,
 };
 
+// todo: maybe assert that IRQ that was passed there is having this handler?
+//       like, so that this is not RTIC.
+//       But there are several gpts, so there may be several handlers, and each
+//       gpt has the same but different cfg??
+//       Can we even mask/unmask them??
+unsafe extern "C" {
+    pub safe fn gpt_counter_overflow_isr();
+    pub safe fn gpt_counter_underflow_isr();
+    pub safe fn gpt_capture_a_isr();
+    pub safe fn gpt_capture_b_isr();
+    pub safe fn gpt_capture_compare_a_isr();
+    pub safe fn gpt_capture_compare_b_isr();
+}
+
 pub enum GptRegister {
     GPT32EH0(pac::GPT32EH0),
     GPT32EH1(pac::GPT32EH1),
@@ -60,13 +74,16 @@ So this handle won't create a new one really.
 I need to figure out how to implemet Block for that handle - should be easy,
 just think about ctrl block and &self or Pin<&mut Self>, as well as instance.
 
+Need some kind of Pin<Box<Gpt>> instead of Pin<&mut Gpt>
+
 */
+
 #[allow(dead_code)]
-pub struct GptHandle<'a, 'f, State: 'static, F>(Pin<&'a mut Gpt<'f, State, F>>);
+pub struct GptHandle<'a, 'f, State: 'static>(Pin<&'a mut Gpt<'f, State>>);
 
 #[repr(C)] // `#[repr(C)]` is for `GptInstance::<Closed>::open`
 #[pin_data(PinnedDrop)]
-pub struct Gpt<'a, State: 'static, F> {
+pub struct Gpt<'a, State: 'static> {
     user_data: *const (),
     cycle_end_irq: Option<pac::Interrupt>,
     capture_a_irq: Option<pac::Interrupt>,
@@ -76,7 +93,7 @@ pub struct Gpt<'a, State: 'static, F> {
     cfg: UnsafePinned<timer_cfg_t>,
     inst: UnsafePinned<timer_instance_t>,
     regs: GptRegister,
-    _marker: core::marker::PhantomData<(State, &'a F)>,
+    _marker: core::marker::PhantomData<(State, &'a ())>,
 }
 
 #[derive(Default)]
@@ -121,12 +138,11 @@ const API: timer_api_t = timer_api_t {
     close: Some(api::R_GPT_Close),
 };
 
-unsafe impl<S, F> Block for Gpt<'_, S, F> {
+unsafe impl<S> Block for Gpt<'_, S> {
     type Config = timer_cfg_t;
     type Instance = timer_instance_t;
     type Api = timer_api_t;
     type State = S;
-    type Context = F;
 
     const API: &'static Self::Api = &API;
 
@@ -139,24 +155,24 @@ unsafe impl<S, F> Block for Gpt<'_, S, F> {
     }
 }
 
-unsafe impl<S, F> Send for Gpt<'_, S, F> {}
-unsafe impl<S, F> Sync for Gpt<'_, S, F> {}
+unsafe impl<S> Send for Gpt<'_, S> {}
+unsafe impl<S> Sync for Gpt<'_, S> {}
 
-impl<'a, F: Callback<timer_event_t>> Gpt<'a, Opened, F> {
+impl<'a> Gpt<'a, Opened> {
     pub fn new(
         gpt: GptRegister,
         cfg: TimerConf<GptExtendedConfig>,
-    ) -> impl PinInit<Gpt<'a, Opened, F>, fsp_err_t> {
+    ) -> impl PinInit<Gpt<'a, Opened>, fsp_err_t> {
         unsafe {
-            pin_init_from_closure(|slot: *mut Gpt<'a, Opened, F>| {
-                init_open(slot.cast::<Gpt<'a, Opened, ()>>(), gpt, cfg)
+            pin_init_from_closure(|slot: *mut Gpt<'a, Opened>| {
+                init_open(slot.cast::<Gpt<'a, Opened>>(), gpt, cfg)
             })
         }
     }
 
     // It may be generalized to the timer lever, but I don't see the clear
     // reason to overcomplicate for now. In short, `F` would move to the trait.
-    pub fn callback_set(self: Pin<&mut Self>, context: &'a F) -> Result<()>
+    pub fn callback_set<F>(self: Pin<&mut Self>, context: &'a F) -> Result<()>
     where
         F: Callback<timer_event_t>,
     {
@@ -164,7 +180,7 @@ impl<'a, F: Callback<timer_event_t>> Gpt<'a, Opened, F> {
             args: *mut timer_callback_args_t,
         ) {
             unsafe {
-                let this = (*args).p_context.cast::<Gpt<Opened, F>>();
+                let this = (*args).p_context.cast::<Gpt<Opened>>();
                 let context = (*this).user_data.cast::<F>();
                 let event = (*args).event;
 
@@ -190,7 +206,7 @@ impl<'a, F: Callback<timer_event_t>> Gpt<'a, Opened, F> {
 }
 
 #[pin_init::pinned_drop]
-impl<S: 'static, F> PinnedDrop for Gpt<'_, S, F> {
+impl<S: 'static> PinnedDrop for Gpt<'_, S> {
     fn drop(self: Pin<&mut Self>) {
         // todo: ensure we did not preempt `trampoline` that was about to use
         //       `p_context` for stuff.
@@ -201,7 +217,7 @@ impl<S: 'static, F> PinnedDrop for Gpt<'_, S, F> {
 }
 
 unsafe fn init_open(
-    slot: *mut Gpt<'_, Opened, ()>,
+    slot: *mut Gpt<'_, Opened>,
     gpt: GptRegister,
     mut cfg: TimerConf<GptExtendedConfig>,
 ) -> Result<()> {
@@ -213,9 +229,9 @@ unsafe fn init_open(
     unsafe {
         (*slot).user_data = ptr::null();
         (*slot).regs = gpt;
-        (*slot).cycle_end_irq = cfg.cycle_end.map(|i| i.int);
-        (*slot).capture_a_irq = cfg.extend.capture_a.map(|i| i.int);
-        (*slot).capture_b_irq = cfg.extend.capture_b.map(|i| i.int);
+        (*slot).cycle_end_irq = Irq::extract_irq(cfg.cycle_end);
+        (*slot).capture_a_irq = Irq::extract_irq(cfg.extend.capture_a);
+        (*slot).capture_b_irq = Irq::extract_irq(cfg.extend.capture_b);
         (*slot).ctrl = UnsafePinned::new(zeroed());
         (*(*slot).inst.get()).p_ctrl = (*slot).ctrl.get().cast::<core::ffi::c_void>();
         (*(*slot).inst.get()).p_cfg = (*slot).cfg.get().cast_const();
@@ -251,7 +267,7 @@ unsafe fn init_open(
     }
 }
 
-impl<F> Gpt<'_, Closed, F> {
+impl<'f> Gpt<'f, Closed> {
     pub fn new(regs: GptRegister) -> Self {
         Self {
             user_data: ptr::null_mut(),
@@ -269,7 +285,7 @@ impl<F> Gpt<'_, Closed, F> {
     pub fn open(
         self: Pin<&mut Self>,
         cfg: TimerConf<GptExtendedConfig>,
-    ) -> Result<Pin<&mut Gpt<'_, Opened, F>>> {
+    ) -> Result<Pin<&mut Gpt<'f, Opened>>> {
         unsafe {
             let this = ptr::from_mut(self.get_unchecked_mut());
             let regs = ptr::read(&(*this).regs);
@@ -278,14 +294,14 @@ impl<F> Gpt<'_, Closed, F> {
                 return Err(e_fsp_err::FSP_ERR_ALREADY_OPEN);
             }
 
-            let this = this.cast::<Gpt<Opened, ()>>();
+            let this = this.cast::<Gpt<Opened>>();
             init_open(this, regs, cfg)?;
-            Ok(Pin::new_unchecked(&mut *this.cast::<Gpt<Opened, F>>()))
+            Ok(Pin::new_unchecked(&mut *this))
         }
     }
 }
 
-impl<S, F> Gpt<'_, S, F> {
+impl<S> Gpt<'_, S> {
     pub fn is_open(&self) -> bool {
         unsafe { (*self.ctrl.get()).open != 0 }
     }

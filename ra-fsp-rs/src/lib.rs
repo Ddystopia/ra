@@ -85,7 +85,6 @@ pub unsafe trait Block {
     type Config: 'static;
     type Instance: 'static;
     type Api: 'static;
-    type Context;
 
     type State;
 

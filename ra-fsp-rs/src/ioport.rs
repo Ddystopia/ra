@@ -41,7 +41,6 @@ unsafe impl crate::Block for IoPort {
     type Instance = ioport_instance_t;
     type Api = ioport_api_t;
     type State = Opened;
-    type Context = ();
 
     const API: &ioport_api_t = unsafe { &g_ioport_on_ioport };
 

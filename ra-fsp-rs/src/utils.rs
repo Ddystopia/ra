@@ -3,13 +3,19 @@ use cortex_m::{interrupt::InterruptNumber, peripheral::NVIC};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Irq {
-    pub int: pac::Interrupt,
-    pub prio: Option<u8>,
+    int: pac::Interrupt,
+    prio: Option<u8>,
 }
 
 impl Irq {
-    pub fn new(int: pac::Interrupt, prio: Option<u8>) -> Self {
-        Self { int, prio }
+    pub fn new(int: pac::Interrupt) -> Self {
+        Self { int, prio: None }
+    }
+    pub unsafe fn new_prio(int: pac::Interrupt, priority: u8) -> Self {
+        Self {
+            int,
+            prio: Some(priority),
+        }
     }
     pub const fn extract_irq(this: Option<Self>) -> i32 {
         let invalid_vector = ra_fsp_sys::generated::FSP_INVALID_VECTOR as i32;

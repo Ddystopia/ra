@@ -14,19 +14,15 @@ static TIMER_QUEUE: TimerQueue<TimerBackend> = TimerQueue::new();
 
 pub struct TimerBackend;
 
-#[allow(private_interfaces)]
-pub type RticGpt<State> = Gpt<'static, State, TimerState<RticGptExtension>>;
-
 #[derive(Default)]
 struct RticGptExtension;
 
-#[allow(private_interfaces)]
-pub fn start(gpt: Pin<&'static mut RticGpt<Opened>>) -> Result<()> {
+pub fn start(gpt: Pin<&'static mut Gpt<Opened>>) -> Result<()> {
     gpt_clock::start::<RticGptExtension>(gpt)
 }
 
 impl Storage for RticGptExtension {
-    fn driver() -> &'static crate::gpt_clock::GptTimerDriver<RticGptExtension> {
+    fn driver() -> &'static GptTimerDriver<RticGptExtension> {
         static DRIVER: GptTimerDriver<RticGptExtension> = GptTimerDriver::<RticGptExtension>::new();
 
         &DRIVER
@@ -71,6 +67,7 @@ impl TimerQueueBackend for TimerBackend {
     }
 
     fn pend_interrupt() {
+        // SAFETY: docs say it is always safe to call
         unsafe { TIMER_QUEUE.on_monotonic_interrupt() }
     }
 
