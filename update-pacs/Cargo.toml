@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1"
-svd2rust = "0.36.1"
+svd2rust = "0.37.1"
 svdtools = "0.4.6"
 form = "0.13.0"
 

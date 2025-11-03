@@ -37,7 +37,7 @@ portable-atomic = { version = "0.3.16", default-features = false, optional = tru
 
 [features]
 rt = []
-fsp = ["rt"]
+fsp = []
 cortex-m-rt-device = ["cortex-m-rt/device", "rt"]
 atomics = ["dep:portable-atomic"]
 critical-section = ["dep:critical-section"]
@@ -287,48 +287,49 @@ fn generate_pac(pac_dir: &Path, name: &str, svd_file: &Path) -> Result<()> {
     let res = svd2rust::generate(&svd, &svd2rust_config).context("Failed to run svd2rust")?;
     let specific = res.device_specific.context("No device-scecific files")?;
 
+    let interrupt_count = res.lib_rs.matches("fn IEL").count();
+
     let lib_rs = res.lib_rs;
     let lib_rs = lib_rs + "\n";
-    let lib_rs = lib_rs
-        + "
-#[cfg(feature = \"rt\")]
+    let lib_rs = format!(
+        r#"{lib_rs}
+#[cfg(all(feature = "fsp", feature = "cortex-m-rt-device"))]
+compile_error!("Cannot enable both `fsp` and `cortex-m-rt-device` features at the same time.");
+
 pub use self::Interrupt as interrupt;
 
-#[cfg(all(feature = \"fsp\", feature = \"cortex-m-rt-device\"))]
-compile_error!(\"Cannot enable both `fsp` and `cortex-m-rt-device` features at the same time.\");
+impl Interrupt {{
+    pub const fn try_from_u16(n: u16) -> Option<Self> {{
+        #[cfg(feature = "rt")]
+        const {{
+            assert!(__INTERRUPTS.len() == {interrupt_count});
+            assert!(__INTERRUPTS.len() <= (u16::MAX as usize));
+        }};
 
-#[cfg(feature = \"rt\")]
-impl Interrupt {
-    pub const fn try_from_u16(n: u16) -> Option<Self> {
-        assert!(__INTERRUPTS.len() < u16::MAX as usize);
-
-        if n >= __INTERRUPTS.len() as u16 {
+        if n >= {interrupt_count} as u16 {{
             return None;
-        }
+        }}
 
-        Some(unsafe { ::core::mem::transmute(n as u16) })
-    }
-}
+        Some(unsafe {{ ::core::mem::transmute(n as u16) }})
+    }}
+}}
 
-#[cfg(feature = \"rt\")]
 #[derive(Debug)]
 pub struct InvalidInterruptNumber;
-#[cfg(feature = \"rt\")]
-impl TryFrom<u16> for Interrupt {
+impl TryFrom<u16> for Interrupt {{
     type Error = InvalidInterruptNumber;
-    fn try_from(value: u16) -> Result<Self, Self::Error> {
+    fn try_from(value: u16) -> Result<Self, Self::Error> {{
         Interrupt::try_from_u16(value).ok_or(InvalidInterruptNumber)
-    }
-}
-#[cfg(feature = \"rt\")]
-impl core::error::Error for InvalidInterruptNumber {}
-#[cfg(feature = \"rt\")]
-impl core::fmt::Display for InvalidInterruptNumber {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        write!(f, \"Invalid interrupt number\")
-    }
-}
-\n";
+    }}
+}}
+impl core::error::Error for InvalidInterruptNumber {{}}
+impl core::fmt::Display for InvalidInterruptNumber {{
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {{
+        write!(f, "Invalid interrupt number")
+    }}
+}}
+"#
+    );
     let lib_rs = lib_rs.replace(
         "# [link_section = \".CHANGE_ME\"]",
         "
