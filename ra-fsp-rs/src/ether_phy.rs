@@ -68,17 +68,20 @@ impl EtherPhy<Closed> {
     pub const fn new(edmac: pac::EDMAC0, conf: EtherPhyConfig) -> impl PinInit<Self> {
         unsafe {
             pin_init_from_closure(move |slot: *mut Self| {
-                *slot = Self {
-                    ctrl: UnsafePinned::new(core::mem::zeroed()),
-                    cfg: UnsafePinned::new(conf.c_conf()),
-                    regs: edmac,
-                    inst: UnsafePinned::new(ether_phy_instance_t {
-                        p_ctrl: ptr::null_mut(),
-                        p_cfg: ptr::null(),
-                        p_api: <Self as crate::Block>::API,
-                    }),
-                    _marker: PhantomData,
-                };
+                ptr::write(
+                    slot,
+                    Self {
+                        ctrl: UnsafePinned::new(core::mem::zeroed()),
+                        cfg: UnsafePinned::new(conf.c_conf()),
+                        regs: edmac,
+                        inst: UnsafePinned::new(ether_phy_instance_t {
+                            p_ctrl: ptr::null_mut(),
+                            p_cfg: ptr::null(),
+                            p_api: <Self as crate::Block>::API,
+                        }),
+                        _marker: PhantomData,
+                    },
+                );
                 (*(*slot).inst.get()).p_ctrl = (*slot).ctrl.get().cast();
                 (*(*slot).inst.get()).p_cfg = (*slot).cfg.get().cast_const().cast();
                 Ok(())

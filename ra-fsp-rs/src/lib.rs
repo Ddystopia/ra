@@ -1,21 +1,21 @@
 #![cfg_attr(not(test), no_std)]
 
+/*
+
+Rule for callbacks:
+- if interrupt callback can be preempted, it must have `&` for the block for
+  `p_context` to remain good.
+
+*/
+
 mod log;
 mod macros;
 mod pacs;
-mod utils;
-
-pub use pin_init;
-pub use utils::Irq;
+pub mod utils;
 
 pub mod state_markers {
-    use core::any::TypeId;
-
     pub struct Closed {}
     pub struct Opened {}
-
-    pub const CLOSED_ID: TypeId = core::any::TypeId::of::<Closed>();
-    pub const OPENED_ID: TypeId = core::any::TypeId::of::<Opened>();
 }
 
 #[cfg(feature = "mod-r_display_api")]
@@ -49,19 +49,26 @@ pub mod smoltcp {
 }
 #[cfg(any(feature = "rtic-monotonics-gpt"))]
 pub mod rtic {
-    #[cfg(any(feature = "rtic-monotonics-gpt"))]
+    #[cfg(feature = "rtic-monotonics-gpt")]
     pub mod gpt;
 }
 
 #[cfg(any(feature = "embassy-time-gpt"))]
 pub mod embassy {
-    #[cfg(any(feature = "embassy-time-gpt"))]
+    #[cfg(feature = "embassy-time-gpt")]
     pub mod gpt;
 }
 
+#[cfg(any(feature = "embedded-graphics-glcdc"))]
+pub mod embedded_graphics {
+    #[cfg(feature = "embedded-graphics-glcdc")]
+    pub mod glcdc;
+}
+
 pub use {
+    cortex_m,
     pacs::pac,
-    ra_fsp_sys,
+    pin_init, ra_fsp_sys,
     ra_fsp_sys::generated::{e_elc_event, e_fsp_err, fsp_err_t},
 };
 
@@ -102,6 +109,10 @@ impl<F: Fn(Event), Event> Callback<Event> for F {
     fn call(context: &F, event: Event) {
         (context)(event)
     }
+}
+
+impl<Event> Callback<Event> for () {
+    fn call(_context: &(), _event: Event) {}
 }
 
 unsafe impl<T: Block> DynBlock<T::Api> for T {

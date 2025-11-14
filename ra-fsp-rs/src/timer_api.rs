@@ -2,6 +2,7 @@ use core::{mem::MaybeUninit, pin::Pin};
 
 use ra_fsp_sys::generated::{
     // -
+    BSP_IRQ_DISABLED,
     timer_api_t,
     timer_cfg_t,
     timer_compare_match_t,
@@ -12,7 +13,7 @@ use ra_fsp_sys::generated::{
     timer_status_t,
 };
 
-use crate::{Block, Irq, Result, fsp_try_unsafe, state_markers};
+use crate::{Block, Result, fsp_try_unsafe, pac, state_markers, utils};
 
 pub struct TimerConf<Extended> {
     pub mode: timer_mode_t,
@@ -20,7 +21,7 @@ pub struct TimerConf<Extended> {
     pub source_div: timer_source_div_t,
     pub duty_cycle_counts: u32,
     pub channel: u8,
-    pub cycle_end: Option<Irq>,
+    pub cycle_end: pac::Interrupt,
     pub extend: Extended,
 }
 
@@ -32,8 +33,8 @@ impl<Extended> TimerConf<Extended> {
             source_div: self.source_div,
             duty_cycle_counts: self.duty_cycle_counts,
             channel: self.channel,
-            cycle_end_irq: Irq::extract_irq(self.cycle_end),
-            cycle_end_ipl: Irq::extract_ipl(self.cycle_end),
+            cycle_end_irq: utils::extract_irq(Some(self.cycle_end)),
+            cycle_end_ipl: BSP_IRQ_DISABLED as u8,
             p_callback: None,
             p_context: core::ptr::null_mut(),
             p_extend: core::ptr::null(),

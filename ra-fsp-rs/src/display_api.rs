@@ -1,11 +1,12 @@
 use core::{ffi::c_void, mem::MaybeUninit, pin::Pin, ptr};
 
-use crate::{Block, Result, fsp_try_unsafe, state_markers, utils::Irq};
+use crate::{Block, Result, fsp_try_unsafe, pac::Interrupt, state_markers, utils};
 
 use ra_fsp_sys::generated::{
-    display_api_t, // -
+    //,
+    BSP_IRQ_DISABLED,
+    display_api_t,
     display_brightness_t,
-    display_callback_args_t,
     display_cfg_t,
     display_clut_cfg_t,
     display_color_order_t,
@@ -73,18 +74,17 @@ pub struct Output {
 
 #[derive(Default)]
 pub struct DisplayConf<Extended> {
-    pub(crate) input_buffers: [Option<FrameBufferMut>; 2],
+    pub input_buffers: [Option<FrameBufferMut>; 2],
     pub input: [Option<Input>; 2],
     pub output: Output,
     pub layer: [display_layer_t; 2],
-    pub line_detect: Option<Irq>,
-    pub underflow_1: Option<Irq>,
-    pub underflow_2: Option<Irq>,
-    pub callback: Option<extern "C" fn(p_args: &mut display_callback_args_t)>,
+    pub line_detect: Option<Interrupt>,
+    pub underflow_1: Option<Interrupt>,
+    pub underflow_2: Option<Interrupt>,
     pub extend: Extended,
 }
 
-pub const fn bpp(format: e_display_in_format) -> u8 {
+pub const fn bpp(format: display_in_format_t) -> u8 {
     match format {
         e_display_in_format::DISPLAY_IN_FORMAT_32BITS_ARGB8888 => 32,
         e_display_in_format::DISPLAY_IN_FORMAT_32BITS_RGB888 => 32,
@@ -94,6 +94,17 @@ pub const fn bpp(format: e_display_in_format) -> u8 {
         e_display_in_format::DISPLAY_IN_FORMAT_CLUT8 => 8,
         e_display_in_format::DISPLAY_IN_FORMAT_CLUT4 => 4,
         e_display_in_format::DISPLAY_IN_FORMAT_CLUT1 => 1,
+    }
+}
+
+pub const fn display_color(r: u8, g: u8, b: u8, a: u8) -> display_color_t {
+    use ra_fsp_sys::generated::st_display_color__bindgen_ty_1;
+    use ra_fsp_sys::generated::st_display_color__bindgen_ty_1__bindgen_ty_1;
+
+    display_color_t {
+        __bindgen_anon_1: st_display_color__bindgen_ty_1 {
+            byte: st_display_color__bindgen_ty_1__bindgen_ty_1 { b, g, r, a },
+        },
     }
 }
 
@@ -110,6 +121,19 @@ impl<const SIZE: usize> FrameBuffer<SIZE> {
         }
 
         FrameBufferMut(&mut self.0)
+    }
+}
+
+impl<const SIZE: usize> core::ops::Deref for FrameBuffer<SIZE> {
+    type Target = [u8; SIZE];
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl<const SIZE: usize> core::ops::DerefMut for FrameBuffer<SIZE> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
     }
 }
 
@@ -136,13 +160,32 @@ impl core::ops::DerefMut for FrameBufferMut {
         self.0
     }
 }
+impl FrameBufferMut {
+    pub fn as_u32_mut(&mut self) -> &mut [u32] {
+        // SAFETY:
+        // - FrameBufferMut invariant ensures 64-byte alignment
+        // - FrameBufferMut invariant ensures length is multiple of 64
+        let len = self.0.len();
+        let ptr = self.0.as_mut_ptr().cast::<u32>();
 
-pub const fn layer_hstride(vsize: u16, hsize: u16, format: e_display_in_format) -> Option<u32> {
-    let 16..=1016 = vsize else { return None };
-    let 16..=1020 = hsize else { return None };
+        assert!(len % 4 == 0, "FrameBuffer length must be multiple of 4");
+        assert!(ptr.is_aligned(), "FrameBuffer pointer must be aligned");
 
+        unsafe { core::slice::from_raw_parts_mut(ptr, len / 4) }
+    }
+}
+
+pub const fn assert_dimensions(vsize: u16, hsize: u16) -> bool {
+    matches!(vsize, 16..=1016) && matches!(hsize, 16..=1020)
+}
+
+pub const fn layer_hstride(hsize: u16, format: e_display_in_format) -> u32 {
     let bits = hsize as u32 * (bpp(format) as u32);
-    Some(bits.div_ceil(64 * 8) * 64)
+    bits.div_ceil(64 * 8) * 64
+}
+
+pub const fn layer_hstride_px(hsize: u16, format: e_display_in_format) -> u32 {
+    layer_hstride(hsize, format) * 8 / (bpp(format) as u32)
 }
 
 pub enum DisplayConfError {
@@ -164,10 +207,12 @@ impl<Extended> DisplayConf<Extended> {
                 assert!(p_base.is_aligned());
 
                 let (vsize, hsize, format) = (i.vsize, i.hsize, i.format);
-                let Some(hstride) = layer_hstride(vsize, hsize, format) else {
+                let hstride_bytes = layer_hstride(hsize, format);
+                let hstride = layer_hstride_px(hsize, format);
+                if !assert_dimensions(vsize, hsize) {
                     return Err(DisplayConfError::InvalidDimensions(vsize, hsize));
-                };
-                let required_buf_len = hstride as usize * vsize as usize;
+                }
+                let required_buf_len = hstride_bytes as usize * vsize as usize;
 
                 // To be able to return it back, we will need to calculate the size.
                 if buf_len != required_buf_len {
@@ -212,13 +257,13 @@ impl<Extended> DisplayConf<Extended> {
                 dithering_on: self.output.dithering_on,
             },
             layer: self.layer,
-            line_detect_irq: Irq::extract_irq(self.line_detect),
-            underflow_1_irq: Irq::extract_irq(self.underflow_1),
-            underflow_2_irq: Irq::extract_irq(self.underflow_2),
-            line_detect_ipl: Irq::extract_ipl(self.underflow_2),
-            underflow_1_ipl: Irq::extract_ipl(self.underflow_2),
-            underflow_2_ipl: Irq::extract_ipl(self.underflow_2),
-            p_callback: self.callback.map(|cb| crate::utils::cast_callback(cb)),
+            line_detect_irq: utils::extract_irq(self.line_detect),
+            underflow_1_irq: utils::extract_irq(self.underflow_1),
+            underflow_2_irq: utils::extract_irq(self.underflow_2),
+            line_detect_ipl: BSP_IRQ_DISABLED as u8,
+            underflow_1_ipl: BSP_IRQ_DISABLED as u8,
+            underflow_2_ipl: BSP_IRQ_DISABLED as u8,
+            p_callback: None,
             p_context: ptr::null_mut(),
             p_extend: ptr::null(),
         })
@@ -252,6 +297,8 @@ impl Default for Output {
 }
 
 pub trait DisplayApi {
+    fn cfg(&self) -> &display_cfg_t;
+
     /// start the display
     fn start(self: Pin<&mut Self>) -> Result<()>;
     /// stop the display
@@ -278,12 +325,14 @@ pub trait DisplayApi {
     fn correction(self: Pin<&mut Self>, correction: &display_correction_t) -> Result<()>;
     /// set CLUT for the display device
     ///
-    /// `clut` - configuration structure
+    /// `clut_start` - offset in CLUT to start writing at
+    /// `clut_data` - slice of CLUT entries
     /// `layer` - layer to affect
     fn clut(
         self: Pin<&mut Self>,
-        clut: &display_clut_cfg_t,
         layer: display_frame_layer_t,
+        clut_start: usize,
+        clut_data: &[display_color_t],
     ) -> Result<()>;
     /// overwrite one CLUT entry in the display device
     ///
@@ -294,7 +343,7 @@ pub trait DisplayApi {
         self: Pin<&mut Self>,
         layer: display_frame_layer_t,
         index: u8,
-        color: u32,
+        color: display_color_t,
     ) -> Result<()>;
     /// configure color keying
     ///
@@ -315,6 +364,10 @@ where
     T: Block<Api = display_api_t>,
     T: Block<State = state_markers::Opened>,
 {
+    fn cfg(&self) -> &display_cfg_t {
+        unsafe { &*self.instance().p_cfg }
+    }
+
     fn start(self: Pin<&mut Self>) -> Result<()> {
         let ctrl = self.ctrl().cast::<c_void>();
         fsp_try_unsafe!((T::API.start.unwrap())(ctrl))
@@ -351,20 +404,32 @@ where
 
     fn clut(
         self: Pin<&mut Self>,
-        clut: &display_clut_cfg_t,
         layer: display_frame_layer_t,
+        clut_start: usize,
+        clut_data: &[display_color_t],
     ) -> Result<()> {
+        const {
+            assert!(size_of::<display_color_t>() == size_of::<u32>());
+            assert!(align_of::<display_color_t>() == align_of::<u32>());
+        }
+
         let ctrl = self.ctrl();
-        fsp_try_unsafe!((T::API.clut.unwrap())(ctrl, clut, layer))
+        let cfg = display_clut_cfg_t {
+            p_base: clut_data.as_ptr().cast::<u32>().cast_mut(),
+            start: clut_start as u16,
+            size: clut_data.len() as u16,
+        };
+        fsp_try_unsafe!((T::API.clut.unwrap())(ctrl, &cfg, layer))
     }
 
     fn clut_edit(
         self: Pin<&mut Self>,
         layer: display_frame_layer_t,
         index: u8,
-        color: u32,
+        color: display_color_t,
     ) -> Result<()> {
         let ctrl = self.ctrl();
+        let color = unsafe { color.__bindgen_anon_1.argb };
         fsp_try_unsafe!((T::API.clutEdit.unwrap())(ctrl, layer, index, color))
     }
 

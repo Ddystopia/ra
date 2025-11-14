@@ -140,3 +140,18 @@ mod r_ether_phy_impl {
     unsafe impl Sync for ether_phy_instance_ctrl_t {}
     unsafe impl Sync for ether_phy_instance_t {}
 }
+
+#[cfg(feature = "mod-r_display_api")]
+mod r_display_api_impl {
+    use super::generated::*;
+
+    impl display_color_t {
+        pub const fn new(a: u8, r: u8, g: u8, b: u8) -> Self {
+            display_color_t {
+                __bindgen_anon_1: st_display_color__bindgen_ty_1 {
+                    byte: st_display_color__bindgen_ty_1__bindgen_ty_1 { b, g, r, a },
+                },
+            }
+        }
+    }
+}

@@ -20,7 +20,7 @@ use ra_fsp_sys::generated::{
 };
 
 use crate::{
-    Block, Callback, Irq, Result, fsp_try_unsafe, pac,
+    Block, Callback, Result, fsp_try_unsafe, pac,
     state_markers::{Closed, Opened},
     timer_api::*,
     unsafe_pinned::UnsafePinned,
@@ -111,8 +111,8 @@ pub struct GptExtendedConfig {
     pub capture_filter_gtioca: raw::gpt_capture_filter_t,
     pub capture_filter_gtiocb: raw::gpt_capture_filter_t,
 
-    pub capture_a: Option<Irq>,
-    pub capture_b: Option<Irq>,
+    pub capture_a: Option<pac::Interrupt>,
+    pub capture_b: Option<pac::Interrupt>,
 
     pub compare_match_value: [u32; 2],
     pub compare_match_status: u8,
@@ -159,7 +159,7 @@ unsafe impl<S> Send for Gpt<'_, S> {}
 unsafe impl<S> Sync for Gpt<'_, S> {}
 
 impl<'a> Gpt<'a, Opened> {
-    pub fn new(
+    pub fn new_open(
         gpt: GptRegister,
         cfg: TimerConf<GptExtendedConfig>,
     ) -> impl PinInit<Gpt<'a, Opened>, fsp_err_t> {
@@ -227,12 +227,20 @@ unsafe fn init_open(
     }
 
     unsafe {
-        (*slot).user_data = ptr::null();
-        (*slot).regs = gpt;
-        (*slot).cycle_end_irq = Irq::extract_irq(cfg.cycle_end);
-        (*slot).capture_a_irq = Irq::extract_irq(cfg.extend.capture_a);
-        (*slot).capture_b_irq = Irq::extract_irq(cfg.extend.capture_b);
-        (*slot).ctrl = UnsafePinned::new(zeroed());
+        let this = Gpt {
+            user_data: ptr::null(),
+            cycle_end_irq: Some(cfg.cycle_end),
+            capture_a_irq: cfg.extend.capture_a,
+            capture_b_irq: cfg.extend.capture_b,
+            c_ext_cfg: zeroed(),
+            ctrl: zeroed(),
+            cfg: zeroed(),
+            inst: zeroed(),
+            regs: gpt,
+            _marker: core::marker::PhantomData,
+        };
+        ptr::write(slot, this);
+
         (*(*slot).inst.get()).p_ctrl = (*slot).ctrl.get().cast::<core::ffi::c_void>();
         (*(*slot).inst.get()).p_cfg = (*slot).cfg.get().cast_const();
         (*(*slot).inst.get()).p_api = ptr::from_ref(&API);
@@ -243,12 +251,15 @@ unsafe fn init_open(
             .get()
             .cast::<core::ffi::c_void>();
 
-        let mut timer_cfg = cfg.c_conf();
-        timer_cfg.p_extend = p_extend;
-        (*slot).cfg = UnsafePinned::new(timer_cfg);
-
         let p_ctrl = UnsafePinned::raw_get(&raw const (*slot).ctrl);
         let p_cfg = UnsafePinned::raw_get(&raw const (*slot).cfg);
+
+        *p_cfg = cfg.c_conf();
+        (*p_cfg).p_extend = p_extend;
+
+        for _ in 0..200 {
+            core::arch::asm!("nop");
+        }
 
         // FSP needs to IRQs to setup contexts, but it will additionally
         // unconditionally set priorities from cfg.
@@ -256,11 +267,11 @@ unsafe fn init_open(
         // Critical section is for nothing to change priorities between out
         // read and FSP's write.
         critical_section::with(|_| {
-            utils::try_read_priority_into(cfg.cycle_end, &raw mut (*p_cfg).cycle_end_ipl);
+            utils::try_read_priority_into(cfg.cycle_end, &mut (*p_cfg).cycle_end_ipl);
 
             let p_extend = (*p_cfg).p_extend.cast::<gpt_extended_cfg_t>().cast_mut();
-            utils::try_read_priority_into(cfg.extend.capture_a, &raw mut (*p_extend).capture_a_ipl);
-            utils::try_read_priority_into(cfg.extend.capture_a, &raw mut (*p_extend).capture_a_ipl);
+            utils::try_read_priority_into(cfg.extend.capture_a, &mut (*p_extend).capture_a_ipl);
+            utils::try_read_priority_into(cfg.extend.capture_a, &mut (*p_extend).capture_a_ipl);
 
             fsp_try_unsafe!(R_GPT_Open(p_ctrl.cast::<timer_ctrl_t>(), p_cfg))
         })
@@ -356,10 +367,10 @@ impl GptExtendedConfig {
             count_down_source: self.count_down_source,
             capture_filter_gtioca: self.capture_filter_gtioca,
             capture_filter_gtiocb: self.capture_filter_gtiocb,
-            capture_a_ipl: Irq::extract_ipl(self.capture_a),
-            capture_b_ipl: Irq::extract_ipl(self.capture_b),
-            capture_a_irq: Irq::extract_irq(self.capture_a),
-            capture_b_irq: Irq::extract_irq(self.capture_b),
+            capture_a_ipl: ra_fsp_sys::generated::BSP_IRQ_DISABLED as u8,
+            capture_b_ipl: ra_fsp_sys::generated::BSP_IRQ_DISABLED as u8,
+            capture_a_irq: utils::extract_irq(self.capture_a),
+            capture_b_irq: utils::extract_irq(self.capture_b),
             compare_match_value: self.compare_match_value,
             compare_match_status: self.compare_match_status,
             p_pwm_cfg: ptr::null(),

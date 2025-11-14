@@ -7,34 +7,73 @@ use std::{
 
 use build_cfg::{build_cfg, build_cfg_main};
 
-fn get_env_paths<const N: usize>(paths: [&str; N]) -> [PathBuf; N] {
-    paths
-        .map(|var| match std::env::var(var) {
-            Ok(val) => PathBuf::from(val),
-            Err(VarError::NotPresent) => panic!(
-                "We require following environment variables to be set: {}.",
-                paths.join(", ")
-            ),
-            Err(VarError::NotUnicode(_os_str)) => panic!(
-                "We require following environment variables to contain unicode: {}.",
-                paths.join(", ")
-            ),
-        })
-        .map(|path| {
-            if !path.exists() || !path.is_dir() {
-                panic!(
-                    "We require paths from following environment variables to be directories: {}.",
-                    paths.join(", ")
-                );
-            }
-            path
-        })
+fn get_env_var(var: &str, context: &str) -> String {
+    match std::env::var(var) {
+        Ok(val) => val,
+        Err(VarError::NotPresent) => {
+            panic!("We require following environment variables to be set: {context}.",)
+        }
+        Err(VarError::NotUnicode(_os_str)) => {
+            panic!("We require following environment variables to contain unicode: {context}.",)
+        }
+    }
 }
 
-pub fn wrap_component(modules: &[&str]) {
+fn to_path(path: &str, context: &str) -> PathBuf {
+    let path = PathBuf::from(path);
+    if !path.exists() || !path.is_dir() {
+        panic!(
+            "We require paths from following environment variables to be directories: {context}. {} is not valid.",
+            path.display()
+        );
+    }
+    path
+}
+
+macro_rules! add_module {
+    ($modules:expr,$module_feat:expr) => {
+        if build_cfg!(feature = $module_feat) {
+            $modules.push(&$module_feat[4..]);
+        }
+    };
+}
+
+#[build_cfg_main]
+fn main() {
+    let mut modules = Vec::<&'static str>::new();
+
+    add_module!(modules, "mod-r_icu");
+    add_module!(modules, "mod-r_flash_hp");
+    add_module!(modules, "mod-r_ioport");
+    add_module!(modules, "mod-r_gpt");
+    add_module!(modules, "mod-r_timer_api");
+    add_module!(modules, "mod-r_glcdc");
+    add_module!(modules, "mod-r_ether");
+    add_module!(modules, "mod-r_ether_phy");
+    add_module!(modules, "mod-r_ether_phy_target_ics1894");
+    add_module!(modules, "mod-r_ether_phy_target_ksz8091rnb");
+    add_module!(modules, "mod-r_ether_phy_target_dp83620");
+    add_module!(modules, "mod-r_ether_phy_target_ksz8041");
+
     let out_path = PathBuf::from(std::env::var("OUT_DIR").unwrap());
 
-    let [fsp_cfg, cmsis_dir, ra_fsp_repo] = get_env_paths(["FSP_CFG", "CMSIS_PATH", "FSP_PATH"]);
+    let paths = ["FSP_CFG", "CMSIS_PATH", "FSP_PATH"];
+    let context = paths.join(", ");
+    let [fsp_cfg, cmsis_dir, ra_fsp_repo] = {
+        paths
+            .map(|e| get_env_var(e, &context))
+            .map(|e| to_path(&e, &context))
+    };
+    let other_include_dirs = match std::env::var("RA_FSP_SYS_INCLUDE_DIRS") {
+        Ok(val) => val
+            .split(&[';', ':'][..])
+            .map(|p| to_path(p, "RA_FSP_SYS_INCLUDE_DIRS"))
+            .collect(),
+        Err(VarError::NotPresent) => vec![],
+        Err(VarError::NotUnicode(_)) => {
+            panic!("We require RA_FSP_SYS_INCLUDE_DIRS` to contain unicode.");
+        }
+    };
 
     let linker_scripts = out_path.join("script");
     let fsp_dir = ra_fsp_repo.join("ra/fsp");
@@ -52,9 +91,11 @@ pub fn wrap_component(modules: &[&str]) {
     println!("cargo:rerun-if-changed={}", fsp_cfg.display());
     println!("cargo:rerun-if-changed=include");
 
-    println!("cargo:rustc-link-lib=static=fsp_prelinked");
-    println!("cargo:rustc-link-search={}", linker_scripts.display());
-    println!("cargo:rustc-link-search={}", out_path.display());
+    if cfg!(feature = "device") {
+        println!("cargo:rustc-link-lib=static=fsp_prelinked");
+        println!("cargo:rustc-link-search={}", linker_scripts.display());
+        println!("cargo:rustc-link-search={}", out_path.display());
+    }
 
     let mut rust_codegen = fs::OpenOptions::new()
         .write(true)
@@ -68,7 +109,7 @@ pub fn wrap_component(modules: &[&str]) {
         return;
     };
 
-    let include_dirs = vec![
+    let mut include_dirs = vec![
         // Other stuff
         ra_fsp_repo.to_path_buf(),
         Path::new("include").to_path_buf(),
@@ -87,84 +128,87 @@ pub fn wrap_component(modules: &[&str]) {
         fsp_cfg.to_path_buf(),
         fsp_cfg.join("bsp"),
     ];
+    include_dirs.extend(other_include_dirs);
 
     // compile fsp library
 
-    let bsp_stems = [
-        "bsp_clocks",
-        "bsp_common",
-        "bsp_delay",
-        "bsp_group_irq", // NMI_Handler
-        "bsp_guard",
-        "bsp_io",
-        "bsp_irq",
-        "bsp_linker",
-        "bsp_macl",
-        "bsp_power",
-        "bsp_register_protection",
-        "bsp_rom_registers",
-        "bsp_sbrk",
-        "bsp_security",
-    ];
-    let device = [
-        "startup", // Includes the vector table and a reset vector
-        "system",  // Includes `SystemInit`
-    ];
-    let mut build = cc::Build::new();
+    if cfg!(feature = "device") {
+        let bsp_stems = [
+            "bsp_clocks",
+            "bsp_common",
+            "bsp_delay",
+            "bsp_group_irq", // NMI_Handler
+            "bsp_guard",
+            "bsp_io",
+            "bsp_irq",
+            "bsp_linker",
+            "bsp_macl",
+            "bsp_power",
+            "bsp_register_protection",
+            "bsp_rom_registers",
+            "bsp_sbrk",
+            "bsp_security",
+        ];
+        let device = [
+            "startup", // Includes the vector table and a reset vector
+            "system",  // Includes `SystemInit`
+        ];
+        let mut build = cc::Build::new();
 
-    walkdir::WalkDir::new(&fsp_src)
-        .follow_links(true)
-        .into_iter()
-        .map(|e| e.expect("Can't walk in fsp src"))
-        .filter(|e| e.file_type().is_file())
-        .filter(|e| e.file_name().to_str().unwrap().ends_with(".c"))
-        .filter(|e| {
-            let stem = e.path().file_stem().unwrap().to_str().unwrap();
-            device.contains(&stem)
-                || bsp_stems.contains(&stem)
-                || modules.iter().find(|m| stem == **m).is_some()
-        })
-        .for_each(|e| {
-            build.file(e.path());
-        });
+        walkdir::WalkDir::new(&fsp_src)
+            .follow_links(true)
+            .into_iter()
+            .map(|e| e.expect("Can't walk in fsp src"))
+            .filter(|e| e.file_type().is_file())
+            .filter(|e| e.file_name().to_str().unwrap().ends_with(".c"))
+            .filter(|e| {
+                let stem = e.path().file_stem().unwrap().to_str().unwrap();
+                device.contains(&stem)
+                    || bsp_stems.contains(&stem)
+                    || modules.iter().find(|m| stem == **m).is_some()
+            })
+            .for_each(|e| {
+                build.file(e.path());
+            });
 
-    let objects = build
-        .includes(&include_dirs)
-        .define(&bsp_mcu_group, Some("1"))
-        .compile_intermediates();
+        let objects = build
+            .includes(&include_dirs)
+            .define(&bsp_mcu_group, Some("1"))
+            .compile_intermediates();
 
-    pre_link_archive("fsp_prelinked", objects);
+        pre_link_archive("fsp_prelinked", objects);
 
-    assert!(out_path.join(&"libfsp_prelinked.a").exists());
+        assert!(out_path.join(&"libfsp_prelinked.a").exists());
 
-    if out_path.join("script").exists() {
-        fs::remove_dir_all(&linker_scripts).unwrap();
+        if out_path.join("script").exists() {
+            fs::remove_dir_all(&linker_scripts).unwrap();
+        }
+
+        std::process::Command::new("cp")
+            .arg("-f")
+            .arg("-r")
+            .arg("./script")
+            .arg(linker_scripts)
+            .status()
+            .expect("failed to copy `script`");
     }
-
-    std::process::Command::new("cp")
-        .arg("-f")
-        .arg("-r")
-        .arg("./script")
-        .arg(linker_scripts)
-        .status()
-        .expect("failed to copy `script`");
 
     let bindgen = bindgen::Builder::default()
         .header_contents(
             "rs_bsp_wrapper.h",
             r#"
-                #include "bsp_api.h"
-                #include "bsp_cfg.h"
-                #include "bsp_mcu_family_cfg.h"
-                #include "renesas.h"
-                #include "bsp_elc.h"
-                #include "bsp_irq.h"
-                #include "bsp_exceptions.h"
-                #include "bsp_common.h"
-                #include "fsp_common_api.h"
-                #include "fsp_version.h"
+            #include "bsp_api.h"
+            #include "bsp_cfg.h"
+            #include "bsp_mcu_family_cfg.h"
+            #include "renesas.h"
+            #include "bsp_elc.h"
+            #include "bsp_irq.h"
+            #include "bsp_exceptions.h"
+            #include "bsp_common.h"
+            #include "fsp_common_api.h"
+            #include "fsp_version.h"
 
-_Static_assert(FSP_INVALID_VECTOR == ((IRQn_Type) - 33));
+            _Static_assert(FSP_INVALID_VECTOR == ((IRQn_Type) - 33));
             "#,
         )
         .header_contents(
@@ -233,9 +277,9 @@ _Static_assert(FSP_INVALID_VECTOR == ((IRQn_Type) - 33));
         .clang_arg(format!("-D{bsp_mcu_group}=1"))
         .clang_args(
             include_dirs
-                .iter()
-                .map(|d| path::absolute(d).expect("Can't resolve absolute path"))
-                .map(|e| format!("-I{}", e.as_os_str().to_str().unwrap())),
+            .iter()
+            .map(|d| path::absolute(d).expect("Can't resolve absolute path"))
+            .map(|e| format!("-I{}", e.as_os_str().to_str().unwrap())),
         )
         .allowlist_item("e_elc_event_.*")
         .allowlist_item("fsp_err_t")
@@ -345,15 +389,15 @@ _Static_assert(FSP_INVALID_VECTOR == ((IRQn_Type) - 33));
             // .rustified_enum("e_display_state")
             // .rustified_enum("e_display_event")
             .rustified_enum("e_display_in_format")
-            // .rustified_enum("e_display_out_format")
-            // .rustified_enum("e_display_endian")
-            // .rustified_enum("e_display_color_order")
-            // .rustified_enum("e_display_signal_polarity")
-            // .rustified_enum("e_display_sync_edge")
-            // .rustified_enum("e_display_fade_control")
-            // .rustified_enum("e_display_fade_status")
-            // .rustified_enum("e_display_color_keying")
-            // .rustified_enum("e_display_data_swap")
+        // .rustified_enum("e_display_out_format")
+        // .rustified_enum("e_display_endian")
+        // .rustified_enum("e_display_color_order")
+        // .rustified_enum("e_display_signal_polarity")
+        // .rustified_enum("e_display_sync_edge")
+        // .rustified_enum("e_display_fade_control")
+        // .rustified_enum("e_display_fade_status")
+        // .rustified_enum("e_display_color_keying")
+        // .rustified_enum("e_display_data_swap")
     } else {
         bindgen
     };
@@ -376,34 +420,6 @@ _Static_assert(FSP_INVALID_VECTOR == ((IRQn_Type) - 33));
         "\npub type e_elc_event = e_elc_event_{mcu_group};\n"
     )
     .unwrap();
-}
-
-macro_rules! add_module {
-    ($modules:expr,$module_feat:expr) => {
-        if build_cfg!(feature = $module_feat) {
-            $modules.push(&$module_feat[4..]);
-        }
-    };
-}
-
-#[build_cfg_main]
-fn main() {
-    let mut modules = Vec::<&'static str>::new();
-
-    add_module!(modules, "mod-r_icu");
-    add_module!(modules, "mod-r_flash_hp");
-    add_module!(modules, "mod-r_ioport");
-    add_module!(modules, "mod-r_gpt");
-    add_module!(modules, "mod-r_timer_api");
-    add_module!(modules, "mod-r_glcdc");
-    add_module!(modules, "mod-r_ether");
-    add_module!(modules, "mod-r_ether_phy");
-    add_module!(modules, "mod-r_ether_phy_target_ics1894");
-    add_module!(modules, "mod-r_ether_phy_target_ksz8091rnb");
-    add_module!(modules, "mod-r_ether_phy_target_dp83620");
-    add_module!(modules, "mod-r_ether_phy_target_ksz8041");
-
-    wrap_component(&modules);
 }
 
 fn pre_link_archive(new_name: &str, objects: Vec<PathBuf>) {

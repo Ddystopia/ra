@@ -1,39 +1,11 @@
 use crate::pac;
 use cortex_m::{interrupt::InterruptNumber, peripheral::NVIC};
 
-#[derive(Clone, Copy, Debug)]
-pub struct Irq {
-    int: pac::Interrupt,
-    prio: Option<u8>,
-}
-
-impl Irq {
-    pub fn new(int: pac::Interrupt) -> Self {
-        Self { int, prio: None }
-    }
-    pub unsafe fn new_prio(int: pac::Interrupt, priority: u8) -> Self {
-        Self {
-            int,
-            prio: Some(priority),
-        }
-    }
-    pub const fn extract_irq(this: Option<Self>) -> i32 {
-        let invalid_vector = ra_fsp_sys::generated::FSP_INVALID_VECTOR as i32;
-        match this {
-            Some(i) => i.int as u16 as i32,
-            None => invalid_vector,
-        }
-    }
-
-    pub const fn extract_ipl(this: Option<Self>) -> u8 {
-        const _: () = assert!(ra_fsp_sys::generated::BSP_IRQ_DISABLED <= u8::MAX as u32);
-
-        let disabled = ra_fsp_sys::generated::BSP_IRQ_DISABLED as u8;
-
-        match this {
-            None | Some(Irq { prio: None, .. }) => disabled,
-            Some(Irq { prio: Some(p), .. }) => p,
-        }
+pub(crate) const fn extract_irq(this: Option<pac::Interrupt>) -> i32 {
+    let invalid_vector = ra_fsp_sys::generated::FSP_INVALID_VECTOR as i32;
+    match this {
+        Some(i) => i as u16 as i32,
+        None => invalid_vector,
     }
 }
 
@@ -56,10 +28,8 @@ pub fn read_fsp_priority<I: InterruptNumber>(irq: I) -> u8 {
     hw_prio_to_fsp(hw_priority, pac::NVIC_PRIO_BITS)
 }
 
-pub unsafe fn try_read_priority_into(irq: Option<Irq>, place: *mut u8) {
-    if let Some(irq) = irq
-        && irq.prio.is_none()
-    {
-        unsafe { *place = read_fsp_priority(irq.int) }
+pub(crate) fn try_read_priority_into(interrupt: impl Into<Option<pac::Interrupt>>, place: &mut u8) {
+    if let Some(int) = interrupt.into() {
+        *place = read_fsp_priority(int)
     }
 }

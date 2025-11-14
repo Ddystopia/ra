@@ -8,7 +8,7 @@ use core::{
 };
 
 use crate::{
-    Block, Callback, Irq, Result,
+    Block, Callback, Result,
     ether_phy::EtherPhy,
     fsp_try_unsafe, log,
     pac::{self, Interrupt},
@@ -47,10 +47,10 @@ pub struct InterruptCause {
 }
 
 use ra_fsp_sys::generated::{
-    R_ETHER_CallbackSet, R_ETHER_Close, R_ETHER_LinkProcess, R_ETHER_Open, R_ETHER_Read,
-    R_ETHER_RxBufferUpdate, R_ETHER_TxStatusGet, R_ETHER_WakeOnLANEnable, R_ETHER_Write,
-    e_ether_padding, e_fsp_err, ether_ctrl_t, ether_extended_cfg_t, ether_instance_descriptor_t,
-    ether_phy_instance_t, fsp_err_t,
+    BSP_IRQ_DISABLED, R_ETHER_CallbackSet, R_ETHER_Close, R_ETHER_LinkProcess, R_ETHER_Open,
+    R_ETHER_Read, R_ETHER_RxBufferUpdate, R_ETHER_TxStatusGet, R_ETHER_WakeOnLANEnable,
+    R_ETHER_Write, e_ether_padding, e_fsp_err, ether_ctrl_t, ether_extended_cfg_t,
+    ether_instance_descriptor_t, ether_phy_instance_t, fsp_err_t,
 };
 
 const _: () = assert!(
@@ -128,7 +128,7 @@ pub struct EtherConfig<const BUF_SIZE: usize> {
     pub p_mac_address: &'static [u8; 6],
 
     pub pp_ether_buffers: Option<&'static mut [&'static mut Buffer<BUF_SIZE>]>,
-    pub irq: Option<Irq>,
+    pub irq: Option<Interrupt>,
     pub p_ether_phy_instance: &'static ether_phy_instance_t,
 
     pub tx_descriptors: &'static mut [Descriptor<BUF_SIZE>],
@@ -242,9 +242,9 @@ unsafe fn init_open<const BUF_SIZE: usize>(
         // Critical section is for nothing to change priorities between out
         // read and FSP's write.
         critical_section::with(|_| {
-            (*p_cfg).interrupt_priority = 0;
-            let ipl = &raw mut (*p_cfg).interrupt_priority;
-            utils::try_read_priority_into(cfg.irq, ipl.cast::<u8>());
+            let mut ipl = 0;
+            utils::try_read_priority_into(cfg.irq, &mut ipl);
+            (*p_cfg).interrupt_priority = ipl as u32;
 
             fsp_try_unsafe!(R_ETHER_Open(p_ctrl.cast::<ether_ctrl_t>(), p_cfg))
         })
@@ -387,6 +387,8 @@ impl<const BUF_SIZE: usize> Ether<BUF_SIZE, Opened> {
         fsp_try_unsafe!(R_ETHER_Write(self.ctrl_void(), ptr.cast(), len as u32))
     }
     pub fn link_process(self: Pin<&mut Self>) -> Result<()> {
+        // todo: setup provenance from self by writing self info context
+        //       and give device to the callback
         fsp_try_unsafe!(R_ETHER_LinkProcess(self.ctrl_void()))
     }
     pub fn wake_on_lan_enable(self: Pin<&mut Self>) -> Result<()> {
@@ -542,7 +544,7 @@ impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
     pub const fn padding(mut self, padding: e_ether_padding, offset: u32) -> Self { self.padding = padding; self.padding_offset = offset; self }
     pub const fn broadcast_filter(mut self, filter: u32) -> Self { self.broadcast_filter = filter; self }
     pub const fn mac(mut self, mac: &'static [u8; 6]) -> Self { self.p_mac_address = mac; self }
-    pub const fn irq(mut self, irq: Irq) -> Self { self.irq = Some(irq);  self }
+    pub const fn irq(mut self, irq: Interrupt) -> Self { self.irq = Some(irq);  self }
     pub const fn ether_buffers(mut self, buffers: &'static mut [&'static mut Buffer<BUF_SIZE>]) -> Self { self.pp_ether_buffers = Some(buffers); self }
     pub const fn rx_descriptors(mut self, descriptors: &'static mut [Descriptor<BUF_SIZE>]) -> Self { self.rx_descriptors = descriptors; self }
     pub const fn tx_descriptors(mut self, descriptors: &'static mut [Descriptor<BUF_SIZE>]) -> Self { self.tx_descriptors = descriptors; self }
@@ -603,8 +605,8 @@ impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
             num_tx_descriptors,
             num_rx_descriptors,
             ether_buffer_size: BUF_SIZE as u32,
-            irq: self.irq.int as u16 as _, 
-            interrupt_priority: self.irq.prio.expect("Interrupt priority is not set") as u32,
+            irq: utils::extract_irq(self.irq),
+            interrupt_priority: BSP_IRQ_DISABLED,
             p_callback: None,
             p_ether_phy_instance: self.p_ether_phy_instance,
             p_context: ptr::null(),

@@ -1,30 +1,21 @@
-use core::{any::TypeId, mem::zeroed, pin::Pin, ptr};
+use core::{
+    any::TypeId,
+    mem::zeroed,
+    pin::Pin,
+    ptr,
+    sync::atomic::{AtomicPtr, Ordering},
+};
 
-use pin_init::{InPlaceWrite, PinInit, pin_data, pin_init_from_closure};
+use pin_init::{PinInit, pin_data, pin_init_from_closure};
 use ra_fsp_sys::generated::{
-    self as raw, //-
-    self as api,
-    R_GLCDC_BASE,
-    R_GLCDC_Close,
-    R_GLCDC_Open,
-    R_GLCDC_Type,
-    display_api_t,
-    display_cfg_t,
-    display_color_t,
-    display_ctrl_t,
-    display_instance_t,
-    e_display_in_format,
-    e_display_state,
-    e_fsp_err,
-    fsp_err_t,
-    glcdc_extended_cfg_t,
+    self as raw, self as api, R_GLCDC_BASE, R_GLCDC_BufferChange, R_GLCDC_Close, R_GLCDC_Open,
+    R_GLCDC_Type, display_api_t, display_cfg_t, display_ctrl_t, display_frame_layer_t,
+    display_instance_t, e_display_state, e_fsp_err, fsp_err_t, glcdc_extended_cfg_t,
     glcdc_instance_ctrl_t,
-    st_display_color__bindgen_ty_1,
-    st_display_color__bindgen_ty_1__bindgen_ty_1,
 };
 
 use crate::{
-    Block, Result,
+    Block, Callback, Result,
     display_api::*,
     fsp_try_unsafe, pac,
     state_markers::{Closed, Opened},
@@ -36,133 +27,21 @@ unsafe extern "C" {
     pub safe fn glcdc_line_detect_isr();
 }
 
-pub fn example() {
-    const HEIGHT: usize = 480;
-    const WIDTH: usize = 800;
-    const BUFFER_SIZE: usize = HEIGHT * HSTRIDE;
-    const HSTRIDE: usize = layer_hstride(
-        HEIGHT as u16,
-        WIDTH as u16,
-        e_display_in_format::DISPLAY_IN_FORMAT_32BITS_ARGB8888,
-    )
-    .unwrap() as usize;
-
-    static F: static_cell::ConstStaticCell<FrameBuffer<BUFFER_SIZE>> =
-        static_cell::ConstStaticCell::new(FrameBuffer::new());
-
-    // SAFETY: By setting IEL15 priority to 10 we declare that we don't break anything
-    // let line_detect = Some(unsafe { crate::Irq::new_prio(pac::Interrupt::IEL15, 10) });
-    unsafe {
-        cortex_m::peripheral::Peripherals::steal()
-            .NVIC
-            .set_priority(pac::Interrupt::IEL15, 10);
-    }
-
-    let conf = DisplayConf {
-        input_buffers: [Some(F.take().to_mut()), None],
-        input: [
-            Some(Input {
-                hsize: WIDTH as u16,
-                vsize: HEIGHT as u16,
-                format: e_display_in_format::DISPLAY_IN_FORMAT_32BITS_ARGB8888,
-                line_descending_enable: false,
-                lines_repeat_enable: false,
-                lines_repeat_times: 0,
-            }),
-            None,
-        ],
-        output: Output {
-            htiming: raw::display_timing_t {
-                total_cyc: 1056,
-                display_cyc: 800,
-                back_porch: 256,
-                sync_width: 128,
-                sync_polarity: raw::e_display_signal_polarity::DISPLAY_SIGNAL_POLARITY_LOACTIVE,
-            },
-            vtiming: raw::display_timing_t {
-                total_cyc: 628,
-                display_cyc: 480,
-                back_porch: 148,
-                sync_width: 4,
-                sync_polarity: raw::e_display_signal_polarity::DISPLAY_SIGNAL_POLARITY_LOACTIVE,
-            },
-            format: raw::e_display_out_format::DISPLAY_OUT_FORMAT_24BITS_RGB888,
-            endian: raw::e_display_endian::DISPLAY_ENDIAN_LITTLE,
-            color_order: raw::e_display_color_order::DISPLAY_COLOR_ORDER_RGB,
-            data_enable_polarity: raw::e_display_signal_polarity::DISPLAY_SIGNAL_POLARITY_HIACTIVE,
-            sync_edge: raw::e_display_sync_edge::DISPLAY_SIGNAL_SYNC_EDGE_RISING,
-            bg_color: display_color(0, 0, 0, 0),
-            brightness: raw::display_brightness_t {
-                enable: false,
-                r: 512,
-                g: 512,
-                b: 512,
-            },
-            contrast: raw::display_contrast_t {
-                enable: false,
-                r: 128,
-                g: 128,
-                b: 128,
-            },
-            dithering_on: false,
-        },
-        layer: [
-            raw::display_layer_t {
-                coordinate: raw::display_coordinate_t { x: 0, y: 0 },
-                bg_color: display_color(255, 255, 255, 255),
-                fade_control: raw::e_display_fade_control::DISPLAY_FADE_CONTROL_NONE,
-                fade_speed: 0,
-            },
-            raw::display_layer_t {
-                coordinate: raw::display_coordinate_t { x: 0, y: 0 },
-                bg_color: display_color(255, 255, 255, 255),
-                fade_control: raw::e_display_fade_control::DISPLAY_FADE_CONTROL_NONE,
-                fade_speed: 0,
-            },
-        ],
-        line_detect: Some(crate::Irq::new(pac::Interrupt::IEL15)),
-        underflow_1: None,
-        underflow_2: None,
-        callback: Some({
-            extern "C" fn glcdc_callback(_p_args: &mut raw::display_callback_args_t) {
-                unimplemented!()
-            }
-            glcdc_callback
-        }),
-        extend: GlcdcExtendedConfig {
-            tcon_hsync: raw::e_glcdc_tcon_pin::GLCDC_TCON_PIN_0,
-            tcon_vsync: raw::e_glcdc_tcon_pin::GLCDC_TCON_PIN_1,
-            tcon_de: raw::e_glcdc_tcon_pin::GLCDC_TCON_PIN_2,
-            correction_proc_order: raw::e_glcdc_correction_proc_order::GLCDC_CORRECTION_PROC_ORDER_BRIGHTNESS_CONTRAST2GAMMA,
-            clksrc: raw::e_glcdc_clk_src::GLCDC_CLK_SRC_INTERNAL,
-            clock_div_ratio: raw::e_glcdc_panel_clk_div::GLCDC_PANEL_CLK_DIVISOR_32,
-            dithering_mode: raw::e_glcdc_dithering_mode::GLCDC_DITHERING_MODE_TRUNCATE,
-            dithering_pattern_A: raw::e_glcdc_dithering_pattern::GLCDC_DITHERING_PATTERN_11,
-            dithering_pattern_B: raw::e_glcdc_dithering_pattern::GLCDC_DITHERING_PATTERN_11,
-            dithering_pattern_C: raw::e_glcdc_dithering_pattern::GLCDC_DITHERING_PATTERN_11,
-            dithering_pattern_D: raw::e_glcdc_dithering_pattern::GLCDC_DITHERING_PATTERN_11,
-        },
-    };
-
-    let glcdc_regs = unsafe { pac::GLCDC::steal() };
-    let initializer = Glcdc::<Opened>::open(glcdc_regs, conf);
-    // pin_init::stack_try_pin_init!(let glcdc = initializer);
-    static PLACE: static_cell::StaticCell<Glcdc<Opened>> = static_cell::StaticCell::new();
-    let glcdc = PLACE.uninit().write_pin_init(initializer);
-    // let glcdc = <This<_> as pin_init::InPlaceWrite<_>>::write_pin_init(uninit, initializer);
-
-    let mut glcdc = glcdc.expect("Failed to open");
-    glcdc.as_mut().start().expect("Failed to start");
+struct CallbackContext {
+    regs: pac::GLCDC,
+    user_data: *const (),
+    current_owned_buffer: [AtomicPtr<u8>; 2],
 }
 
 #[repr(C)] // `#[repr(C)]` is for `Glcdc::<Closed>::open`
 #[pin_data(PinnedDrop)]
 pub struct Glcdc<State: 'static> {
-    regs: pac::GLCDC,
     c_ext_cfg: core::mem::MaybeUninit<UnsafePinned<glcdc_extended_cfg_t>>,
     ctrl: UnsafePinned<glcdc_instance_ctrl_t>,
     cfg: UnsafePinned<display_cfg_t>,
     inst: UnsafePinned<display_instance_t>, // points to cfg and ctrl
+    prev_owned_buffer: [*mut u8; 2],
+    callback_ctx: UnsafePinned<CallbackContext>,
     _marker: core::marker::PhantomData<State>,
 }
 
@@ -227,7 +106,12 @@ impl Glcdc<Closed> {
             );
         }
         Self {
-            regs,
+            callback_ctx: UnsafePinned::new(CallbackContext {
+                regs,
+                user_data: ptr::null(),
+                current_owned_buffer: [AtomicPtr::default(), AtomicPtr::default()],
+            }),
+            prev_owned_buffer: [ptr::null_mut(); 2],
             c_ext_cfg: core::mem::MaybeUninit::zeroed(),
             ctrl: UnsafePinned::new(unsafe { zeroed() }),
             cfg: UnsafePinned::new(unsafe { zeroed() }),
@@ -241,7 +125,7 @@ impl Glcdc<Closed> {
     ) -> Result<Pin<&mut Glcdc<Opened>>> {
         unsafe {
             let this = ptr::from_mut(self.get_unchecked_mut());
-            let regs = ptr::read(&(*this).regs);
+            let regs = ptr::read(&(*(*this).callback_ctx.get()).regs);
 
             if (*(*this).ctrl.get()).state != e_display_state::DISPLAY_STATE_CLOSED {
                 return Err(e_fsp_err::FSP_ERR_ALREADY_OPEN);
@@ -255,7 +139,7 @@ impl Glcdc<Closed> {
 }
 
 impl Glcdc<Opened> {
-    pub fn open(
+    pub fn new_open(
         glcdc: pac::GLCDC,
         cfg: DisplayConf<GlcdcExtendedConfig>,
     ) -> impl PinInit<Glcdc<Opened>, fsp_err_t> {
@@ -269,6 +153,19 @@ impl<S: 'static> PinnedDrop for Glcdc<S> {
         if TypeId::of::<Closed>() == TypeId::of::<S>() {
             return;
         }
+
+        // - If we are in the thread (can't preempt an interrupt), we can't preempt the callback.
+        //   - Interrupt is not running, thus after we reset callback,
+        //      we are sure nobody will use the `p_context` anymore, so we can free it.
+        //   - Todo: assert that drop is not called from interrupt context.
+        // - If we are in an interrupt with lower priority, we are only allowed this in RTIC.
+        //     - In this case require `&Glcdc` in interrupt. It will prevent drop.
+        critical_section::with(|_| unsafe {
+            let this = self.as_mut().get_unchecked_mut();
+            let ctrl = this.ctrl.get().cast::<glcdc_instance_ctrl_t>();
+            (*ctrl).p_callback = None;
+            (*ctrl).p_context = ptr::null();
+        });
 
         loop {
             match fsp_try_unsafe!({
@@ -284,17 +181,66 @@ impl<S: 'static> PinnedDrop for Glcdc<S> {
     }
 }
 
+unsafe extern "C" fn trampoline<F: Callback<raw::display_event_t>>(
+    args: *mut raw::display_callback_args_t,
+) {
+    unsafe {
+        let context = &*((*args).p_context as *const CallbackContext);
+
+        context.current_owned_buffer[0].store(
+            context.regs.gr1_flm2().read().bits() as *mut u8,
+            Ordering::Release,
+        );
+        context.current_owned_buffer[1].store(
+            context.regs.gr2_flm2().read().bits() as *mut u8,
+            Ordering::Release,
+        );
+
+        if let Some(cb) = context.user_data.cast::<F>().as_ref() {
+            let event = (*args).event;
+            F::call(cb, event)
+        }
+    }
+}
+
 unsafe fn init_open(
     slot: *mut Glcdc<Opened>,
     glcdc: pac::GLCDC,
     mut cfg: DisplayConf<GlcdcExtendedConfig>,
 ) -> Result<()> {
+    let display_cfg = match cfg.c_conf() {
+        Ok(c) => c,
+        Err(e) => {
+            log::error!("GLCDC config error: {e}");
+            return Err(e_fsp_err::FSP_ERR_INVALID_ARGUMENT);
+        }
+    };
+
     unsafe {
-        (*slot).regs = glcdc;
-        (*slot).ctrl = UnsafePinned::new(zeroed());
+        let this = Glcdc {
+            ctrl: UnsafePinned::new(zeroed()),
+            inst: UnsafePinned::new(display_instance_t {
+                p_ctrl: ptr::null_mut(),
+                p_cfg: ptr::null(),
+                p_api: ptr::from_ref(&API),
+            }),
+            c_ext_cfg: core::mem::MaybeUninit::uninit(),
+            cfg: UnsafePinned::new(display_cfg),
+            prev_owned_buffer: [ptr::null_mut(); 2],
+            callback_ctx: UnsafePinned::new(CallbackContext {
+                regs: glcdc,
+                user_data: ptr::null(),
+                current_owned_buffer: [
+                    AtomicPtr::new(display_cfg.input[0].p_base as *mut u8),
+                    AtomicPtr::new(display_cfg.input[1].p_base as *mut u8),
+                ],
+            }),
+            _marker: core::marker::PhantomData,
+        };
+        ptr::write(slot, this);
+
         (*(*slot).inst.get()).p_ctrl = (*slot).ctrl.get().cast::<core::ffi::c_void>();
         (*(*slot).inst.get()).p_cfg = (*slot).cfg.get().cast_const();
-        (*(*slot).inst.get()).p_api = ptr::from_ref(&API);
 
         let p_extend = (*slot)
             .c_ext_cfg
@@ -302,18 +248,12 @@ unsafe fn init_open(
             .get()
             .cast::<core::ffi::c_void>();
 
-        let mut display_cfg = match cfg.c_conf() {
-            Ok(c) => c,
-            Err(e) => {
-                log::error!("GLCDC config error: {e}");
-                return Err(e_fsp_err::FSP_ERR_INVALID_ARGUMENT);
-            }
-        };
-        display_cfg.p_extend = p_extend;
-        (*slot).cfg = UnsafePinned::new(display_cfg);
-
         let p_ctrl = UnsafePinned::raw_get(&raw const (*slot).ctrl);
         let p_cfg = UnsafePinned::raw_get(&raw const (*slot).cfg);
+
+        (*p_cfg).p_extend = p_extend;
+        (*p_cfg).p_callback = Some(trampoline::<()>);
+        (*p_cfg).p_context = (*slot).callback_ctx.get().cast_const().cast();
 
         // FSP needs to IRQs to setup contexts, but it will additionally
         // unconditionally set priorities from cfg.
@@ -321,9 +261,9 @@ unsafe fn init_open(
         // Critical section is for nothing to change priorities between out
         // read and FSP's write.
         critical_section::with(|_| {
-            utils::try_read_priority_into(cfg.line_detect, &raw mut (*p_cfg).line_detect_ipl);
-            utils::try_read_priority_into(cfg.underflow_1, &raw mut (*p_cfg).underflow_1_ipl);
-            utils::try_read_priority_into(cfg.underflow_2, &raw mut (*p_cfg).underflow_2_ipl);
+            utils::try_read_priority_into(cfg.line_detect, &mut (*p_cfg).line_detect_ipl);
+            utils::try_read_priority_into(cfg.underflow_1, &mut (*p_cfg).underflow_1_ipl);
+            utils::try_read_priority_into(cfg.underflow_2, &mut (*p_cfg).underflow_2_ipl);
 
             fsp_try_unsafe!(R_GLCDC_Open(p_ctrl.cast::<display_ctrl_t>(), p_cfg))
         })
@@ -350,19 +290,99 @@ impl GlcdcExtendedConfig {
 }
 
 impl<S: 'static> Glcdc<S> {
+    fn callback_ctx(&self) -> &CallbackContext {
+        unsafe { &*self.callback_ctx.get() }
+    }
     pub fn regs(&self) -> &pac::GLCDC {
-        &self.regs
+        &self.callback_ctx().regs
+    }
+    pub fn cfg(&self) -> &display_cfg_t {
+        // Safety: C code is not writing there.
+        unsafe { &*self.cfg.get() }
+    }
+
+    pub fn change_buffer(
+        self: Pin<&mut Self>,
+        layer: display_frame_layer_t,
+        mut buffer: FrameBufferMut,
+    ) -> core::result::Result<(), (fsp_err_t, FrameBufferMut)> {
+        let this = unsafe { self.get_unchecked_mut() };
+        let ptr = buffer.as_mut_ptr();
+        let ctrl = this.ctrl.get().cast::<display_ctrl_t>();
+
+        log::info!(
+            "Changing buffer of layer {} to {:p} (prev {:p})",
+            layer as usize,
+            ptr,
+            this.prev_owned_buffer[layer as usize]
+        );
+
+        fsp_try_unsafe!(R_GLCDC_BufferChange(ctrl, ptr, layer)).map_err(|e| (e, buffer))?;
+
+        let ctx = this.callback_ctx();
+        this.prev_owned_buffer[layer as usize] =
+            ctx.current_owned_buffer[layer as usize].load(Ordering::Relaxed);
+
+        Ok(())
+    }
+
+    pub fn take_buffer(
+        self: Pin<&mut Self>,
+        layer: display_frame_layer_t,
+    ) -> Option<FrameBufferMut> {
+        let this = unsafe { self.get_unchecked_mut() };
+        let cfg = this.cfg();
+        let layer = layer as usize;
+
+        let bpp = bpp(cfg.input[layer].format) as usize;
+        let hstride = cfg.input[layer].hstride as usize * bpp / 8;
+        let vsize = cfg.input[layer].vsize as usize;
+
+        if layer != 0 && layer != 1 || layer >= cfg.input.len() as usize {
+            return None;
+        }
+
+        let used_buf = {
+            let callback_ctx = unsafe { &*this.callback_ctx.get() };
+
+            callback_ctx.current_owned_buffer[layer].load(Ordering::Acquire)
+        };
+
+        let prev_buf = this.prev_owned_buffer[layer];
+
+        log::info!(
+            "Attempt to take buffer of layer {layer}, prev buf: {:p}, used buf: {:p}",
+            prev_buf,
+            used_buf
+        );
+
+        if prev_buf.is_null() || prev_buf == used_buf {
+            return None;
+        }
+
+        this.prev_owned_buffer[layer] = ptr::null_mut();
+
+        // Safety:
+        // - `DisplayConf::c_conf` ensures that length correct.
+        // - `Glcdc::update_buffer` ensures that length is enough.
+        // - Hardware is not using this buffer now.
+        unsafe { Some(FrameBufferMut::from_raw_parts(prev_buf, hstride * vsize)) }
+    }
+
+    pub fn set_callback<F: Callback<raw::display_event_t>>(
+        self: Pin<&mut Self>,
+        callback: &'static F,
+    ) -> Result<()> {
+        critical_section::with(|_| unsafe {
+            let this = self.get_unchecked_mut();
+            let ctrl = this.ctrl.get().cast::<glcdc_instance_ctrl_t>();
+            (*this.callback_ctx.get()).user_data = ptr::from_ref(callback).cast::<()>();
+            (*ctrl).p_callback = Some(trampoline::<F>);
+        });
+        Ok(())
     }
 }
 
 pub const fn regs() -> *mut R_GLCDC_Type {
     R_GLCDC_BASE as *mut R_GLCDC_Type
-}
-
-pub const fn display_color(r: u8, g: u8, b: u8, a: u8) -> display_color_t {
-    display_color_t {
-        __bindgen_anon_1: st_display_color__bindgen_ty_1 {
-            byte: st_display_color__bindgen_ty_1__bindgen_ty_1 { b, g, r, a },
-        },
-    }
 }

@@ -82,7 +82,6 @@ impl TimerState<EmbassyGptStorage> {
 }
 
 impl Driver for GptTimerDriver<EmbassyGptStorage> {
-    #[unsafe(export_name = "ddystopia_gpt_now_disasm")]
     fn now(&self) -> u64 {
         // todo: check asm or bench, maybe critical section + RefCell is better
         match self.timer_state.get() {

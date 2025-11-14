@@ -111,9 +111,9 @@ where
         let mut borrow = Ext::driver().gpt.borrow_ref_mut(cs);
         let mut gpt = borrow.as_mut().unwrap().as_mut();
 
-        NVIC::mask(capture_a_irq);
+        timer_state.mask_a();
         NVIC::unpend(capture_a_irq);
-        NVIC::mask(capture_b_irq);
+        timer_state.mask_b();
         NVIC::unpend(capture_b_irq);
 
         gpt.as_mut().stop()?;
@@ -177,6 +177,7 @@ impl<E> TimerState<E> {
         })
     }
 
+    #[allow(dead_code)] // used in rtic impl
     pub fn reset_alarm(&self, cs: CriticalSection) {
         self.alarm.borrow(cs).timestamp.set(u64::MAX);
         NVIC::mask(self.capture_b_irq);
@@ -194,7 +195,7 @@ impl<E> TimerState<E> {
         if timestamp <= t {
             // If alarm timestamp has passed the alarm will not fire.
             // Disarm the alarm and return `false` to indicate that.
-            NVIC::mask(self.capture_b_irq);
+            self.mask_b();
 
             self.alarm.borrow(cs).timestamp.set(u64::MAX);
 
@@ -225,7 +226,7 @@ impl<E> TimerState<E> {
             // the alarm may or may not have fired.
             // Disarm the alarm and return `false` to indicate that.
             // It is the caller's responsibility to handle this ambiguity.
-            NVIC::mask(self.capture_b_irq);
+            self.mask_b();
 
             self.alarm.borrow(cs).timestamp.set(u64::MAX);
 

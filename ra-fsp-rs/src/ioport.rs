@@ -60,7 +60,7 @@ impl IoPort {
     pub const fn new(ports: pac::PORT0, conf: IoPortConfig) -> impl PinInit<Self> {
         unsafe {
             pin_init_from_closure(move |slot: *mut Self| {
-                *slot = Self {
+                let this = Self {
                     ctrl: UnsafeCell::new(core::mem::zeroed()),
                     cfg: UnsafePinned::new(conf.c_conf()),
                     ports,
@@ -70,6 +70,7 @@ impl IoPort {
                         p_api: <Self as crate::Block>::API,
                     }),
                 };
+                ptr::write(slot, this);
                 (*(*slot).inst.get()).p_ctrl = (*slot).ctrl.get().cast();
                 (*(*slot).inst.get()).p_cfg = (*slot).cfg.get().cast_const().cast();
                 Ok(())
