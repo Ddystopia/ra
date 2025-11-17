@@ -329,6 +329,12 @@ impl From<u8> for Clut4Pixel {
     }
 }
 
+impl From<usize> for Clut4Pixel {
+    fn from(raw: usize) -> Self {
+        Clut4Pixel((raw as u8).into())
+    }
+}
+
 impl buoyant::primitives::Interpolate for Clut4Pixel {
     fn interpolate(from: Self, to: Self, amount: u8) -> Self {
         if amount == 0 { from } else { to }

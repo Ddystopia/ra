@@ -160,6 +160,11 @@ impl From<u8> for Clut8Pixel {
         Clut8Pixel(raw.into())
     }
 }
+impl From<usize> for Clut8Pixel {
+    fn from(raw: usize) -> Self {
+        Clut8Pixel((raw as u8).into())
+    }
+}
 
 impl buoyant::primitives::Interpolate for Clut8Pixel {
     fn interpolate(from: Self, to: Self, amount: u8) -> Self {
