@@ -10,7 +10,6 @@ pub(crate) const fn extract_irq(this: Option<pac::Interrupt>) -> i32 {
 }
 
 // fixme: not true on __CORTEX_M == 23
-#[allow(dead_code)] // used in assert, idk why it warns
 pub const fn fsp_prio_to_hw(priority: u8, nvic_prio_bits: u8) -> u8 {
     (((priority as u32) << (8 - nvic_prio_bits) as u32) & (u8::MAX as u32)) as u8
 }

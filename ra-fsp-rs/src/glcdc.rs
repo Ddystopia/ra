@@ -317,11 +317,12 @@ impl<S: 'static> Glcdc<S> {
             this.prev_owned_buffer[layer as usize]
         );
 
+        let ctx = this.callback_ctx();
+        let used_buffer = ctx.current_owned_buffer[layer as usize].load(Ordering::Relaxed);
+
         fsp_try_unsafe!(R_GLCDC_BufferChange(ctrl, ptr, layer)).map_err(|e| (e, buffer))?;
 
-        let ctx = this.callback_ctx();
-        this.prev_owned_buffer[layer as usize] =
-            ctx.current_owned_buffer[layer as usize].load(Ordering::Relaxed);
+        this.prev_owned_buffer[layer as usize] = used_buffer;
 
         Ok(())
     }
