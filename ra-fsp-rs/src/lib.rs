@@ -68,7 +68,7 @@ pub mod embedded_graphics {
 pub use {
     cortex_m,
     pacs::pac,
-    pin_init, ra_fsp_sys,
+    pin_init, ra_fsp_sys, ra_fsp_sys as sys,
     ra_fsp_sys::generated::{e_elc_event, e_fsp_err, fsp_err_t},
 };
 
