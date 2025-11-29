@@ -109,18 +109,29 @@ pub const fn display_color(r: u8, g: u8, b: u8, a: u8) -> display_color_t {
 }
 
 impl<const SIZE: usize> FrameBuffer<SIZE> {
+    const _ASSERT: () = assert!(
+        SIZE % 64 == 0,
+        "Display Frame Buffer must have 64-byte aligned size"
+    );
+
     pub const fn new() -> Self {
+        _ = Self::_ASSERT;
+
         Self([0u8; SIZE])
     }
     pub fn to_mut(&'static mut self) -> FrameBufferMut {
-        const {
-            assert!(
-                SIZE % 64 == 0,
-                "Display Frame Buffer must have 64-byte aligned size"
-            )
-        }
+        _ = Self::_ASSERT;
 
         FrameBufferMut(&mut self.0)
+    }
+    pub fn as_mut_n(array: &mut [Self]) -> &mut [u8] {
+        _ = Self::_ASSERT;
+
+        let len = array.len() * SIZE;
+        let ptr = array.as_mut_ptr() as *mut u8;
+
+        // SAFETY: `SIZE` is 64-byte aligned, as well as `Self`, thus all bytes initialized
+        unsafe { core::slice::from_raw_parts_mut(ptr, len) }
     }
 }
 

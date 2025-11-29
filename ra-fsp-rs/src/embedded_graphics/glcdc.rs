@@ -6,7 +6,10 @@ use core::{
 
 use diatomic_waker::{DiatomicWaker, WakeSinkRef, WakeSourceRef};
 use embedded_graphics::prelude::*;
-use ra_fsp_sys::generated::{display_event_t, display_frame_layer_t, display_in_format_t, e_display_event};
+use ra_fsp_sys::generated::{
+    display_event_t, display_frame_layer_t, display_in_format_t, e_display_event,
+    e_fsp_err::FSP_ERR_INVALID_UPDATE_TIMING,
+};
 
 use crate::{
     Callback,
@@ -78,19 +81,34 @@ impl<K: Kind> Display<K> {
         })
     }
 
+    pub async fn flush_debounce(
+        &mut self,
+        mut glcdc: Pin<&mut Glcdc<Opened>>,
+        mut debounce: impl AsyncFnMut(usize),
+    ) -> crate::Result<()> {
+        let mut i = 0;
+        loop {
+            match self.flush(glcdc.as_mut()).await {
+                Ok(()) => return Ok(()),
+                Err(e) if e == FSP_ERR_INVALID_UPDATE_TIMING => {
+                    debounce(i).await;
+                    i += 1;
+                }
+                Err(e) => return Err(e),
+            }
+        }
+    }
+
     pub async fn flush(&mut self, mut glcdc: Pin<&mut Glcdc<Opened>>) -> crate::Result<()> {
-        // let load = || self.counter.load(Ordering::Relaxed);
-        // let counter = load();
         let Some(buffer) = self.next_buffer.take() else {
+            // fixme: maybe return false?
             return Ok(());
         };
 
         match glcdc.as_mut().change_buffer(self.layer, buffer) {
-            Ok(()) => {}
+            Ok(()) => (),
             Err((e, buffer)) => {
                 self.next_buffer = Some(buffer);
-                // todo: see what kinds of errors and when can happen here
-                //       maybe we should just spin or async wait
                 return Err(e);
             }
         }
