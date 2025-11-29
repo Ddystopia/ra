@@ -21,7 +21,7 @@ pub struct TimerConf<Extended> {
     pub source_div: timer_source_div_t,
     pub duty_cycle_counts: u32,
     pub channel: u8,
-    pub cycle_end: pac::Interrupt,
+    pub cycle_end: Option<pac::Interrupt>,
     pub extend: Extended,
 }
 
@@ -33,7 +33,7 @@ impl<Extended> TimerConf<Extended> {
             source_div: self.source_div,
             duty_cycle_counts: self.duty_cycle_counts,
             channel: self.channel,
-            cycle_end_irq: utils::extract_irq(Some(self.cycle_end)),
+            cycle_end_irq: utils::extract_irq(self.cycle_end),
             cycle_end_ipl: BSP_IRQ_DISABLED as u8,
             p_callback: None,
             p_context: core::ptr::null_mut(),

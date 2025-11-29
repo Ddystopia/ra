@@ -20,7 +20,9 @@ use ra_fsp_sys::generated::{
 };
 
 use crate::{
-    Block, Callback, Result, fsp_try_unsafe, pac,
+    Block, Callback, Result,
+    callbacks::CallbackEvent,
+    fsp_try_unsafe, pac,
     state_markers::{Closed, Opened},
     timer_api::*,
     unsafe_pinned::UnsafePinned,
@@ -32,11 +34,16 @@ use crate::{
 //       But there are several gpts, so there may be several handlers, and each
 //       gpt has the same but different cfg??
 //       Can we even mask/unmask them??
+//
+//       Thinking about this again, each gpt has different IRQs and there is that
+//       global map IRQ -> Control Block, thus the same ISR will be bind to different
+//       IRQ thus we can ask `&mut Gpt` and assert that current isr is the same as
+//       in config. With `R_FSP_CurrentIrqGet` (see utils.rs) we can get it.
 unsafe extern "C" {
     pub safe fn gpt_counter_overflow_isr();
     pub safe fn gpt_counter_underflow_isr();
-    pub safe fn gpt_capture_a_isr();
-    pub safe fn gpt_capture_b_isr();
+    // pub safe fn gpt_capture_a_isr();
+    // pub safe fn gpt_capture_b_isr();
     pub safe fn gpt_capture_compare_a_isr();
     pub safe fn gpt_capture_compare_b_isr();
 }
@@ -80,6 +87,15 @@ Need some kind of Pin<Box<Gpt>> instead of Pin<&mut Gpt>
 
 #[allow(dead_code)]
 pub struct GptHandle<'a, 'f, State: 'static>(Pin<&'a mut Gpt<'f, State>>);
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IsrPrototype {
+    #[default]
+    Overflow,
+    Underflow,
+    CompareA,
+    CompareB,
+}
 
 #[repr(C)] // `#[repr(C)]` is for `GptInstance::<Closed>::open`
 #[pin_data(PinnedDrop)]
@@ -158,6 +174,71 @@ unsafe impl<S> Block for Gpt<'_, S> {
 unsafe impl<S> Send for Gpt<'_, S> {}
 unsafe impl<S> Sync for Gpt<'_, S> {}
 
+impl IsrPrototype {
+    pub fn call_fsp_isr_handler(self) {
+        match self {
+            IsrPrototype::Overflow => gpt_counter_overflow_isr(),
+            IsrPrototype::Underflow => gpt_counter_underflow_isr(),
+            IsrPrototype::CompareA => gpt_capture_compare_a_isr(),
+            IsrPrototype::CompareB => gpt_capture_compare_b_isr(),
+        }
+    }
+}
+
+unsafe impl<'a> crate::callbacks::CallbackEvent<timer_event_t, Gpt<'a, Opened>> for IsrPrototype {
+    fn call_fsp_isr_handler(self) {
+        self.call_fsp_isr_handler()
+    }
+
+    fn context(block: *mut Gpt<'a, Opened>) -> *mut *const Gpt<'a, Opened> {
+        unsafe {
+            let ctrl = UnsafePinned::raw_get(&raw const (*block).ctrl);
+            let context = &raw mut (*ctrl).p_context;
+            context.cast()
+        }
+    }
+
+    fn process_args(args: *mut ()) -> (*mut Gpt<'a, Opened>, *const (), timer_event_t) {
+        unsafe {
+            let args = args.cast::<timer_callback_args_t>();
+
+            let this = (*args).p_context.cast::<Gpt<'a, Opened>>().cast_mut();
+            let event = (*args).event;
+            if this.is_null() {
+                (ptr::null_mut(), ptr::null(), event)
+            } else {
+                (this, (*this).user_data, event)
+            }
+        }
+    }
+
+    fn process_static_args(args: *mut ()) -> (*const (), timer_event_t) {
+        unsafe {
+            let args = args.cast::<timer_callback_args_t>();
+            ((*args).p_context.cast::<()>(), (*args).event)
+        }
+    }
+
+    #[inline(always)]
+    fn fsp_callback_set<'b>(
+        block: Pin<&'b mut Gpt<'a, Opened>>,
+        p_callback: unsafe extern "C" fn(*mut ()),
+        p_context: *const core::ffi::c_void,
+        user_data: *const (),
+    ) -> Result<()> {
+        unsafe {
+            let this = block.get_unchecked_mut();
+            this.user_data = user_data;
+            fsp_try_unsafe!(api::R_GPT_CallbackSet(
+                this.ctrl.get().cast(),
+                Some(Self::cast_callback(p_callback)),
+                p_context,
+                core::ptr::null_mut(),
+            ))
+        }
+    }
+}
+
 impl<'a> Gpt<'a, Opened> {
     pub fn new_open(
         gpt: GptRegister,
@@ -170,46 +251,37 @@ impl<'a> Gpt<'a, Opened> {
         }
     }
 
-    // It may be generalized to the timer lever, but I don't see the clear
-    // reason to overcomplicate for now. In short, `F` would move to the trait.
+    // FIXME: maybe allow calling this method even when `callback_set` is called?
+    /// Call this method on interrupt of [`IsrPrototype`] IF you used [`Self::callback_set`]. Else it will do nothing.
+    #[inline(always)]
+    pub fn handle_isr(self: Pin<&mut Self>, isr_prototype: IsrPrototype) {
+        IsrPrototype::handle_isr(isr_prototype, self)
+    }
+
+    // May be non-static because calling that callback requires some form of `&mut Self`
+    /// For this callback to be invoked, call [`gpt_counter_overflow_isr`], [`gpt_capture_compare_a_isr`] etc in the interrup handler.
     pub fn callback_set<F>(self: Pin<&mut Self>, context: &'a F) -> Result<()>
+    where
+        F: Callback<timer_event_t, Self>,
+    {
+        IsrPrototype::callback_set(self, context)
+    }
+
+    // Must be static because Gpt might be closed dropped etc during `F`'s call.
+    pub fn callback_set_static<F>(self: Pin<&mut Self>, context: &'static F) -> Result<()>
     where
         F: Callback<timer_event_t>,
     {
-        unsafe extern "C" fn trampoline<F: Callback<timer_event_t>>(
-            args: *mut timer_callback_args_t,
-        ) {
-            unsafe {
-                let this = (*args).p_context.cast::<Gpt<Opened>>();
-                let context = (*this).user_data.cast::<F>();
-                let event = (*args).event;
-
-                debug_assert!(context != ptr::null());
-                F::call(&*context, event);
-            }
-        }
-
-        unsafe {
-            let this = self.get_unchecked_mut();
-            let ctrl = this.ctrl.get();
-
-            this.user_data = ptr::from_ref(context).cast();
-
-            fsp_try_unsafe!(api::R_GPT_CallbackSet(
-                ctrl.cast(),
-                Some(trampoline::<F>),
-                ptr::from_ref(this).cast::<core::ffi::c_void>(),
-                core::ptr::null_mut()
-            ))
-        }
+        IsrPrototype::callback_set_static(self, context)
     }
 }
 
 #[pin_init::pinned_drop]
 impl<S: 'static> PinnedDrop for Gpt<'_, S> {
     fn drop(self: Pin<&mut Self>) {
-        // todo: ensure we did not preempt `trampoline` that was about to use
-        //       `p_context` for stuff.
+        // SAFETY: We can can close of course, and callbacks are fine too
+        // - Non-static callback requires `Pin<&mut Self>`, thus this drop can't overlap.
+        // - Static callback doesn't borrow from `self`
         if self.is_open() {
             fsp_try_unsafe!(R_GPT_Close(self.ctrl_void())).expect("Error closing GPT timer");
         }
@@ -229,7 +301,7 @@ unsafe fn init_open(
     unsafe {
         let this = Gpt {
             user_data: ptr::null(),
-            cycle_end_irq: Some(cfg.cycle_end),
+            cycle_end_irq: cfg.cycle_end,
             capture_a_irq: cfg.extend.capture_a,
             capture_b_irq: cfg.extend.capture_b,
             c_ext_cfg: zeroed(),
