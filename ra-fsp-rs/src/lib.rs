@@ -8,6 +8,7 @@ Rule for callbacks:
 
 */
 
+mod callbacks;
 mod log;
 mod macros;
 mod pacs;
@@ -39,7 +40,7 @@ pub mod systick {
     }
 }
 
-#[cfg(feature = "mod-r_gpt")]
+#[cfg(any(feature = "embassy-time-gpt", feature = "rtic-monotonics-gpt"))]
 mod gpt_clock;
 
 #[cfg(any(feature = "smoltcp-ether"))]
@@ -66,6 +67,7 @@ pub mod embedded_graphics {
 }
 
 pub use {
+    callbacks::{Callback, NopBlock},
     cortex_m,
     pacs::pac,
     pin_init, ra_fsp_sys, ra_fsp_sys as sys,
@@ -88,6 +90,7 @@ pub unsafe trait DynBlock<API: 'static> {
 /// - `API` vtable is exactly the same as provided by FSP for a given HAL block.
 /// - `ctrl` returns a writable pointer to the ctrl block, valid until the `Block` is dropped.
 /// - `instance` retuns a reference to FSP instance with pointers valid as in previous requirement.
+/// - If `Self` is ZST, align must not be equal to 16384 except for `NopBlock`.
 pub unsafe trait Block {
     type Config: 'static;
     type Instance: 'static;
@@ -99,20 +102,6 @@ pub unsafe trait Block {
 
     fn ctrl(&self) -> *mut core::ffi::c_void;
     fn instance(&self) -> &Self::Instance;
-}
-
-pub trait Callback<Event> {
-    fn call(context: &Self, event: Event);
-}
-
-impl<F: Fn(Event), Event> Callback<Event> for F {
-    fn call(context: &F, event: Event) {
-        (context)(event)
-    }
-}
-
-impl<Event> Callback<Event> for () {
-    fn call(_context: &(), _event: Event) {}
 }
 
 unsafe impl<T: Block> DynBlock<T::Api> for T {
