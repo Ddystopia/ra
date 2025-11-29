@@ -45,14 +45,13 @@ pub trait Callback<Event, Block: crate::Block = NopBlock> {
     }
 }
 
-pub(crate) unsafe trait CallbackEvent<E, B: Block = NopBlock>: Copy {
-    fn call_fsp_isr_handler(self);
+pub(crate) unsafe trait CallbackEvent<E>: Block {
     // Would be safe to alias due to ctrl blocks being in UnsafePinned
-    fn context(block: *mut B) -> *mut *const B;
-    fn process_args(args: *mut ()) -> (*mut B, *const (), E);
+    fn context(this: *mut Self) -> *mut *const Self;
+    fn process_args(args: *mut ()) -> (*mut Self, *const (), E);
     fn process_static_args(args: *mut ()) -> (*const (), E);
     fn fsp_callback_set<'a>(
-        block: Pin<&'a mut B>,
+        self: Pin<&'a mut Self>,
         p_callback: unsafe extern "C" fn(*mut ()),
         p_context: *const core::ffi::c_void,
         user_data: *const (),
@@ -64,43 +63,38 @@ pub(crate) unsafe trait CallbackEvent<E, B: Block = NopBlock>: Copy {
     }
 
     #[inline(always)]
-    fn callback_set<'a, F: Callback<E, B>>(block: Pin<&mut B>, context: &'a F) -> Result<()> {
-        unsafe extern "C" fn trampoline<
-            'a,
-            E,
-            B: Block,
-            F: Callback<E, B>,
-            D: CallbackEvent<E, B>,
-        >(
+    fn callback_set<'a, F: Callback<E, Self>>(self: Pin<&mut Self>, context: &'a F) -> Result<()> {
+        unsafe extern "C" fn trampoline<'a, E, B: CallbackEvent<E>, F: Callback<E, B>>(
             args: *mut (),
         ) {
             unsafe {
-                let (block, context, event) = D::process_args(args);
-                if !block.is_null() {
+                let (this, context, event) = B::process_args(args);
+                if !this.is_null() {
                     debug_assert!(!context.is_null());
 
                     let context = &*context.cast::<F>();
-                    let this = Pin::new_unchecked(&mut *block);
+                    let this = Pin::new_unchecked(&mut *this);
                     F::call_with_block(context, this, event);
                 }
             }
         }
 
         Self::fsp_callback_set(
-            block,
-            trampoline::<E, B, F, Self>,
+            self,
+            trampoline::<E, Self, F>,
             core::ptr::null(),
             ptr::from_ref(context).cast(),
         )
     }
 
     #[inline(always)]
-    fn callback_set_static<F: Callback<E>>(block: Pin<&mut B>, context: &'static F) -> Result<()> {
-        unsafe extern "C" fn trampoline<E, B: Block, F: Callback<E>, D: CallbackEvent<E, B>>(
-            args: *mut (),
-        ) {
+    fn callback_set_static<F: Callback<E>>(
+        self: Pin<&mut Self>,
+        context: &'static F,
+    ) -> Result<()> {
+        unsafe extern "C" fn trampoline<E, B: CallbackEvent<E>, F: Callback<E>>(args: *mut ()) {
             unsafe {
-                let (context, event) = D::process_static_args(args);
+                let (context, event) = B::process_static_args(args);
 
                 debug_assert!(!context.is_null());
 
@@ -109,33 +103,32 @@ pub(crate) unsafe trait CallbackEvent<E, B: Block = NopBlock>: Copy {
         }
 
         Self::fsp_callback_set(
-            block,
-            trampoline::<E, B, F, Self>,
+            self,
+            trampoline::<E, Self, F>,
             ptr::from_ref(context).cast(),
             core::ptr::null(),
         )
     }
 
     #[inline(always)]
-    fn handle_isr(self, block: Pin<&mut B>) {
+    fn with_callback_provenance<R>(self: Pin<&mut Self>, f: impl FnOnce() -> R) -> R {
         unsafe {
-            let this = ptr::from_mut(block.get_unchecked_mut());
+            let this = ptr::from_mut(self.get_unchecked_mut());
             let p_context = Self::context(this);
-            // Prevent recursion of `handle_isr`.
-            if !(*p_context).is_null() {
-                return;
-            }
+            let prev_context = *p_context;
 
             // Establish provenance, as `Self` isn't in `UnsafePinned`. Callback may be called.
             *p_context = this;
 
-            // isr gets `p_ctrl` -> gets `p_context` with new provenance -> calls trampoline
+            // isr or something gets `p_ctrl` -> gets `p_context` with new provenance -> calls trampoline
             // which recovers correct `self` -> calls callback.
-            self.call_fsp_isr_handler();
+            let res = f();
 
             // Prevent errors if trampoline gets executed out of this function,
-            // like user manually calling those isr handles.
-            *p_context = ptr::null();
+            // like user manually calling those isr handles. Restore previous provenance.
+            *p_context = prev_context;
+
+            res
         }
     }
 }

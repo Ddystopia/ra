@@ -91,7 +91,7 @@ pub unsafe trait DynBlock<API: 'static> {
 /// - `ctrl` returns a writable pointer to the ctrl block, valid until the `Block` is dropped.
 /// - `instance` retuns a reference to FSP instance with pointers valid as in previous requirement.
 /// - If `Self` is ZST, align must not be equal to 16384 except for `NopBlock`.
-pub unsafe trait Block {
+pub unsafe trait Block: Sized {
     type Config: 'static;
     type Instance: 'static;
     type Api: 'static;

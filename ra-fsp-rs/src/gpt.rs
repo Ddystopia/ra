@@ -185,24 +185,20 @@ impl IsrPrototype {
     }
 }
 
-unsafe impl<'a> crate::callbacks::CallbackEvent<timer_event_t, Gpt<'a, Opened>> for IsrPrototype {
-    fn call_fsp_isr_handler(self) {
-        self.call_fsp_isr_handler()
-    }
-
-    fn context(block: *mut Gpt<'a, Opened>) -> *mut *const Gpt<'a, Opened> {
+unsafe impl<'a> CallbackEvent<timer_event_t> for Gpt<'a, Opened> {
+    fn context(this: *mut Self) -> *mut *const Self {
         unsafe {
-            let ctrl = UnsafePinned::raw_get(&raw const (*block).ctrl);
+            let ctrl = UnsafePinned::raw_get(&raw const (*this).ctrl);
             let context = &raw mut (*ctrl).p_context;
             context.cast()
         }
     }
 
-    fn process_args(args: *mut ()) -> (*mut Gpt<'a, Opened>, *const (), timer_event_t) {
+    fn process_args(args: *mut ()) -> (*mut Self, *const (), timer_event_t) {
         unsafe {
             let args = args.cast::<timer_callback_args_t>();
 
-            let this = (*args).p_context.cast::<Gpt<'a, Opened>>().cast_mut();
+            let this = (*args).p_context.cast::<Self>().cast_mut();
             let event = (*args).event;
             if this.is_null() {
                 (ptr::null_mut(), ptr::null(), event)
@@ -221,13 +217,13 @@ unsafe impl<'a> crate::callbacks::CallbackEvent<timer_event_t, Gpt<'a, Opened>> 
 
     #[inline(always)]
     fn fsp_callback_set<'b>(
-        block: Pin<&'b mut Gpt<'a, Opened>>,
+        self: Pin<&'b mut Self>,
         p_callback: unsafe extern "C" fn(*mut ()),
         p_context: *const core::ffi::c_void,
         user_data: *const (),
     ) -> Result<()> {
         unsafe {
-            let this = block.get_unchecked_mut();
+            let this = self.get_unchecked_mut();
             this.user_data = user_data;
             fsp_try_unsafe!(api::R_GPT_CallbackSet(
                 this.ctrl.get().cast(),
@@ -255,7 +251,7 @@ impl<'a> Gpt<'a, Opened> {
     /// Call this method on interrupt of [`IsrPrototype`] IF you used [`Self::callback_set`]. Else it will do nothing.
     #[inline(always)]
     pub fn handle_isr(self: Pin<&mut Self>, isr_prototype: IsrPrototype) {
-        IsrPrototype::handle_isr(isr_prototype, self)
+        CallbackEvent::with_callback_provenance(self, || isr_prototype.call_fsp_isr_handler());
     }
 
     // May be non-static because calling that callback requires some form of `&mut Self`
@@ -264,7 +260,7 @@ impl<'a> Gpt<'a, Opened> {
     where
         F: Callback<timer_event_t, Self>,
     {
-        IsrPrototype::callback_set(self, context)
+        CallbackEvent::callback_set(self, context)
     }
 
     // Must be static because Gpt might be closed dropped etc during `F`'s call.
@@ -272,7 +268,7 @@ impl<'a> Gpt<'a, Opened> {
     where
         F: Callback<timer_event_t>,
     {
-        IsrPrototype::callback_set_static(self, context)
+        CallbackEvent::callback_set_static(self, context)
     }
 }
 
