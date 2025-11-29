@@ -9,6 +9,7 @@ use core::{
 
 use crate::{
     Block, Callback, Result,
+    callbacks::CallbackEvent,
     ether_phy::EtherPhy,
     fsp_try_unsafe, log,
     pac::{self, Interrupt},
@@ -86,7 +87,7 @@ for the purpous of writing
 */
 
 #[pin_data(PinnedDrop)]
-pub struct Ether<const BUF_SIZE: usize, S: 'static> {
+pub struct Ether<'a, const BUF_SIZE: usize, S: 'static> {
     ctrl: UnsafePinned<ether_instance_ctrl_t>,
     cfg: UnsafePinned<ether_cfg_t>,
     inst: UnsafePinned<ether_instance_t>,
@@ -96,7 +97,7 @@ pub struct Ether<const BUF_SIZE: usize, S: 'static> {
     rx_buffers: &'static mut [Pin<&'static mut Buffer<BUF_SIZE>>],
     tx_taken: u32,
     regs: pac::ETHERC0,
-    _marker: PhantomData<S>,
+    _marker: PhantomData<(S, &'a ())>,
 }
 
 #[repr(C, align(32))]
@@ -137,8 +138,8 @@ pub struct EtherConfig<const BUF_SIZE: usize> {
     pub rx_buffers: &'static mut [Pin<&'static mut Buffer<BUF_SIZE>>],
 }
 
-unsafe impl<const BUF_SIZE: usize, S> Sync for Ether<BUF_SIZE, S> {}
-unsafe impl<const BUF_SIZE: usize, S> Send for Ether<BUF_SIZE, S> {}
+unsafe impl<const BUF_SIZE: usize, S> Sync for Ether<'_, BUF_SIZE, S> {}
+unsafe impl<const BUF_SIZE: usize, S> Send for Ether<'_, BUF_SIZE, S> {}
 unsafe impl<const BUF_SIZE: usize> Sync for Descriptor<BUF_SIZE> {}
 unsafe impl<const BUF_SIZE: usize> Send for Descriptor<BUF_SIZE> {}
 
@@ -155,13 +156,13 @@ const API: ether_api_t = ether_api_t {
     callbackSet: Some(api::R_ETHER_CallbackSet),
 };
 
-unsafe impl<const BUF_SIZE: usize, S> crate::Block for Ether<BUF_SIZE, S> {
+unsafe impl<const BUF_SIZE: usize, S> crate::Block for Ether<'_, BUF_SIZE, S> {
     type Config = ether_cfg_t;
     type Instance = ether_instance_t;
     type Api = ether_api_t;
     type State = S;
 
-    const API: &ether_api_t = &API;
+    const API: &'static ether_api_t = &API;
 
     fn ctrl(&self) -> *mut core::ffi::c_void {
         UnsafePinned::raw_get(&raw const self.ctrl).cast()
@@ -172,7 +173,7 @@ unsafe impl<const BUF_SIZE: usize, S> crate::Block for Ether<BUF_SIZE, S> {
     }
 }
 
-impl<const BUF_SIZE: usize> Ether<BUF_SIZE, Closed> {
+impl<const BUF_SIZE: usize> Ether<'_, BUF_SIZE, Closed> {
     pub const fn new(ether: pac::ETHERC0) -> Self {
         Self {
             regs: ether,
@@ -194,7 +195,7 @@ impl<const BUF_SIZE: usize> Ether<BUF_SIZE, Closed> {
     pub fn open(
         self: Pin<&mut Self>,
         cfg: EtherConfig<BUF_SIZE>,
-    ) -> Result<Pin<&mut Ether<BUF_SIZE, Opened>>> {
+    ) -> Result<Pin<&mut Ether<'_, BUF_SIZE, Opened>>> {
         unsafe {
             let this = ptr::from_mut(self.get_unchecked_mut());
             let regs = ptr::read(&(*this).regs);
@@ -203,17 +204,17 @@ impl<const BUF_SIZE: usize> Ether<BUF_SIZE, Closed> {
                 return Err(e_fsp_err::FSP_ERR_ALREADY_OPEN);
             }
 
-            let this = this.cast::<Ether<BUF_SIZE, Opened>>();
+            let this = this.cast::<Ether<'_, BUF_SIZE, Opened>>();
             init_open(this, regs, cfg)?;
             Ok(Pin::new_unchecked(
-                &mut *this.cast::<Ether<BUF_SIZE, Opened>>(),
+                &mut *this.cast::<Ether<'_, BUF_SIZE, Opened>>(),
             ))
         }
     }
 }
 
 unsafe fn init_open<const BUF_SIZE: usize>(
-    slot: *mut Ether<BUF_SIZE, Opened>,
+    slot: *mut Ether<'_, BUF_SIZE, Opened>,
     gpt: pac::ETHERC0,
     mut cfg: EtherConfig<BUF_SIZE>,
 ) -> Result<()> {
@@ -252,7 +253,7 @@ unsafe fn init_open<const BUF_SIZE: usize>(
 }
 
 #[pin_init::pinned_drop]
-impl<const BUF_SIZE: usize, S: 'static> PinnedDrop for Ether<BUF_SIZE, S> {
+impl<const BUF_SIZE: usize, S: 'static> PinnedDrop for Ether<'_, BUF_SIZE, S> {
     fn drop(self: Pin<&mut Self>) {
         if self.is_open() {
             fsp_try_unsafe!(R_ETHER_Close(self.ctrl_void())).expect("Error closing Ether");
@@ -260,46 +261,91 @@ impl<const BUF_SIZE: usize, S: 'static> PinnedDrop for Ether<BUF_SIZE, S> {
     }
 }
 
-impl<const BUF_SIZE: usize> Ether<BUF_SIZE, Opened> {
+// Todo: I think with frunk I may generalize even this
+
+unsafe impl<'a, const BUF_SIZE: usize> CallbackEvent<InterruptCause>
+    for Ether<'a, BUF_SIZE, Opened>
+{
+    fn context(this: *mut Self) -> *mut *const Self {
+        unsafe {
+            let ctrl = UnsafePinned::raw_get(&raw const (*this).ctrl);
+            let context = &raw mut (*ctrl).p_context;
+            context.cast()
+        }
+    }
+
+    fn process_args(args: *mut ()) -> (*mut Self, *const (), InterruptCause) {
+        unsafe {
+            let args = args.cast::<ether_callback_args_t>();
+
+            let this = (*args).p_context.cast::<Self>().cast_mut();
+            let cause = InterruptCause::from_event(&*args);
+            if this.is_null() {
+                (ptr::null_mut(), ptr::null(), cause)
+            } else {
+                (this, (*this).user_data, cause)
+            }
+        }
+    }
+
+    fn process_static_args(args: *mut ()) -> (*const (), InterruptCause) {
+        unsafe {
+            let args = args.cast::<ether_callback_args_t>();
+            let cause = InterruptCause::from_event(&*args);
+            ((*args).p_context.cast::<()>(), cause)
+        }
+    }
+
+    #[inline(always)]
+    fn fsp_callback_set<'b>(
+        self: Pin<&'b mut Self>,
+        p_callback: unsafe extern "C" fn(*mut ()),
+        p_context: *const core::ffi::c_void,
+        user_data: *const (),
+    ) -> Result<()> {
+        unsafe {
+            let this = self.get_unchecked_mut();
+            this.user_data = user_data;
+            fsp_try_unsafe!(R_ETHER_CallbackSet(
+                this.ctrl.get().cast(),
+                Some(Self::cast_callback(p_callback)),
+                p_context,
+                core::ptr::null_mut(),
+            ))
+        }
+    }
+}
+
+impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
     pub fn new(gpt: pac::ETHERC0, cfg: EtherConfig<BUF_SIZE>) -> impl PinInit<Self, fsp_err_t> {
         unsafe {
-            pin_init_from_closure(|slot: *mut Ether<BUF_SIZE, Opened>| {
-                init_open(slot.cast::<Ether<BUF_SIZE, Opened>>(), gpt, cfg)
+            pin_init_from_closure(|slot: *mut Ether<'a, BUF_SIZE, Opened>| {
+                init_open(slot.cast::<Ether<'a, BUF_SIZE, Opened>>(), gpt, cfg)
             })
         }
     }
 
-    pub fn callback_set<F>(self: Pin<&mut Self>, context: &'static F) -> Result<()>
+    /// Call this method on interrupt of [`IsrPrototype`] IF you used [`Self::callback_set`]. Else it will do nothing.
+    #[inline(always)]
+    pub fn handle_isr(self: Pin<&mut Self>) {
+        CallbackEvent::with_callback_provenance(self, || ether_eint_isr());
+    }
+
+    // May be non-static because calling that callback requires some form of `&mut Self`
+    /// For this callback to be invoked, call [`gpt_counter_overflow_isr`], [`gpt_capture_compare_a_isr`] etc in the interrup handler.
+    pub fn callback_set<F>(self: Pin<&mut Self>, context: &'a F) -> Result<()>
+    where
+        F: Callback<InterruptCause, Self>,
+    {
+        CallbackEvent::callback_set(self, context)
+    }
+
+    // Must be static because Gpt might be closed dropped etc during `F`'s call.
+    pub fn callback_set_static<F>(self: Pin<&mut Self>, context: &'static F) -> Result<()>
     where
         F: Callback<InterruptCause>,
     {
-        unsafe extern "C" fn trampoline<const BUF_SIZE: usize, F: Callback<InterruptCause>>(
-            args: *mut ether_callback_args_t,
-        ) {
-            unsafe {
-                let p_context = (*args).p_context;
-                let this = p_context.cast::<Ether<BUF_SIZE, Opened>>();
-                let context = (*this).user_data.cast::<F>();
-                let cause = InterruptCause::from_event(&*args);
-
-                debug_assert!(context != ptr::null());
-                F::call(&*context, cause);
-            }
-        }
-
-        unsafe {
-            let this = self.get_unchecked_mut();
-            let ctrl = this.ctrl.get();
-
-            this.user_data = ptr::from_ref(context).cast();
-
-            fsp_try_unsafe!(R_ETHER_CallbackSet(
-                ctrl.cast(),
-                Some(trampoline::<BUF_SIZE, F>),
-                ptr::from_ref(this).cast::<core::ffi::c_void>(),
-                core::ptr::null_mut()
-            ))
-        }
+        CallbackEvent::callback_set_static(self, context)
     }
 
     // pub fn close(self: Pin<&mut Self>) -> Result<()> {
@@ -386,10 +432,9 @@ impl<const BUF_SIZE: usize> Ether<BUF_SIZE, Opened> {
         let ptr = buffer.as_ptr().cast_mut();
         fsp_try_unsafe!(R_ETHER_Write(self.ctrl_void(), ptr.cast(), len as u32))
     }
-    pub fn link_process(self: Pin<&mut Self>) -> Result<()> {
-        // todo: setup provenance from self by writing self info context
-        //       and give device to the callback
-        fsp_try_unsafe!(R_ETHER_LinkProcess(self.ctrl_void()))
+    pub fn link_process(mut self: Pin<&mut Self>) -> Result<()> {
+        let ctrl = self.as_mut().ctrl_void();
+        CallbackEvent::with_callback_provenance(self, || fsp_try_unsafe!(R_ETHER_LinkProcess(ctrl)))
     }
     pub fn wake_on_lan_enable(self: Pin<&mut Self>) -> Result<()> {
         fsp_try_unsafe!(R_ETHER_WakeOnLANEnable(self.ctrl_void()))
@@ -482,7 +527,7 @@ impl<const BUF_SIZE: usize> Ether<BUF_SIZE, Opened> {
     }
 }
 
-impl<const BUF_SIZE: usize, S> Ether<BUF_SIZE, S> {
+impl<const BUF_SIZE: usize, S> Ether<'_, BUF_SIZE, S> {
     #[inline(always)]
     const fn ctrl_void(self: Pin<&mut Self>) -> *mut core::ffi::c_void {
         unsafe { self.get_unchecked_mut().ctrl().cast() }

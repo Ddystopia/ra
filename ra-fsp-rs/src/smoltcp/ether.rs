@@ -11,24 +11,24 @@ use {
 };
 
 pub struct Dev<const MTU: usize> {
-    eth: RefCell<Pin<&'static mut Ether<MTU, Opened>>>,
+    eth: RefCell<Pin<&'static mut Ether<'static, MTU, Opened>>>,
     capabilities: DeviceCapabilities,
 }
 
 pub struct EthernetRxToken<'a, const MTU: usize>(
     Option<Pin<&'static mut Buffer<MTU>>>,
     usize,
-    &'a RefCell<Pin<&'static mut Ether<MTU, Opened>>>,
+    &'a RefCell<Pin<&'static mut Ether<'static, MTU, Opened>>>,
 );
 
 pub struct EthernetTxToken<'a, const MTU: usize>(
     Option<Pin<&'static mut Buffer<MTU>>>,
-    &'a RefCell<Pin<&'static mut Ether<MTU, Opened>>>,
+    &'a RefCell<Pin<&'static mut Ether<'static, MTU, Opened>>>,
 );
 
 impl<const MTU: usize> Dev<MTU> {
     pub fn new(
-        eth: Pin<&'static mut Ether<MTU, Opened>>,
+        eth: Pin<&'static mut Ether<'static, MTU, Opened>>,
         capabilities: DeviceCapabilities,
     ) -> Self {
         assert!(
@@ -42,7 +42,7 @@ impl<const MTU: usize> Dev<MTU> {
         }
     }
 
-    pub fn eth(&mut self) -> Pin<&mut Ether<MTU, Opened>> {
+    pub fn eth(&mut self) -> Pin<&mut Ether<'static, MTU, Opened>> {
         self.eth.get_mut().as_mut()
     }
 
