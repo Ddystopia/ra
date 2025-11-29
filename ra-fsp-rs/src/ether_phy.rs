@@ -1,5 +1,6 @@
 #![allow(non_upper_case_globals)]
 #![allow(unused_imports)]
+#![allow(dead_code)] // pin-init pr
 
 use core::{marker::PhantomData, pin::Pin, ptr};
 use pin_init::{PinInit, pin_data, pin_init_from_closure};

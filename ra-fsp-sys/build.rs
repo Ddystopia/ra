@@ -174,6 +174,7 @@ fn main() {
         let objects = build
             .includes(&include_dirs)
             .define(&bsp_mcu_group, Some("1"))
+            // .flag("-fno-short-enums")
             .compile_intermediates();
 
         pre_link_archive("fsp_prelinked", objects);
@@ -288,6 +289,7 @@ fn main() {
         .rustified_enum(&format!("e_elc_event_{mcu_group}"))
         .allowlist_item("BSP_.*")
         .allowlist_item("R_BSP_.*")
+        .allowlist_item("R_FSP_.*")
         .allowlist_item("FSP_.*")
         // -
         ;

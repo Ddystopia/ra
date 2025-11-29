@@ -47,3 +47,24 @@ pub(crate) fn try_read_priority_into(interrupt: impl Into<Option<pac::Interrupt>
         *place = read_fsp_priority(int)
     }
 }
+
+// Manually rewritten from `R_FSP_CurrentIrqGet` in `bsp_common.c` - this is a
+// static inline function there.
+#[allow(dead_code)]
+#[inline(always)]
+pub(crate) fn current_irq_get() -> Option<pac::Interrupt> {
+    #[inline(always)]
+    pub unsafe fn __get_xpsr() -> u32 {
+        let r;
+        unsafe {
+            core::arch::asm!("mrs {}, xpsr", out(reg) r, options(nomem, nostack, preserves_flags));
+        }
+        r
+    }
+
+    let xpsr_value = unsafe { __get_xpsr() };
+    let isr = xpsr_value & 0x1FF;
+    let irq = isr.wrapping_sub(ra_fsp_sys::generated::FSP_PRIV_CORTEX_PROCESSOR_EXCEPTIONS);
+
+    pac::Interrupt::try_from_u16(irq as u16)
+}
