@@ -20,8 +20,8 @@ use crate::{
 
 use pin_init::{PinInit, pin_data, pin_init_from_closure};
 
+use ra_fsp_sys::generated as api;
 pub use ra_fsp_sys::generated::{
-    self as api,
     ETHER_CFG_PARAM_CHECKING_ENABLE,
     e_ether_event::{ETHER_EVENT_INTERRUPT, ETHER_EVENT_LINK_OFF, ETHER_EVENT_LINK_ON},
     e_ether_link_establish_status::ETHER_LINK_ESTABLISH_STATUS_UP,
