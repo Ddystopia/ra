@@ -30,7 +30,7 @@ pub trait Callback<Event, Block: crate::Block = NopBlock> {
         const {
             assert!(
                 size_of::<Block>() == 0 && align_of::<Block>() == 16384,
-                "Either `Block` must be `NopBlock` or override `Callback::call`"
+                "You can't call `call`, use `call_with_block`. Either `Block` must be `NopBlock` or override `Callback::call`"
             );
         }
 
