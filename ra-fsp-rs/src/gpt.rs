@@ -29,6 +29,8 @@ use crate::{
     utils,
 };
 
+pub use channel::*;
+
 // todo: maybe assert that IRQ that was passed there is having this handler?
 //       like, so that this is not RTIC.
 //       But there are several gpts, so there may be several handlers, and each
@@ -48,24 +50,40 @@ unsafe extern "C" {
     pub safe fn gpt_capture_compare_b_isr();
 }
 
-pub enum GptRegister {
-    GPT32EH0(pac::GPT32EH0),
-    GPT32EH1(pac::GPT32EH1),
-    GPT32EH2(pac::GPT32EH2),
-    GPT32EH3(pac::GPT32EH3),
+pub mod channel {
+    #![allow(warnings)]
+    use crate::pac;
 
-    GPT32E4(pac::GPT32E4),
-    GPT32E5(pac::GPT32E5),
-    GPT32E6(pac::GPT32E6),
-    GPT32E7(pac::GPT32E7),
+    pub trait Channel {
+        const N: usize;
 
-    GPT328(pac::GPT328),
-    GPT329(pac::GPT329),
+        type Periph;
+    }
 
-    GPT3210(pac::GPT3210),
-    GPT3211(pac::GPT3211),
-    GPT3212(pac::GPT3212),
-    GPT3213(pac::GPT3213),
+    macro_rules! ch {
+        ($name: ident, $n: literal, $periph: ident) => {
+            pub struct $name;
+            impl Channel for $name {
+                const N: usize = $n;
+                type Periph = pac::$periph;
+            }
+        };
+    }
+
+    ch!(Channel0, 0, GPT32EH0);
+    ch!(Channel1, 1, GPT32EH1);
+    ch!(Channel2, 2, GPT32EH2);
+    ch!(Channel3, 3, GPT32EH3);
+    ch!(Channel4, 4, GPT32E4);
+    ch!(Channel5, 5, GPT32E5);
+    ch!(Channel6, 6, GPT32E6);
+    ch!(Channel7, 7, GPT32E7);
+    ch!(Channel8, 8, GPT328);
+    ch!(Channel9, 9, GPT329);
+    ch!(Channel10, 10, GPT3210);
+    ch!(Channel11, 11, GPT3211);
+    ch!(Channel12, 12, GPT3212);
+    ch!(Channel13, 13, GPT3213);
 }
 
 /* todo:
@@ -86,7 +104,7 @@ Need some kind of Pin<Box<Gpt>> instead of Pin<&mut Gpt>
 */
 
 #[allow(dead_code)]
-pub struct GptHandle<'a, 'f, State: 'static>(Pin<&'a mut Gpt<'f, State>>);
+pub struct GptHandle<'a, 'f, C: Channel, State: 'static>(Pin<&'a mut Gpt<'f, C, State>>);
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IsrPrototype {
@@ -99,7 +117,7 @@ pub enum IsrPrototype {
 
 #[repr(C)] // `#[repr(C)]` is for `GptInstance::<Closed>::open`
 #[pin_data(PinnedDrop)]
-pub struct Gpt<'a, State: 'static> {
+pub struct Gpt<'a, C: Channel, State: 'static> {
     user_data: *const (),
     cycle_end_irq: Option<pac::Interrupt>,
     capture_a_irq: Option<pac::Interrupt>,
@@ -108,7 +126,7 @@ pub struct Gpt<'a, State: 'static> {
     ctrl: UnsafePinned<gpt_instance_ctrl_t>,
     cfg: UnsafePinned<timer_cfg_t>,
     inst: UnsafePinned<timer_instance_t>,
-    regs: GptRegister,
+    regs: C::Periph,
     _marker: core::marker::PhantomData<(State, &'a ())>,
 }
 
@@ -154,7 +172,7 @@ const API: timer_api_t = timer_api_t {
     close: Some(api::R_GPT_Close),
 };
 
-unsafe impl<S> Block for Gpt<'_, S> {
+unsafe impl<C: Channel, S> Block for Gpt<'_, C, S> {
     type Config = timer_cfg_t;
     type Instance = timer_instance_t;
     type Api = timer_api_t;
@@ -171,8 +189,8 @@ unsafe impl<S> Block for Gpt<'_, S> {
     }
 }
 
-unsafe impl<S> Send for Gpt<'_, S> {}
-unsafe impl<S> Sync for Gpt<'_, S> {}
+unsafe impl<C: Channel, S> Send for Gpt<'_, C, S> {}
+unsafe impl<C: Channel, S> Sync for Gpt<'_, C, S> {}
 
 impl IsrPrototype {
     pub fn call_fsp_isr_handler(self) {
@@ -185,7 +203,7 @@ impl IsrPrototype {
     }
 }
 
-unsafe impl<'a> CallbackEvent<timer_event_t> for Gpt<'a, Opened> {
+unsafe impl<'a, C: Channel> CallbackEvent<timer_event_t> for Gpt<'a, C, Opened> {
     fn context(this: *mut Self) -> *mut *const Self {
         unsafe {
             let ctrl = UnsafePinned::raw_get(&raw const (*this).ctrl);
@@ -235,15 +253,13 @@ unsafe impl<'a> CallbackEvent<timer_event_t> for Gpt<'a, Opened> {
     }
 }
 
-impl<'a> Gpt<'a, Opened> {
+impl<'a, C: Channel> Gpt<'a, C, Opened> {
     pub fn new_open(
-        gpt: GptRegister,
+        gpt: C::Periph,
         cfg: TimerConf<GptExtendedConfig>,
-    ) -> impl PinInit<Gpt<'a, Opened>, fsp_err_t> {
+    ) -> impl PinInit<Gpt<'a, C, Opened>, fsp_err_t> {
         unsafe {
-            pin_init_from_closure(|slot: *mut Gpt<'a, Opened>| {
-                init_open(slot.cast::<Gpt<'a, Opened>>(), gpt, cfg)
-            })
+            pin_init_from_closure(|slot: *mut Self| init_open::<C>(slot.cast::<Self>(), gpt, cfg))
         }
     }
 
@@ -273,7 +289,7 @@ impl<'a> Gpt<'a, Opened> {
 }
 
 #[pin_init::pinned_drop]
-impl<S: 'static> PinnedDrop for Gpt<'_, S> {
+impl<C: Channel, S: 'static> PinnedDrop for Gpt<'_, C, S> {
     fn drop(self: Pin<&mut Self>) {
         // SAFETY: We can can close of course, and callbacks are fine too
         // - Non-static callback requires `Pin<&mut Self>`, thus this drop can't overlap.
@@ -284,12 +300,12 @@ impl<S: 'static> PinnedDrop for Gpt<'_, S> {
     }
 }
 
-unsafe fn init_open(
-    slot: *mut Gpt<'_, Opened>,
-    gpt: GptRegister,
+unsafe fn init_open<C: Channel>(
+    slot: *mut Gpt<'_, C, Opened>,
+    gpt: C::Periph,
     mut cfg: TimerConf<GptExtendedConfig>,
 ) -> Result<()> {
-    if cfg.channel != gpt.channel() {
+    if cfg.channel as usize != C::N {
         log::error!("GPT: channel mismatch");
         return Err(e_fsp_err::FSP_ERR_ASSERTION);
     }
@@ -346,8 +362,8 @@ unsafe fn init_open(
     }
 }
 
-impl<'f> Gpt<'f, Closed> {
-    pub fn new(regs: GptRegister) -> Self {
+impl<'f, C: Channel> Gpt<'f, C, Closed> {
+    pub fn new(regs: C::Periph) -> Self {
         Self {
             user_data: ptr::null_mut(),
             regs,
@@ -364,7 +380,7 @@ impl<'f> Gpt<'f, Closed> {
     pub fn open(
         self: Pin<&mut Self>,
         cfg: TimerConf<GptExtendedConfig>,
-    ) -> Result<Pin<&mut Gpt<'f, Opened>>> {
+    ) -> Result<Pin<&mut Gpt<'f, C, Opened>>> {
         unsafe {
             let this = ptr::from_mut(self.get_unchecked_mut());
             let regs = ptr::read(&(*this).regs);
@@ -373,14 +389,14 @@ impl<'f> Gpt<'f, Closed> {
                 return Err(e_fsp_err::FSP_ERR_ALREADY_OPEN);
             }
 
-            let this = this.cast::<Gpt<Opened>>();
-            init_open(this, regs, cfg)?;
+            let this = this.cast::<Gpt<C, Opened>>();
+            init_open::<C>(this, regs, cfg)?;
             Ok(Pin::new_unchecked(&mut *this))
         }
     }
 }
 
-impl<S> Gpt<'_, S> {
+impl<C: Channel, S> Gpt<'_, C, S> {
     pub fn is_open(&self) -> bool {
         unsafe { (*self.ctrl.get()).open != 0 }
     }
@@ -416,7 +432,7 @@ impl<S> Gpt<'_, S> {
     }
 
     #[inline(always)]
-    pub const fn regs_full(&self) -> &GptRegister {
+    pub const fn regs(&self) -> &C::Periph {
         &self.regs
     }
 }
@@ -443,27 +459,6 @@ impl GptExtendedConfig {
             compare_match_status: self.compare_match_status,
             p_pwm_cfg: ptr::null(),
             gtior_setting: self.gtior_setting,
-        }
-    }
-}
-
-impl GptRegister {
-    pub const fn channel(&self) -> u8 {
-        match self {
-            GptRegister::GPT32EH0(_) => 0,
-            GptRegister::GPT32EH1(_) => 1,
-            GptRegister::GPT32EH2(_) => 2,
-            GptRegister::GPT32EH3(_) => 3,
-            GptRegister::GPT32E4(_) => 4,
-            GptRegister::GPT32E5(_) => 5,
-            GptRegister::GPT32E6(_) => 6,
-            GptRegister::GPT32E7(_) => 7,
-            GptRegister::GPT328(_) => 8,
-            GptRegister::GPT329(_) => 9,
-            GptRegister::GPT3210(_) => 10,
-            GptRegister::GPT3211(_) => 11,
-            GptRegister::GPT3212(_) => 12,
-            GptRegister::GPT3213(_) => 13,
         }
     }
 }
