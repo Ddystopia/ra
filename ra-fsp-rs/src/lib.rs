@@ -19,6 +19,8 @@ pub mod state_markers {
     pub struct Opened {}
 }
 
+pub mod icu;
+
 #[cfg(feature = "mod-r_display_api")]
 pub mod display_api;
 #[cfg(feature = "mod-r_ether")]
