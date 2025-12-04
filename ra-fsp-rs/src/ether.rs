@@ -352,6 +352,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
     //     fsp_try_unsafe!(R_ETHER_Close(self.ctrl_void()))
     // }
 
+    #[inline(always)]
     pub fn read_zerocopy(
         self: Pin<&mut Self>,
     ) -> Result<(Pin<&'static mut Buffer<BUF_SIZE>>, usize)> {
@@ -376,6 +377,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
 
         Ok((unsafe { Pin::new_unchecked(&mut *p_buf) }, len as usize))
     }
+    #[inline(always)]
     pub fn read_non_zerocopy(self: Pin<&mut Self>, buffer: &mut [u8]) -> Result<usize> {
         let zerocopy = unsafe { (*(*self.as_ref().get_ref().ctrl.get()).p_ether_cfg).zerocopy };
         if zerocopy != ETHER_ZEROCOPY_DISABLE {
@@ -389,6 +391,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
 
         Ok(len as usize)
     }
+    #[inline(always)]
     pub fn rx_buffer_update(
         self: Pin<&mut Self>,
         buffer: Pin<&'static mut Buffer<BUF_SIZE>>,
@@ -397,6 +400,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
 
         fsp_try_unsafe!(R_ETHER_RxBufferUpdate(self.ctrl_void(), ptr.cast()))
     }
+    #[inline(always)]
     pub fn write_zerocopy(
         mut self: Pin<&mut Self>,
         buffer: Pin<&'static mut Buffer<BUF_SIZE>>,
@@ -422,6 +426,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
             }
         }
     }
+    #[inline(always)]
     pub fn write_non_zerocopy(self: Pin<&mut Self>, buffer: &[u8]) -> Result<()> {
         let zerocopy = unsafe { (*(*self.as_ref().get_ref().ctrl.get()).p_ether_cfg).zerocopy };
         if zerocopy != ETHER_ZEROCOPY_DISABLE {
@@ -432,13 +437,16 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
         let ptr = buffer.as_ptr().cast_mut();
         fsp_try_unsafe!(R_ETHER_Write(self.ctrl_void(), ptr.cast(), len as u32))
     }
+    #[inline(always)]
     pub fn link_process(mut self: Pin<&mut Self>) -> Result<()> {
         let ctrl = self.as_mut().ctrl_void();
         CallbackEvent::with_callback_provenance(self, || fsp_try_unsafe!(R_ETHER_LinkProcess(ctrl)))
     }
+    #[inline(always)]
     pub fn wake_on_lan_enable(self: Pin<&mut Self>) -> Result<()> {
         fsp_try_unsafe!(R_ETHER_WakeOnLANEnable(self.ctrl_void()))
     }
+    #[inline(always)]
     pub fn tx_status_get(self: Pin<&mut Self>) -> Result<()> {
         let mut ptr: *mut Buffer<BUF_SIZE> = ptr::null_mut();
         fsp_try_unsafe!(R_ETHER_TxStatusGet(
@@ -455,6 +463,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
     /// Descriptor is not moved. Note that the only way to move the descriptor is to transmit the message.
     ///
     /// If you want to put it back, use [`Self::tx_buffer_update`].
+    #[inline(always)]
     pub fn take_tx_buf(self: Pin<&mut Self>) -> Option<Pin<&'static mut Buffer<BUF_SIZE>>> {
         unsafe {
             let this = self.get_unchecked_mut();
@@ -485,6 +494,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
         }
     }
 
+    #[inline(always)]
     pub fn update_rx_buffers(self: Pin<&mut Self>, cause: InterruptCause) {
         if !cause.went_up {
             return;
@@ -502,6 +512,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
         }
     }
 
+    #[inline(always)]
     pub fn update_tx_buffers(self: Pin<&mut Self>, cause: InterruptCause) {
         if !cause.transmits {
             return;
@@ -512,6 +523,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
         // log::info!("Update TX buffers");
     }
 
+    #[inline(always)]
     pub fn tx_buffer_update(
         self: Pin<&mut Self>,
         buffer: Pin<&'static mut Buffer<BUF_SIZE>>,
