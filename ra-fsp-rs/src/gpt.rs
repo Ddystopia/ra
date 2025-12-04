@@ -50,40 +50,50 @@ unsafe extern "C" {
     pub safe fn gpt_capture_compare_b_isr();
 }
 
+// Todo: autogenerate stuff like this
 pub mod channel {
     #![allow(warnings)]
     use crate::pac;
 
-    pub trait Channel {
+    pub trait Channel: Send + Sync {
         const N: usize;
-
-        type Periph;
+        fn gtcnt() -> u32;
     }
 
     macro_rules! ch {
-        ($name: ident, $n: literal, $periph: ident) => {
-            pub struct $name;
-            impl Channel for $name {
+        ($periph: ident, $n: literal) => {
+            pub struct $periph;
+            impl Channel for $periph {
                 const N: usize = $n;
-                type Periph = pac::$periph;
+                fn gtcnt() -> u32 {
+                    let gpt = unsafe { $crate::pac::$periph::steal() };
+                    gpt.gtcnt().read().bits()
+                }
+            }
+            impl Channel for &mut $periph {
+                const N: usize = $n;
+                fn gtcnt() -> u32 {
+                    let gpt = unsafe { $crate::pac::$periph::steal() };
+                    gpt.gtcnt().read().bits()
+                }
             }
         };
     }
 
-    ch!(Channel0, 0, GPT32EH0);
-    ch!(Channel1, 1, GPT32EH1);
-    ch!(Channel2, 2, GPT32EH2);
-    ch!(Channel3, 3, GPT32EH3);
-    ch!(Channel4, 4, GPT32E4);
-    ch!(Channel5, 5, GPT32E5);
-    ch!(Channel6, 6, GPT32E6);
-    ch!(Channel7, 7, GPT32E7);
-    ch!(Channel8, 8, GPT328);
-    ch!(Channel9, 9, GPT329);
-    ch!(Channel10, 10, GPT3210);
-    ch!(Channel11, 11, GPT3211);
-    ch!(Channel12, 12, GPT3212);
-    ch!(Channel13, 13, GPT3213);
+    ch!(GPT32EH0, 0);
+    ch!(GPT32EH1, 1);
+    ch!(GPT32EH2, 2);
+    ch!(GPT32EH3, 3);
+    ch!(GPT32E4, 4);
+    ch!(GPT32E5, 5);
+    ch!(GPT32E6, 6);
+    ch!(GPT32E7, 7);
+    ch!(GPT328, 8);
+    ch!(GPT329, 9);
+    ch!(GPT3210, 10);
+    ch!(GPT3211, 11);
+    ch!(GPT3212, 12);
+    ch!(GPT3213, 13);
 }
 
 /* todo:
@@ -117,7 +127,7 @@ pub enum IsrPrototype {
 
 #[repr(C)] // `#[repr(C)]` is for `GptInstance::<Closed>::open`
 #[pin_data(PinnedDrop)]
-pub struct Gpt<'a, C: Channel, State: 'static> {
+pub struct Gpt<'a, C, State: 'static> {
     user_data: *const (),
     cycle_end_irq: Option<pac::Interrupt>,
     capture_a_irq: Option<pac::Interrupt>,
@@ -126,7 +136,7 @@ pub struct Gpt<'a, C: Channel, State: 'static> {
     ctrl: UnsafePinned<gpt_instance_ctrl_t>,
     cfg: UnsafePinned<timer_cfg_t>,
     inst: UnsafePinned<timer_instance_t>,
-    regs: C::Periph,
+    regs: C,
     _marker: core::marker::PhantomData<(State, &'a ())>,
 }
 
@@ -189,8 +199,8 @@ unsafe impl<C: Channel, S> Block for Gpt<'_, C, S> {
     }
 }
 
-unsafe impl<C: Channel, S> Send for Gpt<'_, C, S> {}
-unsafe impl<C: Channel, S> Sync for Gpt<'_, C, S> {}
+unsafe impl<C, S> Send for Gpt<'_, C, S> {}
+unsafe impl<C, S> Sync for Gpt<'_, C, S> {}
 
 impl IsrPrototype {
     pub fn call_fsp_isr_handler(self) {
@@ -255,7 +265,7 @@ unsafe impl<'a, C: Channel> CallbackEvent<timer_event_t> for Gpt<'a, C, Opened> 
 
 impl<'a, C: Channel> Gpt<'a, C, Opened> {
     pub fn new_open(
-        gpt: C::Periph,
+        gpt: C,
         cfg: TimerConf<GptExtendedConfig>,
     ) -> impl PinInit<Gpt<'a, C, Opened>, fsp_err_t> {
         unsafe {
@@ -289,7 +299,7 @@ impl<'a, C: Channel> Gpt<'a, C, Opened> {
 }
 
 #[pin_init::pinned_drop]
-impl<C: Channel, S: 'static> PinnedDrop for Gpt<'_, C, S> {
+impl<C, S: 'static> PinnedDrop for Gpt<'_, C, S> {
     fn drop(self: Pin<&mut Self>) {
         // SAFETY: We can can close of course, and callbacks are fine too
         // - Non-static callback requires `Pin<&mut Self>`, thus this drop can't overlap.
@@ -302,7 +312,7 @@ impl<C: Channel, S: 'static> PinnedDrop for Gpt<'_, C, S> {
 
 unsafe fn init_open<C: Channel>(
     slot: *mut Gpt<'_, C, Opened>,
-    gpt: C::Periph,
+    gpt: C,
     mut cfg: TimerConf<GptExtendedConfig>,
 ) -> Result<()> {
     if cfg.channel as usize != C::N {
@@ -363,7 +373,7 @@ unsafe fn init_open<C: Channel>(
 }
 
 impl<'f, C: Channel> Gpt<'f, C, Closed> {
-    pub fn new(regs: C::Periph) -> Self {
+    pub fn new(regs: C) -> Self {
         Self {
             user_data: ptr::null_mut(),
             regs,
@@ -396,7 +406,7 @@ impl<'f, C: Channel> Gpt<'f, C, Closed> {
     }
 }
 
-impl<C: Channel, S> Gpt<'_, C, S> {
+impl<C, S> Gpt<'_, C, S> {
     pub fn is_open(&self) -> bool {
         unsafe { (*self.ctrl.get()).open != 0 }
     }
@@ -432,7 +442,7 @@ impl<C: Channel, S> Gpt<'_, C, S> {
     }
 
     #[inline(always)]
-    pub const fn regs(&self) -> &C::Periph {
+    pub const fn regs(&self) -> &C {
         &self.regs
     }
 }

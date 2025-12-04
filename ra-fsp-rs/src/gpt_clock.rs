@@ -8,7 +8,13 @@ use atomic_once_cell::AtomicOnceCell;
 use cortex_m::peripheral::NVIC;
 use critical_section::{CriticalSection, Mutex};
 
-use crate::{Callback, Result, gpt::Gpt, pac, state_markers::Opened, timer_api::TimerApi};
+use crate::{
+    Callback, Result,
+    gpt::{Channel, Gpt},
+    pac,
+    state_markers::Opened,
+    timer_api::TimerApi,
+};
 
 #[allow(unused_imports)]
 use ra_fsp_sys::generated::R_GPT0_Type;
@@ -35,40 +41,32 @@ fn calc_now(period: u32, counter: u32) -> u64 {
     ((period as u64) << 31) + ((counter ^ ((period & 1) << 31)) as u64)
 }
 
-pub trait Storage: Default + 'static {
-    fn driver() -> &'static GptTimerDriver<Self>;
-}
-
 pub struct AlarmState {
     pub timestamp: Cell<u64>,
 }
 
-pub struct TimerState<Ext> {
+pub struct TimerState<C> {
     /// number of 2^32 periods elapsed since boot
-    pub period: AtomicU32,
-    // gtcnt: *mut u32,
-    pub gtcnt: &'static pac::gpt328::GTCNT,
-    pub alarm: Mutex<AlarmState>,
-    pub capture_a_irq: pac::Interrupt,
-    pub capture_b_irq: pac::Interrupt,
-
-    // pub queue: Mutex<RefCell<Queue>>,
-    pub ext: Ext,
+    period: AtomicU32,
+    alarm: Mutex<AlarmState>,
+    capture_a_irq: pac::Interrupt,
+    capture_b_irq: pac::Interrupt,
+    _marker: core::marker::PhantomData<C>,
 }
 
-pub struct GptTimerDriver<Ext: 'static> {
-    pub gpt: Mutex<RefCell<Option<Pin<&'static mut Gpt<'static, Opened>>>>>,
-    pub timer_state: AtomicOnceCell<TimerState<Ext>>,
+pub struct GptTimerStorage<C: 'static> {
+    pub gpt: Mutex<RefCell<Option<Pin<&'static mut Gpt<'static, C, Opened>>>>>,
+    pub timer_state: AtomicOnceCell<TimerState<C>>,
 }
 
-// For the register inside
-unsafe impl<E: Send> Send for GptTimerDriver<E> {}
-unsafe impl<E: Sync> Sync for GptTimerDriver<E> {}
+pub trait Storage<C: 'static> {
+    fn storage(&'static self) -> &'static GptTimerStorage<C>;
+}
 
-pub fn start<Ext: Storage>(gpt: Pin<&'static mut Gpt<'static, Opened>>) -> Result<()>
-where
-    TimerState<Ext>: Callback<timer_event_t>,
-{
+pub fn start<C: Channel + 'static, Cb: Callback<timer_event_t> + Storage<C>>(
+    gpt: Pin<&'static mut Gpt<'static, C, Opened>>,
+    callback: &'static Cb,
+) -> Result<()> {
     if gpt.capture_a_irq().is_none() {
         log::error!("cycle_end_irq invalid");
 
@@ -81,34 +79,29 @@ where
         return Err(e_fsp_err::FSP_ERR_INVALID_ARGUMENT);
     };
 
-    // let regs = gpt.c_regs();
-    let regs = gpt.regs_ptr();
+    let storage = callback.storage();
 
-    let result = Ext::driver().timer_state.set(TimerState {
-        // gtcnt: unsafe { &raw mut (*regs).__bindgen_anon_19.GTCNT },
-        gtcnt: unsafe { (*regs).gtcnt() },
+    if let Err(_) = storage.timer_state.set(TimerState {
         capture_a_irq,
         capture_b_irq,
         period: AtomicU32::new(0),
         alarm: Mutex::new(AlarmState::new()),
-        // queue: Mutex::new(RefCell::new(Queue::new())),
-        ext: Default::default(),
-    });
-
-    if result.is_err() {
-        return Err(ra_fsp_sys::generated::e_fsp_err::FSP_ERR_ALREADY_OPEN);
+        _marker: core::marker::PhantomData,
+    }) {
+        log::error!("Embassy GPT Timer already started");
+        return Err(e_fsp_err::FSP_ERR_ALREADY_OPEN);
     }
 
-    let timer_state = Ext::driver().timer_state.get().unwrap();
+    let timer_state = &storage.timer_state.get().unwrap();
 
     let channel = e_timer_compare_match::TIMER_COMPARE_MATCH_A;
     let capture_a_irq = timer_state.capture_a_irq;
     let capture_b_irq = timer_state.capture_b_irq;
 
     critical_section::with(|cs| {
-        *Ext::driver().gpt.borrow_ref_mut(cs) = Some(gpt);
+        *storage.gpt.borrow_ref_mut(cs) = Some(gpt);
 
-        let mut borrow = Ext::driver().gpt.borrow_ref_mut(cs);
+        let mut borrow = storage.gpt.borrow_ref_mut(cs);
         let mut gpt = borrow.as_mut().unwrap().as_mut();
 
         timer_state.mask_a();
@@ -120,7 +113,7 @@ where
         gpt.as_mut().stop()?;
         gpt.as_mut().reset()?;
         gpt.as_mut().compare_match_set(0x80000000, channel)?;
-        gpt.as_mut().callback_set(timer_state)?;
+        gpt.as_mut().callback_set_static(callback)?;
 
         NVIC::unpend(capture_a_irq);
         timer_state.unmask_a();
@@ -131,7 +124,20 @@ where
     })
 }
 
-impl<E> TimerState<E> {
+pub trait TimerStateExt<C> {
+    fn must_get(&self) -> &TimerState<C>;
+}
+
+impl<C> TimerStateExt<C> for AtomicOnceCell<TimerState<C>> {
+    fn must_get(&self) -> &TimerState<C> {
+        match self.get() {
+            Some(state) => state,
+            None => panic!("GPT TimerState not initialized"),
+        }
+    }
+}
+
+impl<C: Channel> TimerState<C> {
     /// Dianables capture a interrupt
     pub fn mask_a(&self) {
         NVIC::mask(self.capture_a_irq)
@@ -155,8 +161,7 @@ impl<E> TimerState<E> {
     pub fn now(&self) -> u64 {
         let period = self.period.load(atomic::Ordering::Relaxed);
         compiler_fence(atomic::Ordering::Acquire);
-        // let counter = unsafe { self.gtcnt.read_volatile() };
-        let counter = self.gtcnt.read().bits();
+        let counter = C::gtcnt();
         calc_now(period, counter)
     }
 
@@ -238,7 +243,7 @@ impl<E> TimerState<E> {
     }
 }
 
-impl<E> GptTimerDriver<E> {
+impl<C: 'static> GptTimerStorage<C> {
     pub const fn new() -> Self {
         Self {
             gpt: Mutex::new(RefCell::new(None)),
