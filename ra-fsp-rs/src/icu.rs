@@ -4,11 +4,11 @@ use cortex_m::peripheral::NVIC;
 
 #[inline(always)]
 pub fn irq_status_clear(irq: crate::pac::Interrupt) {
-    let icu = unsafe { crate::pac::ICU::steal() };
-    icu.ielsr(irq as u16 as usize).write(|w| w.ir().clear_bit());
-    _ = icu.ielsr(irq as u16 as usize).read();
+    // let icu = unsafe { crate::pac::ICU::steal() };
+    // icu.ielsr(irq as u16 as usize).write(|w| w.ir().clear_bit());
+    // _ = icu.ielsr(irq as u16 as usize).read();
 
-    // unsafe { ra_fsp_sys::generated::R_BSP_IrqStatusClear(irq as u16 as i32) }
+    unsafe { ra_fsp_sys::generated::R_BSP_IrqStatusClear(irq as u16 as i32) }
 }
 
 #[inline(always)]
