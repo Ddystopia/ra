@@ -38,6 +38,9 @@ pub struct DriverBox<T>(NonNull<T>);
 /// and returns `Result<DriverBox<Driver<Opened>>, DriverBox<Driver<Closed>>>`.
 pub struct DriverPlace<T>(StaticCell<T>);
 
+unsafe impl<T: Send> Send for DriverBox<T> {}
+unsafe impl<T: Sync> Sync for DriverBox<T> {}
+
 impl<T: LifetimeDriver> DriverBox<T> {
     #[inline]
     #[must_use]
@@ -99,7 +102,7 @@ impl<T: LifetimeDriver> DriverPlace<T> {
     /// It can be initialized at runtime with [`DriverPlace::init()`] or similar methods.
     #[inline]
     #[must_use]
-    pub const fn new() -> DriverPlace<T::Target<'static>> {
+    pub const fn new() -> DriverPlace<T> {
         DriverPlace(StaticCell::new())
     }
 
