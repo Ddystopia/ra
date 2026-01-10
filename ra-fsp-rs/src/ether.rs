@@ -18,7 +18,7 @@ use crate::{
     utils::{self},
 };
 
-use pin_init::{PinInit, pin_data, pin_init_from_closure};
+use crate::pin_init::{PinInit, pin_data, pin_init_from_closure, pinned_drop};
 
 use ra_fsp_sys::generated as api;
 pub use ra_fsp_sys::generated::{
@@ -252,7 +252,7 @@ unsafe fn init_open<const BUF_SIZE: usize>(
     }
 }
 
-#[pin_init::pinned_drop]
+#[pinned_drop]
 impl<const BUF_SIZE: usize, S: 'static> PinnedDrop for Ether<'_, BUF_SIZE, S> {
     fn drop(self: Pin<&mut Self>) {
         if self.is_open() {

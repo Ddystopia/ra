@@ -3,7 +3,7 @@
 #![allow(dead_code)] // pin-init pr
 
 use core::{marker::PhantomData, pin::Pin, ptr};
-use pin_init::{PinInit, pin_data, pin_init_from_closure};
+use crate::pin_init::{PinInit, pin_data, pin_init_from_closure};
 use ra_fsp_sys::generated::fsp_err_t;
 
 use crate::{

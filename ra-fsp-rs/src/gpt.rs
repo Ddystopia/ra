@@ -23,6 +23,7 @@ use crate::{
     Block, Callback, Result,
     callbacks::CallbackEvent,
     fsp_try_unsafe, pac,
+    pin_init::{pin_data, pinned_drop},
     state_markers::{Closed, Opened},
     timer_api::*,
     unsafe_pinned::UnsafePinned,

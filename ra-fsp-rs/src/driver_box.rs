@@ -1,5 +1,5 @@
+use crate::pin_init;
 use core::{fmt::Debug, ops::Deref, pin::Pin, ptr::NonNull};
-use pin_init::InPlaceWrite;
 use static_cell::StaticCell;
 
 /**
@@ -146,7 +146,13 @@ impl<T: LifetimeDriver> DriverPlace<T> {
         &'static self,
         init: impl pin_init::PinInit<T, E>,
     ) -> Result<DriverBox<T::Target<'a>>, E> {
-        let pin = self.0.uninit().write_pin_init(init)?;
+        // TODO: replace to this (v) when `pin_init` is updated.
+        // use pin_init::InPlaceWrite;
+        // let pin = self.0.uninit().write_pin_init(init)?;
+        // Ok(DriverBox::from_pin(pin))
+        let uninit = self.0.uninit();
+        unsafe { init.__pinned_init(uninit.as_mut_ptr())? };
+        let pin = Pin::static_mut(unsafe { uninit.assume_init_mut() });
         Ok(DriverBox::from_pin(pin))
     }
 
@@ -162,8 +168,16 @@ impl<T: LifetimeDriver> DriverPlace<T> {
         &'static self,
         init: impl pin_init::PinInit<T, E>,
     ) -> Option<Result<DriverBox<T::Target<'a>>, E>> {
-        let pin = self.0.try_uninit()?.write_pin_init(init);
-        Some(pin.map(DriverBox::from_pin))
+        // TODO: replace to this (v) when `pin_init` is updated.
+        // use pin_init::InPlaceWrite;
+        // let pin = self.0.try_uninit()?.write_pin_init(init);
+        // Some(pin.map(DriverBox::from_pin))
+        let uninit = self.0.try_uninit()?;
+        if let Err(e) = unsafe { init.__pinned_init(uninit.as_mut_ptr()) } {
+            return Some(Err(e));
+        }
+        let pin = Pin::static_mut(unsafe { uninit.assume_init_mut() });
+        Some(Ok(DriverBox::from_pin(pin)))
     }
 }
 

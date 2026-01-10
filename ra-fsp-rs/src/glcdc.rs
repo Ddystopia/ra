@@ -6,7 +6,7 @@ use core::{
     sync::atomic::{AtomicPtr, Ordering},
 };
 
-use pin_init::{PinInit, pin_data, pin_init_from_closure};
+use crate::pin_init::{PinInit, pin_data, pin_init_from_closure, pinned_drop};
 use ra_fsp_sys::generated::{
     self as raw, self as api, R_GLCDC_BASE, R_GLCDC_BufferChange, R_GLCDC_Close, R_GLCDC_Open,
     R_GLCDC_Type, display_api_t, display_cfg_t, display_ctrl_t, display_frame_layer_t,
@@ -147,7 +147,7 @@ impl Glcdc<Opened> {
     }
 }
 
-#[pin_init::pinned_drop]
+#[pinned_drop]
 impl<S: 'static> PinnedDrop for Glcdc<S> {
     fn drop(mut self: Pin<&mut Self>) {
         if TypeId::of::<Closed>() == TypeId::of::<S>() {

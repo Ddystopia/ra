@@ -1,6 +1,6 @@
 use core::{cell::UnsafeCell, mem::MaybeUninit, pin::Pin, ptr};
 
-use pin_init::{PinInit, pin_init_from_closure};
+use crate::pin_init::{PinInit, pin_init_from_closure};
 use ra_fsp_sys::generated::IOPORT_CFG_PARAM_CHECKING_ENABLE;
 pub use ra_fsp_sys::generated::{
     //
