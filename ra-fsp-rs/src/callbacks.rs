@@ -45,6 +45,7 @@ pub trait Callback<Event, Block: crate::Block = NopBlock> {
     }
 }
 
+#[allow(unused)] // When no drivers are enabled
 pub(crate) unsafe trait CallbackEvent<E>: Block {
     // Would be safe to alias due to ctrl blocks being in UnsafePinned
     fn context(this: *mut Self) -> *mut *const Self;

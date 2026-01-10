@@ -1,6 +1,7 @@
 use crate::pac;
 use cortex_m::{interrupt::InterruptNumber, peripheral::NVIC};
 
+#[allow(unused)] // When no drivers are enabled
 pub(crate) const fn extract_irq(this: Option<pac::Interrupt>) -> i32 {
     let invalid_vector = ra_fsp_sys::generated::FSP_INVALID_VECTOR as i32;
     match this {
@@ -42,6 +43,7 @@ pub unsafe fn set_fsp_priority<I: InterruptNumber>(nvic: &mut NVIC, irq: I, fsp_
     unsafe { nvic.set_priority(irq, hw_priority) }
 }
 
+#[allow(unused)] // When no drivers are enabled
 pub(crate) fn try_read_priority_into(interrupt: impl Into<Option<pac::Interrupt>>, place: &mut u8) {
     if let Some(int) = interrupt.into() {
         *place = read_fsp_priority(int)
