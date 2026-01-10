@@ -1,29 +1,20 @@
-use core::{mem::zeroed, pin::Pin, ptr};
+use core::{
+    mem::{ManuallyDrop, zeroed},
+    pin::Pin,
+    ptr,
+};
 
-use pin_init::{PinInit, pin_data, pin_init_from_closure};
 use ra_fsp_sys::generated::{
-    self as api, // -
-    self as raw,
-    R_GPT_Close,
-    R_GPT_Open,
-    R_GPT0_Type,
-    e_fsp_err,
-    fsp_err_t,
-    gpt_extended_cfg_t,
-    gpt_instance_ctrl_t,
-    timer_api_t,
-    timer_callback_args_t,
-    timer_cfg_t,
-    timer_ctrl_t,
-    timer_event_t,
-    timer_instance_t,
+    self as api, self as raw, BSP_IRQ_DISABLED, R_GPT_Close, R_GPT_Open, R_GPT0_Type, e_fsp_err,
+    fsp_err_t, gpt_extended_cfg_t, gpt_instance_ctrl_t, timer_api_t, timer_callback_args_t,
+    timer_cfg_t, timer_ctrl_t, timer_event_t, timer_instance_t,
 };
 
 use crate::{
-    Block, Callback, Result,
+    Block, Callback, DriverBox, Result, TypeStateResult,
     callbacks::CallbackEvent,
     fsp_try_unsafe, pac,
-    pin_init::{pin_data, pinned_drop},
+    pin_init::{PinInit, pin_data, pin_init_from_closure, pinned_drop},
     state_markers::{Closed, Opened},
     timer_api::*,
     unsafe_pinned::UnsafePinned,
@@ -32,16 +23,6 @@ use crate::{
 
 pub use channel::*;
 
-// todo: maybe assert that IRQ that was passed there is having this handler?
-//       like, so that this is not RTIC.
-//       But there are several gpts, so there may be several handlers, and each
-//       gpt has the same but different cfg??
-//       Can we even mask/unmask them??
-//
-//       Thinking about this again, each gpt has different IRQs and there is that
-//       global map IRQ -> Control Block, thus the same ISR will be bind to different
-//       IRQ thus we can ask `&mut Gpt` and assert that current isr is the same as
-//       in config. With `R_FSP_CurrentIrqGet` (see utils.rs) we can get it.
 unsafe extern "C" {
     pub safe fn gpt_counter_overflow_isr();
     pub safe fn gpt_counter_underflow_isr();
@@ -93,26 +74,6 @@ pub mod channel {
     ch!(GPT3213, 13);
 }
 
-/* todo:
-
-The problem is, I can't track the state using typestate because how would you
-transition the state of a pinned reference? You can cast it, but if it was a
-reborrow, user can simple drop it and still have a previous state. Something
-like `&own T` would've been needed.
-
-Additionally, all drivers anyway use used through the `Pin<&'static mut Gpt<'a, State, F>>`,
-So this handle won't create a new one really.
-
-I need to figure out how to implemet Block for that handle - should be easy,
-just think about ctrl block and &self or Pin<&mut Self>, as well as instance.
-
-Need some kind of Pin<Box<Gpt>> instead of Pin<&mut Gpt>
-
-*/
-
-#[allow(dead_code)]
-pub struct GptHandle<'a, 'f, C: Channel, State: 'static>(Pin<&'a mut Gpt<'f, C, State>>);
-
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IsrPrototype {
     #[default]
@@ -122,14 +83,14 @@ pub enum IsrPrototype {
     CompareB,
 }
 
-#[repr(C)] // `#[repr(C)]` is for `GptInstance::<Closed>::open`
+#[repr(C)] // `#[repr(C)]` is for typestate
 #[pin_data(PinnedDrop)]
 pub struct Gpt<'a, C, State: 'static> {
     user_data: *const (),
     cycle_end_irq: Option<pac::Interrupt>,
     capture_a_irq: Option<pac::Interrupt>,
     capture_b_irq: Option<pac::Interrupt>,
-    c_ext_cfg: core::mem::MaybeUninit<UnsafePinned<gpt_extended_cfg_t>>,
+    c_ext_cfg: UnsafePinned<gpt_extended_cfg_t>,
     ctrl: UnsafePinned<gpt_instance_ctrl_t>,
     cfg: UnsafePinned<timer_cfg_t>,
     inst: UnsafePinned<timer_instance_t>,
@@ -178,6 +139,10 @@ const API: timer_api_t = timer_api_t {
     callbackSet: Some(api::R_GPT_CallbackSet),
     close: Some(api::R_GPT_Close),
 };
+
+unsafe impl<C, S> crate::LifetimeDriver for Gpt<'static, C, S> {
+    type Target<'a> = Gpt<'a, C, S>;
+}
 
 unsafe impl<C: Channel, S> Block for Gpt<'_, C, S> {
     type Config = timer_cfg_t;
@@ -293,16 +258,103 @@ impl<'a, C: Channel> Gpt<'a, C, Opened> {
     {
         CallbackEvent::callback_set_static(self, context)
     }
+
+    pub fn close<'any>(
+        this: DriverBox<Self>,
+    ) -> core::result::Result<
+        (
+            DriverBox<Gpt<'any, C, Closed>>,
+            TimerConf<GptExtendedConfig>,
+        ),
+        (DriverBox<Self>, fsp_err_t),
+    > {
+        if !this.is_open() {
+            return Err((this, e_fsp_err::FSP_ERR_NOT_OPEN));
+        }
+        let mut this = ManuallyDrop::new(this);
+        let mut this = this.as_mut();
+
+        if let Err(err) = fsp_try_unsafe!(R_GPT_Close(this.as_mut().ctrl_void())) {
+            let this = unsafe { DriverBox::new_unchecked(this.get_unchecked_mut()) };
+
+            Err((this, err))
+        } else {
+            let conf = unsafe { &*this.cfg.get() };
+            let extended = unsafe { &*this.c_ext_cfg.get() };
+            let cycle_end = conf.cycle_end_irq as u16;
+            let cycle_end = if cycle_end == BSP_IRQ_DISABLED as u16 {
+                None
+            } else {
+                pac::Interrupt::try_from_u16(cycle_end)
+            };
+
+            let conf = TimerConf {
+                mode: conf.mode,
+                period_counts: conf.period_counts,
+                source_div: conf.source_div,
+                duty_cycle_counts: conf.duty_cycle_counts,
+                channel: conf.channel,
+                cycle_end,
+                extend: GptExtendedConfig::from_c_conf(extended),
+            };
+            let this = unsafe { ptr::from_mut(this.get_unchecked_mut()).cast() };
+            let this = unsafe { DriverBox::new_unchecked(&mut *this) };
+
+            Ok((this, conf))
+        }
+    }
 }
 
-#[pin_init::pinned_drop]
+#[pinned_drop]
 impl<C, S: 'static> PinnedDrop for Gpt<'_, C, S> {
-    fn drop(self: Pin<&mut Self>) {
+    fn drop(mut self: Pin<&mut Self>) {
         // SAFETY: We can can close of course, and callbacks are fine too
         // - Non-static callback requires `Pin<&mut Self>`, thus this drop can't overlap.
         // - Static callback doesn't borrow from `self`
         if self.is_open() {
-            fsp_try_unsafe!(R_GPT_Close(self.ctrl_void())).expect("Error closing GPT timer");
+            if let Err(err) = fsp_try_unsafe!(R_GPT_Close(self.as_mut().ctrl_void())) {
+                let channel = unsafe { (*self.cfg.get()).channel };
+                log::error!("Failed to close GPT driver on channel {channel}: {err}");
+            }
+        }
+    }
+}
+
+impl<'f, C: Channel> Gpt<'f, C, Closed> {
+    pub const fn new(regs: C) -> Self {
+        Self {
+            user_data: ptr::null_mut(),
+            regs,
+            capture_a_irq: None,
+            capture_b_irq: None,
+            cycle_end_irq: None,
+            c_ext_cfg: UnsafePinned::new(unsafe { zeroed() }),
+            ctrl: UnsafePinned::new(unsafe { zeroed() }),
+            cfg: UnsafePinned::new(unsafe { zeroed() }),
+            inst: UnsafePinned::new(unsafe { zeroed() }),
+            _marker: core::marker::PhantomData,
+        }
+    }
+    pub fn open(
+        this: DriverBox<Self>,
+        cfg: TimerConf<GptExtendedConfig>,
+    ) -> TypeStateResult<Gpt<'f, C, Opened>, Self> {
+        unsafe {
+            let mut this = ManuallyDrop::new(this);
+            let this = ptr::from_mut(this.get_unchecked_mut());
+            let regs = ptr::read(&(*this).regs);
+
+            if (*(*this).ctrl.get()).open != 0 {
+                let prev = DriverBox::new_unchecked(&mut *this);
+                return Err((prev, e_fsp_err::FSP_ERR_ALREADY_OPEN));
+            }
+
+            let this = this.cast::<Gpt<C, Opened>>();
+            if let Err(err) = init_open::<C>(this, regs, cfg) {
+                let prev = DriverBox::new_unchecked(&mut *this.cast::<Self>());
+                return Err((prev, err));
+            }
+            Ok(DriverBox::new_unchecked(&mut *this))
         }
     }
 }
@@ -335,15 +387,11 @@ unsafe fn init_open<C: Channel>(
         (*(*slot).inst.get()).p_ctrl = (*slot).ctrl.get().cast::<core::ffi::c_void>();
         (*(*slot).inst.get()).p_cfg = (*slot).cfg.get().cast_const();
         (*(*slot).inst.get()).p_api = ptr::from_ref(&API);
-
-        let p_extend = (*slot)
-            .c_ext_cfg
-            .write(UnsafePinned::new(cfg.extend.c_conf()))
-            .get()
-            .cast::<core::ffi::c_void>();
+        (*slot).c_ext_cfg = UnsafePinned::new(cfg.extend.c_conf());
 
         let p_ctrl = UnsafePinned::raw_get(&raw const (*slot).ctrl);
         let p_cfg = UnsafePinned::raw_get(&raw const (*slot).cfg);
+        let p_extend = UnsafePinned::raw_get(&raw const (*slot).c_ext_cfg).cast();
 
         *p_cfg = cfg.c_conf();
         (*p_cfg).p_extend = p_extend;
@@ -366,40 +414,6 @@ unsafe fn init_open<C: Channel>(
 
             fsp_try_unsafe!(R_GPT_Open(p_ctrl.cast::<timer_ctrl_t>(), p_cfg))
         })
-    }
-}
-
-impl<'f, C: Channel> Gpt<'f, C, Closed> {
-    pub fn new(regs: C) -> Self {
-        Self {
-            user_data: ptr::null_mut(),
-            regs,
-            capture_a_irq: None,
-            capture_b_irq: None,
-            cycle_end_irq: None,
-            c_ext_cfg: core::mem::MaybeUninit::zeroed(),
-            ctrl: UnsafePinned::new(unsafe { zeroed() }),
-            cfg: UnsafePinned::new(unsafe { zeroed() }),
-            inst: UnsafePinned::new(unsafe { zeroed() }),
-            _marker: core::marker::PhantomData,
-        }
-    }
-    pub fn open(
-        self: Pin<&mut Self>,
-        cfg: TimerConf<GptExtendedConfig>,
-    ) -> Result<Pin<&mut Gpt<'f, C, Opened>>> {
-        unsafe {
-            let this = ptr::from_mut(self.get_unchecked_mut());
-            let regs = ptr::read(&(*this).regs);
-
-            if (*(*this).ctrl.get()).open != 0 {
-                return Err(e_fsp_err::FSP_ERR_ALREADY_OPEN);
-            }
-
-            let this = this.cast::<Gpt<C, Opened>>();
-            init_open::<C>(this, regs, cfg)?;
-            Ok(Pin::new_unchecked(&mut *this))
-        }
     }
 }
 
@@ -458,14 +472,46 @@ impl GptExtendedConfig {
             count_down_source: self.count_down_source,
             capture_filter_gtioca: self.capture_filter_gtioca,
             capture_filter_gtiocb: self.capture_filter_gtiocb,
-            capture_a_ipl: ra_fsp_sys::generated::BSP_IRQ_DISABLED as u8,
-            capture_b_ipl: ra_fsp_sys::generated::BSP_IRQ_DISABLED as u8,
+            capture_a_ipl: BSP_IRQ_DISABLED as u8,
+            capture_b_ipl: BSP_IRQ_DISABLED as u8,
             capture_a_irq: utils::extract_irq(self.capture_a),
             capture_b_irq: utils::extract_irq(self.capture_b),
             compare_match_value: self.compare_match_value,
             compare_match_status: self.compare_match_status,
             p_pwm_cfg: ptr::null(),
             gtior_setting: self.gtior_setting,
+        }
+    }
+    fn from_c_conf(conf: &gpt_extended_cfg_t) -> Self {
+        let capture_a: Option<u16> = conf.capture_a_irq.try_into().ok();
+        let capture_a = capture_a.unwrap_or(BSP_IRQ_DISABLED as u16);
+        let capture_b: Option<u16> = conf.capture_b_irq.try_into().ok();
+        let capture_b = capture_b.unwrap_or(BSP_IRQ_DISABLED as u16);
+        Self {
+            gtioca: conf.gtioca,
+            gtiocb: conf.gtiocb,
+            start_source: conf.start_source,
+            stop_source: conf.stop_source,
+            clear_source: conf.clear_source,
+            capture_a_source: conf.capture_a_source,
+            capture_b_source: conf.capture_b_source,
+            count_up_source: conf.count_up_source,
+            count_down_source: conf.count_down_source,
+            capture_filter_gtioca: conf.capture_filter_gtioca,
+            capture_filter_gtiocb: conf.capture_filter_gtiocb,
+            capture_a: if capture_a == BSP_IRQ_DISABLED as u16 {
+                None
+            } else {
+                pac::Interrupt::try_from_u16(capture_a)
+            },
+            capture_b: if capture_b == BSP_IRQ_DISABLED as u16 {
+                None
+            } else {
+                pac::Interrupt::try_from_u16(capture_b)
+            },
+            compare_match_value: conf.compare_match_value,
+            compare_match_status: conf.compare_match_status,
+            gtior_setting: conf.gtior_setting,
         }
     }
 }

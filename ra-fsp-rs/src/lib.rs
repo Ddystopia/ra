@@ -73,12 +73,14 @@ pub use {
     callbacks::{Callback, NopBlock},
     cortex_m,
     pacs::pac,
-    pin_init, ra_fsp_sys, ra_fsp_sys as sys,
+    pinned_init as pin_init,
+    ra_fsp_sys, ra_fsp_sys as sys,
     ra_fsp_sys::generated::{e_elc_event, e_fsp_err, fsp_err_t},
     driver_box::{DriverBox, DriverPlace, LifetimeDriver},
 };
 
 pub type Result<T> = core::result::Result<T, fsp_err_t>;
+pub type TypeStateResult<T1, T2> = core::result::Result<DriverBox<T1>, (DriverBox<T2>, fsp_err_t)>;
 
 pub const FSP_VERSION: (u32, u32, u32) = (
     ra_fsp_sys::generated::FSP_VERSION_MAJOR,
