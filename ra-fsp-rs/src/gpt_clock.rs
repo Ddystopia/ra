@@ -51,7 +51,7 @@ pub struct TimerState<C> {
     alarm: Mutex<AlarmState>,
     capture_a_irq: pac::Interrupt,
     capture_b_irq: pac::Interrupt,
-    _marker: core::marker::PhantomData<C>,
+    _marker: core::marker::PhantomData<fn(C) -> C>,
 }
 
 pub struct GptTimerStorage<C: 'static> {

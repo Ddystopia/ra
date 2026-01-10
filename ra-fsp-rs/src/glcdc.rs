@@ -310,13 +310,6 @@ impl<S: 'static> Glcdc<S> {
         let ptr = buffer.as_mut_ptr();
         let ctrl = this.ctrl.get().cast::<display_ctrl_t>();
 
-        log::info!(
-            "Changing buffer of layer {} to {:p} (prev {:p})",
-            layer as usize,
-            ptr,
-            this.prev_owned_buffer[layer as usize]
-        );
-
         let ctx = this.callback_ctx();
         let used_buffer = ctx.current_owned_buffer[layer as usize].load(Ordering::Relaxed);
 
@@ -350,12 +343,6 @@ impl<S: 'static> Glcdc<S> {
         };
 
         let prev_buf = this.prev_owned_buffer[layer];
-
-        log::info!(
-            "Attempt to take buffer of layer {layer}, prev buf: {:p}, used buf: {:p}",
-            prev_buf,
-            used_buf
-        );
 
         if prev_buf.is_null() || prev_buf == used_buf {
             return None;

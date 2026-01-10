@@ -52,25 +52,21 @@ unsafe extern "C" {
 
 // Todo: autogenerate stuff like this
 pub mod channel {
-    #![allow(warnings)]
-    use crate::pac;
-
-    pub trait Channel: Send + Sync {
+    pub trait Channel: Send {
         const N: usize;
         fn gtcnt() -> u32;
     }
 
     macro_rules! ch {
         ($periph: ident, $n: literal) => {
-            pub struct $periph;
-            impl Channel for $periph {
+            impl Channel for $crate::pac::$periph {
                 const N: usize = $n;
                 fn gtcnt() -> u32 {
                     let gpt = unsafe { $crate::pac::$periph::steal() };
                     gpt.gtcnt().read().bits()
                 }
             }
-            impl Channel for &mut $periph {
+            impl Channel for &mut $crate::pac::$periph {
                 const N: usize = $n;
                 fn gtcnt() -> u32 {
                     let gpt = unsafe { $crate::pac::$periph::steal() };

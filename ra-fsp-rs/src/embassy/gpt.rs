@@ -13,6 +13,8 @@ use crate::{
     timer_api::TimerApi,
 };
 
+pub use embassy_time_driver::time_driver_impl;
+
 pub struct EmbassyGptTimerDriver<C: 'static> {
     timer: GptTimerStorage<C>,
     queue: Mutex<RefCell<Queue>>,
@@ -29,17 +31,15 @@ impl<C: Channel + 'static> EmbassyGptTimerDriver<C> {
     }
 }
 
-impl<C: 'static> Default for EmbassyGptTimerDriver<C> {
-    fn default() -> Self {
+impl<C: Channel> EmbassyGptTimerDriver<C> {
+    pub const fn new() -> Self {
         EmbassyGptTimerDriver {
             timer: GptTimerStorage::new(),
             queue: Mutex::new(RefCell::new(Queue::new())),
         }
     }
-}
 
-impl<C: Channel> EmbassyGptTimerDriver<C> {
-    pub fn trigger_alarm<T: TimerApi>(
+    fn trigger_alarm<T: TimerApi>(
         &self,
         cs: CriticalSection,
         mut gpt: Pin<&mut T>,
@@ -55,7 +55,7 @@ impl<C: Channel> EmbassyGptTimerDriver<C> {
         Ok(())
     }
 
-    pub fn schedule_wake<T: TimerApi>(
+    fn schedule_wake<T: TimerApi>(
         &self,
         cs: CriticalSection<'_>,
         mut gpt: Pin<&mut T>,
