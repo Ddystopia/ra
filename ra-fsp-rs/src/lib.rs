@@ -8,6 +8,7 @@ Rule for callbacks:
 
 */
 
+mod driver_box;
 mod callbacks;
 mod log;
 mod macros;
@@ -74,6 +75,7 @@ pub use {
     pacs::pac,
     pin_init, ra_fsp_sys, ra_fsp_sys as sys,
     ra_fsp_sys::generated::{e_elc_event, e_fsp_err, fsp_err_t},
+    driver_box::{DriverBox, DriverPlace, LifetimeDriver},
 };
 
 pub type Result<T> = core::result::Result<T, fsp_err_t>;
