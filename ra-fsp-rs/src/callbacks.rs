@@ -39,8 +39,7 @@ pub trait Callback<Event, Block: crate::Block = NopBlock> {
         unimplemented!();
     }
 
-    fn call_with_block(context: &Self, block: core::pin::Pin<&mut Block>, event: Event) {
-        _ = block;
+    fn call_with_block(context: &Self, _block: Pin<&mut Block>, event: Event) {
         Self::call(context, event)
     }
 }
@@ -134,8 +133,14 @@ pub(crate) unsafe trait CallbackEvent<E>: Block {
     }
 }
 
-impl<F: Fn(Event), Event> Callback<Event> for F {
-    fn call(context: &F, event: Event) {
+impl<F: Fn(Pin<&mut B>, Event), Event, B: Block> Callback<Event, B> for F {
+    fn call_with_block(context: &Self, block: Pin<&mut B>, event: Event) {
+        (context)(block, event)
+    }
+}
+
+impl<Event, B: Block> Callback<Event, B> for fn(Event) {
+    fn call(context: &Self, event: Event) {
         (context)(event)
     }
 }
