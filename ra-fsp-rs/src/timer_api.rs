@@ -15,6 +15,7 @@ use ra_fsp_sys::generated::{
 
 use crate::{Block, Result, fsp_try_unsafe, pac, state_markers, utils};
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct TimerConf<Extended> {
     pub mode: timer_mode_t,
     pub period_counts: u32,

@@ -8,8 +8,8 @@ Rule for callbacks:
 
 */
 
-mod driver_box;
 mod callbacks;
+mod driver_box;
 mod log;
 mod macros;
 mod pacs;
@@ -73,11 +73,10 @@ pub mod embedded_graphics {
 pub use {
     callbacks::{Callback, NopBlock},
     cortex_m,
-    pacs::pac,
-    pinned_init as pin_init,
-    ra_fsp_sys, ra_fsp_sys as sys,
-    ra_fsp_sys::generated::{e_elc_event, e_fsp_err, fsp_err_t},
     driver_box::{DriverBox, DriverPlace, LifetimeDriver},
+    pacs::pac,
+    pinned_init as pin_init, ra_fsp_sys, ra_fsp_sys as sys,
+    ra_fsp_sys::generated::{e_elc_event, e_fsp_err, fsp_err_t},
 };
 
 pub type Result<T> = core::result::Result<T, fsp_err_t>;

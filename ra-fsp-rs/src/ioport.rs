@@ -1,6 +1,15 @@
-use core::{cell::UnsafeCell, mem::MaybeUninit, pin::Pin, ptr};
+use core::{
+    cell::UnsafeCell,
+    marker::PhantomData,
+    mem::{ManuallyDrop, MaybeUninit, zeroed},
+    ptr,
+};
 
-use crate::pin_init::{PinInit, pin_init_from_closure};
+use crate::{
+    DriverBox, TypeStateResult,
+    pin_init::{PinInit, pin_init_from_closure},
+    state_markers::Closed,
+};
 use ra_fsp_sys::generated::IOPORT_CFG_PARAM_CHECKING_ENABLE;
 pub use ra_fsp_sys::generated::{
     //
@@ -26,21 +35,26 @@ const _: () = assert!(
     "The FSP configuration option IOPORT_CFG_PARAM_CHECKING_ENABLE is required with this crate, please enable it"
 );
 
-pub struct IoPort {
+pub struct IoPort<S> {
     ctrl: UnsafeCell<ioport_instance_ctrl_t>,
     cfg: UnsafePinned<ioport_cfg_t>,
     inst: UnsafePinned<ioport_instance_t>,
-    ports: pac::PORT0,
+    regs: pac::PORT0,
+    _marker: PhantomData<S>,
 }
 
 #[derive(Debug, Copy, Clone)]
 pub struct IoPortConfig(pub &'static [ioport_pin_cfg_t]);
 
-unsafe impl crate::Block for IoPort {
+unsafe impl<S> crate::LifetimeDriver for IoPort<S> {
+    type Target<'a> = IoPort<S>;
+}
+
+unsafe impl<S> crate::Block for IoPort<S> {
     type Config = ioport_cfg_t;
     type Instance = ioport_instance_t;
     type Api = ioport_api_t;
-    type State = Opened;
+    type State = S;
 
     const API: &ioport_api_t = unsafe { &g_ioport_on_ioport };
 
@@ -53,43 +67,90 @@ unsafe impl crate::Block for IoPort {
     }
 }
 
-unsafe impl Send for IoPort {}
-unsafe impl Sync for IoPort {}
+unsafe impl<S> Send for IoPort<S> {}
+unsafe impl<S> Sync for IoPort<S> {}
 
-impl IoPort {
-    pub const fn new(ports: pac::PORT0, conf: IoPortConfig) -> impl PinInit<Self> {
-        unsafe {
-            pin_init_from_closure(move |slot: *mut Self| {
-                let this = Self {
-                    ctrl: UnsafeCell::new(core::mem::zeroed()),
-                    cfg: UnsafePinned::new(conf.c_conf()),
-                    ports,
-                    inst: UnsafePinned::new(ioport_instance_t {
-                        p_ctrl: ptr::null_mut(),
-                        p_cfg: ptr::null(),
-                        p_api: <Self as crate::Block>::API,
-                    }),
-                };
-                ptr::write(slot, this);
-                (*(*slot).inst.get()).p_ctrl = (*slot).ctrl.get().cast();
-                (*(*slot).inst.get()).p_cfg = (*slot).cfg.get().cast_const().cast();
-                Ok(())
-            })
+unsafe fn init_open(
+    slot: *mut IoPort<Opened>,
+    regs: pac::PORT0,
+    conf: IoPortConfig,
+) -> crate::Result<()> {
+    unsafe {
+        let this = IoPort {
+            ctrl: UnsafeCell::new(core::mem::zeroed()),
+            cfg: UnsafePinned::new(conf.c_conf()),
+            regs,
+            inst: UnsafePinned::new(ioport_instance_t {
+                p_ctrl: ptr::null_mut(),
+                p_cfg: ptr::null(),
+                p_api: <IoPort<Opened> as crate::Block>::API,
+            }),
+            _marker: PhantomData,
+        };
+        ptr::write(slot, this);
+        (*(*slot).inst.get()).p_ctrl = (*slot).ctrl.get().cast();
+        (*(*slot).inst.get()).p_cfg = (*slot).cfg.get().cast_const().cast();
+        Ok(())
+    }
+}
+
+impl IoPort<Opened> {
+    pub const fn new_open(ports: pac::PORT0, conf: IoPortConfig) -> impl PinInit<Self, fsp_err_t> {
+        unsafe { pin_init_from_closure(move |slot: *mut Self| init_open(slot, ports, conf)) }
+    }
+    pub fn close(this: DriverBox<IoPort<Opened>>) -> TypeStateResult<IoPort<Closed>, Self> {
+        let mut this = ManuallyDrop::new(this);
+        let ctrl = this.ctrl.get().cast();
+        match crate::fsp_try_unsafe!(R_IOPORT_Close(ctrl)) {
+            Ok(()) => Ok(unsafe {
+                let ptr = ptr::from_mut(this.get_unchecked_mut());
+                DriverBox::new_unchecked(&mut *ptr.cast())
+            }),
+            Err(err) => Err((ManuallyDrop::into_inner(this), err)),
         }
     }
+}
+
+impl IoPort<Closed> {
+    pub const fn new() -> Self {
+        Self {
+            ctrl: unsafe { zeroed() },
+            cfg: unsafe { zeroed() },
+            inst: unsafe { zeroed() },
+            regs: unsafe { zeroed() },
+            _marker: PhantomData,
+        }
+    }
+    pub fn open(
+        this: DriverBox<IoPort<Closed>>,
+        cfg: IoPortConfig,
+        ports: pac::PORT0,
+    ) -> TypeStateResult<IoPort<Opened>, Self> {
+        if this.is_open() {
+            return Err((this, ra_fsp_sys::generated::e_fsp_err::FSP_ERR_ALREADY_OPEN));
+        }
+
+        unsafe {
+            let mut this = ManuallyDrop::new(this);
+
+            let p_this = ptr::from_mut(this.get_unchecked_mut());
+
+            let p_this = p_this.cast::<IoPort<Opened>>();
+            init_open(p_this, ports, cfg).map_err(|e| (ManuallyDrop::into_inner(this), e))?;
+            Ok(DriverBox::new_unchecked(&mut *p_this))
+        }
+    }
+}
+
+impl<S> IoPort<S> {
     pub unsafe fn from_ptr<'a>(ptr: *mut ioport_instance_ctrl_t) -> &'a mut Self {
-        unsafe { &mut *ptr.cast::<IoPort>() }
-    }
-    pub fn open(self: Pin<&mut Self>) -> Result<(), fsp_err_t> {
-        let ctrl = self.ctrl.get().cast();
-        crate::fsp_try_unsafe!(R_IOPORT_Open(ctrl, self.cfg.get()))
-    }
-    pub fn close(self: Pin<&mut Self>) -> Result<(), fsp_err_t> {
-        let ctrl = self.ctrl.get().cast();
-        crate::fsp_try_unsafe!(R_IOPORT_Close(ctrl))
+        unsafe { &mut *ptr.cast::<Self>() }
     }
     pub const fn ports(&self) -> &pac::PORT0 {
-        &self.ports
+        &self.regs
+    }
+    pub fn is_open(&self) -> bool {
+        unsafe { (*self.ctrl.get()).open != 0 }
     }
 }
 

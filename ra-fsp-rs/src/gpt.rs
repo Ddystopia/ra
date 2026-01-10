@@ -259,48 +259,18 @@ impl<'a, C: Channel> Gpt<'a, C, Opened> {
         CallbackEvent::callback_set_static(self, context)
     }
 
-    pub fn close<'any>(
-        this: DriverBox<Self>,
-    ) -> core::result::Result<
-        (
-            DriverBox<Gpt<'any, C, Closed>>,
-            TimerConf<GptExtendedConfig>,
-        ),
-        (DriverBox<Self>, fsp_err_t),
-    > {
+    pub fn close<'any>(this: DriverBox<Self>) -> TypeStateResult<Gpt<'any, C, Closed>, Self> {
         if !this.is_open() {
             return Err((this, e_fsp_err::FSP_ERR_NOT_OPEN));
         }
         let mut this = ManuallyDrop::new(this);
-        let mut this = this.as_mut();
 
-        if let Err(err) = fsp_try_unsafe!(R_GPT_Close(this.as_mut().ctrl_void())) {
-            let this = unsafe { DriverBox::new_unchecked(this.get_unchecked_mut()) };
-
-            Err((this, err))
-        } else {
-            let conf = unsafe { &*this.cfg.get() };
-            let extended = unsafe { &*this.c_ext_cfg.get() };
-            let cycle_end = conf.cycle_end_irq as u16;
-            let cycle_end = if cycle_end == BSP_IRQ_DISABLED as u16 {
-                None
-            } else {
-                pac::Interrupt::try_from_u16(cycle_end)
-            };
-
-            let conf = TimerConf {
-                mode: conf.mode,
-                period_counts: conf.period_counts,
-                source_div: conf.source_div,
-                duty_cycle_counts: conf.duty_cycle_counts,
-                channel: conf.channel,
-                cycle_end,
-                extend: GptExtendedConfig::from_c_conf(extended),
-            };
-            let this = unsafe { ptr::from_mut(this.get_unchecked_mut()).cast() };
-            let this = unsafe { DriverBox::new_unchecked(&mut *this) };
-
-            Ok((this, conf))
+        match fsp_try_unsafe!(R_GPT_Close(this.as_mut().ctrl().cast())) {
+            Err(err) => Err((ManuallyDrop::into_inner(this), err)),
+            Ok(_) => unsafe {
+                let ptr = ptr::from_mut(this.get_unchecked_mut()).cast();
+                Ok(DriverBox::new_unchecked(&mut *ptr))
+            },
         }
     }
 }
@@ -339,22 +309,18 @@ impl<'f, C: Channel> Gpt<'f, C, Closed> {
         this: DriverBox<Self>,
         cfg: TimerConf<GptExtendedConfig>,
     ) -> TypeStateResult<Gpt<'f, C, Opened>, Self> {
+        if this.is_open() {
+            return Err((this, e_fsp_err::FSP_ERR_ALREADY_OPEN));
+        }
+
         unsafe {
             let mut this = ManuallyDrop::new(this);
-            let this = ptr::from_mut(this.get_unchecked_mut());
-            let regs = ptr::read(&(*this).regs);
+            let p_this = ptr::from_mut(this.get_unchecked_mut());
+            let regs = ptr::read(&(*p_this).regs);
 
-            if (*(*this).ctrl.get()).open != 0 {
-                let prev = DriverBox::new_unchecked(&mut *this);
-                return Err((prev, e_fsp_err::FSP_ERR_ALREADY_OPEN));
-            }
-
-            let this = this.cast::<Gpt<C, Opened>>();
-            if let Err(err) = init_open::<C>(this, regs, cfg) {
-                let prev = DriverBox::new_unchecked(&mut *this.cast::<Self>());
-                return Err((prev, err));
-            }
-            Ok(DriverBox::new_unchecked(&mut *this))
+            let p_this = p_this.cast::<Gpt<C, Opened>>();
+            init_open(p_this, regs, cfg).map_err(|e| (ManuallyDrop::into_inner(this), e))?;
+            Ok(DriverBox::new_unchecked(&mut *p_this))
         }
     }
 }
@@ -387,7 +353,7 @@ unsafe fn init_open<C: Channel>(
         (*(*slot).inst.get()).p_ctrl = (*slot).ctrl.get().cast::<core::ffi::c_void>();
         (*(*slot).inst.get()).p_cfg = (*slot).cfg.get().cast_const();
         (*(*slot).inst.get()).p_api = ptr::from_ref(&API);
-        (*slot).c_ext_cfg = UnsafePinned::new(cfg.extend.c_conf());
+        ptr::write((*slot).c_ext_cfg.get(), cfg.extend.c_conf());
 
         let p_ctrl = UnsafePinned::raw_get(&raw const (*slot).ctrl);
         let p_cfg = UnsafePinned::raw_get(&raw const (*slot).cfg);
@@ -395,10 +361,6 @@ unsafe fn init_open<C: Channel>(
 
         *p_cfg = cfg.c_conf();
         (*p_cfg).p_extend = p_extend;
-
-        for _ in 0..200 {
-            core::arch::asm!("nop");
-        }
 
         // FSP needs to IRQs to setup contexts, but it will additionally
         // unconditionally set priorities from cfg.
@@ -480,38 +442,6 @@ impl GptExtendedConfig {
             compare_match_status: self.compare_match_status,
             p_pwm_cfg: ptr::null(),
             gtior_setting: self.gtior_setting,
-        }
-    }
-    fn from_c_conf(conf: &gpt_extended_cfg_t) -> Self {
-        let capture_a: Option<u16> = conf.capture_a_irq.try_into().ok();
-        let capture_a = capture_a.unwrap_or(BSP_IRQ_DISABLED as u16);
-        let capture_b: Option<u16> = conf.capture_b_irq.try_into().ok();
-        let capture_b = capture_b.unwrap_or(BSP_IRQ_DISABLED as u16);
-        Self {
-            gtioca: conf.gtioca,
-            gtiocb: conf.gtiocb,
-            start_source: conf.start_source,
-            stop_source: conf.stop_source,
-            clear_source: conf.clear_source,
-            capture_a_source: conf.capture_a_source,
-            capture_b_source: conf.capture_b_source,
-            count_up_source: conf.count_up_source,
-            count_down_source: conf.count_down_source,
-            capture_filter_gtioca: conf.capture_filter_gtioca,
-            capture_filter_gtiocb: conf.capture_filter_gtiocb,
-            capture_a: if capture_a == BSP_IRQ_DISABLED as u16 {
-                None
-            } else {
-                pac::Interrupt::try_from_u16(capture_a)
-            },
-            capture_b: if capture_b == BSP_IRQ_DISABLED as u16 {
-                None
-            } else {
-                pac::Interrupt::try_from_u16(capture_b)
-            },
-            compare_match_value: conf.compare_match_value,
-            compare_match_status: conf.compare_match_status,
-            gtior_setting: conf.gtior_setting,
         }
     }
 }

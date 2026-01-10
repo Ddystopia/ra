@@ -1,5 +1,6 @@
 use {
     crate::{
+        DriverBox,
         ether::{self, Buffer, Ether, InterruptCause},
         state_markers::Opened,
     },
@@ -11,24 +12,24 @@ use {
 };
 
 pub struct Dev<const MTU: usize> {
-    eth: RefCell<Pin<&'static mut Ether<'static, MTU, Opened>>>,
+    eth: RefCell<DriverBox<Ether<'static, MTU, Opened>>>,
     capabilities: DeviceCapabilities,
 }
 
 pub struct EthernetRxToken<'a, const MTU: usize>(
     Option<Pin<&'static mut Buffer<MTU>>>,
     usize,
-    &'a RefCell<Pin<&'static mut Ether<'static, MTU, Opened>>>,
+    &'a RefCell<DriverBox<Ether<'static, MTU, Opened>>>,
 );
 
 pub struct EthernetTxToken<'a, const MTU: usize>(
     Option<Pin<&'static mut Buffer<MTU>>>,
-    &'a RefCell<Pin<&'static mut Ether<'static, MTU, Opened>>>,
+    &'a RefCell<DriverBox<Ether<'static, MTU, Opened>>>,
 );
 
 impl<const MTU: usize> Dev<MTU> {
     pub fn new(
-        eth: Pin<&'static mut Ether<'static, MTU, Opened>>,
+        eth: DriverBox<Ether<'static, MTU, Opened>>,
         capabilities: DeviceCapabilities,
     ) -> Self {
         assert!(

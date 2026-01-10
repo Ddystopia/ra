@@ -1,14 +1,14 @@
 #![allow(non_upper_case_globals)]
 use core::{
     marker::PhantomData,
-    mem::{MaybeUninit, replace, take, zeroed},
+    mem::{ManuallyDrop, MaybeUninit, replace, take, zeroed},
     ops::{Deref, DerefMut},
     pin::Pin,
     ptr,
 };
 
 use crate::{
-    Block, Callback, Result,
+    Block, Callback, DriverBox, Result, TypeStateResult,
     callbacks::CallbackEvent,
     ether_phy::EtherPhy,
     fsp_try_unsafe, log,
@@ -156,6 +156,10 @@ const API: ether_api_t = ether_api_t {
     callbackSet: Some(api::R_ETHER_CallbackSet),
 };
 
+unsafe impl<const BUF_SIZE: usize, S> crate::LifetimeDriver for Ether<'static, BUF_SIZE, S> {
+    type Target<'a> = Ether<'a, BUF_SIZE, S>;
+}
+
 unsafe impl<const BUF_SIZE: usize, S> crate::Block for Ether<'_, BUF_SIZE, S> {
     type Config = ether_cfg_t;
     type Instance = ether_instance_t;
@@ -192,43 +196,49 @@ impl<const BUF_SIZE: usize> Ether<'_, BUF_SIZE, Closed> {
             }),
         }
     }
-    pub fn open(
-        self: Pin<&mut Self>,
+    pub fn open<'any>(
+        this: DriverBox<Self>,
         cfg: EtherConfig<BUF_SIZE>,
-    ) -> Result<Pin<&mut Ether<'_, BUF_SIZE, Opened>>> {
+    ) -> TypeStateResult<Ether<'any, BUF_SIZE, Opened>, Self> {
+        if this.is_open() {
+            return Err((this, e_fsp_err::FSP_ERR_ALREADY_OPEN));
+        }
+
         unsafe {
-            let this = ptr::from_mut(self.get_unchecked_mut());
-            let regs = ptr::read(&(*this).regs);
+            let mut this = ManuallyDrop::new(this);
 
-            if (*(*this).ctrl.get()).open != 0 {
-                return Err(e_fsp_err::FSP_ERR_ALREADY_OPEN);
-            }
+            let p_this = ptr::from_mut(this.get_unchecked_mut());
+            let regs = ptr::read(&(*p_this).regs);
 
-            let this = this.cast::<Ether<'_, BUF_SIZE, Opened>>();
-            init_open(this, regs, cfg)?;
-            Ok(Pin::new_unchecked(
-                &mut *this.cast::<Ether<'_, BUF_SIZE, Opened>>(),
-            ))
+            let p_this = p_this.cast::<Ether<'_, BUF_SIZE, Opened>>();
+            init_open(p_this, regs, cfg).map_err(|e| (ManuallyDrop::into_inner(this), e))?;
+            Ok(DriverBox::new_unchecked(&mut *p_this))
         }
     }
 }
 
 unsafe fn init_open<const BUF_SIZE: usize>(
     slot: *mut Ether<'_, BUF_SIZE, Opened>,
-    gpt: pac::ETHERC0,
+    regs: pac::ETHERC0,
     mut cfg: EtherConfig<BUF_SIZE>,
 ) -> Result<()> {
     unsafe {
-        (*slot).regs = gpt;
-        (*slot).ctrl = UnsafePinned::new(zeroed());
+        let this = Ether {
+            regs,
+            ctrl: zeroed(),
+            inst: zeroed(),
+            c_ext_cfg: zeroed(),
+            tx_buffers: take(&mut cfg.tx_buffers),
+            rx_buffers: take(&mut cfg.rx_buffers),
+            tx_taken: 0,
+            user_data: ptr::null(),
+            cfg: zeroed(),
+            _marker: PhantomData,
+        };
+        ptr::write(slot, this);
         (*(*slot).inst.get()).p_ctrl = (*slot).ctrl.get().cast::<core::ffi::c_void>();
         (*(*slot).inst.get()).p_cfg = (*slot).cfg.get().cast_const();
         (*(*slot).inst.get()).p_api = ptr::from_ref(&API);
-        (*slot).c_ext_cfg = MaybeUninit::zeroed();
-        (*slot).tx_buffers = take(&mut cfg.tx_buffers);
-        (*slot).rx_buffers = take(&mut cfg.rx_buffers);
-        (*slot).tx_taken = 0;
-        (*slot).user_data = ptr::null();
         (*slot).cfg = {
             let c_ext_projection = Pin::new_unchecked(&mut (*slot).c_ext_cfg);
             UnsafePinned::new(cfg.c_conf(c_ext_projection))
@@ -317,7 +327,10 @@ unsafe impl<'a, const BUF_SIZE: usize> CallbackEvent<InterruptCause>
 }
 
 impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
-    pub fn new(gpt: pac::ETHERC0, cfg: EtherConfig<BUF_SIZE>) -> impl PinInit<Self, fsp_err_t> {
+    pub fn new_open(
+        gpt: pac::ETHERC0,
+        cfg: EtherConfig<BUF_SIZE>,
+    ) -> impl PinInit<Self, fsp_err_t> {
         unsafe {
             pin_init_from_closure(|slot: *mut Ether<'a, BUF_SIZE, Opened>| {
                 init_open(slot.cast::<Ether<'a, BUF_SIZE, Opened>>(), gpt, cfg)
@@ -347,10 +360,6 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
     {
         CallbackEvent::callback_set_static(self, context)
     }
-
-    // pub fn close(self: Pin<&mut Self>) -> Result<()> {
-    //     fsp_try_unsafe!(R_ETHER_Close(self.ctrl_void()))
-    // }
 
     #[inline(always)]
     pub fn read_zerocopy(
@@ -537,6 +546,23 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
 
         None
     }
+
+    // FIXME: Return all buffers and descriptors, and that ether phy too.
+    pub fn close<'any>(
+        this: DriverBox<Self>,
+    ) -> TypeStateResult<Ether<'any, BUF_SIZE, Closed>, Self> {
+        debug_assert!(!this.is_open());
+
+        let mut this = ManuallyDrop::new(this);
+
+        match fsp_try_unsafe!(R_ETHER_Close(this.as_mut().ctrl_void())) {
+            Err(err) => Err((ManuallyDrop::into_inner(this), err)),
+            Ok(()) => unsafe {
+                let ptr = ptr::from_mut(this.get_unchecked_mut()).cast();
+                Ok(DriverBox::new_unchecked(&mut *ptr))
+            },
+        }
+    }
 }
 
 impl<const BUF_SIZE: usize, S> Ether<'_, BUF_SIZE, S> {
@@ -567,11 +593,11 @@ impl<const BUF_SIZE: usize, S> Ether<'_, BUF_SIZE, S> {
 
 #[rustfmt::skip]
 impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
-    pub fn new(ether_phy_instance: Pin<&'static mut EtherPhy<Closed>>) -> Self {
+    pub fn new(ether_phy_instance: DriverBox<EtherPhy<Closed>>) -> Self {
         const { assert!(BUF_SIZE <= 1514) };
         const { assert!(BUF_SIZE >= 60) };
 
-        let p_ether_phy_instance = ether_phy_instance.into_ref().get_ref().instance();
+        let p_ether_phy_instance = ether_phy_instance.leak().into_ref().get_ref().instance();
 
         Self {
             channel: 0,

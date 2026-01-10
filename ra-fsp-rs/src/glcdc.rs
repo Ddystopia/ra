@@ -1,17 +1,21 @@
 use core::{
     any::TypeId,
-    mem::zeroed,
+    mem::{ManuallyDrop, zeroed},
     pin::Pin,
     ptr,
     sync::atomic::{AtomicPtr, Ordering},
 };
 
-use crate::pin_init::{PinInit, pin_data, pin_init_from_closure, pinned_drop};
+use crate::{
+    DriverBox, TypeStateResult,
+    pin_init::{PinInit, pin_data, pin_init_from_closure, pinned_drop},
+};
 use ra_fsp_sys::generated::{
     self as raw, self as api, R_GLCDC_BASE, R_GLCDC_BufferChange, R_GLCDC_Close, R_GLCDC_Open,
     R_GLCDC_Type, display_api_t, display_cfg_t, display_ctrl_t, display_frame_layer_t,
-    display_instance_t, e_display_state, e_fsp_err, fsp_err_t, glcdc_extended_cfg_t,
-    glcdc_instance_ctrl_t,
+    display_instance_t, e_display_state,
+    e_fsp_err::{self, FSP_ERR_INVALID_UPDATE_TIMING},
+    fsp_err_t, glcdc_extended_cfg_t, glcdc_instance_ctrl_t,
 };
 
 use crate::{
@@ -36,7 +40,7 @@ struct CallbackContext {
 #[repr(C)] // `#[repr(C)]` is for `Glcdc::<Closed>::open`
 #[pin_data(PinnedDrop)]
 pub struct Glcdc<State: 'static> {
-    c_ext_cfg: core::mem::MaybeUninit<UnsafePinned<glcdc_extended_cfg_t>>,
+    c_ext_cfg: UnsafePinned<glcdc_extended_cfg_t>,
     ctrl: UnsafePinned<glcdc_instance_ctrl_t>,
     cfg: UnsafePinned<display_cfg_t>,
     inst: UnsafePinned<display_instance_t>, // points to cfg and ctrl
@@ -102,7 +106,7 @@ unsafe impl<S: 'static> Send for Glcdc<S> {}
 unsafe impl<S: 'static> Sync for Glcdc<S> {}
 
 impl Glcdc<Closed> {
-    pub fn new(regs: pac::GLCDC) -> Self {
+    pub const fn new(regs: pac::GLCDC) -> Self {
         const {
             assert!(
                 e_display_state::DISPLAY_STATE_CLOSED as u32 == 0,
@@ -113,10 +117,13 @@ impl Glcdc<Closed> {
             callback_ctx: UnsafePinned::new(CallbackContext {
                 regs,
                 user_data: ptr::null(),
-                current_owned_buffer: [AtomicPtr::default(), AtomicPtr::default()],
+                current_owned_buffer: [
+                    AtomicPtr::new(ptr::null_mut()),
+                    AtomicPtr::new(ptr::null_mut()),
+                ],
             }),
             prev_owned_buffer: [ptr::null_mut(); 2],
-            c_ext_cfg: core::mem::MaybeUninit::zeroed(),
+            c_ext_cfg: UnsafePinned::new(unsafe { zeroed() }),
             ctrl: UnsafePinned::new(unsafe { zeroed() }),
             cfg: UnsafePinned::new(unsafe { zeroed() }),
             inst: UnsafePinned::new(unsafe { zeroed() }),
@@ -124,20 +131,22 @@ impl Glcdc<Closed> {
         }
     }
     pub fn open(
-        self: Pin<&mut Self>,
+        this: DriverBox<Self>,
         cfg: DisplayConf<GlcdcExtendedConfig>,
-    ) -> Result<Pin<&mut Glcdc<Opened>>> {
+    ) -> TypeStateResult<Glcdc<Opened>, Self> {
+        let state = unsafe { (*(*this).ctrl.get()).state };
+        if state != e_display_state::DISPLAY_STATE_CLOSED {
+            return Err((this, e_fsp_err::FSP_ERR_ALREADY_OPEN));
+        }
+
         unsafe {
-            let this = ptr::from_mut(self.get_unchecked_mut());
-            let regs = ptr::read(&(*(*this).callback_ctx.get()).regs);
+            let mut this = ManuallyDrop::new(this);
+            let p_this = ptr::from_mut(this.get_unchecked_mut());
+            let regs = ptr::read(&(*(*p_this).callback_ctx.get()).regs);
 
-            if (*(*this).ctrl.get()).state != e_display_state::DISPLAY_STATE_CLOSED {
-                return Err(e_fsp_err::FSP_ERR_ALREADY_OPEN);
-            }
-
-            let this = this.cast::<Glcdc<Opened>>();
-            init_open(this, regs, cfg)?;
-            Ok(Pin::new_unchecked(&mut *this))
+            let p_this = p_this.cast::<Glcdc<Opened>>();
+            init_open(p_this, regs, cfg).map_err(|e| (ManuallyDrop::into_inner(this), e))?;
+            Ok(DriverBox::new_unchecked(&mut *p_this))
         }
     }
 }
@@ -149,6 +158,172 @@ impl Glcdc<Opened> {
     ) -> impl PinInit<Glcdc<Opened>, fsp_err_t> {
         unsafe { pin_init_from_closure(|slot| init_open(slot, glcdc, cfg)) }
     }
+
+    pub fn close(this: DriverBox<Self>) -> TypeStateResult<Glcdc<Closed>, Self> {
+        // let mut this = ManuallyDrop::new(this);
+        // match fsp_try_unsafe!({
+        //     let this = this.get_unchecked_mut();
+        //     R_GLCDC_Close(this.ctrl.get().cast::<display_ctrl_t>())
+        // }) {
+        //     Ok(()) => unsafe {
+        //         let ptr = ptr::from_mut(this.get_unchecked_mut());
+        //         Ok(DriverBox::new_unchecked(&mut *ptr.cast()))
+        //     },
+        //     Err(err) => Err((ManuallyDrop::into_inner(this), err)),
+        // }
+        let mut this = ManuallyDrop::new(this);
+
+        match fsp_try_unsafe!(R_GLCDC_Close(this.as_mut().ctrl().cast::<display_ctrl_t>())) {
+            Err(err) => Err((ManuallyDrop::into_inner(this), err)),
+            Ok(_) => unsafe {
+                let ptr = ptr::from_mut(this.get_unchecked_mut()).cast();
+                Ok(DriverBox::new_unchecked(&mut *ptr))
+            },
+        }
+    }
+
+    pub async fn close_debounce(
+        mut this: DriverBox<Self>,
+        mut debounce: impl AsyncFnMut(usize),
+    ) -> TypeStateResult<Glcdc<Closed>, Self> {
+        let mut i = 0;
+        loop {
+            match Self::close(this) {
+                Ok(closed) => return Ok(closed),
+                Err((opened, e)) if e == FSP_ERR_INVALID_UPDATE_TIMING => {
+                    this = opened;
+                    debounce(i).await;
+                    i += 1;
+                }
+                Err((opened, err)) => return Err((opened, err)),
+            }
+        }
+    }
+}
+
+impl Glcdc<Opened> {
+    /// Submit the `buffer` into the driver. Make sure to [`Self::take_buffer`] beforehand, as there is
+    /// a possibility it will leak after calling this method.
+    pub fn change_buffer(
+        self: Pin<&mut Self>,
+        layer: display_frame_layer_t,
+        mut buffer: FrameBufferMut,
+    ) -> core::result::Result<(), (fsp_err_t, FrameBufferMut)> {
+        let this = unsafe { self.get_unchecked_mut() };
+        let ptr = buffer.as_mut_ptr();
+        let ctrl = this.ctrl.get().cast::<display_ctrl_t>();
+
+        let ctx = this.callback_ctx();
+        let used_buffer = ctx.current_owned_buffer[layer as usize].load(Ordering::Relaxed);
+
+        fsp_try_unsafe!(R_GLCDC_BufferChange(ctrl, ptr, layer)).map_err(|e| (e, buffer))?;
+
+        this.prev_owned_buffer[layer as usize] = used_buffer;
+
+        Ok(())
+    }
+
+    pub fn take_buffer(
+        self: Pin<&mut Self>,
+        layer: display_frame_layer_t,
+    ) -> Option<FrameBufferMut> {
+        let this = unsafe { self.get_unchecked_mut() };
+        let cfg = this.cfg();
+        let layer = layer as usize;
+
+        let bpp = bpp(cfg.input[layer].format) as usize;
+        let hstride = cfg.input[layer].hstride as usize * bpp / 8;
+        let vsize = cfg.input[layer].vsize as usize;
+
+        if layer != 0 && layer != 1 || layer >= cfg.input.len() as usize {
+            return None;
+        }
+
+        let used_buf = {
+            let callback_ctx = unsafe { &*this.callback_ctx.get() };
+
+            callback_ctx.current_owned_buffer[layer].load(Ordering::Acquire)
+        };
+
+        let prev_buf = this.prev_owned_buffer[layer];
+
+        if prev_buf.is_null() || prev_buf == used_buf {
+            return None;
+        }
+
+        this.prev_owned_buffer[layer] = ptr::null_mut();
+
+        // Safety:
+        // - `DisplayConf::c_conf` ensures that length correct.
+        // - `Glcdc::update_buffer` ensures that length is enough.
+        // - Hardware is not using this buffer now.
+        unsafe { Some(FrameBufferMut::from_raw_parts(prev_buf, hstride * vsize)) }
+    }
+
+    // todo: use standart callback mechanism from this crate come on.
+    pub fn set_callback<F: Callback<raw::display_event_t>>(
+        self: Pin<&mut Self>,
+        callback: &'static F,
+    ) -> Result<()> {
+        critical_section::with(|_| unsafe {
+            let this = self.get_unchecked_mut();
+            let ctrl = this.ctrl.get().cast::<glcdc_instance_ctrl_t>();
+            (*this.callback_ctx.get()).user_data = ptr::from_ref(callback).cast::<()>();
+            (*ctrl).p_callback = Some(trampoline::<F>);
+        });
+        Ok(())
+    }
+}
+
+impl Glcdc<Closed> {
+    pub fn take_buffers(
+        self: Pin<&mut Self>,
+        layer: display_frame_layer_t,
+    ) -> Option<(FrameBufferMut, Option<FrameBufferMut>)> {
+        let this = unsafe { self.get_unchecked_mut() };
+        let cfg = this.cfg();
+        let layer = layer as usize;
+
+        let bpp = bpp(cfg.input[layer].format) as usize;
+        let hstride = cfg.input[layer].hstride as usize * bpp / 8;
+        let vsize = cfg.input[layer].vsize as usize;
+
+        if layer != 0 && layer != 1 || layer >= cfg.input.len() as usize {
+            return None;
+        }
+
+        let used_buf = {
+            let callback_ctx = unsafe { &*this.callback_ctx.get() };
+
+            callback_ctx.current_owned_buffer[layer].swap(ptr::null_mut(), Ordering::Relaxed)
+        };
+
+        let prev_buf = this.prev_owned_buffer[layer];
+        this.prev_owned_buffer[layer] = ptr::null_mut();
+
+        let len = hstride * vsize;
+
+        // Safety:
+        // - Driver is not accessing buffer, it is closed
+        // - `DisplayConf::c_conf` ensures that length correct.
+        // - `Glcdc::update_buffer` ensures that length is enough.
+        // - Hardware is not using this buffer now.
+        unsafe {
+            if !used_buf.is_null() && !prev_buf.is_null() {
+                let used_buf = FrameBufferMut::from_raw_parts(used_buf, len);
+                let prev_buf = FrameBufferMut::from_raw_parts(prev_buf, len);
+                Some((used_buf, Some(prev_buf)))
+            } else if used_buf.is_null() && !prev_buf.is_null() {
+                let prev_buf = FrameBufferMut::from_raw_parts(prev_buf, len);
+                Some((prev_buf, None))
+            } else if !used_buf.is_null() && prev_buf.is_null() {
+                let used_buf = FrameBufferMut::from_raw_parts(used_buf, len);
+                Some((used_buf, None))
+            } else {
+                None
+            }
+        }
+    }
 }
 
 #[pinned_drop]
@@ -158,12 +333,6 @@ impl<S: 'static> PinnedDrop for Glcdc<S> {
             return;
         }
 
-        // - If we are in the thread (can't preempt an interrupt), we can't preempt the callback.
-        //   - Interrupt is not running, thus after we reset callback,
-        //      we are sure nobody will use the `p_context` anymore, so we can free it.
-        //   - Todo: assert that drop is not called from interrupt context.
-        // - If we are in an interrupt with lower priority, we are only allowed this in RTIC.
-        //     - In this case require `&Glcdc` in interrupt. It will prevent drop.
         critical_section::with(|_| unsafe {
             let this = self.as_mut().get_unchecked_mut();
             let ctrl = this.ctrl.get().cast::<glcdc_instance_ctrl_t>();
@@ -228,7 +397,7 @@ unsafe fn init_open(
                 p_cfg: ptr::null(),
                 p_api: ptr::from_ref(&API),
             }),
-            c_ext_cfg: core::mem::MaybeUninit::uninit(),
+            c_ext_cfg: zeroed(),
             cfg: UnsafePinned::new(display_cfg),
             prev_owned_buffer: [ptr::null_mut(); 2],
             callback_ctx: UnsafePinned::new(CallbackContext {
@@ -245,15 +414,11 @@ unsafe fn init_open(
 
         (*(*slot).inst.get()).p_ctrl = (*slot).ctrl.get().cast::<core::ffi::c_void>();
         (*(*slot).inst.get()).p_cfg = (*slot).cfg.get().cast_const();
-
-        let p_extend = (*slot)
-            .c_ext_cfg
-            .write(UnsafePinned::new(cfg.extend.c_conf()))
-            .get()
-            .cast::<core::ffi::c_void>();
+        ptr::write((*slot).c_ext_cfg.get(), cfg.extend.c_conf());
 
         let p_ctrl = UnsafePinned::raw_get(&raw const (*slot).ctrl);
         let p_cfg = UnsafePinned::raw_get(&raw const (*slot).cfg);
+        let p_extend = UnsafePinned::raw_get(&raw const (*slot).c_ext_cfg).cast();
 
         (*p_cfg).p_extend = p_extend;
         (*p_cfg).p_callback = Some(trampoline::<()>);
@@ -303,75 +468,6 @@ impl<S: 'static> Glcdc<S> {
     pub fn cfg(&self) -> &display_cfg_t {
         // Safety: C code is not writing there.
         unsafe { &*self.cfg.get() }
-    }
-
-    pub fn change_buffer(
-        self: Pin<&mut Self>,
-        layer: display_frame_layer_t,
-        mut buffer: FrameBufferMut,
-    ) -> core::result::Result<(), (fsp_err_t, FrameBufferMut)> {
-        let this = unsafe { self.get_unchecked_mut() };
-        let ptr = buffer.as_mut_ptr();
-        let ctrl = this.ctrl.get().cast::<display_ctrl_t>();
-
-        let ctx = this.callback_ctx();
-        let used_buffer = ctx.current_owned_buffer[layer as usize].load(Ordering::Relaxed);
-
-        fsp_try_unsafe!(R_GLCDC_BufferChange(ctrl, ptr, layer)).map_err(|e| (e, buffer))?;
-
-        this.prev_owned_buffer[layer as usize] = used_buffer;
-
-        Ok(())
-    }
-
-    pub fn take_buffer(
-        self: Pin<&mut Self>,
-        layer: display_frame_layer_t,
-    ) -> Option<FrameBufferMut> {
-        let this = unsafe { self.get_unchecked_mut() };
-        let cfg = this.cfg();
-        let layer = layer as usize;
-
-        let bpp = bpp(cfg.input[layer].format) as usize;
-        let hstride = cfg.input[layer].hstride as usize * bpp / 8;
-        let vsize = cfg.input[layer].vsize as usize;
-
-        if layer != 0 && layer != 1 || layer >= cfg.input.len() as usize {
-            return None;
-        }
-
-        let used_buf = {
-            let callback_ctx = unsafe { &*this.callback_ctx.get() };
-
-            callback_ctx.current_owned_buffer[layer].load(Ordering::Acquire)
-        };
-
-        let prev_buf = this.prev_owned_buffer[layer];
-
-        if prev_buf.is_null() || prev_buf == used_buf {
-            return None;
-        }
-
-        this.prev_owned_buffer[layer] = ptr::null_mut();
-
-        // Safety:
-        // - `DisplayConf::c_conf` ensures that length correct.
-        // - `Glcdc::update_buffer` ensures that length is enough.
-        // - Hardware is not using this buffer now.
-        unsafe { Some(FrameBufferMut::from_raw_parts(prev_buf, hstride * vsize)) }
-    }
-
-    pub fn set_callback<F: Callback<raw::display_event_t>>(
-        self: Pin<&mut Self>,
-        callback: &'static F,
-    ) -> Result<()> {
-        critical_section::with(|_| unsafe {
-            let this = self.get_unchecked_mut();
-            let ctrl = this.ctrl.get().cast::<glcdc_instance_ctrl_t>();
-            (*this.callback_ctx.get()).user_data = ptr::from_ref(callback).cast::<()>();
-            (*ctrl).p_callback = Some(trampoline::<F>);
-        });
-        Ok(())
     }
 }
 

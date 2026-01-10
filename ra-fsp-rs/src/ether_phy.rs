@@ -48,6 +48,9 @@ pub struct EtherPhyConfig {
     pub mii_type: e_ether_phy_mii_type,
 }
 
+unsafe impl<S> crate::LifetimeDriver for EtherPhy<S> {
+    type Target<'a> = EtherPhy<S>;
+}
 unsafe impl<S> crate::Block for EtherPhy<S> {
     type Config = ether_phy_cfg_t;
     type Instance = ether_phy_instance_t;
@@ -65,8 +68,9 @@ unsafe impl<S> crate::Block for EtherPhy<S> {
     }
 }
 
+
 impl EtherPhy<Closed> {
-    pub const fn new(edmac: pac::EDMAC0, conf: EtherPhyConfig) -> impl PinInit<Self> {
+    pub const fn new_closed(edmac: pac::EDMAC0, conf: EtherPhyConfig) -> impl PinInit<Self> {
         unsafe {
             pin_init_from_closure(move |slot: *mut Self| {
                 ptr::write(

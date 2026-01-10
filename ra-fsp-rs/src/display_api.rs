@@ -56,6 +56,7 @@ pub struct Input {
     pub lines_repeat_times: u16,
 }
 
+#[derive(Clone, Copy)]
 pub struct Output {
     pub htiming: display_timing_t,
     pub vtiming: display_timing_t,
@@ -458,5 +459,20 @@ where
         let mut status = MaybeUninit::zeroed();
         fsp_try_unsafe!((T::API.statusGet.unwrap())(ctrl, status.as_mut_ptr()))?;
         Ok(unsafe { status.assume_init() })
+    }
+}
+
+impl<Extended: Clone> Clone for DisplayConf<Extended> {
+    fn clone(&self) -> Self {
+        Self {
+            input_buffers: [None, None],
+            input: self.input,
+            output: self.output,
+            layer: self.layer,
+            line_detect: self.line_detect,
+            underflow_1: self.underflow_1,
+            underflow_2: self.underflow_2,
+            extend: self.extend.clone(),
+        }
     }
 }
