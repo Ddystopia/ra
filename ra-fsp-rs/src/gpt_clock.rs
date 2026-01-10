@@ -9,11 +9,7 @@ use cortex_m::peripheral::NVIC;
 use critical_section::{CriticalSection, Mutex};
 
 use crate::{
-    Callback, Result,
-    gpt::{Channel, Gpt},
-    pac,
-    state_markers::Opened,
-    timer_api::TimerApi,
+    Callback, DriverBox, Result, gpt::{Channel, Gpt}, pac, state_markers::Opened, timer_api::TimerApi
 };
 
 #[allow(unused_imports)]
@@ -55,7 +51,7 @@ pub struct TimerState<C> {
 }
 
 pub struct GptTimerStorage<C: 'static> {
-    pub gpt: Mutex<RefCell<Option<Pin<&'static mut Gpt<'static, C, Opened>>>>>,
+    pub gpt: Mutex<RefCell<Option<DriverBox<Gpt<'static, C, Opened>>>>>,
     pub timer_state: AtomicOnceCell<TimerState<C>>,
 }
 
@@ -64,7 +60,7 @@ pub trait Storage<C: 'static> {
 }
 
 pub fn start<C: Channel + 'static, Cb: Callback<timer_event_t> + Storage<C>>(
-    gpt: Pin<&'static mut Gpt<'static, C, Opened>>,
+    gpt: DriverBox<Gpt<'static, C, Opened>>,
     callback: &'static Cb,
 ) -> Result<()> {
     if gpt.capture_a_irq().is_none() {

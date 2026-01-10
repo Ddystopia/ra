@@ -70,6 +70,12 @@ impl<T> DriverBox<T> {
         // SAFETY: the same as `Pin::get_ref`.
         unsafe { Pin::new_unchecked(self.0.as_ref()) }
     }
+    pub fn leak<'a>(self) -> Pin<&'a mut T> {
+        let mut this = core::mem::ManuallyDrop::new(self);
+        // SAFETY: `self` is pinned thus creating a pin is fine. Memory where 
+        //          we point is leaked and will always be available for reads and writes.
+        unsafe { Pin::new_unchecked(this.0.as_mut()) }
+    }
     /// Refer to [`Pin::get_unchecked_mut`].
     pub unsafe fn get_unchecked_mut(&mut self) -> &mut T {
         unsafe { self.0.as_mut() }

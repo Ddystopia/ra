@@ -6,7 +6,7 @@ use embassy_time_queue_utils::Queue;
 use ra_fsp_sys::generated::{e_fsp_err, e_timer_event, timer_event_t};
 
 use crate::{
-    Callback, Result,
+    Callback, DriverBox, Result,
     gpt::{Channel, Gpt},
     gpt_clock::{self, GptTimerStorage, Storage, TimerStateExt},
     state_markers::Opened,
@@ -21,29 +21,25 @@ pub struct EmbassyGptTimerDriver<C: 'static> {
 }
 
 impl<C: Channel + 'static> EmbassyGptTimerDriver<C> {
-    pub fn start(&'static self, mut gpt: Pin<&'static mut Gpt<'static, C, Opened>>) -> Result<()> {
+    pub fn start(&'static self, mut gpt: DriverBox<Gpt<'static, C, Opened>>) -> Result<()> {
         if gpt.as_mut().info_get()?.clock_frequency as u64 != TICK_HZ {
             log::error!("GPT frequency not matching selected tick-hz-* feature");
             return Err(e_fsp_err::FSP_ERR_ASSERTION);
         }
 
-        gpt_clock::start::<C, EmbassyGptTimerDriver<C>>(gpt, self)
+        gpt_clock::start::<C, Self>(gpt, self)
     }
 }
 
 impl<C: Channel> EmbassyGptTimerDriver<C> {
     pub const fn new() -> Self {
-        EmbassyGptTimerDriver {
+        Self {
             timer: GptTimerStorage::new(),
             queue: Mutex::new(RefCell::new(Queue::new())),
         }
     }
 
-    fn trigger_alarm<T: TimerApi>(
-        &self,
-        cs: CriticalSection,
-        mut gpt: Pin<&mut T>,
-    ) -> Result<()> {
+    fn trigger_alarm<T: TimerApi>(&self, cs: CriticalSection, mut gpt: Pin<&mut T>) -> Result<()> {
         let timer = self.timer.timer_state.must_get();
         let mut queue = self.queue.borrow_ref_mut(cs);
         let mut next = queue.next_expiration(timer.now());
@@ -103,14 +99,14 @@ impl<C: Channel + 'static> Callback<timer_event_t> for EmbassyGptTimerDriver<C> 
     fn call(this: &Self, event: e_timer_event) {
         let state = this.timer.timer_state.must_get();
         let gpt = &this.timer.gpt;
-        critical_section::with(|cs| match event {
+        match event {
             e_timer_event::TIMER_EVENT_CYCLE_END => Ok(state.next_period()),
             e_timer_event::TIMER_EVENT_COMPARE_A => Ok(state.next_period()),
-            e_timer_event::TIMER_EVENT_COMPARE_B => {
+            e_timer_event::TIMER_EVENT_COMPARE_B => critical_section::with(|cs| {
                 this.trigger_alarm(cs, gpt.borrow_ref_mut(cs).as_mut().unwrap().as_mut())
-            }
+            }),
             _ => Ok(()),
-        })
+        }
         .expect("Error in callback handler");
     }
 }

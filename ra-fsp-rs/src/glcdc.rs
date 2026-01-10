@@ -77,6 +77,10 @@ const API: display_api_t = display_api_t {
     statusGet: Some(api::R_GLCDC_StatusGet),
 };
 
+unsafe impl<S> crate::LifetimeDriver for Glcdc<S> {
+    type Target<'a> = Glcdc<S>;
+}
+
 unsafe impl<S> Block for Glcdc<S> {
     type Config = display_cfg_t;
     type Instance = display_instance_t;

@@ -43,8 +43,9 @@ pub mod systick {
     }
 }
 
-#[cfg(any(feature = "embassy-time-gpt", feature = "rtic-monotonics-gpt"))]
-mod gpt_clock;
+/// Abstractions to create clocks.
+#[cfg(feature = "mod-r_gpt")]
+pub mod gpt_clock;
 
 #[cfg(any(feature = "smoltcp-ether"))]
 pub mod smoltcp {
