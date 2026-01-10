@@ -1,4 +1,4 @@
-use core::{pin::Pin, ptr::NonNull};
+use core::{fmt::Debug, ops::Deref, pin::Pin, ptr::NonNull};
 use pin_init::InPlaceWrite;
 use static_cell::StaticCell;
 
@@ -63,7 +63,25 @@ impl<T> DriverBox<T> {
         // SAFETY: see documentation of `DriverBox`. It is basically the same as `Pin<&mut T>`.
         unsafe { Pin::new_unchecked(self.0.as_mut()) }
     }
+    pub fn as_ref(&self) -> Pin<&T> {
+        // SAFETY: the same as `Pin::get_ref`.
+        unsafe { Pin::new_unchecked(self.0.as_ref()) }
+    }
+    /// Refer to [`Pin::get_unchecked_mut`].
+    pub unsafe fn get_unchecked_mut(&mut self) -> &mut T {
+        unsafe { self.0.as_mut() }
+    }
+    /// Refer to [`Pin::new_unchecked`].
+    pub unsafe fn new_unchecked(driver: &mut T) -> Self {
+        DriverBox(NonNull::from_mut(driver))
+    }
+}
 
+impl<T> Deref for DriverBox<T> {
+    type Target = T;
+    fn deref(&self) -> &T {
+        Pin::get_ref(Self::as_ref(self))
+    }
 }
 
 /*
@@ -146,5 +164,19 @@ impl<T: LifetimeDriver> DriverPlace<T> {
     ) -> Option<Result<DriverBox<T::Target<'a>>, E>> {
         let pin = self.0.try_uninit()?.write_pin_init(init);
         Some(pin.map(DriverBox::from_pin))
+    }
+}
+
+impl<T: Debug> Debug for DriverBox<T> {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        let value: &T = &self;
+        f.debug_tuple("DriverBox").field(value).finish()
+    }
+}
+
+impl<T> Drop for DriverBox<T> {
+    fn drop(&mut self) {
+        // SAFETY: `self` is equivalent to `Pin<Box<T>>`, thus it is correct to drop it like that.
+        unsafe { core::ptr::drop_in_place(self.0.as_ptr()) }
     }
 }
