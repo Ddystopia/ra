@@ -1,5 +1,4 @@
 use core::{
-    cell::UnsafeCell,
     marker::PhantomData,
     mem::{ManuallyDrop, MaybeUninit, zeroed},
     ptr,
@@ -7,7 +6,7 @@ use core::{
 
 use crate::{
     DriverBox, TypeStateResult,
-    pin_init::{PinInit, pin_init_from_closure},
+    pin_init::{pin_data, PinInit, pin_init_from_closure},
     state_markers::Closed,
 };
 use ra_fsp_sys::generated::IOPORT_CFG_PARAM_CHECKING_ENABLE;
@@ -35,8 +34,9 @@ const _: () = assert!(
     "The FSP configuration option IOPORT_CFG_PARAM_CHECKING_ENABLE is required with this crate, please enable it"
 );
 
+#[pin_data]
 pub struct IoPort<S> {
-    ctrl: UnsafeCell<ioport_instance_ctrl_t>,
+    ctrl: UnsafePinned<ioport_instance_ctrl_t>,
     cfg: UnsafePinned<ioport_cfg_t>,
     inst: UnsafePinned<ioport_instance_t>,
     regs: pac::PORT0,
@@ -59,7 +59,7 @@ unsafe impl<S> crate::Block for IoPort<S> {
     const API: &ioport_api_t = unsafe { &g_ioport_on_ioport };
 
     fn ctrl(&self) -> *mut core::ffi::c_void {
-        UnsafeCell::raw_get(&raw const self.ctrl).cast()
+        UnsafePinned::raw_get(&raw const self.ctrl).cast()
     }
 
     fn instance(&self) -> &Self::Instance {
@@ -77,7 +77,7 @@ unsafe fn init_open(
 ) -> crate::Result<()> {
     unsafe {
         let this = IoPort {
-            ctrl: UnsafeCell::new(core::mem::zeroed()),
+            ctrl: UnsafePinned::new(core::mem::zeroed()),
             cfg: UnsafePinned::new(conf.c_conf()),
             regs,
             inst: UnsafePinned::new(ioport_instance_t {
@@ -90,6 +90,11 @@ unsafe fn init_open(
         ptr::write(slot, this);
         (*(*slot).inst.get()).p_ctrl = (*slot).ctrl.get().cast();
         (*(*slot).inst.get()).p_cfg = (*slot).cfg.get().cast_const().cast();
+
+        let p_ctrl = (*(*slot).inst.get()).p_ctrl;
+        let p_cfg = (*(*slot).inst.get()).p_cfg;
+
+        crate::fsp_try_unsafe!(R_IOPORT_Open(p_ctrl, p_cfg))?;
         Ok(())
     }
 }
