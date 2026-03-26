@@ -76,6 +76,9 @@ impl<T> DriverBox<T> {
         //          we point is leaked and will always be available for reads and writes.
         unsafe { Pin::new_unchecked(this.0.as_mut()) }
     }
+    pub fn forget(self) {
+        core::mem::forget(self)
+    }
     /// Refer to [`Pin::get_unchecked_mut`].
     pub unsafe fn get_unchecked_mut(&mut self) -> &mut T {
         unsafe { self.0.as_mut() }
