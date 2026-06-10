@@ -59,11 +59,11 @@ pub trait Storage<C: 'static> {
     fn storage(&'static self) -> &'static GptTimerStorage<C>;
 }
 
-pub fn start<C: Channel + 'static, Cb: Callback<timer_event_t> + Storage<C>>(
+pub fn start<C: Channel + 'static, Cb: Callback<timer_event_t> + Sync + Storage<C>>(
     gpt: DriverBox<Gpt<'static, C, Opened>>,
     callback: &'static Cb,
 ) -> Result<()> {
-    if gpt.capture_a_irq().is_none() {
+    if gpt.cycle_end_irq().is_none() {
         log::error!("cycle_end_irq invalid");
 
         return Err(e_fsp_err::FSP_ERR_INVALID_ARGUMENT);
