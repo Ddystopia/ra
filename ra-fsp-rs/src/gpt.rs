@@ -5,10 +5,15 @@ use core::{
 };
 
 use ra_fsp_sys::generated::{
-    self as api, self as raw, BSP_IRQ_DISABLED, R_GPT_Close, R_GPT_Open, R_GPT0_Type, e_fsp_err,
-    fsp_err_t, gpt_extended_cfg_t, gpt_instance_ctrl_t, timer_api_t, timer_callback_args_t,
-    timer_cfg_t, timer_ctrl_t, timer_event_t, timer_instance_t,
+    self as api, self as raw, BSP_IRQ_DISABLED, GPT_CFG_PARAM_CHECKING_ENABLE, R_GPT_Close,
+    R_GPT_Open, R_GPT0_Type, e_fsp_err, fsp_err_t, gpt_extended_cfg_t, gpt_instance_ctrl_t,
+    timer_api_t, timer_callback_args_t, timer_cfg_t, timer_ctrl_t, timer_event_t, timer_instance_t,
 };
+
+const _: () = assert!(
+    GPT_CFG_PARAM_CHECKING_ENABLE == 1,
+    "The FSP configuration option GPT_CFG_PARAM_CHECKING_ENABLE is required with this crate, please enable it"
+);
 
 use crate::{
     Block, Callback, DriverBox, Result, TypeStateResult,
