@@ -202,7 +202,7 @@ pub const fn layer_hstride_px(hsize: u16, format: e_display_in_format) -> u32 {
 
 pub enum DisplayConfError {
     InvalidDimensions(u16, u16),
-    UnmatchedBufferSize { extected: usize, found: usize },
+    UnmatchedBufferSize { expected: usize, found: usize },
 }
 
 impl<Extended> DisplayConf<Extended> {
@@ -229,7 +229,7 @@ impl<Extended> DisplayConf<Extended> {
                 // To be able to return it back, we will need to calculate the size.
                 if buf_len != required_buf_len {
                     return Err(DisplayConfError::UnmatchedBufferSize {
-                        extected: required_buf_len,
+                        expected: required_buf_len,
                         found: buf_len,
                     });
                 }
@@ -291,10 +291,10 @@ impl core::fmt::Display for DisplayConfError {
                     "Invalid dimensions: vsize={vsize}, hsize={hsize}, expected vsize in 16..=1016 and hsize in 16..=1020"
                 )
             }
-            DisplayConfError::UnmatchedBufferSize { extected, found } => {
+            DisplayConfError::UnmatchedBufferSize { expected, found } => {
                 write!(
                     f,
-                    "Unmatched buffer size: expected={extected}, found={found}",
+                    "Unmatched buffer size: expected={expected}, found={found}",
                 )
             }
         }

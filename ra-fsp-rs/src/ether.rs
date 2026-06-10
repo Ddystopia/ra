@@ -82,7 +82,7 @@ Write:
 
 => For write descriptor we can see, that if `TD0_TACT == 0`, we can return
 `Pin<&'static mut Buffer<BUF_SIZE>>` to the user, when he wants to take the buffer
-for the purpous of writing
+for the purpose of writing
 
 */
 
@@ -345,7 +345,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
     }
 
     // May be non-static because calling that callback requires some form of `&mut Self`
-    /// For this callback to be invoked, call [`gpt_counter_overflow_isr`], [`gpt_capture_compare_a_isr`] etc in the interrup handler.
+    /// For this callback to be invoked, call [`gpt_counter_overflow_isr`], [`gpt_capture_compare_a_isr`] etc in the interrupt handler.
     pub fn callback_set<F>(self: Pin<&mut Self>, context: &'a F) -> Result<()>
     where
         F: Callback<InterruptCause, Self>,
@@ -795,14 +795,14 @@ impl InterruptCause {
         match args.event {
             ETHER_EVENT_INTERRUPT => {
                 let receive_mask = ETHER_EDMAC_INTERRUPT_FACTOR_FR;
-                let trasmit_mask = ETHER_EDMAC_INTERRUPT_FACTOR_TC;
+                let transmit_mask = ETHER_EDMAC_INTERRUPT_FACTOR_TC;
 
                 /* Packet received. */
                 if receive_mask == (args.status_eesr & receive_mask) {
                     cause.receive = true;
                 }
 
-                if trasmit_mask == (args.status_eesr & trasmit_mask) {
+                if transmit_mask == (args.status_eesr & transmit_mask) {
                     cause.transmits = true;
                 }
             }
@@ -826,7 +826,7 @@ impl InterruptCause {
 impl<const BUF_SIZE: usize> Deref for Buffer<BUF_SIZE> {
     type Target = [u8; BUF_SIZE];
     fn deref(&self) -> &Self::Target {
-        // todo: autite it
+        // todo: audit it
         unsafe { &*self.buf.get() }
     }
 }

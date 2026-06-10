@@ -106,7 +106,6 @@ pub fn start<C: Channel + 'static, Cb: Callback<timer_event_t> + Storage<C>>(
         NVIC::unpend(capture_b_irq);
 
         gpt.as_mut().stop()?;
-        gpt.as_mut().stop()?;
         gpt.as_mut().reset()?;
         gpt.as_mut().compare_match_set(0x80000000, channel)?;
         gpt.as_mut().callback_set_static(callback)?;
@@ -134,19 +133,21 @@ impl<C> TimerStateExt<C> for AtomicOnceCell<TimerState<C>> {
 }
 
 impl<C: Channel> TimerState<C> {
-    /// Dianables capture a interrupt
+    /// Disables "capture a" interrupt
     pub fn mask_a(&self) {
         NVIC::mask(self.capture_a_irq)
     }
-    /// Dianables capture b interrupt
+    /// Dianables "capture b"" interrupt
     pub fn mask_b(&self) {
         NVIC::mask(self.capture_b_irq)
     }
-    /// Enables capture a interrupt
+    /// Enables "capture a" interrupt
     pub fn unmask_a(&self) {
+        // todo: make sure that nothing else has that irq so
+        //       we will not tamper with it
         unsafe { NVIC::unmask(self.capture_a_irq) }
     }
-    /// Enables capture b interrupt
+    /// Enables "capture b" interrupt
     pub fn unmask_b(&self) {
         // todo: make sure that nothing else has that irq so
         //       we will not tamper with it

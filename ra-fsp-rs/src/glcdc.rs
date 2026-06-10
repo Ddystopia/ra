@@ -231,13 +231,13 @@ impl Glcdc<Opened> {
         let cfg = this.cfg();
         let layer = layer as usize;
 
-        let bpp = bpp(cfg.input[layer].format) as usize;
-        let hstride = cfg.input[layer].hstride as usize * bpp / 8;
-        let vsize = cfg.input[layer].vsize as usize;
-
         if layer != 0 && layer != 1 || layer >= cfg.input.len() as usize {
             return None;
         }
+
+        let bpp = bpp(cfg.input[layer].format) as usize;
+        let hstride = cfg.input[layer].hstride as usize * bpp / 8;
+        let vsize = cfg.input[layer].vsize as usize;
 
         let used_buf = {
             let callback_ctx = unsafe { &*this.callback_ctx.get() };

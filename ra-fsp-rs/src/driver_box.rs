@@ -3,12 +3,12 @@ use core::{fmt::Debug, ops::Deref, pin::Pin, ptr::NonNull};
 use static_cell::StaticCell;
 
 /**
-A trait provinding casting guarantees and type system support. You can think of
+A trait providing casting guarantees and type system support. You can think of
 this trait as a class of functors over `'a` where `Self` is the `'static` case.
 
 # Safety
 
-It must is always valid to cast `&'static mut MaybeUninit<Self>` to `for<'a, 'b: 'a> &'a mut MaybeUninit<Self::Target<'b>>`.
+It must is always be valid to cast `&'static mut MaybeUninit<Self>` to `for<'a, 'b: 'a> &'a mut MaybeUninit<Self::Target<'b>>`.
 
 */
 pub unsafe trait LifetimeDriver {
