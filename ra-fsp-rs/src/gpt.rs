@@ -372,7 +372,7 @@ unsafe fn init_open<C: Channel>(
 
             let p_extend = (*p_cfg).p_extend.cast::<gpt_extended_cfg_t>().cast_mut();
             utils::try_read_priority_into(cfg.extend.capture_a, &mut (*p_extend).capture_a_ipl);
-            utils::try_read_priority_into(cfg.extend.capture_a, &mut (*p_extend).capture_a_ipl);
+            utils::try_read_priority_into(cfg.extend.capture_b, &mut (*p_extend).capture_b_ipl);
 
             fsp_try_unsafe!(R_GPT_Open(p_ctrl.cast::<timer_ctrl_t>(), p_cfg))
         })
