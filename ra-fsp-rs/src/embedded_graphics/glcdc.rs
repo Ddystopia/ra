@@ -22,10 +22,14 @@ pub trait Kind {
     const RAW_FORMAT: display_in_format_t;
     const BPP: usize = bpp(Self::RAW_FORMAT) as usize;
 
+    #[cfg(feature = "buoyant")]
     type Pixel: PixelColor
         + From<<Self::Pixel as PixelColor>::Raw>
         + buoyant::primitives::Interpolate
         + buoyant::color::AlphaColor;
+ 
+    #[cfg(not(feature = "buoyant"))]
+    type Pixel: PixelColor + From<<Self::Pixel as PixelColor>::Raw>;
 }
 
 mod bpp4;

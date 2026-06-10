@@ -46,7 +46,8 @@ smoltcp-ether = ["dep:smoltcp", "ra-fsp-sys/mod-r_ether", "smoltcp/medium-ethern
 rtic-monotonics = ["dep:rtic-monotonics"]
 rtic-monotonics-gpt = ["mod-r_gpt", "rtic-monotonics"]
 embassy-time-gpt = ["dep:embassy-time-queue-utils", "dep:embassy-time-driver", "mod-r_gpt"]
-embedded-graphics-glcdc = ["dep:buoyant", "dep:embedded-graphics", "mod-r_glcdc"]
+embedded-graphics-glcdc = ["dep:embedded-graphics", "mod-r_glcdc"]
+buoyant = ["dep:buoyant"]
 
 mod-r_dmac = ["ra-fsp-sys/mod-r_dmac"]
 mod-r_elc = ["ra-fsp-sys/mod-r_elc"]

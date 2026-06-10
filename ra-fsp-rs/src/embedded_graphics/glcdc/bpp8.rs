@@ -166,10 +166,12 @@ impl From<usize> for Clut8Pixel {
     }
 }
 
+#[cfg(feature = "buoyant")]
 impl buoyant::primitives::Interpolate for Clut8Pixel {
     fn interpolate(from: Self, to: Self, amount: u8) -> Self {
         if amount == 0 { from } else { to }
     }
 }
 
+#[cfg(feature = "buoyant")]
 impl buoyant::color::AlphaColor for Clut8Pixel {}
