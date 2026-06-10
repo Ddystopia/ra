@@ -396,7 +396,16 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
             return Err(FSP_ERR_ASSERTION);
         }
 
-        Ok((unsafe { Pin::new_unchecked(&mut *p_buf) }, len as usize))
+        let len = len as usize;
+        // FSP reports len = frame_size + padding, which can exceed BUF_SIZE when padding is
+        // enabled. Clamp to avoid callers slicing past the buffer boundary.
+        #[cfg(debug_assertions)]
+        if len > BUF_SIZE {
+            log::warn!("ether(read): reported len {len} > BUF_SIZE {BUF_SIZE}, clamping");
+        }
+        let len = len.min(BUF_SIZE);
+
+        Ok((unsafe { Pin::new_unchecked(&mut *p_buf) }, len))
     }
     #[inline(always)]
     pub fn read_non_zerocopy(self: Pin<&mut Self>, buffer: &mut [u8]) -> Result<usize> {
@@ -528,11 +537,12 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
             //   unconditionally at open, so `position < tx_buffers.len()` always (and
             //   `position < 4`, a valid `u32` bit index).
             let position = p_desc.offset_from(p_tx_descriptors);
-            let position = position as u8;
 
-            const { assert_eq!(size_of::<Descriptor<BUF_SIZE>>(), size_of::<ether_instance_descriptor_t>()) };
-            const { assert_eq!(align_of::<Descriptor<BUF_SIZE>>(), align_of::<ether_instance_descriptor_t>()) };
+            const { assert!(size_of::<Descriptor<BUF_SIZE>>() == size_of::<ether_instance_descriptor_t>()) };
+            const { assert!(align_of::<Descriptor<BUF_SIZE>>() == align_of::<ether_instance_descriptor_t>()) };
             debug_assert!(position >= 0 && (position as usize) < this.tx_buffers.len());
+
+            let position = position as u8;
 
             if this.tx_taken & (1 << position) != 0 {
                 log::error!("TX taken");
