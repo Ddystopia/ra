@@ -306,6 +306,10 @@ unsafe impl<'a, const BUF_SIZE: usize> CallbackEvent<InterruptCause>
         }
     }
 
+    fn user_data(this: *mut Self) -> *const () {
+        unsafe { (*this).user_data }
+    }
+
     #[inline(always)]
     fn fsp_callback_set<'b>(
         self: Pin<&'b mut Self>,
@@ -315,13 +319,14 @@ unsafe impl<'a, const BUF_SIZE: usize> CallbackEvent<InterruptCause>
     ) -> Result<()> {
         unsafe {
             let this = self.get_unchecked_mut();
-            this.user_data = user_data;
             fsp_try_unsafe!(R_ETHER_CallbackSet(
                 this.ctrl.get().cast(),
                 Some(Self::cast_callback(p_callback)),
                 p_context,
                 core::ptr::null_mut(),
-            ))
+            ))?;
+            this.user_data = user_data;
+            Ok(())
         }
     }
 }

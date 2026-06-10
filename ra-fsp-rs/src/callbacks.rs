@@ -50,6 +50,7 @@ pub(crate) unsafe trait CallbackEvent<E>: Block {
     fn context(this: *mut Self) -> *mut *const Self;
     fn process_args(args: *mut ()) -> (*mut Self, *const (), E);
     fn process_static_args(args: *mut ()) -> (*const (), E);
+    fn user_data(this: *mut Self) -> *const ();
     fn fsp_callback_set<'a>(
         self: Pin<&'a mut Self>,
         p_callback: unsafe extern "C" fn(*mut ()),
@@ -114,6 +115,15 @@ pub(crate) unsafe trait CallbackEvent<E>: Block {
     fn with_callback_provenance<R>(self: Pin<&mut Self>, f: impl FnOnce() -> R) -> R {
         unsafe {
             let this = ptr::from_mut(self.get_unchecked_mut());
+
+            // When user_data is null, either no callback or a static callback is registered.
+            // In the static case, p_context holds `&'static F` for the static trampoline and
+            // must not be clobbered. In the no-callback case FSP's p_callback is null so
+            // nothing reads p_context. Only touch p_context for non-static callbacks.
+            if Self::user_data(this).is_null() {
+                return f();
+            }
+
             let p_context = Self::context(this);
             let prev_context = *p_context;
 
