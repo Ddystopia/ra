@@ -315,20 +315,55 @@ pub trait DisplayApi {
     fn start(self: Pin<&mut Self>) -> Result<()>;
     /// stop the display
     fn stop(self: Pin<&mut Self>) -> Result<()>;
-    /// change layer parameters at runtime
+    /// Change layer parameters at runtime.
     ///
     /// `cfg` - new layer configuration
     /// `layer` - layer to change
-    fn layer_change(
+    ///
+    /// # Safety
+    ///
+    /// `cfg.input.p_base` is submitted directly to the display hardware as the
+    /// active scanout pointer.  The caller must ensure:
+    ///
+    /// - `cfg.input.p_base` is valid for the entire duration the hardware scans
+    ///   from it.
+    /// - The buffer is correctly aligned (64-byte) and large enough for the
+    ///   configured layer geometry (`hstride * vsize` bytes).
+    /// - The dimensions and pixel format in `cfg.input` are consistent with the
+    ///   values used when the display was opened.  Implementations that derive
+    ///   buffer sizes from open-time geometry will reconstruct buffer references
+    ///   with the wrong length if the geometry changes, leading to unsound
+    ///   `&mut` aliasing.
+    /// - Passing an unowned or invalid pointer corrupts the pointer-tracking
+    ///   invariant relied upon by buffer-recovery methods, which will later hand
+    ///   that pointer back as a safe `&'static mut [u8]`.
+    unsafe fn layer_change(
         self: Pin<&mut Self>,
         cfg: &display_runtime_cfg_t,
         layer: display_frame_layer_t,
     ) -> Result<()>;
-    /// change layer framebuffer pointer
+
+    /// Change the layer framebuffer pointer.
     ///
     /// `framebuffer` - 64-byte aligned framebuffer pointer
     /// `layer` - layer to change
-    fn buffer_change(
+    ///
+    /// # Safety
+    ///
+    /// `framebuffer` is submitted directly to the display hardware as the active
+    /// scanout pointer and is recorded by the driver for later buffer-recovery.
+    /// The caller must ensure:
+    ///
+    /// - `framebuffer` is valid for the entire duration the hardware scans from
+    ///   it (i.e. at least until the next successful buffer swap).
+    /// - The buffer is 64-byte aligned and at least `hstride * vsize` bytes in
+    ///   length, computed from the open-time layer geometry.
+    /// - No other live reference to the buffer exists for as long as the
+    ///   hardware holds the pointer.
+    /// - Passing an unowned or invalid pointer corrupts the driver's
+    ///   pointer-tracking invariant; buffer-recovery methods will later hand
+    ///   that pointer back as a safe `&'static mut [u8]` over arbitrary memory.
+    unsafe fn buffer_change(
         self: Pin<&mut Self>,
         framebuffer: *mut u8,
         layer: display_frame_layer_t,
@@ -390,7 +425,7 @@ where
         fsp_try_unsafe!((T::API.stop.unwrap())(ctrl))
     }
 
-    fn layer_change(
+    unsafe fn layer_change(
         self: Pin<&mut Self>,
         // is this lifetime ok?
         cfg: &display_runtime_cfg_t,
@@ -400,7 +435,7 @@ where
         fsp_try_unsafe!((T::API.layerChange.unwrap())(ctrl, cfg, layer))
     }
 
-    fn buffer_change(
+    unsafe fn buffer_change(
         self: Pin<&mut Self>,
         framebuffer: *mut u8,
         layer: display_frame_layer_t,
