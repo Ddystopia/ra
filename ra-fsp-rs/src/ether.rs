@@ -388,8 +388,25 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
     }
     #[inline(always)]
     pub fn read_non_zerocopy(self: Pin<&mut Self>, buffer: &mut [u8]) -> Result<usize> {
-        let zerocopy = unsafe { (*(*self.as_ref().get_ref().ctrl.get()).p_ether_cfg).zerocopy };
-        if zerocopy != ETHER_ZEROCOPY_DISABLE {
+        // SAFETY: C code is not writing to the cfg, this is a shared read.
+        let cfg = unsafe { &*(*self.as_ref().get_ref().ctrl.get()).p_ether_cfg };
+        if cfg.zerocopy != ETHER_ZEROCOPY_DISABLE {
+            return Err(FSP_ERR_ASSERTION);
+        }
+
+        // `R_ETHER_Read` (non-zerocopy) `memcpy`s `descriptor.size + padding` bytes
+        // into `buffer` WITHOUT knowing its length. A received frame is bounded by
+        // `BUF_SIZE`, and FSP inserts up to `padding` extra bytes,
+        // so the destination must hold at least `BUF_SIZE + padding` bytes.
+        // Without this guard a too-small `buffer` is an out-of-bounds write (UB)
+        // reachable from safe code.
+        let required = BUF_SIZE + cfg.padding as usize;
+        if buffer.len() < required {
+            log::error!(
+                "ether(read_non_zerocopy): buffer too small: {} < {}",
+                buffer.len(),
+                required
+            );
             return Err(FSP_ERR_ASSERTION);
         }
 
@@ -631,10 +648,11 @@ impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
     pub const fn ether_buffers(mut self, buffers: &'static mut [&'static mut Buffer<BUF_SIZE>]) -> Self { self.pp_ether_buffers = Some(buffers); self }
     pub const fn rx_descriptors(mut self, descriptors: &'static mut [Descriptor<BUF_SIZE>]) -> Self { self.rx_descriptors = descriptors; self }
     pub const fn tx_descriptors(mut self, descriptors: &'static mut [Descriptor<BUF_SIZE>]) -> Self { self.tx_descriptors = descriptors; self }
-    pub const fn buffers<const TX: usize, const RX: usize>(mut self, buffers: &'static mut Buffers<BUF_SIZE, TX, RX>) -> Self { 
+    pub const fn buffers<const TX: usize, const RX: usize>(mut self, buffers: &'static mut Buffers<BUF_SIZE, TX, RX>) -> Self {
+        const { assert!(TX <= u32::BITS as usize, "`u32` bitset is used to account for taken TX buffers.") };
         self.rx_buffers = &mut buffers.rx_buffers;
-        self.tx_buffers = &mut buffers.tx_buffers; 
-        self 
+        self.tx_buffers = &mut buffers.tx_buffers;
+        self
     }
     pub const fn set_buffers<const TX: usize, const RX: usize>(&mut self, buffers: &'static mut Buffers<BUF_SIZE, TX, RX>) {
         const { assert!(TX <= u32::BITS as usize, "`u32` bitset is used to account for taken TX buffers.") };
