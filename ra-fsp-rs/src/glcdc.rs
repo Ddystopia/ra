@@ -11,12 +11,17 @@ use crate::{
     pin_init::{PinInit, pin_data, pin_init_from_closure, pinned_drop},
 };
 use ra_fsp_sys::generated::{
-    self as raw, self as api, R_GLCDC_BASE, R_GLCDC_BufferChange, R_GLCDC_Close, R_GLCDC_Open,
-    R_GLCDC_Type, display_api_t, display_cfg_t, display_ctrl_t, display_frame_layer_t,
-    display_instance_t, e_display_state,
+    self as raw, self as api, GLCDC_CFG_PARAM_CHECKING_ENABLE, R_GLCDC_BASE, R_GLCDC_BufferChange,
+    R_GLCDC_Close, R_GLCDC_Open, R_GLCDC_Type, display_api_t, display_cfg_t, display_ctrl_t,
+    display_frame_layer_t, display_instance_t, e_display_state,
     e_fsp_err::{self, FSP_ERR_INVALID_UPDATE_TIMING},
     fsp_err_t, glcdc_extended_cfg_t, glcdc_instance_ctrl_t,
 };
+
+const _: () = assert!(
+    GLCDC_CFG_PARAM_CHECKING_ENABLE == 1,
+    "The FSP configuration option GLCDC_CFG_PARAM_CHECKING_ENABLE is required with this crate, please enable it"
+);
 
 use crate::{
     Block, Callback, Result,
@@ -210,6 +215,16 @@ impl Glcdc<Opened> {
         mut buffer: FrameBufferMut,
     ) -> core::result::Result<(), (fsp_err_t, FrameBufferMut)> {
         let this = unsafe { self.get_unchecked_mut() };
+
+        let required_len = match this.layer_buf_len(layer as usize) {
+            Some(len) => len,
+            None => return Err((e_fsp_err::FSP_ERR_INVALID_ARGUMENT, buffer)),
+        };
+
+        if buffer.len() != required_len {
+            return Err((e_fsp_err::FSP_ERR_INVALID_ARGUMENT, buffer));
+        }
+
         let ptr = buffer.as_mut_ptr();
         let ctrl = this.ctrl.get().cast::<display_ctrl_t>();
 
@@ -228,16 +243,9 @@ impl Glcdc<Opened> {
         layer: display_frame_layer_t,
     ) -> Option<FrameBufferMut> {
         let this = unsafe { self.get_unchecked_mut() };
-        let cfg = this.cfg();
         let layer = layer as usize;
 
-        if layer != 0 && layer != 1 || layer >= cfg.input.len() as usize {
-            return None;
-        }
-
-        let bpp = bpp(cfg.input[layer].format) as usize;
-        let hstride = cfg.input[layer].hstride as usize * bpp / 8;
-        let vsize = cfg.input[layer].vsize as usize;
+        let len = this.layer_buf_len(layer)?;
 
         let used_buf = {
             let callback_ctx = unsafe { &*this.callback_ctx.get() };
@@ -254,14 +262,14 @@ impl Glcdc<Opened> {
         this.prev_owned_buffer[layer] = ptr::null_mut();
 
         // Safety:
-        // - `DisplayConf::c_conf` ensures that length correct.
-        // - `Glcdc::update_buffer` ensures that length is enough.
+        // - `DisplayConf::c_conf` validates buffer length on open.
+        // - `Glcdc::change_buffer` validates that every submitted buffer has the correct length.
         // - Hardware is not using this buffer now.
-        unsafe { Some(FrameBufferMut::from_raw_parts(prev_buf, hstride * vsize)) }
+        unsafe { Some(FrameBufferMut::from_raw_parts(prev_buf, len)) }
     }
 
     // todo: use standart callback mechanism from this crate come on.
-    pub fn set_callback<F: Callback<raw::display_event_t>>(
+    pub fn set_callback<F: Callback<raw::display_event_t> + Sync>(
         self: Pin<&mut Self>,
         callback: &'static F,
     ) -> Result<()> {
@@ -281,16 +289,9 @@ impl Glcdc<Closed> {
         layer: display_frame_layer_t,
     ) -> Option<(FrameBufferMut, Option<FrameBufferMut>)> {
         let this = unsafe { self.get_unchecked_mut() };
-        let cfg = this.cfg();
         let layer = layer as usize;
 
-        let bpp = bpp(cfg.input[layer].format) as usize;
-        let hstride = cfg.input[layer].hstride as usize * bpp / 8;
-        let vsize = cfg.input[layer].vsize as usize;
-
-        if layer != 0 && layer != 1 || layer >= cfg.input.len() as usize {
-            return None;
-        }
+        let len = this.layer_buf_len(layer)?;
 
         let used_buf = {
             let callback_ctx = unsafe { &*this.callback_ctx.get() };
@@ -301,12 +302,10 @@ impl Glcdc<Closed> {
         let prev_buf = this.prev_owned_buffer[layer];
         this.prev_owned_buffer[layer] = ptr::null_mut();
 
-        let len = hstride * vsize;
-
         // Safety:
-        // - Driver is not accessing buffer, it is closed
-        // - `DisplayConf::c_conf` ensures that length correct.
-        // - `Glcdc::update_buffer` ensures that length is enough.
+        // - Driver is not accessing buffer, it is closed.
+        // - `DisplayConf::c_conf` validates buffer length on open.
+        // - `Glcdc::change_buffer` validates that every submitted buffer has the correct length.
         // - Hardware is not using this buffer now.
         unsafe {
             if !used_buf.is_null() && !prev_buf.is_null() {
@@ -468,6 +467,18 @@ impl<S: 'static> Glcdc<S> {
     pub fn cfg(&self) -> &display_cfg_t {
         // Safety: C code is not writing there.
         unsafe { &*self.cfg.get() }
+    }
+    /// Returns the required buffer byte-length for `layer`, or `None` if the
+    /// layer index is out of range (i.e. not 0 or 1).
+    fn layer_buf_len(&self, layer: usize) -> Option<usize> {
+        if layer > 1 || layer >= self.cfg().input.len() {
+            return None;
+        }
+        let cfg = &self.cfg().input[layer];
+        let bpp = bpp(cfg.format) as usize;
+        let hstride = cfg.hstride as usize * bpp / 8;
+        let vsize = cfg.vsize as usize;
+        Some(hstride * vsize)
     }
 }
 
