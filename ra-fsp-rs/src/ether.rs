@@ -359,7 +359,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
     /// For this callback to be invoked, call [`gpt_counter_overflow_isr`], [`gpt_capture_compare_a_isr`] etc in the interrupt handler.
     pub fn callback_set<F>(self: Pin<&mut Self>, context: &'a F) -> Result<()>
     where
-        F: Callback<InterruptCause, Self>,
+        F: Callback<InterruptCause, Self> + Sync,
     {
         CallbackEvent::callback_set(self, context)
     }
@@ -367,7 +367,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
     // Must be static because Gpt might be closed dropped etc during `F`'s call.
     pub fn callback_set_static<F>(self: Pin<&mut Self>, context: &'static F) -> Result<()>
     where
-        F: Callback<InterruptCause>,
+        F: Callback<InterruptCause> + Sync,
     {
         CallbackEvent::callback_set_static(self, context)
     }

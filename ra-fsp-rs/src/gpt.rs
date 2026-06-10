@@ -261,7 +261,7 @@ impl<'a, C: Channel> Gpt<'a, C, Opened> {
     /// For this callback to be invoked, call [`gpt_counter_overflow_isr`], [`gpt_capture_compare_a_isr`] etc in the interrup handler.
     pub fn callback_set<F>(self: Pin<&mut Self>, context: &'a F) -> Result<()>
     where
-        F: Callback<timer_event_t, Self>,
+        F: Callback<timer_event_t, Self> + Sync,
     {
         CallbackEvent::callback_set(self, context)
     }
@@ -269,7 +269,7 @@ impl<'a, C: Channel> Gpt<'a, C, Opened> {
     // Must be static because Gpt might be closed dropped etc during `F`'s call.
     pub fn callback_set_static<F>(self: Pin<&mut Self>, context: &'static F) -> Result<()>
     where
-        F: Callback<timer_event_t>,
+        F: Callback<timer_event_t> + Sync,
     {
         CallbackEvent::callback_set_static(self, context)
     }

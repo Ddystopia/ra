@@ -64,7 +64,7 @@ pub(crate) unsafe trait CallbackEvent<E>: Block {
     }
 
     #[inline(always)]
-    fn callback_set<'a, F: Callback<E, Self>>(self: Pin<&mut Self>, context: &'a F) -> Result<()> {
+    fn callback_set<'a, F: Callback<E, Self> + Sync>(self: Pin<&mut Self>, context: &'a F) -> Result<()> {
         unsafe extern "C" fn trampoline<'a, E, B: CallbackEvent<E>, F: Callback<E, B>>(
             args: *mut (),
         ) {
@@ -89,7 +89,7 @@ pub(crate) unsafe trait CallbackEvent<E>: Block {
     }
 
     #[inline(always)]
-    fn callback_set_static<F: Callback<E>>(
+    fn callback_set_static<F: Callback<E> + Sync>(
         self: Pin<&mut Self>,
         context: &'static F,
     ) -> Result<()> {
