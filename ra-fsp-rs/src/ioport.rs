@@ -34,6 +34,7 @@ const _: () = assert!(
     "The FSP configuration option IOPORT_CFG_PARAM_CHECKING_ENABLE is required with this crate, please enable it"
 );
 
+#[repr(C)] // `#[repr(C)]` is for typestate
 #[pin_data]
 pub struct IoPort<S> {
     ctrl: UnsafePinned<ioport_instance_ctrl_t>,

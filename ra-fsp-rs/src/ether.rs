@@ -86,6 +86,7 @@ for the purpose of writing
 
 */
 
+#[repr(C)] // `#[repr(C)]` is for typestate
 #[pin_data(PinnedDrop)]
 pub struct Ether<'a, const BUF_SIZE: usize, S: 'static> {
     ctrl: UnsafePinned<ether_instance_ctrl_t>,
