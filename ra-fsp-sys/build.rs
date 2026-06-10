@@ -120,7 +120,7 @@ fn main() {
         fsp_dir.join("inc/drivers"),
         fsp_dir.join("src/bsp/cmsis/Device/RENESAS/Include"),
         #[cfg(debug_assertions)]
-        PathBuf::from("/home/ddystopia/job/ra/ra-fsp-sys/debug_inc/"),
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("debug_inc"),
         fsp_dir.join("src/bsp/mcu").join(mcu_group),
         fsp_dir.join("src/bsp/mcu/all"),
         cmsis_dir.join("CMSIS/Core/Include/"),
