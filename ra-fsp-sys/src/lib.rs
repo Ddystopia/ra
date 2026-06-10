@@ -1,5 +1,4 @@
 #![no_std]
-#![feature(ptr_metadata)]
 
 pub mod generated {
     #![allow(non_camel_case_types)]
