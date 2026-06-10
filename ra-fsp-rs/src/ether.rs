@@ -551,7 +551,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
     pub fn close<'any>(
         this: DriverBox<Self>,
     ) -> TypeStateResult<Ether<'any, BUF_SIZE, Closed>, Self> {
-        debug_assert!(!this.is_open());
+        debug_assert!(this.is_open());
 
         let mut this = ManuallyDrop::new(this);
 
