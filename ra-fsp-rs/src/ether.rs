@@ -65,21 +65,43 @@ unsafe extern "C" {
 
 /*
 
-TX buffer ownership: the `tx_held` bit covers take -> submit; after submission
-the descriptor's TACT flag, written back by the EDMAC, covers submit -> done:
+TX buffer ownership is tracked by *move*, not by a side bitset: each TX
+descriptor `i` has one parking slot `tx_buffers[i]: Option<...>`. The full state
+space is (slot present?) x (descriptor TACT):
 
-| bit | TACT | state                               | owner    |
-|-----|------|-------------------------------------|----------|
-|  0  |  0   | free (unused or fully transmitted)  | driver   |
-|  1  |  0   | taken, not yet submitted            | user     |
-|  0  |  1   | submitted, in flight                | hardware |
-|  1  |  1   | unreachable: submit clears the bit  | -        |
+| slot | TACT | state                              | owner    |
+|------|------|------------------------------------|----------|
+| Some |  0   | free (unused or fully transmitted) | driver   |
+| None |  0   | taken, not yet returned/submitted  | user     |
+| Some |  1   | submitted, in flight               | hardware |
+| None |  1   | unreachable (see below)            | n/a      |
 
-`take_tx_buf` hands a buffer out only in the (0, 0) state. TACT is checked
-with a volatile read of the descriptor (plain SRAM, not MMIO), so neither
-safety nor reclamation depends on TC interrupt timing; the TC interrupt is
-purely a wakeup signal. Compare `rm_netxduo_ether.c`, which instead re-derives
-the completed range inside the TC handler from TDFAR + TACT via TxStatusGet.
+`(None, TACT=1)` is unreachable: TACT is set only by `write_zerocopy`, which in
+the same step parks the submitted buffer into the slot (making it `Some`); and a
+slot is emptied to `None` only by `take_tx_buf`, which first checks TACT is
+clear. So a `None` slot always implies TACT clear. The code still treats it
+defensively - `take_tx_buf` returns `None` for any non-available descriptor and
+the park operations reject `TACT=1` - so the unreachable state is harmless.
+
+Each operation handles every reachable state:
+- `take_tx_buf`: `(Some,0)` -> move out, return the buffer; `(None,0)` -> `None`
+  (already taken); `(Some,1)` -> `None` (in flight, `is_available` is false).
+- `write_zerocopy` / `tx_buffer_update` (parking): `(Some,1)` is rejected (never
+  displace a hardware-owned buffer); `(Some,0)` -> the parked free buffer is
+  *reclaimed* and returned to the caller (this is the normal one-call pool swap,
+  not an error); `(None,0)` -> park, return `None`.
+
+Because a `Pin<&'static mut Buffer>` is a unique owning token that cannot be
+duplicated in safe code, no buffer is ever handed out twice. TACT is read with a
+volatile load of the descriptor (plain SRAM, not MMIO), so reclamation never
+depends on TC interrupt timing; the TC interrupt is purely a wakeup signal.
+Compare `rm_netxduo_ether.c`, which brings its own packet buffers and swaps them
+through the descriptors the same way, re-deriving completion from TDFAR + TACT
+via TxStatusGet.
+
+This take/swap pair is the primitive a caller layers a packet pool on top of:
+`take_tx_buf` reclaims a completed buffer, `write_zerocopy` submits the next and
+hands back the buffer it displaced.
 
 Write:
     Non-Zerocopy:
@@ -110,11 +132,11 @@ pub struct Ether<'a, const BUF_SIZE: usize, S: 'static> {
     inst: UnsafePinned<ether_instance_t>,
     user_data: *const (),
     c_ext_cfg: MaybeUninit<UnsafePinned<ether_extended_cfg_t>>,
-    tx_buffers: &'static mut [Pin<&'static mut Buffer<BUF_SIZE>>],
+    /// One parking slot per TX descriptor. `None` means the buffer is currently
+    /// held by the user; ownership is tracked by move, not a side bitset. See
+    /// the ownership table at the top of this file.
+    tx_buffers: &'static mut [Option<Pin<&'static mut Buffer<BUF_SIZE>>>],
     rx_buffers: &'static mut [Pin<&'static mut Buffer<BUF_SIZE>>],
-    /// Bitset of TX buffers currently held by the user (between `take_tx_buf`
-    /// and submission). See the ownership table at the top of this file.
-    tx_held: u32,
     regs: pac::ETHERC0,
     _marker: PhantomData<(S, &'a ())>,
 }
@@ -122,11 +144,16 @@ pub struct Ether<'a, const BUF_SIZE: usize, S: 'static> {
 #[repr(C, align(32))]
 pub struct Buffer<const BUF_SIZE: usize> {
     buf: UnsafePinned<[u8; BUF_SIZE]>,
-    tx_held_position: UnsafePinned<u32>,
+    /// Nonzero while this RX buffer is loaned to the user (between
+    /// `read_zerocopy` and `rx_buffer_update`). Consulted only on the cold
+    /// link-up path (`update_rx_buffers`) so the buffer isn't re-armed into the
+    /// DMA ring while the user still holds it. `u32` (not `bool`) for a
+    /// word-sized access on cortex-m4.
+    rx_loaned: UnsafePinned<u32>,
 }
 
 pub struct Buffers<const BUF_SIZE: usize, const TX: usize, const RX: usize> {
-    tx_buffers: [Pin<&'static mut Buffer<BUF_SIZE>>; TX],
+    tx_buffers: [Option<Pin<&'static mut Buffer<BUF_SIZE>>>; TX],
     rx_buffers: [Pin<&'static mut Buffer<BUF_SIZE>>; RX],
 }
 
@@ -153,7 +180,7 @@ pub struct EtherConfig<const BUF_SIZE: usize> {
 
     pub tx_descriptors: &'static mut [Descriptor<BUF_SIZE>],
     pub rx_descriptors: &'static mut [Descriptor<BUF_SIZE>],
-    pub tx_buffers: &'static mut [Pin<&'static mut Buffer<BUF_SIZE>>],
+    pub tx_buffers: &'static mut [Option<Pin<&'static mut Buffer<BUF_SIZE>>>],
     pub rx_buffers: &'static mut [Pin<&'static mut Buffer<BUF_SIZE>>],
 }
 
@@ -204,7 +231,6 @@ impl<const BUF_SIZE: usize> Ether<'_, BUF_SIZE, Closed> {
             ctrl: UnsafePinned::new(unsafe { ::core::mem::zeroed() }),
             c_ext_cfg: MaybeUninit::zeroed(),
             tx_buffers: &mut [],
-            tx_held: 0,
             rx_buffers: &mut [],
             _marker: PhantomData,
             cfg: UnsafePinned::new(unsafe { ::core::mem::zeroed() }),
@@ -249,7 +275,6 @@ unsafe fn init_open<const BUF_SIZE: usize>(
             c_ext_cfg: zeroed(),
             tx_buffers: take(&mut cfg.tx_buffers),
             rx_buffers: take(&mut cfg.rx_buffers),
-            tx_held: 0,
             user_data: ptr::null(),
             cfg: zeroed(),
             _marker: PhantomData,
@@ -419,13 +444,16 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
         }
 
         let len = len as usize;
-        // FSP reports len = frame_size + padding, which can exceed BUF_SIZE when padding is
-        // enabled. Clamp to avoid callers slicing past the buffer boundary.
-        #[cfg(debug_assertions)]
-        if len > BUF_SIZE {
-            log::warn!("ether(read): reported len {len} > BUF_SIZE {BUF_SIZE}, clamping");
-        }
+        // `len` is `RFL + padding`; RFL is per-buffer, hardware-bounded by
+        // BUF_SIZE (RA6M3 RD1.RFL), so this clamp is a no-op when sized right and
+        // a safety backstop otherwise. A frame larger than BUF_SIZE is split by
+        // the EDMAC and surfaced a fragment at a time (not reassembled here).
         let len = len.min(BUF_SIZE);
+
+        // Record that this RX buffer is now loaned to the user, so the link-up
+        // path (`update_rx_buffers`) won't re-arm it into the DMA ring while we
+        // still hold it. One store, no scan; the flag is read only on link-up.
+        unsafe { ptr::write((*p_buf).rx_loaned.get(), 1) };
 
         Ok((unsafe { Pin::new_unchecked(&mut *p_buf) }, len))
     }
@@ -437,12 +465,13 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
             return Err(FSP_ERR_ASSERTION);
         }
 
-        // `R_ETHER_Read` (non-zerocopy) `memcpy`s `descriptor.size + padding` bytes
-        // into `buffer` WITHOUT knowing its length. A received frame is bounded by
-        // `BUF_SIZE`, and FSP inserts up to `padding` extra bytes,
-        // so the destination must hold at least `BUF_SIZE + padding` bytes.
-        // Without this guard a too-small `buffer` is an out-of-bounds write (UB)
-        // reachable from safe code.
+        // `R_ETHER_Read` (non-zerocopy) `memcpy`s `descriptor.size + padding`
+        // (`RFL + padding`) bytes into `buffer` WITHOUT knowing its length. Per the
+        // RA6M3 manual (RD1.RFL, §31), RFL is the per-buffer frame length, hardware-
+        // bounded by the descriptor's RBL (= BUF_SIZE), so the copy is at most
+        // `BUF_SIZE + padding` bytes; the destination must hold that. Without this
+        // guard a too-small `buffer` is an out-of-bounds write (UB) reachable from
+        // safe code.
         let required = BUF_SIZE + cfg.padding as usize;
         if buffer.len() < required {
             log::error!(
@@ -465,36 +494,65 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
         self: Pin<&mut Self>,
         buffer: Pin<&'static mut Buffer<BUF_SIZE>>,
     ) -> Result<()> {
-        let ptr = unsafe { buffer.get_unchecked_mut().buf.get() };
+        let b = unsafe { buffer.get_unchecked_mut() };
+        // Going back into the DMA ring: no longer loaned to the user.
+        unsafe { ptr::write(b.rx_loaned.get(), 0) };
+        let ptr = b.buf.get();
 
         fsp_try_unsafe!(R_ETHER_RxBufferUpdate(self.ctrl_void(), ptr.cast()))
     }
+    /// Submits `buffer` to the current TX descriptor and parks it into that
+    /// descriptor's slot.
+    ///
+    /// On success returns the buffer that was previously parked in the slot, now
+    /// reclaimed (the completed buffer of the previous transmit on this
+    /// descriptor) - this is the normal one-call pool swap - or `None` if the
+    /// slot was empty (e.g. the buffer came from [`Self::take_tx_buf`]).
+    ///
+    /// On failure the buffer was *not* submitted; it is handed back unchanged in
+    /// the `Err` together with the error code, so the caller can retry or park it
+    /// with [`Self::tx_buffer_update`]. The call fails (rather than clobbering a
+    /// transmission in progress) when the descriptor is still in flight.
     #[inline(always)]
     pub fn write_zerocopy(
-        mut self: Pin<&mut Self>,
+        self: Pin<&mut Self>,
         buffer: Pin<&'static mut Buffer<BUF_SIZE>>,
         len: usize,
-    ) -> Result<()> {
-        let zerocopy = unsafe { (*(*self.as_ref().get_ref().ctrl.get()).p_ether_cfg).zerocopy };
-        if zerocopy != ETHER_ZEROCOPY_ENABLE {
-            return Err(FSP_ERR_ASSERTION);
+    ) -> core::result::Result<
+        Option<Pin<&'static mut Buffer<BUF_SIZE>>>,
+        (Pin<&'static mut Buffer<BUF_SIZE>>, fsp_err_t),
+    > {
+        unsafe {
+            let this = self.get_unchecked_mut();
+
+            if (*(*this.ctrl.get()).p_ether_cfg).zerocopy != ETHER_ZEROCOPY_ENABLE {
+                return Err((buffer, FSP_ERR_ASSERTION));
+            }
+
+            let position = this.current_tx_position();
+            let p_desc = (*this.ctrl.get()).p_tx_descriptor;
+
+            // (Some, TACT=1): the EDMAC is still transmitting on this descriptor.
+            // Submitting would clobber the in-flight descriptor and let us hand
+            // the hardware-owned buffer back as "reclaimed" - reject instead.
+            if !Descriptor::<BUF_SIZE>::is_available(p_desc) {
+                return Err((buffer, e_fsp_err::FSP_ERR_ETHER_ERROR_TRANSMIT_BUFFER_FULL));
+            }
+
+            let ptr = buffer.as_ref().get_ref().buf.get();
+            let len = len.min(BUF_SIZE);
+
+            match fsp_try_unsafe!(R_ETHER_Write(this.ctrl().cast(), ptr.cast(), len as u32)) {
+                // Submitted: `buffer` is now in flight (tracked by TACT from here
+                // on). Park it and hand back whatever free buffer the slot held -
+                // the reclaimed buffer for a one-call pool swap, or `None` if the
+                // slot was emptied by `take_tx_buf`.
+                Ok(()) => Ok(this.tx_buffers.get_mut(position).and_then(|s| s.replace(buffer))),
+                // Not submitted (descriptor untouched, slot unchanged): hand the
+                // buffer back so nothing is lost.
+                Err(e) => Err((buffer, e)),
+            }
         }
-
-        let ptr = buffer.as_ref().get_ref().buf.get();
-        let len = len.min(BUF_SIZE);
-
-        let res = fsp_try_unsafe!(R_ETHER_Write(
-            self.as_mut().ctrl_void(),
-            ptr.cast(),
-            len as u32
-        ));
-
-        // Release the hold bit either way: on success ownership moves to the
-        // hardware (tracked by the descriptor's TACT flag from here on), on
-        // failure the descriptor was never activated so the buffer is free.
-        self.tx_buffer_update(buffer);
-
-        res
     }
     #[inline(always)]
     pub fn write_non_zerocopy(self: Pin<&mut Self>, buffer: &[u8]) -> Result<()> {
@@ -527,9 +585,39 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
         Ok(())
     }
 
-    /// Takes the buffer out of the current tx descriptor. Returns `None` if
-    /// that buffer is already held or the hardware is still transmitting it
-    /// (descriptor TACT set) - see the ownership table at the top of this file.
+    /// Index of the descriptor FSP will submit next. This is also the
+    /// `tx_buffers` slot index because:
+    ///
+    /// - `offset_from` counts `ether_instance_descriptor_t` steps, which equals
+    ///   the `[Descriptor<BUF_SIZE>]` index because the two have the same size:
+    ///   `Descriptor` is a `#[repr(C)]` newtype around `ether_instance_descriptor_t`
+    ///   plus a ZST, and on the target the inner struct is already 16 bytes so the
+    ///   `align(16)` adds no padding. (This equality is also what makes the
+    ///   `[Descriptor] -> [ether_instance_descriptor_t]` cast in `c_conf` sound.)
+    ///   FSP further guarantees `p_desc`/`p_tx_descriptors` share the allocation.
+    /// - FSP keeps `p_tx_descriptor` in `0..num_tx_descriptors` (debug_assert).
+    /// - `EtherConfig::c_conf` enforces `tx_buffers.len() >= num_tx_descriptors`
+    ///   unconditionally at open, so `position < tx_buffers.len()` always.
+    #[inline(always)]
+    unsafe fn current_tx_position(&self) -> usize {
+        unsafe {
+            let p_inst = self.ctrl.get();
+            let p_desc = (*p_inst).p_tx_descriptor;
+            let p_conf = (*p_inst).p_ether_cfg;
+            let p_extend = (*p_conf).p_extend.cast::<ether_extended_cfg_t>();
+            let p_tx_descriptors = (*p_extend).p_tx_descriptors;
+
+            const { assert!(size_of::<Descriptor<BUF_SIZE>>() == size_of::<ether_instance_descriptor_t>()) };
+            let position = p_desc.offset_from(p_tx_descriptors);
+            debug_assert!(position >= 0 && (position as usize) < self.tx_buffers.len());
+            position as usize
+        }
+    }
+
+    /// Takes the buffer out of the current tx descriptor's slot. Returns `None`
+    /// if that buffer is already held by the user (slot empty) or the hardware
+    /// is still transmitting it (descriptor TACT set) - see the ownership table
+    /// at the top of this file.
     ///
     /// Descriptor is not moved. Note that the only way to move the descriptor is to transmit the message.
     ///
@@ -538,39 +626,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
     pub fn take_tx_buf(self: Pin<&mut Self>) -> Option<Pin<&'static mut Buffer<BUF_SIZE>>> {
         unsafe {
             let this = self.get_unchecked_mut();
-            let p_inst = this.ctrl.get();
-            let p_desc = (*p_inst).p_tx_descriptor;
-
-            let p_conf = (*p_inst).p_ether_cfg;
-            let p_extend = (*p_conf).p_extend.cast::<ether_extended_cfg_t>();
-            let p_tx_descriptors = (*p_extend).p_tx_descriptors;
-
-            // SAFETY of the `get_unchecked_mut` below: `position` is the index of
-            // the current TX descriptor, which is sound to use as a `tx_buffers`
-            // index because:
-            //
-            // - `offset_from` counts `ether_instance_descriptor_t` steps, which equals
-            //   the `[Descriptor<BUF_SIZE>]` index because the two have the same size:
-            //   `Descriptor` is a `#[repr(C)]` newtype around `ether_instance_descriptor_t`
-            //   plus a ZST, and on the target the inner struct is already 16 bytes so the
-            //   `align(16)` adds no padding. (This equality is also what makes the
-            //   `[Descriptor] -> [ether_instance_descriptor_t]` cast in `c_conf` sound.)
-            //   FSP further guarantees `p_desc`/`p_tx_descriptors` share the allocation.
-            // - FSP keeps `p_tx_descriptor` in `0..num_tx_descriptors` (debug_assert).
-            // - `EtherConfig::c_conf` enforces `tx_buffers.len() >= num_tx_descriptors`
-            //   unconditionally at open, so `position < tx_buffers.len()` always (and
-            //   `position < 4`, a valid `u32` bit index).
-            let position = p_desc.offset_from(p_tx_descriptors);
-
-            const { assert!(size_of::<Descriptor<BUF_SIZE>>() == size_of::<ether_instance_descriptor_t>()) };
-            debug_assert!(position >= 0 && (position as usize) < this.tx_buffers.len());
-
-            let position = position as u32;
-
-            if this.tx_held & (1 << position) != 0 {
-                log::error!("TX buffer already held");
-                return None;
-            }
+            let p_desc = (*this.ctrl.get()).p_tx_descriptor;
 
             // The EDMAC owns the descriptor and its buffer until it writes
             // TACT back to zero; never hand out an in-flight buffer.
@@ -578,17 +634,11 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
                 return None;
             }
 
-            this.tx_held |= 1 << position;
-
-            let buffer = this
-                .tx_buffers
-                .get_unchecked_mut(position as usize)
-                .as_mut()
-                .get_unchecked_mut();
-
-            ptr::write(buffer.tx_held_position.get(), position);
-
-            Some(Pin::new_unchecked(&mut *ptr::from_mut(buffer)))
+            // Move the buffer out of its slot, leaving `None`. A subsequent
+            // `take` returns `None` until the buffer is parked back, so a buffer
+            // is never handed out twice.
+            let position = this.current_tx_position();
+            this.tx_buffers.get_mut(position)?.take()
         }
     }
 
@@ -603,13 +653,30 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
 
         for buffer in &mut *this.rx_buffers {
             unsafe {
-                let ptr = buffer.as_mut().get_unchecked_mut().buf.get();
+                let b = buffer.as_mut().get_unchecked_mut();
 
+                // Don't re-arm a buffer the user is currently holding (loaned by
+                // `read_zerocopy`); handing it back to the EDMAC would let the
+                // hardware DMA into a buffer that still has a live `&mut` out.
+                if *b.rx_loaned.get() != 0 {
+                    continue;
+                }
+
+                let ptr = b.buf.get();
                 R_ETHER_RxBufferUpdate(instance, ptr.cast());
             }
         }
     }
 
+    /// Parks `buffer` into the current descriptor's slot *without* submitting it,
+    /// e.g. to return a buffer obtained from [`Self::take_tx_buf`] that ended up
+    /// not being sent.
+    ///
+    /// Returns the buffer previously parked in the slot, now reclaimed - this is
+    /// the normal result when swapping a pool buffer in, not an error - or `None`
+    /// if the slot was empty (the usual take-then-return case). If the descriptor
+    /// is currently in flight (`TACT` set) the slot holds a hardware-owned buffer
+    /// that must not be displaced, so the input `buffer` is handed straight back.
     #[inline(always)]
     pub fn tx_buffer_update(
         self: Pin<&mut Self>,
@@ -617,12 +684,18 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
     ) -> Option<Pin<&'static mut Buffer<BUF_SIZE>>> {
         unsafe {
             let this = self.get_unchecked_mut();
-            let position = *buffer.as_ref().tx_held_position.get();
+            let p_desc = (*this.ctrl.get()).p_tx_descriptor;
 
-            this.tx_held &= !(1 << position);
+            // (Some, TACT=1): never displace a hardware-owned, in-flight buffer.
+            if !Descriptor::<BUF_SIZE>::is_available(p_desc) {
+                return Some(buffer);
+            }
+
+            let position = this.current_tx_position();
+            this.tx_buffers
+                .get_mut(position)
+                .and_then(|slot| slot.replace(buffer))
         }
-
-        None
     }
 
     // FIXME: Return all buffers and descriptors, and that ether phy too.
@@ -672,7 +745,9 @@ impl<const BUF_SIZE: usize, S> Ether<'_, BUF_SIZE, S> {
 #[rustfmt::skip]
 impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
     pub fn new(ether_phy_instance: DriverBox<EtherPhy<Closed>>) -> Self {
-        const { assert!(BUF_SIZE <= 1514) };
+        // BUF_SIZE is a free knob (the NetX `payload_size` analog): undersizing is
+        // memory-safe, it only caps the largest frame received whole. 60 is the
+        // min Ethernet frame, required to form/transmit a minimum-size frame.
         const { assert!(BUF_SIZE >= 60) };
 
         let p_ether_phy_instance = ether_phy_instance.leak().into_ref().get_ref().instance();
@@ -710,13 +785,11 @@ impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
     pub const fn rx_descriptors(mut self, descriptors: &'static mut [Descriptor<BUF_SIZE>]) -> Self { self.rx_descriptors = descriptors; self }
     pub const fn tx_descriptors(mut self, descriptors: &'static mut [Descriptor<BUF_SIZE>]) -> Self { self.tx_descriptors = descriptors; self }
     pub const fn buffers<const TX: usize, const RX: usize>(mut self, buffers: &'static mut Buffers<BUF_SIZE, TX, RX>) -> Self {
-        const { assert!(TX <= u32::BITS as usize, "`u32` bitset is used to account for held TX buffers.") };
         self.rx_buffers = &mut buffers.rx_buffers;
         self.tx_buffers = &mut buffers.tx_buffers;
         self
     }
     pub const fn set_buffers<const TX: usize, const RX: usize>(&mut self, buffers: &'static mut Buffers<BUF_SIZE, TX, RX>) {
-        const { assert!(TX <= u32::BITS as usize, "`u32` bitset is used to account for held TX buffers.") };
         self.rx_buffers = &mut buffers.rx_buffers;
         self.tx_buffers = &mut buffers.tx_buffers; 
     }
@@ -841,7 +914,7 @@ impl<const BUF_SIZE: usize> Buffer<BUF_SIZE> {
     pub const fn new() -> Self {
         Self {
             buf: UnsafePinned::new([0; BUF_SIZE]),
-            tx_held_position: UnsafePinned::new(0),
+            rx_loaned: UnsafePinned::new(0),
         }
     }
 

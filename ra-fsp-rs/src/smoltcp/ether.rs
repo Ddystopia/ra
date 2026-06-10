@@ -140,15 +140,24 @@ impl<const MTU: usize> TxToken for EthernetTxToken<'_, MTU> {
             buf[length..60].fill(0);
         }
 
-        match self
+        // This token always carries a buffer taken from `take_tx_buf`, so the
+        // descriptor slot is empty and a successful submit reclaims nothing
+        // (`Ok(None)`). On failure the buffer is handed back un-submitted; park
+        // it into its slot so it isn't lost. (Bind the result first so the
+        // `RefCell` borrow is released before the re-borrow in the error arm.)
+        let res = self
             .1
             .borrow_mut()
             .as_mut()
-            .write_zerocopy(pin_buf, length.max(60))
-        {
-            Ok(()) | Err(ether::FSP_ERR_ETHER_ERROR_LINK) => result,
-            Err(err) => {
-                log::error!("Failed to write to the network: {err}");
+            .write_zerocopy(pin_buf, length.max(60));
+
+        match res {
+            Ok(_reclaimed) => result,
+            Err((buf, err)) => {
+                if err != ether::FSP_ERR_ETHER_ERROR_LINK {
+                    log::error!("Failed to write to the network: {err}");
+                }
+                self.1.borrow_mut().as_mut().tx_buffer_update(buf);
                 result
             }
         }
