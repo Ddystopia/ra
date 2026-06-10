@@ -499,8 +499,29 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
             let p_conf = (*p_inst).p_ether_cfg;
             let p_extend = (*p_conf).p_extend.cast::<ether_extended_cfg_t>();
             let p_tx_descriptors = (*p_extend).p_tx_descriptors;
+
+            // SAFETY of the `get_unchecked_mut` below: `position` is the index of
+            // the current TX descriptor, which is sound to use as a `tx_buffers`
+            // index because:
+            //
+            // - `offset_from` counts `ether_instance_descriptor_t` steps, which equals
+            //   the `[Descriptor<BUF_SIZE>]` index because the two have the same size:
+            //   `Descriptor` is a `#[repr(C)]` newtype around `ether_instance_descriptor_t`
+            //   plus a ZST, and on the target the inner struct is already 16 bytes so the
+            //   `align(16)` adds no padding. (This equality is also what makes the
+            //   `[Descriptor] -> [ether_instance_descriptor_t]` cast in `c_conf` sound.)
+            //   FSP further guarantees `p_desc`/`p_tx_descriptors` share the allocation.
+            // - FSP keeps `p_tx_descriptor` in `0..num_tx_descriptors` (debug_assert).
+            // - `EtherConfig::c_conf` enforces `tx_buffers.len() >= num_tx_descriptors`
+            //   unconditionally at open, so `position < tx_buffers.len()` always (and
+            //   `position < 4`, a valid `u32` bit index).
             let position = p_desc.offset_from(p_tx_descriptors);
             let position = position as u8;
+
+            const { assert_eq!(size_of::<Descriptor<BUF_SIZE>>(), size_of::<ether_instance_descriptor_t>()) };
+            const { assert_eq!(align_of::<Descriptor<BUF_SIZE>>(), align_of::<ether_instance_descriptor_t>()) };
+            debug_assert!(position >= 0 && (position as usize) < this.tx_buffers.len());
+
             if this.tx_taken & (1 << position) != 0 {
                 log::error!("TX taken");
                 return None;
@@ -510,7 +531,9 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
 
             this.tx_taken |= 1 << position;
 
-            let buffer = this.tx_buffers[position as usize]
+            let buffer = this
+                .tx_buffers
+                .get_unchecked_mut(position as usize)
                 .as_mut()
                 .get_unchecked_mut();
 
@@ -668,6 +691,16 @@ impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
         assert!(self.rx_descriptors.len() != 0, "Descriptors cannot be empty");
         assert!(self.rx_descriptors.len() <= 4, "Max 4 descriptors");
         assert!(self.tx_descriptors.len() <= 4, "Max 4 descriptors");
+
+        // `take_tx_buf` indexes `tx_buffers` with `get_unchecked` by the current TX
+        // descriptor index, which FSP keeps in `0..num_tx_descriptors`. This bound
+        // is the safety precondition for that unchecked access, so it is enforced
+        // unconditionally here (once, at open) — `tx_buffers` may NOT be shorter than
+        // `tx_descriptors`, even for callers that never use the zero-copy TX path.
+        assert!(
+            self.tx_buffers.len() >= self.tx_descriptors.len(),
+            "There must be at least as many TX buffers as TX descriptors"
+        );
 
         let num_tx_descriptors = self.tx_descriptors.len() as u8;
         let num_rx_descriptors = self.rx_descriptors.len() as u8;
