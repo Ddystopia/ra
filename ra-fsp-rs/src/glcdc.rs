@@ -33,7 +33,7 @@ use crate::{
 };
 
 unsafe extern "C" {
-    pub safe fn glcdc_line_detect_isr();
+    pub unsafe fn glcdc_line_detect_isr();
 }
 
 struct CallbackContext {

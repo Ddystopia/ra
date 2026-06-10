@@ -170,7 +170,8 @@ unsafe impl<C, S> Send for Gpt<'_, C, S> {}
 unsafe impl<C, S> Sync for Gpt<'_, C, S> {}
 
 impl IsrPrototype {
-    pub fn call_fsp_isr_handler(self) {
+    /// SAFETY: Call only from the correct IRQ.
+    pub unsafe fn call_fsp_isr_handler(self) {
         match self {
             IsrPrototype::Overflow => gpt_counter_overflow_isr(),
             IsrPrototype::Underflow => gpt_counter_underflow_isr(),
@@ -263,7 +264,9 @@ impl<'a, C: Channel> Gpt<'a, C, Opened> {
         if expected_irq.is_none() || active != expected_irq {
             return;
         }
-        CallbackEvent::with_callback_provenance(self, || isr_prototype.call_fsp_isr_handler());
+        CallbackEvent::with_callback_provenance(self, || unsafe {
+            isr_prototype.call_fsp_isr_handler()
+        });
     }
 
     // May be non-static because calling that callback requires some form of `&mut Self`

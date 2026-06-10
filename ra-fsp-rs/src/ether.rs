@@ -60,7 +60,7 @@ const _: () = assert!(
 );
 
 unsafe extern "C" {
-    pub safe fn ether_eint_isr();
+    pub unsafe fn ether_eint_isr();
 }
 
 /*
@@ -400,7 +400,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
         if active != Some(cfg_irq) {
             return;
         }
-        CallbackEvent::with_callback_provenance(self, || ether_eint_isr());
+        CallbackEvent::with_callback_provenance(self, || unsafe { ether_eint_isr() });
     }
 
     // May be non-static because calling that callback requires some form of `&mut Self`
@@ -547,7 +547,10 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
                 // on). Park it and hand back whatever free buffer the slot held -
                 // the reclaimed buffer for a one-call pool swap, or `None` if the
                 // slot was emptied by `take_tx_buf`.
-                Ok(()) => Ok(this.tx_buffers.get_mut(position).and_then(|s| s.replace(buffer))),
+                Ok(()) => Ok(this
+                    .tx_buffers
+                    .get_mut(position)
+                    .and_then(|s| s.replace(buffer))),
                 // Not submitted (descriptor untouched, slot unchanged): hand the
                 // buffer back so nothing is lost.
                 Err(e) => Err((buffer, e)),
@@ -607,7 +610,11 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
             let p_extend = (*p_conf).p_extend.cast::<ether_extended_cfg_t>();
             let p_tx_descriptors = (*p_extend).p_tx_descriptors;
 
-            const { assert!(size_of::<Descriptor<BUF_SIZE>>() == size_of::<ether_instance_descriptor_t>()) };
+            const {
+                assert!(
+                    size_of::<Descriptor<BUF_SIZE>>() == size_of::<ether_instance_descriptor_t>()
+                )
+            };
             let position = p_desc.offset_from(p_tx_descriptors);
             debug_assert!(position >= 0 && (position as usize) < self.tx_buffers.len());
             position as usize
