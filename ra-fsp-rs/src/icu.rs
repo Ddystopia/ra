@@ -22,19 +22,31 @@ pub fn irq_clear_pending(irq: crate::pac::Interrupt) {
     // unsafe { ra_fsp_sys::generated::R_BSP_IrqClearPending(irq as u16 as i32) }
 }
 
+/// # Safety
+///
+/// Enabling an interrupt can break priority-based critical sections
+/// (see [`cortex_m::register::basepri`]) and compromise memory safety.
+///
+/// [`cortex_m::register::basepri`](https://docs.rs/cortex-m/0.7.7/cortex_m/register/basepri/index.html)
 #[inline(always)]
-pub fn irq_enable_no_clear(irq: crate::pac::Interrupt) {
+pub unsafe fn irq_enable_no_clear(irq: crate::pac::Interrupt) {
     atomic::compiler_fence(atomic::Ordering::SeqCst);
-    NVIC::unpend(irq);
+    unsafe { NVIC::unmask(irq) };
     atomic::compiler_fence(atomic::Ordering::SeqCst);
 
     // unsafe { ra_fsp_sys::generated::R_BSP_IrqEnableNoClear(irq as u16 as i32) }
 }
 
+/// # Safety
+///
+/// Enabling an interrupt can break priority-based critical sections
+/// (see [`cortex_m::register::basepri`]) and compromise memory safety.
+///
+/// [`cortex_m::register::basepri`](https://docs.rs/cortex-m/0.7.7/cortex_m/register/basepri/index.html)
 #[inline(always)]
-pub fn irq_enable(irq: crate::pac::Interrupt) {
+pub unsafe fn irq_enable(irq: crate::pac::Interrupt) {
     irq_clear_pending(irq);
-    irq_enable_no_clear(irq);
+    unsafe { irq_enable_no_clear(irq) }
 
     // unsafe { ra_fsp_sys::generated::R_BSP_IrqEnable(irq as u16 as i32) }
 }
