@@ -241,9 +241,19 @@ impl<'a, C: Channel> Gpt<'a, C, Opened> {
     }
 
     // FIXME: maybe allow calling this method even when `callback_set` is called?
-    /// Call this method on interrupt of [`IsrPrototype`] IF you used [`Self::callback_set`]. Else it will do nothing.
+    /// Call this method on interrupt of [`IsrPrototype`].
+    /// Calling it from thread mode or the wrong IRQ is a no-op.
     #[inline(always)]
     pub fn handle_isr(self: Pin<&mut Self>, isr_prototype: IsrPrototype) {
+        let expected_irq = match isr_prototype {
+            IsrPrototype::Overflow | IsrPrototype::Underflow => self.cycle_end_irq,
+            IsrPrototype::CompareA => self.capture_a_irq,
+            IsrPrototype::CompareB => self.capture_b_irq,
+        };
+        let active = utils::current_irq_get();
+        if expected_irq.is_none() || active != expected_irq {
+            return;
+        }
         CallbackEvent::with_callback_provenance(self, || isr_prototype.call_fsp_isr_handler());
     }
 

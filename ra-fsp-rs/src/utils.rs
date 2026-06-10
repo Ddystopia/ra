@@ -52,7 +52,6 @@ pub(crate) fn try_read_priority_into(interrupt: impl Into<Option<pac::Interrupt>
 
 // Manually rewritten from `R_FSP_CurrentIrqGet` in `bsp_common.c` - this is a
 // static inline function there.
-#[allow(dead_code)]
 #[inline(always)]
 pub(crate) fn current_irq_get() -> Option<pac::Interrupt> {
     #[inline(always)]

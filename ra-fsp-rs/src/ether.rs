@@ -343,9 +343,15 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
         }
     }
 
-    /// Call this method on interrupt of [`IsrPrototype`] IF you used [`Self::callback_set`]. Else it will do nothing.
+    /// Call this method on interrupt of [`IsrPrototype`].
+    /// Calling it outside the configured ISR (e.g. from thread mode or the wrong IRQ) is a no-op.
     #[inline(always)]
     pub fn handle_isr(self: Pin<&mut Self>) {
+        let cfg_irq = unsafe { (*(*self.as_ref().get_ref().ctrl.get()).p_ether_cfg).irq };
+        let active = utils::current_irq_get().map(|i| i as u16 as i32);
+        if active != Some(cfg_irq) {
+            return;
+        }
         CallbackEvent::with_callback_provenance(self, || ether_eint_isr());
     }
 
