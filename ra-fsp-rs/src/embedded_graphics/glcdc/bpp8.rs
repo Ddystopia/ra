@@ -48,6 +48,10 @@ impl<'a, 'b> DrawTarget for Display<Bpp8> {
 
             let v = color.into_inner();
             let (x, y) = (x as usize, y as usize);
+            // `x` is intentionally not clipped to `< hstride`: an out-of-row `x`
+            // wraps into the next row rather than being rejected. This is a
+            // deliberate perf tradeoff (skip the per-pixel branch); it is never
+            // UB because `get_mut` still bounds-checks the final flat index.
             let Some(p) = buffer[..].get_mut(y * hstride + x) else {
                 continue;
             };
