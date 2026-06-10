@@ -52,16 +52,21 @@ pub unsafe extern "C" fn SysTick_Handler() {
     unsafe { SysTick() }
 }
 
+fn cstr_to_str(ptr: *const u8) -> &'static str {
+    if ptr.is_null() {
+        return "<null>";
+    }
+    unsafe { core::ffi::CStr::from_ptr(ptr) }
+        .to_str()
+        .unwrap_or("<Invalid UTF-8>")
+}
+
 #[unsafe(no_mangle)]
 #[cfg(feature = "device")]
 pub extern "C" fn __assert_func(file: *const u8, line: i32, func: *const u8, expr: *const u8) {
-    let file = unsafe { core::ffi::CStr::from_ptr(file) };
-    let func = unsafe { core::ffi::CStr::from_ptr(func) };
-    let expr = unsafe { core::ffi::CStr::from_ptr(expr) };
-
-    let file = file.to_str().unwrap_or("<Invalid UTF-8>");
-    let func = func.to_str().unwrap_or("<Invalid UTF-8>");
-    let expr = expr.to_str().unwrap_or("<Invalid UTF-8>");
+    let file = cstr_to_str(file);
+    let func = cstr_to_str(func);
+    let expr = cstr_to_str(expr);
 
     panic!("Assertion failed in file: {file}, line: {line}, function: {func}, expression: {expr}",);
 }
@@ -75,12 +80,9 @@ pub unsafe extern "C" fn __fsp_log_func(
     _line: i32,
     fmt: *const u8,
 ) {
-    let module = unsafe { core::ffi::CStr::from_ptr(module) };
-    let file = unsafe { core::ffi::CStr::from_ptr(file) };
-    let fmt = unsafe { core::ffi::CStr::from_ptr(fmt) };
-    let module = module.to_str().unwrap_or("<Invalid UTF-8>");
-    let file = file.to_str().unwrap_or("<Invalid UTF-8>");
-    let fmt = fmt.to_str().unwrap_or("<Invalid UTF-8>");
+    let module = cstr_to_str(module);
+    let file = cstr_to_str(file);
+    let fmt = cstr_to_str(fmt);
 
     let lvl = match level {
         0 => log::Level::Error,
