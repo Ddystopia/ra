@@ -295,6 +295,7 @@ impl<const BUF_SIZE: usize, S: 'static> PinnedDrop for Ether<'_, BUF_SIZE, S> {
 unsafe impl<'a, const BUF_SIZE: usize> CallbackEvent<InterruptCause>
     for Ether<'a, BUF_SIZE, Opened>
 {
+    #[inline(always)]
     fn context(this: *mut Self) -> *mut *const Self {
         unsafe {
             let ctrl = UnsafePinned::raw_get(&raw const (*this).ctrl);
@@ -303,6 +304,7 @@ unsafe impl<'a, const BUF_SIZE: usize> CallbackEvent<InterruptCause>
         }
     }
 
+    #[inline(always)]
     fn process_args(args: *mut ()) -> (*mut Self, *const (), InterruptCause) {
         unsafe {
             let args = args.cast::<ether_callback_args_t>();
@@ -317,6 +319,7 @@ unsafe impl<'a, const BUF_SIZE: usize> CallbackEvent<InterruptCause>
         }
     }
 
+    #[inline(always)]
     fn process_static_args(args: *mut ()) -> (*const (), InterruptCause) {
         unsafe {
             let args = args.cast::<ether_callback_args_t>();
@@ -325,6 +328,7 @@ unsafe impl<'a, const BUF_SIZE: usize> CallbackEvent<InterruptCause>
         }
     }
 
+    #[inline(always)]
     fn user_data(this: *mut Self) -> *const () {
         unsafe { (*this).user_data }
     }

@@ -181,6 +181,7 @@ impl IsrPrototype {
 }
 
 unsafe impl<'a, C: Channel> CallbackEvent<timer_event_t> for Gpt<'a, C, Opened> {
+    #[inline(always)]
     fn context(this: *mut Self) -> *mut *const Self {
         unsafe {
             let ctrl = UnsafePinned::raw_get(&raw const (*this).ctrl);
@@ -189,6 +190,7 @@ unsafe impl<'a, C: Channel> CallbackEvent<timer_event_t> for Gpt<'a, C, Opened> 
         }
     }
 
+    #[inline(always)]
     fn process_args(args: *mut ()) -> (*mut Self, *const (), timer_event_t) {
         unsafe {
             let args = args.cast::<timer_callback_args_t>();
@@ -203,6 +205,7 @@ unsafe impl<'a, C: Channel> CallbackEvent<timer_event_t> for Gpt<'a, C, Opened> 
         }
     }
 
+    #[inline(always)]
     fn process_static_args(args: *mut ()) -> (*const (), timer_event_t) {
         unsafe {
             let args = args.cast::<timer_callback_args_t>();
@@ -210,6 +213,7 @@ unsafe impl<'a, C: Channel> CallbackEvent<timer_event_t> for Gpt<'a, C, Opened> 
         }
     }
 
+    #[inline(always)]
     fn user_data(this: *mut Self) -> *const () {
         unsafe { (*this).user_data }
     }
