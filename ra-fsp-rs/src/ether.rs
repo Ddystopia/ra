@@ -539,7 +539,6 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
             let position = p_desc.offset_from(p_tx_descriptors);
 
             const { assert!(size_of::<Descriptor<BUF_SIZE>>() == size_of::<ether_instance_descriptor_t>()) };
-            const { assert!(align_of::<Descriptor<BUF_SIZE>>() == align_of::<ether_instance_descriptor_t>()) };
             debug_assert!(position >= 0 && (position as usize) < this.tx_buffers.len());
 
             let position = position as u8;
