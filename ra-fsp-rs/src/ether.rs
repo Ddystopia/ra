@@ -65,6 +65,22 @@ unsafe extern "C" {
 
 /*
 
+TX buffer ownership: the `tx_held` bit covers take -> submit; after submission
+the descriptor's TACT flag, written back by the EDMAC, covers submit -> done:
+
+| bit | TACT | state                               | owner    |
+|-----|------|-------------------------------------|----------|
+|  0  |  0   | free (unused or fully transmitted)  | driver   |
+|  1  |  0   | taken, not yet submitted            | user     |
+|  0  |  1   | submitted, in flight                | hardware |
+|  1  |  1   | unreachable: submit clears the bit  | -        |
+
+`take_tx_buf` hands a buffer out only in the (0, 0) state. TACT is checked
+with a volatile read of the descriptor (plain SRAM, not MMIO), so neither
+safety nor reclamation depends on TC interrupt timing; the TC interrupt is
+purely a wakeup signal. Compare `rm_netxduo_ether.c`, which instead re-derives
+the completed range inside the TC handler from TDFAR + TACT via TxStatusGet.
+
 Write:
     Non-Zerocopy:
       action:       memcpy from provided buffer to descriptors buffer
@@ -96,7 +112,9 @@ pub struct Ether<'a, const BUF_SIZE: usize, S: 'static> {
     c_ext_cfg: MaybeUninit<UnsafePinned<ether_extended_cfg_t>>,
     tx_buffers: &'static mut [Pin<&'static mut Buffer<BUF_SIZE>>],
     rx_buffers: &'static mut [Pin<&'static mut Buffer<BUF_SIZE>>],
-    tx_taken: u32,
+    /// Bitset of TX buffers currently held by the user (between `take_tx_buf`
+    /// and submission). See the ownership table at the top of this file.
+    tx_held: u32,
     regs: pac::ETHERC0,
     _marker: PhantomData<(S, &'a ())>,
 }
@@ -104,7 +122,7 @@ pub struct Ether<'a, const BUF_SIZE: usize, S: 'static> {
 #[repr(C, align(32))]
 pub struct Buffer<const BUF_SIZE: usize> {
     buf: UnsafePinned<[u8; BUF_SIZE]>,
-    tx_taken_position: UnsafePinned<u8>,
+    tx_held_position: UnsafePinned<u32>,
 }
 
 pub struct Buffers<const BUF_SIZE: usize, const TX: usize, const RX: usize> {
@@ -186,7 +204,7 @@ impl<const BUF_SIZE: usize> Ether<'_, BUF_SIZE, Closed> {
             ctrl: UnsafePinned::new(unsafe { ::core::mem::zeroed() }),
             c_ext_cfg: MaybeUninit::zeroed(),
             tx_buffers: &mut [],
-            tx_taken: 0,
+            tx_held: 0,
             rx_buffers: &mut [],
             _marker: PhantomData,
             cfg: UnsafePinned::new(unsafe { ::core::mem::zeroed() }),
@@ -231,7 +249,7 @@ unsafe fn init_open<const BUF_SIZE: usize>(
             c_ext_cfg: zeroed(),
             tx_buffers: take(&mut cfg.tx_buffers),
             rx_buffers: take(&mut cfg.rx_buffers),
-            tx_taken: 0,
+            tx_held: 0,
             user_data: ptr::null(),
             cfg: zeroed(),
             _marker: PhantomData,
@@ -461,17 +479,18 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
         let ptr = buffer.as_ref().get_ref().buf.get();
         let len = len.min(BUF_SIZE);
 
-        match fsp_try_unsafe!(R_ETHER_Write(
+        let res = fsp_try_unsafe!(R_ETHER_Write(
             self.as_mut().ctrl_void(),
             ptr.cast(),
             len as u32
-        )) {
-            Ok(()) => Ok(()),
-            Err(err) => {
-                self.as_mut().tx_buffer_update(buffer);
-                Err(err)
-            }
-        }
+        ));
+
+        // Release the hold bit either way: on success ownership moves to the
+        // hardware (tracked by the descriptor's TACT flag from here on), on
+        // failure the descriptor was never activated so the buffer is free.
+        self.tx_buffer_update(buffer);
+
+        res
     }
     #[inline(always)]
     pub fn write_non_zerocopy(self: Pin<&mut Self>, buffer: &[u8]) -> Result<()> {
@@ -505,7 +524,8 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
     }
 
     /// Takes the buffer out of the current tx descriptor. Returns `None` if
-    /// all descriptors are currently used or if there is no descriptor.
+    /// that buffer is already held or the hardware is still transmitting it
+    /// (descriptor TACT set) - see the ownership table at the top of this file.
     ///
     /// Descriptor is not moved. Note that the only way to move the descriptor is to transmit the message.
     ///
@@ -541,16 +561,20 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
             const { assert!(size_of::<Descriptor<BUF_SIZE>>() == size_of::<ether_instance_descriptor_t>()) };
             debug_assert!(position >= 0 && (position as usize) < this.tx_buffers.len());
 
-            let position = position as u8;
+            let position = position as u32;
 
-            if this.tx_taken & (1 << position) != 0 {
-                log::error!("TX taken");
+            if this.tx_held & (1 << position) != 0 {
+                log::error!("TX buffer already held");
                 return None;
             }
 
-            debug_assert!(Descriptor::<BUF_SIZE>::is_available(p_desc));
+            // The EDMAC owns the descriptor and its buffer until it writes
+            // TACT back to zero; never hand out an in-flight buffer.
+            if !Descriptor::<BUF_SIZE>::is_available(p_desc) {
+                return None;
+            }
 
-            this.tx_taken |= 1 << position;
+            this.tx_held |= 1 << position;
 
             let buffer = this
                 .tx_buffers
@@ -558,7 +582,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
                 .as_mut()
                 .get_unchecked_mut();
 
-            ptr::write(buffer.tx_taken_position.get(), position);
+            ptr::write(buffer.tx_held_position.get(), position);
 
             Some(Pin::new_unchecked(&mut *ptr::from_mut(buffer)))
         }
@@ -583,26 +607,15 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
     }
 
     #[inline(always)]
-    pub fn update_tx_buffers(self: Pin<&mut Self>, cause: InterruptCause) {
-        if !cause.transmits {
-            return;
-        }
-
-        let this = unsafe { self.get_unchecked_mut() };
-        this.tx_taken = 0;
-        // log::info!("Update TX buffers");
-    }
-
-    #[inline(always)]
     pub fn tx_buffer_update(
         self: Pin<&mut Self>,
         buffer: Pin<&'static mut Buffer<BUF_SIZE>>,
     ) -> Option<Pin<&'static mut Buffer<BUF_SIZE>>> {
         unsafe {
             let this = self.get_unchecked_mut();
-            let position = *buffer.as_ref().tx_taken_position.get();
+            let position = *buffer.as_ref().tx_held_position.get();
 
-            this.tx_taken &= !(1 << position);
+            this.tx_held &= !(1 << position);
         }
 
         None
@@ -693,13 +706,13 @@ impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
     pub const fn rx_descriptors(mut self, descriptors: &'static mut [Descriptor<BUF_SIZE>]) -> Self { self.rx_descriptors = descriptors; self }
     pub const fn tx_descriptors(mut self, descriptors: &'static mut [Descriptor<BUF_SIZE>]) -> Self { self.tx_descriptors = descriptors; self }
     pub const fn buffers<const TX: usize, const RX: usize>(mut self, buffers: &'static mut Buffers<BUF_SIZE, TX, RX>) -> Self {
-        const { assert!(TX <= u32::BITS as usize, "`u32` bitset is used to account for taken TX buffers.") };
+        const { assert!(TX <= u32::BITS as usize, "`u32` bitset is used to account for held TX buffers.") };
         self.rx_buffers = &mut buffers.rx_buffers;
         self.tx_buffers = &mut buffers.tx_buffers;
         self
     }
     pub const fn set_buffers<const TX: usize, const RX: usize>(&mut self, buffers: &'static mut Buffers<BUF_SIZE, TX, RX>) {
-        const { assert!(TX <= u32::BITS as usize, "`u32` bitset is used to account for taken TX buffers.") };
+        const { assert!(TX <= u32::BITS as usize, "`u32` bitset is used to account for held TX buffers.") };
         self.rx_buffers = &mut buffers.rx_buffers;
         self.tx_buffers = &mut buffers.tx_buffers; 
     }
@@ -824,7 +837,7 @@ impl<const BUF_SIZE: usize> Buffer<BUF_SIZE> {
     pub const fn new() -> Self {
         Self {
             buf: UnsafePinned::new([0; BUF_SIZE]),
-            tx_taken_position: UnsafePinned::new(0),
+            tx_held_position: UnsafePinned::new(0),
         }
     }
 

@@ -60,9 +60,9 @@ impl<const MTU: usize> Dev<MTU> {
     pub fn populate_buffers(&mut self, cause: InterruptCause) {
         if cause.went_up {
             self.eth().as_mut().update_rx_buffers(cause);
-        } else if cause.transmits {
-            self.eth().as_mut().update_tx_buffers(cause);
         }
+        // TX needs no work here: buffer reclamation is driven by the
+        // descriptor TACT flag in `take_tx_buf`, not by the TC interrupt.
     }
 
     fn send_buffer(&mut self) -> Option<Pin<&'static mut Buffer<MTU>>> {
