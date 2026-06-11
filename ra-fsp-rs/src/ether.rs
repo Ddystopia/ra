@@ -138,6 +138,14 @@ pub struct Ether<'a, const BUF_SIZE: usize, S: 'static> {
     tx_buffers: &'static mut [Option<Pin<&'static mut Buffer<BUF_SIZE>>>],
     rx_buffers: &'static mut [Pin<&'static mut Buffer<BUF_SIZE>>],
     regs: pac::ETHERC0,
+    /// Cached at open so the per-call mode guard is a single self-relative load
+    /// + compare instead of a dependent chain through the FSP cfg pointer.
+    /// FSP never mutates this field; it is written once in `init_open`.
+    zerocopy: bool,
+    /// Extra bytes FSP may copy past the frame payload (`e_ether_padding` as
+    /// `u32`). Cached at open for the same reason as `zerocopy`; used by
+    /// `read_non_zerocopy` to compute the minimum destination buffer size.
+    padding: u32,
     _marker: PhantomData<(S, &'a ())>,
 }
 
@@ -232,6 +240,8 @@ impl<const BUF_SIZE: usize> Ether<'_, BUF_SIZE, Closed> {
             c_ext_cfg: MaybeUninit::zeroed(),
             tx_buffers: &mut [],
             rx_buffers: &mut [],
+            zerocopy: false,
+            padding: 0,
             _marker: PhantomData,
             cfg: UnsafePinned::new(unsafe { ::core::mem::zeroed() }),
             inst: UnsafePinned::new(ether_instance_t {
@@ -268,6 +278,10 @@ unsafe fn init_open<const BUF_SIZE: usize>(
     mut cfg: EtherConfig<BUF_SIZE>,
 ) -> Result<()> {
     unsafe {
+        // Capture before c_conf takes ownership of cfg fields.
+        let zerocopy = cfg.zerocopy;
+        let padding = cfg.padding as u32;
+
         let this = Ether {
             regs,
             ctrl: zeroed(),
@@ -276,6 +290,8 @@ unsafe fn init_open<const BUF_SIZE: usize>(
             tx_buffers: take(&mut cfg.tx_buffers),
             rx_buffers: take(&mut cfg.rx_buffers),
             user_data: ptr::null(),
+            zerocopy,
+            padding,
             cfg: zeroed(),
             _marker: PhantomData,
         };
@@ -440,8 +456,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
     pub fn read_zerocopy(
         self: Pin<&mut Self>,
     ) -> Result<(Pin<&'static mut Buffer<BUF_SIZE>>, usize)> {
-        let zerocopy = unsafe { (*(*self.as_ref().get_ref().ctrl.get()).p_ether_cfg).zerocopy };
-        if zerocopy != ETHER_ZEROCOPY_ENABLE {
+        if !self.zerocopy {
             return Err(FSP_ERR_ASSERTION);
         }
 
@@ -475,9 +490,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
     }
     #[inline(always)]
     pub fn read_non_zerocopy(self: Pin<&mut Self>, buffer: &mut [u8]) -> Result<usize> {
-        // SAFETY: C code is not writing to the cfg, this is a shared read.
-        let cfg = unsafe { &*(*self.as_ref().get_ref().ctrl.get()).p_ether_cfg };
-        if cfg.zerocopy != ETHER_ZEROCOPY_DISABLE {
+        if self.zerocopy {
             return Err(FSP_ERR_ASSERTION);
         }
 
@@ -488,7 +501,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
         // `BUF_SIZE + padding` bytes; the destination must hold that. Without this
         // guard a too-small `buffer` is an out-of-bounds write (UB) reachable from
         // safe code.
-        let required = BUF_SIZE + cfg.padding as usize;
+        let required = BUF_SIZE + self.padding as usize;
         if buffer.len() < required {
             log::error!(
                 "ether(read_non_zerocopy): buffer too small: {} < {}",
@@ -541,7 +554,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
         unsafe {
             let this = self.get_unchecked_mut();
 
-            if (*(*this.ctrl.get()).p_ether_cfg).zerocopy != ETHER_ZEROCOPY_ENABLE {
+            if !this.zerocopy {
                 return Err((buffer, FSP_ERR_ASSERTION));
             }
 
@@ -575,8 +588,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
     }
     #[inline(always)]
     pub fn write_non_zerocopy(self: Pin<&mut Self>, buffer: &[u8]) -> Result<()> {
-        let zerocopy = unsafe { (*(*self.as_ref().get_ref().ctrl.get()).p_ether_cfg).zerocopy };
-        if zerocopy != ETHER_ZEROCOPY_DISABLE {
+        if self.zerocopy {
             return Err(FSP_ERR_ASSERTION);
         }
 
