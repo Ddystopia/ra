@@ -38,6 +38,11 @@ default = [
 device = []
 log = ["dep:log"]
 
+# Keep the FSP C sources at the cargo profile's opt-level (e.g. -O0 in dev) for
+# source-level debugging. Without this feature the C is always compiled at -O2
+# regardless of profile, so debug firmware doesn't silently lose driver performance.
+debug-fsp-c = []
+
 mod-r_dmac = []
 mod-r_elc = []
 

@@ -171,6 +171,19 @@ fn main() {
                 build.file(e.path());
             });
 
+        // FSP C is driver-level code: running it at -O0 in dev builds produces
+        // misleading firmware performance (descriptor handling, ISR bodies,
+        // memcpy paths are all hot). Debug info is emitted independently via
+        // the DEBUG env var (cc passes -g), so source-level stepping still
+        // works at -O2. Enable the `debug-fsp-c` feature to opt out and keep
+        // whatever opt-level the cargo profile specifies.
+        if !cfg!(feature = "debug-fsp-c") {
+            let opt = std::env::var("OPT_LEVEL").unwrap_or_default();
+            if opt == "0" || opt == "1" {
+                build.opt_level(2);
+            }
+        }
+
         let objects = build
             .includes(&include_dirs)
             .define(&bsp_mcu_group, Some("1"))
