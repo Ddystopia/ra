@@ -157,14 +157,25 @@ pub struct Ether<'a, const BUF_SIZE: usize, S: 'static> {
     _marker: PhantomData<(S, &'a ())>,
 }
 
+/// **RAM overhead note:** `align(32)` means the trailing `rx_loaned` word
+/// rounds each `Buffer` up to the next 32-byte boundary.  With a `BUF_SIZE`
+/// that is already a multiple of 32 (the typical case) that is +32 bytes per
+/// buffer — paid by both the TX and RX pools.  This is an accepted tradeoff for
+/// the O(1) loan flag: the alternative (a side bitmap in `Ether`) would require
+/// index bookkeeping on the hot RX path, which this design deliberately avoids.
 #[repr(C, align(32))]
 pub struct Buffer<const BUF_SIZE: usize> {
     buf: UnsafePinned<[u8; BUF_SIZE]>,
     /// Nonzero while this RX buffer is loaned to the user (between
     /// `read_zerocopy` and `rx_buffer_update`). Consulted only on the cold
     /// link-up path (`update_rx_buffers`) so the buffer isn't re-armed into the
-    /// DMA ring while the user still holds it. `u32` (not `bool`) for a
-    /// word-sized access on cortex-m4.
+    /// DMA ring while the user still holds it.
+    ///
+    /// `u32` rather than `bool` or `u8`: on Cortex-M4, byte loads are
+    /// single-cycle and zero-extend for free, so a narrower type would perform
+    /// identically.  The word width is kept as a conventional idiom for
+    /// ISR-visible flags and costs nothing here because the alignment padding
+    /// already swallows the extra bytes regardless.
     rx_loaned: UnsafePinned<u32>,
 }
 
@@ -857,6 +868,16 @@ impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
     /// Beware!!! `ether_cfg_t` returned has pointer with `ext`'s address and provenance.
     /// Using those pointers is unsafe thus this function is still safe.
     pub const fn c_conf(&mut self, ext: Pin<&mut MaybeUninit<UnsafePinned<ether_extended_cfg_t>>>) -> ether_cfg_t {
+        // Re-asserted here (not only in `new`) because `EtherConfig` fields are
+        // `pub`, so a literal-constructed config bypasses `new`. Every open
+        // funnels through `c_conf`. See `new` for why this bound is load-bearing.
+        const {
+            assert!(
+                BUF_SIZE % 32 == 0 && BUF_SIZE >= 60,
+                "BUF_SIZE must be >= 60 and a multiple of 32 (RD1.RBL hardware requirement)"
+            )
+        };
+
         assert!(self.tx_descriptors.len() != 0, "Descriptors cannot be empty");
         assert!(self.rx_descriptors.len() != 0, "Descriptors cannot be empty");
         assert!(self.rx_descriptors.len() <= 4, "Max 4 descriptors");
