@@ -307,17 +307,21 @@ impl Glcdc<Closed> {
         // - `DisplayConf::c_conf` validates buffer length on open.
         // - `Glcdc::change_buffer` validates that every submitted buffer has the correct length.
         // - Hardware is not using this buffer now.
+        // - If both slots hold the same pointer (no line-detect interrupt advanced
+        //   `current_owned_buffer` since the last `change_buffer`), only a single
+        //   `FrameBufferMut` is created: wrapping the same allocation twice would
+        //   produce two aliasing `&'static mut [u8]`.
         unsafe {
-            if !used_buf.is_null() && !prev_buf.is_null() {
+            if !used_buf.is_null() && !prev_buf.is_null() && used_buf != prev_buf {
                 let used_buf = FrameBufferMut::from_raw_parts(used_buf, len);
                 let prev_buf = FrameBufferMut::from_raw_parts(prev_buf, len);
                 Some((used_buf, Some(prev_buf)))
-            } else if used_buf.is_null() && !prev_buf.is_null() {
-                let prev_buf = FrameBufferMut::from_raw_parts(prev_buf, len);
-                Some((prev_buf, None))
-            } else if !used_buf.is_null() && prev_buf.is_null() {
+            } else if !used_buf.is_null() {
                 let used_buf = FrameBufferMut::from_raw_parts(used_buf, len);
                 Some((used_buf, None))
+            } else if !prev_buf.is_null() {
+                let prev_buf = FrameBufferMut::from_raw_parts(prev_buf, len);
+                Some((prev_buf, None))
             } else {
                 None
             }
