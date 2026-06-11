@@ -897,7 +897,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
                 // Don't re-arm a buffer the user is currently holding (loaned by
                 // `read_zerocopy`); handing it back to the EDMAC would let the
                 // hardware DMA into a buffer that still has a live `&mut` out.
-                if *b.rx_loaned.get() != 0 {
+                if *b.rx_loaned.get() {
                     continue;
                 }
 
@@ -1176,7 +1176,7 @@ impl<const BUF_SIZE: usize> Buffer<BUF_SIZE> {
     pub const fn new() -> Self {
         Self {
             buf: UnsafePinned::new([0; BUF_SIZE]),
-            rx_loaned: UnsafePinned::new(0),
+            rx_loaned: UnsafePinned::new(false),
         }
     }
 
@@ -1291,7 +1291,7 @@ impl<'drv, 'eth, const BUF_SIZE: usize> RxFrame<'drv, 'eth, BUF_SIZE> {
         // Clear rx_loaned whether or not BufferRelease succeeded: there is no
         // live `&mut` anymore, and on link-bounce re-init the buffer must be
         // eligible for re-arm.
-        unsafe { ptr::write((*this.buf).rx_loaned.get(), 0) };
+        unsafe { ptr::write((*this.buf).rx_loaned.get(), false) };
         result
     }
 
@@ -1332,7 +1332,7 @@ impl<'drv, 'eth, const BUF_SIZE: usize> RxFrame<'drv, 'eth, BUF_SIZE> {
 
         // Clear rx_loaned on `new` before it enters the ring.
         let new_raw = unsafe { new.get_unchecked_mut() as *mut Buffer<BUF_SIZE> };
-        unsafe { ptr::write((*new_raw).rx_loaned.get(), 0) };
+        unsafe { ptr::write((*new_raw).rx_loaned.get(), false) };
 
         let new_data_ptr = unsafe { (*new_raw).buf.get() };
         let result = fsp_try_unsafe!(R_ETHER_RxBufferUpdate(
@@ -1362,7 +1362,7 @@ impl<'drv, 'eth, const BUF_SIZE: usize> RxFrame<'drv, 'eth, BUF_SIZE> {
                     // Clear rx_loaned on the returned buffer: it is now the
                     // caller's; the flag must be 0 so a future re-arm (if the
                     // caller donates it back) goes through correctly.
-                    unsafe { ptr::write((*old_raw).rx_loaned.get(), 0) };
+                    unsafe { ptr::write((*old_raw).rx_loaned.get(), false) };
                     Ok(old_pin)
                 } else {
                     // Invariant violation: every buffer in a descriptor should
@@ -1375,7 +1375,7 @@ impl<'drv, 'eth, const BUF_SIZE: usize> RxFrame<'drv, 'eth, BUF_SIZE> {
                     debug_assert!(false, "replace_buffer: guard buffer not in rx_buffers");
                     // Return the old buffer as best-effort even without the
                     // bookkeeping update.
-                    unsafe { ptr::write((*old_raw).rx_loaned.get(), 0) };
+                    unsafe { ptr::write((*old_raw).rx_loaned.get(), false) };
                     Ok(unsafe { Pin::new_unchecked(&mut *old_raw) })
                 }
             }
