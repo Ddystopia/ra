@@ -66,7 +66,9 @@ impl<const MTU: usize> Dev<MTU> {
     }
 
     fn send_buffer(&mut self) -> Option<Pin<&'static mut Buffer<MTU>>> {
-        self.eth.borrow_mut().as_mut().take_tx_buf()
+        // &mut self proves exclusivity here; get_mut avoids the RefCell runtime
+        // borrow check (and its panic path) that borrow_mut would incur.
+        self.eth.get_mut().as_mut().take_tx_buf()
     }
 }
 
