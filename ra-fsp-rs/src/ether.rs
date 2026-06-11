@@ -146,6 +146,14 @@ pub struct Ether<'a, const BUF_SIZE: usize, S: 'static> {
     /// `u32`). Cached at open for the same reason as `zerocopy`; used by
     /// `read_non_zerocopy` to compute the minimum destination buffer size.
     padding: u32,
+    /// Base pointer of the TX descriptor ring, cached at open.  Eliminates the
+    /// ctrl→p_ether_cfg→p_extend→p_tx_descriptors four-load chain in the hot
+    /// TX path.  Derived from the same allocation as `p_tx_descriptor` (both
+    /// come from `EtherConfig::tx_descriptors`), so `offset_from` between them
+    /// is valid.  Written once in `init_open`; FSP never writes Rust-side fields
+    /// so no `UnsafePinned` is needed.  The raw-pointer field is covered by the
+    /// existing `unsafe impl Send/Sync` on `Ether`.
+    tx_descriptors_base: *const ether_instance_descriptor_t,
     _marker: PhantomData<(S, &'a ())>,
 }
 
@@ -242,6 +250,7 @@ impl<const BUF_SIZE: usize> Ether<'_, BUF_SIZE, Closed> {
             rx_buffers: &mut [],
             zerocopy: false,
             padding: 0,
+            tx_descriptors_base: ptr::null(),
             _marker: PhantomData,
             cfg: UnsafePinned::new(unsafe { ::core::mem::zeroed() }),
             inst: UnsafePinned::new(ether_instance_t {
@@ -281,6 +290,10 @@ unsafe fn init_open<const BUF_SIZE: usize>(
         // Capture before c_conf takes ownership of cfg fields.
         let zerocopy = cfg.zerocopy;
         let padding = cfg.padding as u32;
+        // c_conf will replace tx_descriptors with &mut [] via ptr::replace;
+        // capture the base pointer now so offset_from against FSP's
+        // p_tx_descriptor (which derives from the same allocation) stays valid.
+        let tx_descriptors_base = cfg.tx_descriptors.as_ptr().cast::<ether_instance_descriptor_t>();
 
         let this = Ether {
             regs,
@@ -292,6 +305,7 @@ unsafe fn init_open<const BUF_SIZE: usize>(
             user_data: ptr::null(),
             zerocopy,
             padding,
+            tx_descriptors_base,
             cfg: zeroed(),
             _marker: PhantomData,
         };
@@ -558,7 +572,6 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
                 return Err((buffer, FSP_ERR_ASSERTION));
             }
 
-            let position = this.current_tx_position();
             let p_desc = (*this.ctrl.get()).p_tx_descriptor;
 
             // (Some, TACT=1): the EDMAC is still transmitting on this descriptor.
@@ -567,6 +580,11 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
             if !Descriptor::<BUF_SIZE>::is_available(p_desc) {
                 return Err((buffer, e_fsp_err::FSP_ERR_ETHER_ERROR_TRANSMIT_BUFFER_FULL));
             }
+
+            // Compute position from the pre-Write snapshot of p_tx_descriptor;
+            // R_ETHER_Write advances the ring pointer so the post-Write value
+            // would index the wrong slot.
+            let position = this.tx_position_of(p_desc);
 
             let ptr = buffer.as_ref().get_ref().buf.get();
             let len = len.min(BUF_SIZE);
@@ -616,8 +634,8 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
         Ok(())
     }
 
-    /// Index of the descriptor FSP will submit next. This is also the
-    /// `tx_buffers` slot index because:
+    /// Index of the given descriptor pointer within the TX ring.  This is also
+    /// the `tx_buffers` slot index because:
     ///
     /// - `offset_from` counts `ether_instance_descriptor_t` steps, which equals
     ///   the `[Descriptor<BUF_SIZE>]` index because the two have the same size:
@@ -625,28 +643,21 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
     ///   plus a ZST, and on the target the inner struct is already 16 bytes so the
     ///   `align(16)` adds no padding. (This equality is also what makes the
     ///   `[Descriptor] -> [ether_instance_descriptor_t]` cast in `c_conf` sound.)
-    ///   FSP further guarantees `p_desc`/`p_tx_descriptors` share the allocation.
+    ///   `p_desc` and `tx_descriptors_base` both derive from `EtherConfig::tx_descriptors`,
+    ///   so `offset_from` is valid.
     /// - FSP keeps `p_tx_descriptor` in `0..num_tx_descriptors` (debug_assert).
     /// - `EtherConfig::c_conf` enforces `tx_buffers.len() >= num_tx_descriptors`
     ///   unconditionally at open, so `position < tx_buffers.len()` always.
     #[inline(always)]
-    unsafe fn current_tx_position(&self) -> usize {
-        unsafe {
-            let p_inst = self.ctrl.get();
-            let p_desc = (*p_inst).p_tx_descriptor;
-            let p_conf = (*p_inst).p_ether_cfg;
-            let p_extend = (*p_conf).p_extend.cast::<ether_extended_cfg_t>();
-            let p_tx_descriptors = (*p_extend).p_tx_descriptors;
-
-            const {
-                assert!(
-                    size_of::<Descriptor<BUF_SIZE>>() == size_of::<ether_instance_descriptor_t>()
-                )
-            };
-            let position = p_desc.offset_from(p_tx_descriptors);
-            debug_assert!(position >= 0 && (position as usize) < self.tx_buffers.len());
-            position as usize
-        }
+    unsafe fn tx_position_of(&self, p_desc: *const ether_instance_descriptor_t) -> usize {
+        const {
+            assert!(
+                size_of::<Descriptor<BUF_SIZE>>() == size_of::<ether_instance_descriptor_t>()
+            )
+        };
+        let position = unsafe { p_desc.offset_from(self.tx_descriptors_base) };
+        debug_assert!(position >= 0 && (position as usize) < self.tx_buffers.len());
+        position as usize
     }
 
     /// Takes the buffer out of the current tx descriptor's slot. Returns `None`
@@ -672,7 +683,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
             // Move the buffer out of its slot, leaving `None`. A subsequent
             // `take` returns `None` until the buffer is parked back, so a buffer
             // is never handed out twice.
-            let position = this.current_tx_position();
+            let position = this.tx_position_of(p_desc);
             this.tx_buffers.get_mut(position)?.take()
         }
     }
@@ -726,7 +737,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
                 return Some(buffer);
             }
 
-            let position = this.current_tx_position();
+            let position = this.tx_position_of(p_desc);
             this.tx_buffers
                 .get_mut(position)
                 .and_then(|slot| slot.replace(buffer))
@@ -782,8 +793,21 @@ impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
     pub fn new(ether_phy_instance: DriverBox<EtherPhy<Closed>>) -> Self {
         // BUF_SIZE is a free knob (the NetX `payload_size` analog): undersizing is
         // memory-safe, it only caps the largest frame received whole. 60 is the
-        // min Ethernet frame, required to form/transmit a minimum-size frame.
+        // min Ethernet frame, required to form/transmit a minimum-size frame;
+        // together with the multiple-of-32 rule the effective minimum is 64.
         const { assert!(BUF_SIZE >= 60) };
+        // BUF_SIZE goes unrounded into each RX descriptor's RD1.RBL field
+        // (`ether_buffer_size`, FSP `ether_init_descriptors`), and the RA6M3
+        // manual (p. 932) requires RBL to be "an integral multiple of 32". An
+        // out-of-spec RBL leaves the EDMAC's write bound undefined, and
+        // `rx_loaned` sits at offset BUF_SIZE in `Buffer`, so the bound is
+        // load-bearing for memory safety, not just for frame sizing.
+        const {
+            assert!(
+                BUF_SIZE % 32 == 0,
+                "BUF_SIZE must be a multiple of 32 (RD1.RBL hardware requirement)"
+            )
+        };
 
         let p_ether_phy_instance = ether_phy_instance.leak().into_ref().get_ref().instance();
 
