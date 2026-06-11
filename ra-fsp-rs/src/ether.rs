@@ -301,10 +301,6 @@ unsafe fn init_open<const BUF_SIZE: usize>(
         // Capture before c_conf takes ownership of cfg fields.
         let zerocopy = cfg.zerocopy;
         let padding = cfg.padding as u32;
-        // c_conf will replace tx_descriptors with &mut [] via ptr::replace;
-        // capture the base pointer now so offset_from against FSP's
-        // p_tx_descriptor (which derives from the same allocation) stays valid.
-        let tx_descriptors_base = cfg.tx_descriptors.as_ptr().cast::<ether_instance_descriptor_t>();
 
         let this = Ether {
             regs,
@@ -316,7 +312,7 @@ unsafe fn init_open<const BUF_SIZE: usize>(
             user_data: ptr::null(),
             zerocopy,
             padding,
-            tx_descriptors_base,
+            tx_descriptors_base: ptr::null(),
             cfg: zeroed(),
             _marker: PhantomData,
         };
@@ -328,6 +324,8 @@ unsafe fn init_open<const BUF_SIZE: usize>(
             let c_ext_projection = Pin::new_unchecked(&mut (*slot).c_ext_cfg);
             UnsafePinned::new(cfg.c_conf(c_ext_projection))
         };
+        let p_extend = *(*(*slot).cfg.get()).p_extend.cast::<ether_extended_cfg_t>();
+        (*slot).tx_descriptors_base = p_extend.p_tx_descriptors;
 
         let p_ctrl = UnsafePinned::raw_get(&raw const (*slot).ctrl);
         let p_cfg = UnsafePinned::raw_get(&raw const (*slot).cfg);
