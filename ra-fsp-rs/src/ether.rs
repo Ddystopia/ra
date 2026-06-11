@@ -625,6 +625,33 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
         let ptr = buffer.as_ptr().cast_mut();
         fsp_try_unsafe!(R_ETHER_Write(self.ctrl_void(), ptr.cast(), len as u32))
     }
+    /// Polls the PHY for link-state changes and fires the EINT callback
+    /// ([`InterruptCause::went_up`] / [`InterruptCause::went_down`]) when the
+    /// state transitions.
+    ///
+    /// # Cost — MDIO busy-wait when `ETHER_CFG_USE_LINKSTA == 0`
+    ///
+    /// With the default FSP configuration (`ETHER_CFG_USE_LINKSTA == 0`),
+    /// every call to `R_ETHER_LinkProcess` invokes the PHY driver's
+    /// `linkStatusGet`, which performs a full MDIO management-frame read.
+    /// MDIO is software-driven (bit-banged) through the ETHERC PIR register
+    /// with busy-wait delays — the most expensive "register access" in the
+    /// entire Ethernet driver, costing tens of microseconds of pure CPU stall
+    /// per call.
+    ///
+    /// If the board wires the PHY's LINKSTA pin to the ETHERC and the FSP_CFG
+    /// option `ETHER_CFG_USE_LINKSTA` is set to `1`, the link state is read
+    /// from an ETHERC register bit instead and the call is cheap.
+    ///
+    /// # Recommended call rate
+    ///
+    /// **Do not call this from the hot network-poll loop.** Call it from a
+    /// slow periodic task. At the 10 ms period currently used in ra6m3-rtic
+    /// the MDIO stall costs roughly a few tenths of a percent of a 120 MHz
+    /// core — tolerable, but needless if the rate is reduced. Periods of
+    /// 100 ms – 1 s are plenty: link flaps are rare, and state transitions are
+    /// also surfaced immediately via the EINT interrupt callback, so polling
+    /// adds latency robustness only, not functionality.
     #[inline(always)]
     pub fn link_process(mut self: Pin<&mut Self>) -> Result<()> {
         let ctrl = self.as_mut().ctrl_void();

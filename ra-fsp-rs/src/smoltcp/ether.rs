@@ -47,6 +47,14 @@ impl<const MTU: usize> Dev<MTU> {
         self.eth.get_mut().as_mut()
     }
 
+    /// Polls the PHY for link-state changes; see [`Ether::link_process`] for
+    /// the full cost analysis.
+    ///
+    /// **MDIO cost:** with `ETHER_CFG_USE_LINKSTA == 0` (default) this
+    /// performs a blocking, bit-banged MDIO read that stalls the CPU for tens
+    /// of microseconds.  Call from a slow periodic task (100 ms – 1 s), not
+    /// the hot smoltcp poll loop.  Setting `ETHER_CFG_USE_LINKSTA = 1` in
+    /// FSP_CFG eliminates the cost entirely when the PHY LINKSTA pin is wired.
     pub fn poll_link(&mut self) {
         if self.eth().get_open() != 0 {
             _ = self.eth().link_process();
