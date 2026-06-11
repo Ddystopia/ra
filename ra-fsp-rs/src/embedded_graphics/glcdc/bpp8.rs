@@ -137,12 +137,22 @@ impl<'a, 'b> DrawTarget for Display<Bpp8> {
         for y in tl.y..=br.y {
             let row = &mut buffer[(y as usize) * hstride..][..hstride];
             let (sx, ex) = (tl.x as usize, br.x as usize);
-            for x in sx..=ex {
-                let Some(v) = colors.next() else { break };
-                if v == filter {
-                    continue;
+            // Slice the span once so the compiler can see its length; the
+            // zip+iter_mut pair eliminates per-pixel index arithmetic and the
+            // bounds check that `row[x] = v` would otherwise emit each cycle.
+            let span = &mut row[sx..=ex];
+            let span_len = span.len();
+            let mut n = 0usize;
+            for (p, v) in span.iter_mut().zip(&mut colors) {
+                n += 1;
+                if v != filter {
+                    *p = v;
                 }
-                row[x] = v;
+            }
+            // `colors` was exhausted before the span was fully consumed:
+            // nothing more will be drawn on subsequent rows either.
+            if n < span_len {
+                return Ok(());
             }
         }
 
