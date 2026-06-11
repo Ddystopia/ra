@@ -420,6 +420,22 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
         CallbackEvent::callback_set_static(self, context)
     }
 
+    /// Returns `true` if the current RX descriptor appears to be software-owned
+    /// (RACT clear), meaning a received frame is likely waiting.
+    ///
+    /// This is one volatile SRAM read — no FFI, no MMIO. It can produce a false
+    /// positive when the ring is unarmed (e.g. link-down, descriptors zeroed —
+    /// RACT is clear because the hardware never set it). In that case the
+    /// subsequent [`Self::read_zerocopy`] will return the real error. Use this
+    /// as a cheap fast-path filter, not as an authoritative status check.
+    #[inline(always)]
+    pub fn rx_pending(&self) -> bool {
+        unsafe {
+            let p_desc = (*self.ctrl()).p_rx_descriptor;
+            Descriptor::<BUF_SIZE>::is_available(p_desc)
+        }
+    }
+
     #[inline(always)]
     pub fn read_zerocopy(
         self: Pin<&mut Self>,

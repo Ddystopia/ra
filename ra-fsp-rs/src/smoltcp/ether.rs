@@ -78,6 +78,15 @@ impl<const MTU: usize> Device for Dev<MTU> {
     //       multiple tokens.
 
     fn receive(&mut self, _: Instant) -> Option<(Self::RxToken<'_>, Self::TxToken<'_>)> {
+        // Fast-path: one volatile SRAM read — no FFI, no MMIO. Avoids the TX
+        // descriptor take/park roundtrip and the R_ETHER_Read call (which does a
+        // link check + ETHERC MMIO read) on the common idle-poll case where there
+        // is no pending RX frame. Can false-positive when the ring is unarmed, in
+        // which case read_zerocopy below will return the real error.
+        if !self.eth.get_mut().rx_pending() {
+            return None;
+        }
+
         let tx = self.send_buffer()?;
         // smoltcp never drops rx token, so it is fine to read it right away
         match self.eth().read_zerocopy() {
