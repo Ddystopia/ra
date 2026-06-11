@@ -185,6 +185,19 @@ impl<C: Channel> TimerState<C> {
         NVIC::mask(self.capture_b_irq);
     }
 
+    // FIXME(latency): the caller holds a global critical section for the entire
+    // duration of this function — two GTCNT MMIO reads (`now()`), the
+    // `compare_match_set` FFI call into `R_GPT_CompareMatchSet` (which also
+    // toggles GTWP write-protection when `GPT_CFG_WRITE_PROTECT_ENABLE` is
+    // on, adding two extra register accesses), and NVIC mask/unmask.  That
+    // whole sequence bounds worst-case interrupt latency for the entire system.
+    // The structure mirrors embassy's reference drivers and is correct as-is;
+    // this is a latency note, not a bug.  If it matters, consider:
+    //   - disabling GPT write protection in FSP_CFG (removes the GTWP
+    //     accesses from `compare_match_set`);
+    //   - the second `now()` re-check (the race guard) is the only step that
+    //     truly needs the critical section to be this wide; earlier work could
+    //     be done outside it, though that would complicate the call sites.
     pub fn set_alarm<T: TimerApi>(
         &self,
         cs: CriticalSection,

@@ -78,6 +78,8 @@ impl<C: Channel + 'static> Driver for EmbassyGptTimerDriver<C> {
     }
 
     fn schedule_wake(&self, at: u64, waker: &core::task::Waker) {
+        // FIXME(latency): opens a global critical section that spans
+        // `TimerState::set_alarm` — see the FIXME there for details.
         critical_section::with(|cs| {
             let mut borrow = self.timer.gpt.borrow_ref_mut(cs);
             let gpt = borrow.as_mut().expect("Driver not initialized").as_mut();
