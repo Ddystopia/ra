@@ -461,6 +461,12 @@ impl<S: 'static> Glcdc<S> {
     fn callback_ctx(&self) -> &CallbackContext {
         unsafe { &*self.callback_ctx.get() }
     }
+    // NOTE(soundness/policy): `Glcdc` is unconditionally `Sync`, and this hands
+    // out `&pac::GLCDC` even though svd2rust deliberately leaves peripherals
+    // `!Sync` — sharing it across priority levels permits torn `modify()`
+    // read-modify-writes on registers. Not Rust-AM UB on a single core
+    // (interrupts give happens-before), but it bypasses the PAC's ownership
+    // discipline; multi-context users must serialize register access themselves.
     pub fn regs(&self) -> &pac::GLCDC {
         &self.callback_ctx().regs
     }

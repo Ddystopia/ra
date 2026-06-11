@@ -29,12 +29,12 @@ use crate::{
 pub use channel::*;
 
 unsafe extern "C" {
-    pub safe fn gpt_counter_overflow_isr();
-    pub safe fn gpt_counter_underflow_isr();
-    // pub safe fn gpt_capture_a_isr();
-    // pub safe fn gpt_capture_b_isr();
-    pub safe fn gpt_capture_compare_a_isr();
-    pub safe fn gpt_capture_compare_b_isr();
+    pub unsafe fn gpt_counter_overflow_isr();
+    pub unsafe fn gpt_counter_underflow_isr();
+    // pub unsafe fn gpt_capture_a_isr();
+    // pub unsafe fn gpt_capture_b_isr();
+    pub unsafe fn gpt_capture_compare_a_isr();
+    pub unsafe fn gpt_capture_compare_b_isr();
 }
 
 // Todo: autogenerate stuff like this
@@ -172,11 +172,13 @@ unsafe impl<C, S> Sync for Gpt<'_, C, S> {}
 impl IsrPrototype {
     /// SAFETY: Call only from the correct IRQ.
     pub unsafe fn call_fsp_isr_handler(self) {
-        match self {
-            IsrPrototype::Overflow => gpt_counter_overflow_isr(),
-            IsrPrototype::Underflow => gpt_counter_underflow_isr(),
-            IsrPrototype::CompareA => gpt_capture_compare_a_isr(),
-            IsrPrototype::CompareB => gpt_capture_compare_b_isr(),
+        unsafe {
+            match self {
+                IsrPrototype::Overflow => gpt_counter_overflow_isr(),
+                IsrPrototype::Underflow => gpt_counter_underflow_isr(),
+                IsrPrototype::CompareA => gpt_capture_compare_a_isr(),
+                IsrPrototype::CompareB => gpt_capture_compare_b_isr(),
+            }
         }
     }
 }
@@ -441,6 +443,13 @@ impl<C, S> Gpt<'_, C, S> {
         unsafe { *self.ctrl.get() }.p_reg.cast()
     }
 
+    // NOTE(soundness/policy): `Gpt` is unconditionally `Sync` (see the
+    // `unsafe impl` above), and this hands out `&C` even though svd2rust
+    // deliberately leaves peripherals `!Sync` — sharing it across priority
+    // levels permits torn `modify()` read-modify-writes on registers. Not
+    // Rust-AM UB on a single core (interrupts give happens-before), but it
+    // bypasses the PAC's ownership discipline; multi-context users must
+    // serialize register access themselves.
     #[inline(always)]
     pub const fn regs(&self) -> &C {
         &self.regs

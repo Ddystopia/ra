@@ -686,11 +686,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
     ///   unconditionally at open, so `position < tx_buffers.len()` always.
     #[inline(always)]
     unsafe fn tx_position_of(&self, p_desc: *const ether_instance_descriptor_t) -> usize {
-        const {
-            assert!(
-                size_of::<Descriptor<BUF_SIZE>>() == size_of::<ether_instance_descriptor_t>()
-            )
-        };
+        const { assert!(size_of::<Descriptor<BUF_SIZE>>() == size_of::<ether_instance_descriptor_t>()) };
         let position = unsafe { p_desc.offset_from(self.tx_descriptors_base) };
         debug_assert!(position >= 0 && (position as usize) < self.tx_buffers.len());
         position as usize
