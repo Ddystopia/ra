@@ -1,5 +1,6 @@
 #![allow(non_upper_case_globals)]
 use core::{
+    cell::RefMut,
     marker::PhantomData,
     mem::{ManuallyDrop, MaybeUninit, replace, take, zeroed},
     ops::{Deref, DerefMut},
@@ -166,26 +167,36 @@ pub struct Ether<'a, const BUF_SIZE: usize, S: 'static> {
 #[repr(C, align(32))]
 pub struct Buffer<const BUF_SIZE: usize> {
     buf: UnsafePinned<[u8; BUF_SIZE]>,
-    /// Nonzero while this RX buffer is loaned to the user (between
-    /// `read_zerocopy` and `rx_buffer_update`). Consulted only on the cold
+    /// Nonzero while this RX buffer is loaned to the user (an [`RxFrame`] is
+    /// live, or was leaked via `mem::forget`). Consulted only on the cold
     /// link-up path (`update_rx_buffers`) so the buffer isn't re-armed into the
     /// DMA ring while the user still holds it.
-    ///
-    /// `u32` rather than `bool` or `u8`: on Cortex-M4, byte loads are
-    /// single-cycle and zero-extend for free, so a narrower type would perform
-    /// identically.  The word width is kept as a conventional idiom for
-    /// ISR-visible flags and costs nothing here because the alignment padding
-    /// already swallows the extra bytes regardless.
-    rx_loaned: UnsafePinned<u32>,
+    rx_loaned: UnsafePinned<bool>,
+}
+
+/// Exclusive handle to an opened [`Ether`] driver.
+///
+/// [`RxFrame`] is generic over this so the guard can either *borrow* the
+/// driver (`Pin<&mut Ether>`, the common case via [`Ether::read_zerocopy`])
+/// or *own* an enclosing borrow guard (`RefMut<DriverBox<Ether>>`, used by
+/// the smoltcp glue whose tokens cannot hold a reference into the `RefCell`
+/// they travel with).  Implement it for your own wrapper (e.g. a mutex
+/// guard) to use [`RxFrame::read`] with custom driver storage.
+pub trait EtherMut<'eth, const BUF_SIZE: usize> {
+    /// Reborrows the handle as the pinned driver.
+    fn ether_mut(&mut self) -> Pin<&mut Ether<'eth, BUF_SIZE, Opened>>;
 }
 
 /// A zero-copy RX frame loan.
 ///
-/// Created by [`Ether::read_zerocopy`]; lives until released.  The guard
-/// **borrows the driver mutably** for its entire lifetime, which is the
-/// soundness mechanism: borrowck statically forbids a second `read_zerocopy`,
-/// `update_rx_buffers`, `close`, or any other driver call while the guard is
-/// alive, without any runtime flag on the hot path.
+/// Created by [`Ether::read_zerocopy`] (plain borrow) or [`RxFrame::read`]
+/// (any [`EtherMut`] handle); lives until released.  The guard **holds the
+/// driver handle exclusively** for its entire lifetime, which is the
+/// soundness mechanism: no second `read_zerocopy`, `update_rx_buffers`,
+/// `close`, or any other driver call is possible while the guard is alive —
+/// statically (borrowck) for a borrowed handle, via the owning guard's own
+/// exclusivity (e.g. a `RefCell` borrow) otherwise.  No runtime flag on the
+/// hot path.
 ///
 /// # Frame access
 ///
@@ -208,7 +219,7 @@ pub struct Buffer<const BUF_SIZE: usize> {
 ///
 /// # Holding the guard blocks TX
 ///
-/// The guard holds `Pin<&mut Ether<...>>`, so **all** driver calls —
+/// The guard holds the driver exclusively, so **all** driver calls —
 /// including TX — are blocked for the guard's lifetime.  To transmit while
 /// still needing the frame data, either:
 /// - copy the data out of the guard before dropping it, or
@@ -226,7 +237,9 @@ pub struct Buffer<const BUF_SIZE: usize> {
 /// Cost of forgetting: the buffer's `rx_loaned` flag remains set until the
 /// re-read.  If the link bounces in that window, `update_rx_buffers` skips
 /// this buffer permanently (it looks loaned), costing one fewer RX ring slot
-/// for the rest of the session.  In short: sound, but don't do it.
+/// for the rest of the session.  Forgetting a guard with an *owning* handle
+/// (e.g. the smoltcp token's `RefMut`) additionally leaks that borrow, so
+/// every later `RefCell` borrow panics.  In short: sound, but don't do it.
 ///
 /// # Internal note
 ///
@@ -234,20 +247,22 @@ pub struct Buffer<const BUF_SIZE: usize> {
 /// methods on the guard in the future (e.g. replying to a frame while still
 /// holding it), without any extra indirection.
 #[must_use = "dropping RxFrame calls BufferRelease; use release() if you need the error"]
-pub struct RxFrame<'drv, 'eth, const BUF_SIZE: usize> {
-    /// Mutable borrow of the driver.  This is the compile-time exclusivity
-    /// guarantee: no second loan is possible while `driver` is alive.
-    ///
-    /// `'drv` is the borrow lifetime of the driver reference; `'eth` is
-    /// `Ether`'s own `'a` lifetime parameter (covering the callback context).
-    /// Keeping them separate avoids conflating the two lifetimes, which would
-    /// cause variance errors at the call site.
-    driver: Pin<&'drv mut Ether<'eth, BUF_SIZE, Opened>>,
+pub struct RxFrame<'eth, D, const BUF_SIZE: usize>
+where
+    D: EtherMut<'eth, BUF_SIZE>,
+{
+    /// Exclusive driver handle.  This is the exclusivity guarantee: no second
+    /// loan is possible while the handle sits here (borrowck for a borrowed
+    /// handle, the owning guard's runtime exclusivity otherwise).
+    driver: D,
     /// Raw pointer to the current RX buffer; stable for the guard's lifetime
     /// because the descriptor is software-owned (RACT == 0).
     buf: *mut Buffer<BUF_SIZE>,
     /// Frame length: `R_ETHER_Read` size clamped to `BUF_SIZE`.
     len: usize,
+    /// `'eth` (the driver's callback-context lifetime) is used only through
+    /// `D`'s trait bound, which doesn't count as a use for the compiler.
+    _eth: PhantomData<&'eth ()>,
 }
 
 pub struct Buffers<const BUF_SIZE: usize, const TX: usize, const RX: usize> {
@@ -558,7 +573,8 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
     /// Holding the guard exclusively borrows the driver, so no other driver
     /// call (including TX) is possible until the guard is dropped.  See
     /// [`RxFrame`] for the full ownership story, TX-blocking implications, and
-    /// `mem::forget` semantics.
+    /// `mem::forget` semantics.  To construct the guard from an owning handle
+    /// (e.g. a `RefMut` over the driver) use [`RxFrame::read`] directly.
     ///
     /// # Errors
     ///
@@ -568,100 +584,9 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
     /// zerocopy mode or if FSP returns a null or misaligned buffer pointer.
     #[inline(always)]
     pub fn read_zerocopy<'drv>(
-        mut self: Pin<&'drv mut Self>,
-    ) -> Result<RxFrame<'drv, 'a, BUF_SIZE>> {
-        if !self.zerocopy {
-            return Err(FSP_ERR_ASSERTION);
-        }
-
-        let mut p_buf: *mut Buffer<BUF_SIZE> = ptr::null_mut();
-        let mut len = 0u32;
-
-        fsp_try_unsafe!(R_ETHER_Read(
-            self.as_mut().ctrl_void(),
-            ptr::from_mut(&mut p_buf).cast(),
-            &mut len
-        ))?;
-
-        if !p_buf.is_aligned() || p_buf.is_null() {
-            log::error!("ether(read): buffer is not aligned or null. p_buf: {p_buf:p}, len: {len}");
-            return Err(FSP_ERR_ASSERTION);
-        }
-
-        let len = len as usize;
-        // `len` is `RFL + padding`; RFL is per-buffer, hardware-bounded by
-        // BUF_SIZE (RA6M3 RD1.RFL), so this clamp is a no-op when sized right and
-        // a safety backstop otherwise. A frame larger than BUF_SIZE is split by
-        // the EDMAC and surfaced a fragment at a time (not reassembled here).
-        let len = len.min(BUF_SIZE);
-
-        // Record that this RX buffer is now loaned to the user, so the link-up
-        // path (`update_rx_buffers`) won't re-arm it into the DMA ring while we
-        // still hold it. One store, no scan; the flag is read only on link-up.
-        unsafe { ptr::write((*p_buf).rx_loaned.get(), 1) };
-
-        // SAFETY: `p_buf` is the FSP-owned RX buffer for the current descriptor.
-        // The descriptor is software-owned (RACT == 0, FSP just returned it).
-        // `rx_loaned` is now 1, so `update_rx_buffers` will skip it.  The
-        // returned guard borrows `self` mutably, guaranteeing exclusive access
-        // until the guard is dropped.
-        Ok(RxFrame {
-            driver: unsafe { Pin::new_unchecked(self.get_unchecked_mut()) },
-            buf: p_buf,
-            len,
-        })
-    }
-
-    /// Like [`Self::read_zerocopy`] but returns the raw buffer pointer and
-    /// length instead of a borrow-checked guard.
-    ///
-    /// # Safety
-    ///
-    /// The caller must guarantee:
-    /// 1. The loan is exclusive: no second raw read is issued before the
-    ///    buffer is returned via [`Self::rx_buffer_update`].
-    /// 2. The buffer is returned (via `rx_buffer_update`) before the driver
-    ///    is closed or the RX ring is re-initialized.
-    ///
-    /// These invariants are upheld by the smoltcp token discipline:
-    /// `receive(&mut self)` mutably borrows the device, smoltcp consumes the
-    /// RX token before the TX token, and the token's `Drop` always calls
-    /// `rx_buffer_update`.  No other caller should use this function.
-    #[inline(always)]
-    pub(crate) unsafe fn read_zerocopy_raw(
-        mut self: Pin<&mut Self>,
-    ) -> Result<(Pin<&'static mut Buffer<BUF_SIZE>>, usize)> {
-        if !self.zerocopy {
-            return Err(FSP_ERR_ASSERTION);
-        }
-
-        let mut p_buf: *mut Buffer<BUF_SIZE> = ptr::null_mut();
-        let mut len = 0u32;
-
-        fsp_try_unsafe!(R_ETHER_Read(
-            self.as_mut().ctrl_void(),
-            ptr::from_mut(&mut p_buf).cast(),
-            &mut len
-        ))?;
-
-        if !p_buf.is_aligned() || p_buf.is_null() {
-            log::error!("ether(read): buffer is not aligned or null. p_buf: {p_buf:p}, len: {len}");
-            return Err(FSP_ERR_ASSERTION);
-        }
-
-        let len = len as usize;
-        // `len` is `RFL + padding`; RFL is per-buffer, hardware-bounded by
-        // BUF_SIZE (RA6M3 RD1.RFL), so this clamp is a no-op when sized right and
-        // a safety backstop otherwise. A frame larger than BUF_SIZE is split by
-        // the EDMAC and surfaced a fragment at a time (not reassembled here).
-        let len = len.min(BUF_SIZE);
-
-        // Record that this RX buffer is now loaned to the user, so the link-up
-        // path (`update_rx_buffers`) won't re-arm it into the DMA ring while we
-        // still hold it. One store, no scan; the flag is read only on link-up.
-        unsafe { ptr::write((*p_buf).rx_loaned.get(), 1) };
-
-        Ok((unsafe { Pin::new_unchecked(&mut *p_buf) }, len))
+        self: Pin<&'drv mut Self>,
+    ) -> Result<RxFrame<'a, Pin<&'drv mut Self>, BUF_SIZE>> {
+        RxFrame::read(self).map_err(|(_, err)| err)
     }
     #[inline(always)]
     pub fn read_non_zerocopy(self: Pin<&mut Self>, buffer: &mut [u8]) -> Result<usize> {
@@ -692,27 +617,6 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
         fsp_try_unsafe!(R_ETHER_Read(self.ctrl_void(), p_buf.cast(), &mut len))?;
 
         Ok(len as usize)
-    }
-    /// Swaps `buffer` into the current RX descriptor and re-arms it.
-    ///
-    /// Not public: in the guard-based API, arming an arbitrary `'static`
-    /// buffer into the current descriptor from safe code could double-arm one
-    /// buffer into two descriptors (UB via DMA under a live loan from a
-    /// different descriptor).  The smoltcp glue calls this through
-    /// `read_zerocopy_raw`, which upholds the loan-exclusivity invariant via
-    /// token discipline.  External callers should use [`RxFrame::replace_buffer`]
-    /// instead.
-    #[inline(always)]
-    pub(crate) fn rx_buffer_update(
-        self: Pin<&mut Self>,
-        buffer: Pin<&'static mut Buffer<BUF_SIZE>>,
-    ) -> Result<()> {
-        let b = unsafe { buffer.get_unchecked_mut() };
-        // Going back into the DMA ring: no longer loaned to the user.
-        unsafe { ptr::write(b.rx_loaned.get(), 0) };
-        let ptr = b.buf.get();
-
-        fsp_try_unsafe!(R_ETHER_RxBufferUpdate(self.ctrl_void(), ptr.cast()))
     }
     /// Submits `buffer` to the current TX descriptor and parks it into that
     /// descriptor's slot.
@@ -1271,7 +1175,68 @@ impl<const BUF_SIZE: usize> Default for Descriptor<BUF_SIZE> {
     }
 }
 
-impl<'drv, 'eth, const BUF_SIZE: usize> RxFrame<'drv, 'eth, BUF_SIZE> {
+impl<'eth, D, const BUF_SIZE: usize> RxFrame<'eth, D, BUF_SIZE>
+where
+    D: EtherMut<'eth, BUF_SIZE>,
+{
+    /// Reads the pending frame, taking `driver` as the guard's exclusive
+    /// handle.  [`Ether::read_zerocopy`] is the convenience form for a plain
+    /// `Pin<&mut Ether>` borrow; use this directly with an owning handle
+    /// (e.g. `RefMut<DriverBox<Ether>>`) when the guard must not borrow its
+    /// surroundings.
+    ///
+    /// # Errors
+    ///
+    /// On error the handle is handed back together with the error code so
+    /// the caller can keep using the driver.  Propagates errors from
+    /// `R_ETHER_Read` (e.g. [`FSP_ERR_ETHER_ERROR_NO_DATA`] when no frame is
+    /// ready, or link-down errors); [`FSP_ERR_ASSERTION`] if the driver is
+    /// not in zerocopy mode or FSP returns a null or misaligned pointer.
+    #[inline(always)]
+    pub fn read(mut driver: D) -> core::result::Result<Self, (D, fsp_err_t)> {
+        if !driver.ether_mut().zerocopy {
+            return Err((driver, FSP_ERR_ASSERTION));
+        }
+
+        let mut p_buf: *mut Buffer<BUF_SIZE> = ptr::null_mut();
+        let mut len = 0u32;
+
+        if let Err(err) = fsp_try_unsafe!(R_ETHER_Read(
+            driver.ether_mut().ctrl_void(),
+            ptr::from_mut(&mut p_buf).cast(),
+            &mut len
+        )) {
+            return Err((driver, err));
+        }
+
+        if !p_buf.is_aligned() || p_buf.is_null() {
+            log::error!("ether(read): buffer is not aligned or null. p_buf: {p_buf:p}, len: {len}");
+            return Err((driver, FSP_ERR_ASSERTION));
+        }
+
+        let len = len as usize;
+        // `len` is `RFL + padding`; RFL is per-buffer, hardware-bounded by
+        // BUF_SIZE (RA6M3 RD1.RFL), so this clamp is a no-op when sized right and
+        // a safety backstop otherwise. A frame larger than BUF_SIZE is split by
+        // the EDMAC and surfaced a fragment at a time (not reassembled here).
+        let len = len.min(BUF_SIZE);
+
+        // Record that this RX buffer is now loaned to the user, so the link-up
+        // path (`update_rx_buffers`) won't re-arm it into the DMA ring while we
+        // still hold it. One store, no scan; the flag is read only on link-up.
+        unsafe { ptr::write((*p_buf).rx_loaned.get(), true) };
+
+        // `p_buf` is the FSP-owned RX buffer of the current descriptor, which
+        // is software-owned (RACT == 0, FSP just returned it) and stays that
+        // way: the guard now holds the only route to the driver.
+        Ok(RxFrame {
+            driver,
+            buf: p_buf,
+            len,
+            _eth: PhantomData,
+        })
+    }
+
     /// Explicitly release the frame, returning any error from
     /// `R_ETHER_BufferRelease`.
     ///
@@ -1287,7 +1252,7 @@ impl<'drv, 'eth, const BUF_SIZE: usize> RxFrame<'drv, 'eth, BUF_SIZE> {
     /// re-initialized on the next link-up, so a failure here is not fatal.
     pub fn release(self) -> Result<()> {
         let mut this = ManuallyDrop::new(self);
-        let result = fsp_try_unsafe!(R_ETHER_BufferRelease(this.driver.as_mut().ctrl_void()));
+        let result = fsp_try_unsafe!(R_ETHER_BufferRelease(this.driver.ether_mut().ctrl_void()));
         // Clear rx_loaned whether or not BufferRelease succeeded: there is no
         // live `&mut` anymore, and on link-bounce re-init the buffer must be
         // eligible for re-arm.
@@ -1336,7 +1301,7 @@ impl<'drv, 'eth, const BUF_SIZE: usize> RxFrame<'drv, 'eth, BUF_SIZE> {
 
         let new_data_ptr = unsafe { (*new_raw).buf.get() };
         let result = fsp_try_unsafe!(R_ETHER_RxBufferUpdate(
-            this.driver.as_mut().ctrl_void(),
+            this.driver.ether_mut().ctrl_void(),
             new_data_ptr.cast()
         ));
 
@@ -1345,9 +1310,9 @@ impl<'drv, 'eth, const BUF_SIZE: usize> RxFrame<'drv, 'eth, BUF_SIZE> {
                 // `new` is now in the ring.  Find the guard's buffer in
                 // rx_buffers and replace it with `new`.
                 let old_raw = this.buf;
-                let driver = unsafe { this.driver.as_mut().get_unchecked_mut() };
+                let driver = unsafe { this.driver.ether_mut().get_unchecked_mut() };
                 let replaced = driver.rx_buffers.iter_mut().find(|b| {
-                    // `b` is `&&mut Pin<&'static mut Buffer<BUF_SIZE>>`; deref
+                    // `b` is `&mut Pin<&'static mut Buffer<BUF_SIZE>>`; deref
                     // through Pin to get `&Buffer` (via Deref on the Pin), then
                     // compare raw addresses.  No mutation needed here.
                     core::ptr::eq(&***b as *const Buffer<BUF_SIZE>, old_raw as *const _)
@@ -1383,15 +1348,15 @@ impl<'drv, 'eth, const BUF_SIZE: usize> RxFrame<'drv, 'eth, BUF_SIZE> {
                 // FFI failed (unreachable in practice): fall back to
                 // BufferRelease (ignore its error) and return `new` to the
                 // caller together with the original error.
-                let _ = fsp_try_unsafe!(R_ETHER_BufferRelease(this.driver.as_mut().ctrl_void()));
-                unsafe { ptr::write((*this.buf).rx_loaned.get(), 0) };
+                let _ = fsp_try_unsafe!(R_ETHER_BufferRelease(this.driver.ether_mut().ctrl_void()));
+                unsafe { ptr::write((*this.buf).rx_loaned.get(), false) };
                 Err((unsafe { Pin::new_unchecked(&mut *new_raw) }, e))
             }
         }
     }
 }
 
-impl<const BUF_SIZE: usize> Deref for RxFrame<'_, '_, BUF_SIZE> {
+impl<'eth, D: EtherMut<'eth, BUF_SIZE>, const BUF_SIZE: usize> Deref for RxFrame<'eth, D, BUF_SIZE> {
     type Target = [u8];
     fn deref(&self) -> &Self::Target {
         // SAFETY: `buf` is the descriptor-current RX buffer (RACT == 0).
@@ -1402,7 +1367,9 @@ impl<const BUF_SIZE: usize> Deref for RxFrame<'_, '_, BUF_SIZE> {
     }
 }
 
-impl<const BUF_SIZE: usize> DerefMut for RxFrame<'_, '_, BUF_SIZE> {
+impl<'eth, D: EtherMut<'eth, BUF_SIZE>, const BUF_SIZE: usize> DerefMut
+    for RxFrame<'eth, D, BUF_SIZE>
+{
     fn deref_mut(&mut self) -> &mut Self::Target {
         // SAFETY: Same as Deref above.  `DerefMut` is sound: while the guard
         // lives the descriptor is software-owned (RACT == 0) and the driver
@@ -1411,17 +1378,35 @@ impl<const BUF_SIZE: usize> DerefMut for RxFrame<'_, '_, BUF_SIZE> {
     }
 }
 
-impl<const BUF_SIZE: usize> Drop for RxFrame<'_, '_, BUF_SIZE> {
+impl<'eth, D: EtherMut<'eth, BUF_SIZE>, const BUF_SIZE: usize> Drop for RxFrame<'eth, D, BUF_SIZE> {
     fn drop(&mut self) {
         // Re-arm the same buffer into the ring and advance the descriptor.
         // Errors are silently ignored: `R_ETHER_BufferRelease` can only fail
         // when the link is down or in magic-packet mode; in either case the
         // ring is re-initialized on the next link-up and every descriptor is
         // re-armed then, so no frame slot is permanently lost.
-        let _ = fsp_try_unsafe!(R_ETHER_BufferRelease(self.driver.as_mut().ctrl_void()));
+        let _ = fsp_try_unsafe!(R_ETHER_BufferRelease(self.driver.ether_mut().ctrl_void()));
         // Clear the loan flag unconditionally, even if BufferRelease failed:
         // there is no live `&mut` anymore, and on link-bounce re-init the
         // buffer must be eligible for re-arm by `update_rx_buffers`.
-        unsafe { ptr::write((*self.buf).rx_loaned.get(), 0) };
+        unsafe { ptr::write((*self.buf).rx_loaned.get(), false) };
+    }
+}
+
+impl<'eth, const BUF_SIZE: usize> EtherMut<'eth, BUF_SIZE>
+    for Pin<&mut Ether<'eth, BUF_SIZE, Opened>>
+{
+    #[inline(always)]
+    fn ether_mut(&mut self) -> Pin<&mut Ether<'eth, BUF_SIZE, Opened>> {
+        self.as_mut()
+    }
+}
+
+impl<'eth, const BUF_SIZE: usize> EtherMut<'eth, BUF_SIZE>
+    for RefMut<'_, DriverBox<Ether<'eth, BUF_SIZE, Opened>>>
+{
+    #[inline(always)]
+    fn ether_mut(&mut self) -> Pin<&mut Ether<'eth, BUF_SIZE, Opened>> {
+        (**self).as_mut()
     }
 }

@@ -1,10 +1,13 @@
 use {
     crate::{
         DriverBox,
-        ether::{self, Buffer, Ether, InterruptCause},
+        ether::{self, Buffer, Ether, InterruptCause, RxFrame},
         state_markers::Opened,
     },
-    core::{cell::RefCell, pin::Pin},
+    core::{
+        cell::{RefCell, RefMut},
+        pin::Pin,
+    },
     smoltcp::{
         phy::{Device, DeviceCapabilities, Medium, RxToken, TxToken},
         time::Instant,
@@ -16,11 +19,14 @@ pub struct Dev<const MTU: usize> {
     capabilities: DeviceCapabilities,
 }
 
-pub struct EthernetRxToken<'a, const MTU: usize>(
-    Option<Pin<&'static mut Buffer<MTU>>>,
-    usize,
-    &'a RefCell<DriverBox<Ether<'static, MTU, Opened>>>,
-);
+/// The `RefCell` borrow of the driver, owned by the RX token's guard for the
+/// token's lifetime.
+type EthRefMut<'a, const MTU: usize> = RefMut<'a, DriverBox<Ether<'static, MTU, Opened>>>;
+
+/// Holds the frame as an [`RxFrame`] guard owning the `RefCell` borrow: the
+/// loan is exclusive by construction, and the guard's `Drop` releases the
+/// frame (`BufferRelease`), tolerating link-down instead of panicking.
+pub struct EthernetRxToken<'a, const MTU: usize>(RxFrame<'static, EthRefMut<'a, MTU>, MTU>);
 
 pub struct EthernetTxToken<'a, const MTU: usize>(
     Option<Pin<&'static mut Buffer<MTU>>>,
@@ -98,22 +104,32 @@ impl<const MTU: usize> Device for Dev<MTU> {
         }
 
         let tx = self.send_buffer()?;
-        // smoltcp never drops rx token, so it is fine to read it right away
-        match self.eth().read_zerocopy() {
-            Ok((buf, len)) => Some((
-                EthernetRxToken(Some(buf), len, &self.eth),
-                EthernetTxToken(Some(tx), &self.eth),
-            )),
-            Err(ether::FSP_ERR_ETHER_ERROR_NO_DATA) => {
-                self.eth().as_mut().tx_buffer_update(tx);
-                None
+        // The RX guard owns the `RefCell` borrow for the token's lifetime.
+        // smoltcp consumes the RX token (dropping the guard and its borrow)
+        // before it uses the TX token, so the TX token's deferred
+        // `borrow_mut` cannot collide with it; a hypothetical out-of-order
+        // use would surface as a `RefCell` panic, not as aliasing.
+        // (Two steps so the error path's `RefMut` is fully gone before the
+        // driver is re-borrowed to park the TX buffer back.)
+        let frame = match RxFrame::read(self.eth.borrow_mut()) {
+            Ok(frame) => Some(frame),
+            Err((eth, err)) => {
+                drop(eth);
+                if err != ether::FSP_ERR_ETHER_ERROR_NO_DATA {
+                    log::error!("Ethernet read error: {err}");
+                }
+                return None;
             }
-            Err(err) => {
-                log::error!("Ethernet read error: {err}");
-                self.eth().as_mut().tx_buffer_update(tx);
-                None
-            }
-        }
+        };
+        let Some(frame) = frame else {
+            self.eth.borrow_mut().as_mut().tx_buffer_update(tx);
+            return None;
+        };
+
+        Some((
+            EthernetRxToken(frame),
+            EthernetTxToken(Some(tx), &self.eth),
+        ))
     }
 
     fn transmit(&mut self, _: Instant) -> Option<Self::TxToken<'_>> {
@@ -130,19 +146,9 @@ impl<const MTU: usize> RxToken for EthernetRxToken<'_, MTU> {
     where
         F: FnOnce(&[u8]) -> R,
     {
-        f(&self.0.as_ref().unwrap()[..self.1])
-    }
-}
-
-impl<const MTU: usize> Drop for EthernetRxToken<'_, MTU> {
-    fn drop(&mut self) {
-        let buf = self.0.take().unwrap();
-
-        self.2
-            .borrow_mut()
-            .as_mut()
-            .rx_buffer_update(buf)
-            .expect("Failed to update buffer")
+        // The guard derefs to the frame slice; dropping `self` afterwards
+        // releases the descriptor (BufferRelease) and the RefCell borrow.
+        f(&self.0)
     }
 }
 
