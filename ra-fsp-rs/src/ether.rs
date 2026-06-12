@@ -1,4 +1,152 @@
 #![allow(non_upper_case_globals)]
+//! Ethernet driver (ETHERC/EDMAC) — safe wrapper over Renesas FSP `r_ether`.
+//!
+//! # Flow
+//!
+//! [`Ether`] is opened from an [`EtherConfig`] carrying the TX/RX descriptor
+//! rings and buffer rosters. FSP is opened with `pp_ether_buffers == NULL`
+//! (see [INV-NULLBUF](#invariants)), so FSP neither owns nor tracks packet
+//! buffers — this wrapper owns the buffer↔descriptor binding and RX re-arming.
+//!
+//! - **RX (zero-copy):** [`Ether::read_zerocopy`] hands back an [`RxFrame`]
+//!   guard that derefs to the frame bytes. Dropping it re-arms the same buffer
+//!   (`R_ETHER_BufferRelease`); [`RxFrame::replace_buffer`] keeps the frame and
+//!   donates a fresh buffer to the ring instead.
+//! - **TX (zero-copy):** a caller's buffer pool layered on a take/submit/park
+//!   trio: [`Ether::take_tx_buf`] reclaims a completed buffer,
+//!   [`Ether::write_zerocopy`] submits the next one and returns the buffer it
+//!   displaced, [`Ether::tx_buffer_update`] parks a buffer without submitting.
+//! - **Link:** [`Ether::link_process`] polls the PHY; on each link-up FSP
+//!   rebuilds the RX ring unarmed and [`Ether::update_rx_buffers`] re-arms it
+//!   from the roster.
+//!
+//! # Invariants
+//!
+//! Inline comments reference these by tag rather than re-deriving them.
+//!
+//! - **INV-NULLBUF** — FSP is opened with `pp_ether_buffers == NULL`. It stores
+//!   whatever buffer pointer it is handed into the current descriptor and
+//!   advances, keeping no buffer list of its own. Hence the wrapper keeps the
+//!   `tx_buffers`/`rx_buffers` rosters and owns re-arming the RX ring after a
+//!   link bounce.
+//!
+//! - **INV-TXMOVE** — TX buffer ownership is tracked by *move*: one parking slot
+//!   `tx_buffers[i]: Option<…>` per TX descriptor `i`, never a side bitset. A
+//!   `Pin<&'static mut Buffer>` is a unique owning token, so a buffer is never
+//!   handed out twice. The reachable state space is (slot present?) × descriptor
+//!   `TACT`:
+//!
+//!   | slot | TACT | state                              | owner    |
+//!   |------|------|------------------------------------|----------|
+//!   | Some |  0   | free (unused or fully transmitted) | driver   |
+//!   | None |  0   | taken, not yet returned/submitted  | user     |
+//!   | Some |  1   | submitted, in flight               | hardware |
+//!   | None |  1   | unreachable                        | n/a      |
+//!
+//!   `(None, TACT=1)` is unreachable: `TACT` is set only by `write_zerocopy`,
+//!   which in the same step parks the buffer (→ `Some`); a slot is emptied only
+//!   by `take_tx_buf`, which first checks `TACT` clear. The code still rejects it
+//!   defensively (harmless). `TACT` is read with a volatile load of the
+//!   descriptor (plain SRAM, not MMIO), so reclamation never depends on
+//!   TC-interrupt timing — the TC interrupt is only a wakeup.
+//!
+//!   Note the asymmetry with RX: `R_ETHER_Read` does *not* advance
+//!   `p_rx_descriptor` (which is why a `&'static mut Buffer` minted from the RX
+//!   ring could be handed out twice — the reason RX uses the [`RxFrame`] guard
+//!   instead). `R_ETHER_Write` *does* advance `p_tx_descriptor`, but TX safety
+//!   does not rest on that. It rests on this invariant: buffer tokens are only
+//!   ever *moved* between caller and parking slot, never minted from the ring,
+//!   so no buffer is aliased; and the TACT check on every take/submit/park keeps
+//!   a buffer the EDMAC owns (TACT=1) out of the caller's hands entirely.
+//!
+//! - **INV-RXLOAN** — RX-buffer aliasing safety rests entirely on the [`RxFrame`]
+//!   guard holding the driver handle exclusively for its whole lifetime. Every
+//!   path that re-arms a buffer (`update_rx_buffers`, `R_ETHER_BufferRelease`,
+//!   `R_ETHER_RxBufferUpdate`) needs `&mut Ether`, and every live `&`/`&mut` into
+//!   an RX buffer is reached either through the guard or through `&mut Ether`. So
+//!   a re-arm (EDMAC may DMA into the buffer) and a live reference to that buffer
+//!   are mutually exclusive by borrowck. `mem::forget(guard)` stays sound:
+//!   moving the guard into `forget` requires every borrow of it — hence every
+//!   `&mut [u8]` into the buffer — to be dead first (the guard itself holds only
+//!   a raw `*mut Buffer`), so no live reference remains when the EDMAC takes the
+//!   buffer back. **Load-bearing:** never hand out an RX-buffer handle that
+//!   outlives or is decoupled from the driver borrow.
+//!
+//! - **INV-DESCSIZE** — `size_of::<Descriptor<BUF_SIZE>>() ==
+//!   size_of::<ether_instance_descriptor_t>()`: `Descriptor` is a `#[repr(C)]`
+//!   newtype around that struct plus a ZST, and the inner struct is already 16
+//!   bytes so `align(16)` adds no padding. This makes the
+//!   `[Descriptor] → [ether_instance_descriptor_t]` cast in `c_conf` sound and
+//!   makes `offset_from` yield the `tx_buffers` slot index (see `tx_position_of`).
+//!
+//! - **INV-TXLEN** — `tx_buffers.len() >= num_tx_descriptors`, enforced
+//!   unconditionally at open in `c_conf`. FSP keeps `p_tx_descriptor` within
+//!   `0..num_tx_descriptors`, so a descriptor-derived slot index is always in
+//!   bounds — the safety precondition for the unchecked path in `tx_position_of`.
+//!
+//! - **INV-RBL** — `BUF_SIZE` is a multiple of 32 and `>= 60`. It is written
+//!   verbatim into each RX descriptor's RD1.RBL (`ether_buffer_size`); the RA6M3
+//!   manual (p. 932) requires RBL to be an integral multiple of 32, otherwise the
+//!   EDMAC's write bound is undefined — load-bearing for memory safety, not just
+//!   frame sizing. `Buffer` is `#[repr(C, align(32))]` (the EDMAC requires the
+//!   buffer pointer 32-byte aligned) and, given the multiple-of-32 size, is
+//!   exactly `BUF_SIZE` bytes with no padding. `>= 60` is the minimum Ethernet
+//!   frame; with the multiple-of-32 rule the effective minimum is 64.
+//!
+//! - **INV-RFL** — A received frame's per-buffer length is `descriptor.size` =
+//!   RD1.RFL, the count of frame bytes the EDMAC actually stored, written back per
+//!   packet (distinct from `descriptor.buffer_size` = RD1.RBL = `BUF_SIZE`, the
+//!   capacity). RFL is hardware-bounded by RBL, so `R_ETHER_Read` never reports
+//!   more than `BUF_SIZE + padding` bytes and the EDMAC never writes past one
+//!   buffer. A frame larger than `BUF_SIZE` is split across descriptors (see
+//!   INV-WHOLEFRAME). Read-path length clamps are no-ops when sized right, safety
+//!   backstops otherwise.
+//!
+//!   `padding` here is the EDMAC RPADIR data-insertion feature (`e_ether_padding`,
+//!   0–3 bytes), NOT the descriptor padding of INV-DESCSIZE. When enabled the
+//!   EDMAC inserts `padding` zero-bytes into the received frame at offset
+//!   `padding_offset` (the classic use is 2 bytes after the 14-byte Ethernet
+//!   header to 4-align the IP header). FSP returns `RFL + padding` and, in
+//!   non-zerocopy mode, `memcpy`s that many bytes — so the destination must hold
+//!   `RFL + padding` (≤ `BUF_SIZE + padding`); the `+padding` is *added* because
+//!   padding makes the copy larger, not smaller.
+//!
+//!   `received_size = RFL + padding` is meaningful **only for a single-buffer
+//!   frame** (RD0.RFP == 11). Per the RA6M3 manual §31.3.3 (p. 934) the EDMAC
+//!   writes RFL back **only on a frame-final descriptor** (RFP 11/01); for a
+//!   non-final buffer of a *split* frame (RFP 10/00, "became full") it writes RFP
+//!   and RACT but **not RFL**, leaving `descriptor.size` at its init value (0) or
+//!   stale. So if a frame splits (`BUF_SIZE` smaller than the frame), FSP's
+//!   `size + padding` for those buffers is garbage; with a large stale `size`,
+//!   `received_size` can exceed `BUF_SIZE` and FSP's non-zerocopy `memcpy`
+//!   **over-reads the source RX buffer** (read-only; the destination is still
+//!   guarded). The single-buffer case is always exact: there `RFL + padding`
+//!   equals the buffer's physical byte count (frame + inserted padding) ≤
+//!   `BUF_SIZE`. Zerocopy is immune regardless (no `memcpy`; `len.min(BUF_SIZE)`
+//!   clamp). FSP's padding feature, like the NetX glue (`rm_netxduo_ether.c`), is
+//!   written for one buffer per frame — see INV-WHOLEFRAME.
+//!
+//! - **INV-WHOLEFRAME** — A small `BUF_SIZE` is fully supported and memory-safe:
+//!   every buffer is RBL-bounded (INV-RBL), so a frame larger than `BUF_SIZE` just
+//!   splits across descriptors. The *limitation* is functional, not a safety one:
+//!   the read path surfaces one buffer at a time and does not currently expose
+//!   RD0.RFP (head/middle/end) or a corrected per-fragment length, so split frames
+//!   arrive as indistinguishable fragments. (Reassembly is the caller's job, not
+//!   the driver's; the planned fix is to *expose* RFP + length, not to stitch.)
+//!   Callers who need each frame delivered whole must
+//!   therefore size `BUF_SIZE >= 1518 + padding` (max on-wire frame + any RPADIR
+//!   padding, ×32) so no frame ever splits — this is the regime FSP/NetX assume.
+//!   Callers who knowingly accept fragments (or only handle known-small traffic)
+//!   may use any `BUF_SIZE >= 60` / ×32; just avoid the INV-RFL over-read corner
+//!   (don't combine a splitting `BUF_SIZE` with non-zerocopy + `padding`).
+//!
+//! - **INV-REARM** — `update_rx_buffers` gates on ring state, not on an event
+//!   token. After a link-up reset every descriptor has `p_buffer == NULL` and
+//!   `p_rx_descriptor` is descriptor 0; in steady state every `p_buffer` is
+//!   non-NULL. A NULL `p_buffer` at the ring head is thus an unforgeable "FSP
+//!   just reset the ring" marker, making re-arming idempotent and bounce-proof:
+//!   it happens exactly once per FSP reset, regardless of polling cadence or a
+//!   replayed `went_up` event.
 use core::{
     cell::RefMut,
     marker::PhantomData,
@@ -64,67 +212,6 @@ unsafe extern "C" {
     pub unsafe fn ether_eint_isr();
 }
 
-/*
-
-TX buffer ownership is tracked by *move*, not by a side bitset: each TX
-descriptor `i` has one parking slot `tx_buffers[i]: Option<...>`. The full state
-space is (slot present?) x (descriptor TACT):
-
-| slot | TACT | state                              | owner    |
-|------|------|------------------------------------|----------|
-| Some |  0   | free (unused or fully transmitted) | driver   |
-| None |  0   | taken, not yet returned/submitted  | user     |
-| Some |  1   | submitted, in flight               | hardware |
-| None |  1   | unreachable (see below)            | n/a      |
-
-`(None, TACT=1)` is unreachable: TACT is set only by `write_zerocopy`, which in
-the same step parks the submitted buffer into the slot (making it `Some`); and a
-slot is emptied to `None` only by `take_tx_buf`, which first checks TACT is
-clear. So a `None` slot always implies TACT clear. The code still treats it
-defensively - `take_tx_buf` returns `None` for any non-available descriptor and
-the park operations reject `TACT=1` - so the unreachable state is harmless.
-
-Each operation handles every reachable state:
-- `take_tx_buf`: `(Some,0)` -> move out, return the buffer; `(None,0)` -> `None`
-  (already taken); `(Some,1)` -> `None` (in flight, `is_available` is false).
-- `write_zerocopy` / `tx_buffer_update` (parking): `(Some,1)` is rejected (never
-  displace a hardware-owned buffer); `(Some,0)` -> the parked free buffer is
-  *reclaimed* and returned to the caller (this is the normal one-call pool swap,
-  not an error); `(None,0)` -> park, return `None`.
-
-Because a `Pin<&'static mut Buffer>` is a unique owning token that cannot be
-duplicated in safe code, no buffer is ever handed out twice. TACT is read with a
-volatile load of the descriptor (plain SRAM, not MMIO), so reclamation never
-depends on TC interrupt timing; the TC interrupt is purely a wakeup signal.
-Compare `rm_netxduo_ether.c`, which brings its own packet buffers and swaps them
-through the descriptors the same way, re-deriving completion from TDFAR + TACT
-via TxStatusGet.
-
-This take/swap pair is the primitive a caller layers a packet pool on top of:
-`take_tx_buf` reclaims a completed buffer, `write_zerocopy` submits the next and
-hands back the buffer it displaced.
-
-Write:
-    Non-Zerocopy:
-      action:       memcpy from provided buffer to descriptors buffer
-      precondition: buffer inside descriptor must have TD0_TACT is 0
-      /* fallthrough */
-    Zerocopy:
-      action:       store the pointer into the descriptor and submit to the
-                    queue. todo: return that pointer to the user when TD0_TACT
-                    becomes 0 again.
-
-      precondition: fsp code does not check TD0_TACT and simply overwrites the
-                    pointer to the buffers and submits the descriptor. I don't
-                    know what is it gonna do, but it would not be bad if we
-                    required this TD0_TACT to be 0 too
-
-=> For write descriptor we can see, that if `TD0_TACT == 0`, we can return
-`Pin<&'static mut Buffer<BUF_SIZE>>` to the user, when he wants to take the buffer
-for the purpose of writing
-
-*/
-
 #[repr(C)] // `#[repr(C)]` is for typestate
 #[pin_data(PinnedDrop)]
 pub struct Ether<'a, const BUF_SIZE: usize, S: 'static> {
@@ -133,45 +220,34 @@ pub struct Ether<'a, const BUF_SIZE: usize, S: 'static> {
     inst: UnsafePinned<ether_instance_t>,
     user_data: *const (),
     c_ext_cfg: MaybeUninit<UnsafePinned<ether_extended_cfg_t>>,
-    /// One parking slot per TX descriptor. `None` means the buffer is currently
-    /// held by the user; ownership is tracked by move, not a side bitset. See
-    /// the ownership table at the top of this file.
+    // TX parking slots, one per TX descriptor; `None` means the buffer is held
+    // by the user. Kept Rust-side per INV-NULLBUF; indexed by descriptor via
+    // `tx_position_of`. Ownership rules: INV-TXMOVE.
     tx_buffers: &'static mut [Option<Pin<&'static mut Buffer<BUF_SIZE>>>],
+    // RX buffer roster, kept per INV-NULLBUF so `update_rx_buffers` can re-arm
+    // the ring after a link-up (INV-REARM). `replace_buffer` keeps it truthful
+    // when a buffer is swapped out of the ring.
     rx_buffers: &'static mut [Pin<&'static mut Buffer<BUF_SIZE>>],
     regs: pac::ETHERC0,
-    /// Cached at open so the per-call mode guard is a single self-relative load
-    /// + compare instead of a dependent chain through the FSP cfg pointer.
-    /// FSP never mutates this field; it is written once in `init_open`.
+    // Mode and padding cached at open so the per-call guards are a single
+    // self-relative load instead of a chain through the FSP cfg pointer. FSP
+    // never mutates these; written once in `init_open`.
     zerocopy: bool,
-    /// Extra bytes FSP may copy past the frame payload (`e_ether_padding` as
-    /// `u32`). Cached at open for the same reason as `zerocopy`; used by
-    /// `read_non_zerocopy` to compute the minimum destination buffer size.
+    // Extra bytes FSP may copy past the payload (`e_ether_padding` as `u32`);
+    // used by `read_non_zerocopy` to size the destination (INV-RFL).
     padding: u32,
-    /// Base pointer of the TX descriptor ring, cached at open.  Eliminates the
-    /// ctrl→p_ether_cfg→p_extend→p_tx_descriptors four-load chain in the hot
-    /// TX path.  Derived from the same allocation as `p_tx_descriptor` (both
-    /// come from `EtherConfig::tx_descriptors`), so `offset_from` between them
-    /// is valid.  Written once in `init_open`; FSP never writes Rust-side fields
-    /// so no `UnsafePinned` is needed.  The raw-pointer field is covered by the
-    /// existing `unsafe impl Send/Sync` on `Ether`.
+    // TX ring base, cached at open to avoid the
+    // ctrl→p_ether_cfg→p_extend→p_tx_descriptors chain on the hot TX path.
+    // Same allocation as `p_tx_descriptor`, so `offset_from` between them is
+    // valid (INV-DESCSIZE). Covered by the `unsafe impl Send/Sync` below.
     tx_descriptors_base: *const ether_instance_descriptor_t,
     _marker: PhantomData<(S, &'a ())>,
 }
 
-/// **RAM overhead note:** `align(32)` means the trailing `rx_loaned` word
-/// rounds each `Buffer` up to the next 32-byte boundary.  With a `BUF_SIZE`
-/// that is already a multiple of 32 (the typical case) that is +32 bytes per
-/// buffer — paid by both the TX and RX pools.  This is an accepted tradeoff for
-/// the O(1) loan flag: the alternative (a side bitmap in `Ether`) would require
-/// index bookkeeping on the hot RX path, which this design deliberately avoids.
+/// A `BUF_SIZE`-byte DMA frame buffer (`align(32)`, see INV-RBL).
 #[repr(C, align(32))]
 pub struct Buffer<const BUF_SIZE: usize> {
     buf: UnsafePinned<[u8; BUF_SIZE]>,
-    /// Nonzero while this RX buffer is loaned to the user (an [`RxFrame`] is
-    /// live, or was leaked via `mem::forget`). Consulted only on the cold
-    /// link-up path (`update_rx_buffers`) so the buffer isn't re-armed into the
-    /// DMA ring while the user still holds it.
-    rx_loaned: UnsafePinned<bool>,
 }
 
 /// Exclusive handle to an opened [`Ether`] driver.
@@ -190,28 +266,23 @@ pub trait EtherMut<'eth, const BUF_SIZE: usize> {
 /// A zero-copy RX frame loan.
 ///
 /// Created by [`Ether::read_zerocopy`] (plain borrow) or [`RxFrame::read`]
-/// (any [`EtherMut`] handle); lives until released.  The guard **holds the
-/// driver handle exclusively** for its entire lifetime, which is the
-/// soundness mechanism: no second `read_zerocopy`, `update_rx_buffers`,
-/// `close`, or any other driver call is possible while the guard is alive —
-/// statically (borrowck) for a borrowed handle, via the owning guard's own
-/// exclusivity (e.g. a `RefCell` borrow) otherwise.  No runtime flag on the
-/// hot path.
+/// (any [`EtherMut`] handle); lives until released. The guard holds the driver
+/// handle exclusively for its whole lifetime — the soundness mechanism behind
+/// INV-RXLOAN — so no other driver call is possible while it is alive.
 ///
 /// # Frame access
 ///
-/// `Deref<Target = [u8]>` / `DerefMut` yield `&buffer[..len]`.  The slice is
+/// `Deref<Target = [u8]>` / `DerefMut` yield `&buffer[..len]`. The slice is
 /// valid to read and write: while the guard is alive the descriptor is
 /// software-owned (RACT == 0) and nothing can re-arm it.
 ///
 /// # Releasing the frame
 ///
 /// * **`Drop`** (implicit) — calls `R_ETHER_BufferRelease`, which re-arms the
-///   same buffer into the ring and advances to the next descriptor.  Errors
-///   from `BufferRelease` are silently ignored: the call can only fail when the
-///   link is down or in magic-packet mode; in either case the ring is
-///   re-initialized on the next link-up and every descriptor is re-armed then,
-///   so the frame will not be stuck forever.
+///   same buffer into the ring and advances to the next descriptor. Errors are
+///   ignored: `BufferRelease` can only fail with the link down or in
+///   magic-packet mode, and the ring is fully re-armed on the next link-up, so
+///   the frame slot is never permanently lost.
 /// * **[`RxFrame::release`]** — explicit fallible variant; use when the caller
 ///   wants to observe the error (rare in practice).
 /// * **[`RxFrame::replace_buffer`]** — swap a fresh buffer into the ring and
@@ -219,49 +290,33 @@ pub trait EtherMut<'eth, const BUF_SIZE: usize> {
 ///
 /// # Holding the guard blocks TX
 ///
-/// The guard holds the driver exclusively, so **all** driver calls —
-/// including TX — are blocked for the guard's lifetime.  To transmit while
-/// still needing the frame data, either:
-/// - copy the data out of the guard before dropping it, or
-/// - call `replace_buffer` to donate a fresh buffer and reclaim the frame
-///   buffer with its data intact.
+/// The guard holds the driver exclusively, so **all** driver calls — including
+/// TX — are blocked for its lifetime. To transmit while still needing the frame
+/// data, either copy it out before dropping the guard, or call
+/// [`RxFrame::replace_buffer`] to donate a fresh buffer and keep this one.
 ///
 /// # `mem::forget` semantics
 ///
-/// Forgetting the guard is **sound**: no release fires, the descriptor stays
-/// software-owned (RACT == 0) with the frame pending, and the *next*
-/// `read_zerocopy` returns the same frame as a fresh guard (FSP never advances
-/// the descriptor without a release, so no aliasing arises — the forgotten
-/// guard's borrows are gone by then).
-///
-/// Cost of forgetting: the buffer's `rx_loaned` flag remains set until the
-/// re-read.  If the link bounces in that window, `update_rx_buffers` skips
-/// this buffer permanently (it looks loaned), costing one fewer RX ring slot
-/// for the rest of the session.  Forgetting a guard with an *owning* handle
-/// (e.g. the smoltcp token's `RefMut`) additionally leaks that borrow, so
-/// every later `RefCell` borrow panics.  In short: sound, but don't do it.
-///
-/// # Internal note
-///
-/// The guard holds the full driver borrow — a natural hook for growing TX
-/// methods on the guard in the future (e.g. replying to a frame while still
-/// holding it), without any extra indirection.
+/// Forgetting the guard is sound (see INV-RXLOAN): no release fires, the
+/// descriptor stays software-owned with the frame pending, and the next
+/// `read_zerocopy` returns the same frame. The cost is that the frame is never
+/// released until a re-read or a link bounce. Forgetting a guard with an
+/// *owning* handle (e.g. the smoltcp token's `RefMut`) leaks that borrow, so
+/// every later `RefCell` borrow panics — sound, but don't do it.
 #[must_use = "dropping RxFrame calls BufferRelease; use release() if you need the error"]
 pub struct RxFrame<'eth, D, const BUF_SIZE: usize>
 where
     D: EtherMut<'eth, BUF_SIZE>,
 {
-    /// Exclusive driver handle.  This is the exclusivity guarantee: no second
-    /// loan is possible while the handle sits here (borrowck for a borrowed
-    /// handle, the owning guard's runtime exclusivity otherwise).
+    // Exclusive driver handle — the carrier of INV-RXLOAN.
     driver: D,
-    /// Raw pointer to the current RX buffer; stable for the guard's lifetime
-    /// because the descriptor is software-owned (RACT == 0).
+    // Current RX buffer; stable for the guard's lifetime (descriptor stays
+    // software-owned, RACT == 0).
     buf: *mut Buffer<BUF_SIZE>,
-    /// Frame length: `R_ETHER_Read` size clamped to `BUF_SIZE`.
+    // Frame length: `R_ETHER_Read` size clamped to `BUF_SIZE` (INV-RFL).
     len: usize,
-    /// `'eth` (the driver's callback-context lifetime) is used only through
-    /// `D`'s trait bound, which doesn't count as a use for the compiler.
+    // `'eth` (the driver's callback-context lifetime) is used only through
+    // `D`'s trait bound, which doesn't count as a use for the compiler.
     _eth: PhantomData<&'eth ()>,
 }
 
@@ -594,13 +649,12 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
             return Err(FSP_ERR_ASSERTION);
         }
 
-        // `R_ETHER_Read` (non-zerocopy) `memcpy`s `descriptor.size + padding`
-        // (`RFL + padding`) bytes into `buffer` WITHOUT knowing its length. Per the
-        // RA6M3 manual (RD1.RFL, §31), RFL is the per-buffer frame length, hardware-
-        // bounded by the descriptor's RBL (= BUF_SIZE), so the copy is at most
-        // `BUF_SIZE + padding` bytes; the destination must hold that. Without this
-        // guard a too-small `buffer` is an out-of-bounds write (UB) reachable from
-        // safe code.
+        // `R_ETHER_Read` (non-zerocopy) `memcpy`s `RFL + padding` bytes into
+        // `buffer` without knowing its length. By INV-RFL that is at most
+        // `BUF_SIZE + padding`; requiring the destination to hold that turns an
+        // otherwise safe-reachable out-of-bounds write into an error. (The
+        // matching source over-read in the undersized-split + padding corner is
+        // FSP-internal and unpreventable here — honor INV-WHOLEFRAME to avoid it.)
         let required = BUF_SIZE + self.padding as usize;
         if buffer.len() < required {
             log::error!(
@@ -648,26 +702,23 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
 
             let p_desc = (*this.ctrl.get()).p_tx_descriptor;
 
-            // (Some, TACT=1): the EDMAC is still transmitting on this descriptor.
-            // Submitting would clobber the in-flight descriptor and let us hand
-            // the hardware-owned buffer back as "reclaimed" - reject instead.
+            // TACT=1: descriptor in flight; submitting would clobber it and let
+            // us hand the hardware-owned buffer back as "reclaimed" (INV-TXMOVE).
             if !Descriptor::<BUF_SIZE>::is_available(p_desc) {
                 return Err((buffer, e_fsp_err::FSP_ERR_ETHER_ERROR_TRANSMIT_BUFFER_FULL));
             }
 
-            // Compute position from the pre-Write snapshot of p_tx_descriptor;
-            // R_ETHER_Write advances the ring pointer so the post-Write value
-            // would index the wrong slot.
+            // Snapshot the slot index before the Write: `R_ETHER_Write` advances
+            // the ring pointer, so the post-Write value would index the wrong slot.
             let position = this.tx_position_of(p_desc);
 
             let ptr = buffer.as_ref().get_ref().buf.get();
             let len = len.min(BUF_SIZE);
 
             match fsp_try_unsafe!(R_ETHER_Write(this.ctrl().cast(), ptr.cast(), len as u32)) {
-                // Submitted: `buffer` is now in flight (tracked by TACT from here
-                // on). Park it and hand back whatever free buffer the slot held -
-                // the reclaimed buffer for a one-call pool swap, or `None` if the
-                // slot was emptied by `take_tx_buf`.
+                // Submitted: `buffer` is now in flight (TACT tracks it). Park it
+                // and hand back whatever the slot held — the reclaimed buffer for
+                // a one-call pool swap, or `None` if `take_tx_buf` emptied it.
                 Ok(()) => Ok(this
                     .tx_buffers
                     .get_mut(position)
@@ -735,20 +786,10 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
         Ok(())
     }
 
-    /// Index of the given descriptor pointer within the TX ring.  This is also
-    /// the `tx_buffers` slot index because:
-    ///
-    /// - `offset_from` counts `ether_instance_descriptor_t` steps, which equals
-    ///   the `[Descriptor<BUF_SIZE>]` index because the two have the same size:
-    ///   `Descriptor` is a `#[repr(C)]` newtype around `ether_instance_descriptor_t`
-    ///   plus a ZST, and on the target the inner struct is already 16 bytes so the
-    ///   `align(16)` adds no padding. (This equality is also what makes the
-    ///   `[Descriptor] -> [ether_instance_descriptor_t]` cast in `c_conf` sound.)
-    ///   `p_desc` and `tx_descriptors_base` both derive from `EtherConfig::tx_descriptors`,
-    ///   so `offset_from` is valid.
-    /// - FSP keeps `p_tx_descriptor` in `0..num_tx_descriptors` (debug_assert).
-    /// - `EtherConfig::c_conf` enforces `tx_buffers.len() >= num_tx_descriptors`
-    ///   unconditionally at open, so `position < tx_buffers.len()` always.
+    /// Index of `p_desc` within the TX ring, which is also its `tx_buffers` slot
+    /// index. `offset_from` is valid and yields the slot index by INV-DESCSIZE
+    /// (`p_desc` and `tx_descriptors_base` share the `tx_descriptors` allocation);
+    /// the result is in bounds by INV-TXLEN. The `debug_assert` re-checks both.
     #[inline(always)]
     unsafe fn tx_position_of(&self, p_desc: *const ether_instance_descriptor_t) -> usize {
         const { assert!(size_of::<Descriptor<BUF_SIZE>>() == size_of::<ether_instance_descriptor_t>()) };
@@ -757,54 +798,73 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
         position as usize
     }
 
-    /// Takes the buffer out of the current tx descriptor's slot. Returns `None`
-    /// if that buffer is already held by the user (slot empty) or the hardware
-    /// is still transmitting it (descriptor TACT set) - see the ownership table
-    /// at the top of this file.
+    /// Takes the buffer out of the current TX descriptor's slot. Returns `None`
+    /// per INV-TXMOVE if the buffer is already held by the user (slot empty) or
+    /// the hardware is still transmitting it (TACT set).
     ///
-    /// Descriptor is not moved. Note that the only way to move the descriptor is to transmit the message.
-    ///
-    /// If you want to put it back, use [`Self::tx_buffer_update`].
+    /// The descriptor is not advanced — only a transmit advances it. Put the
+    /// buffer back with [`Self::tx_buffer_update`].
     #[inline(always)]
     pub fn take_tx_buf(self: Pin<&mut Self>) -> Option<Pin<&'static mut Buffer<BUF_SIZE>>> {
         unsafe {
             let this = self.get_unchecked_mut();
             let p_desc = (*this.ctrl.get()).p_tx_descriptor;
 
-            // The EDMAC owns the descriptor and its buffer until it writes
-            // TACT back to zero; never hand out an in-flight buffer.
+            // TACT=1: in flight, EDMAC-owned; never hand it out (INV-TXMOVE).
             if !Descriptor::<BUF_SIZE>::is_available(p_desc) {
                 return None;
             }
 
-            // Move the buffer out of its slot, leaving `None`. A subsequent
-            // `take` returns `None` until the buffer is parked back, so a buffer
-            // is never handed out twice.
+            // Move out, leaving `None`; the slot then stays empty until parked
+            // back, so a buffer is never handed out twice (INV-TXMOVE).
             let position = this.tx_position_of(p_desc);
             this.tx_buffers.get_mut(position)?.take()
         }
     }
 
+    /// Re-arms the RX descriptor ring after a link-up, handing every buffer
+    /// back to the EDMAC.
+    //
+    // The NULL-`p_buffer`-at-head marker that INV-REARM relies on is committed
+    // by FSP: on a link-up transition `R_ETHER_LinkProcess` rebuilds the ring
+    // through `ether_configure_mac` -> `ether_init_descriptors`
+    // (`r_ether.c:1585`); with `pp_ether_buffers == NULL` (INV-NULLBUF) every
+    // descriptor is left `p_buffer == NULL` / `RACT` clear and `p_rx_descriptor`
+    // reset to descriptor 0. A link-*down* leaves the ring untouched, and in
+    // steady state every `p_buffer` is non-NULL (`R_ETHER_RxBufferUpdate` only
+    // swaps in non-NULL, `read_zerocopy` never clears it).
     #[inline(always)]
-    pub fn update_rx_buffers(self: Pin<&mut Self>, cause: InterruptCause) {
-        if !cause.went_up {
+    pub fn update_rx_buffers(self: Pin<&mut Self>) {
+        // Gate per INV-REARM: act only once FSP reports the link up *and* the
+        // ring is still post-reset. `is_up()` rejects the do_link-failed window
+        // (ring memset but link not yet up); the head-descriptor check below
+        // rejects steady state (every descriptor already armed).
+        if !self.is_up() {
             return;
         }
 
         let this = unsafe { self.get_unchecked_mut() };
-        let instance = this.ctrl.get().cast();
+        let ctrl = this.ctrl.get();
 
+        // `p_rx_descriptor` is descriptor 0 after the reset and is the first
+        // descriptor `R_ETHER_RxBufferUpdate` arms, so its `p_buffer` is the
+        // NULL reset marker (INV-REARM).
+        let head = unsafe { (*ctrl).p_rx_descriptor };
+        if head.is_null() || !unsafe { (*head).p_buffer.is_null() } {
+            return;
+        }
+
+        let instance = ctrl.cast();
+
+        // Re-arm every roster buffer unconditionally. This hands buffers to the
+        // EDMAC (RACT=1, it may DMA into them); soundness is INV-RXLOAN — the
+        // gate above guarantees no live `RxFrame` guard (hence no live reference
+        // into any buffer) can coexist with this loop. Each roster entry is a
+        // unique `&'static mut` armed once into successive descriptors, so no
+        // buffer is armed into two descriptors.
         for buffer in &mut *this.rx_buffers {
             unsafe {
                 let b = buffer.as_mut().get_unchecked_mut();
-
-                // Don't re-arm a buffer the user is currently holding (loaned by
-                // `read_zerocopy`); handing it back to the EDMAC would let the
-                // hardware DMA into a buffer that still has a live `&mut` out.
-                if *b.rx_loaned.get() {
-                    continue;
-                }
-
                 let ptr = b.buf.get();
                 R_ETHER_RxBufferUpdate(instance, ptr.cast());
             }
@@ -815,11 +875,11 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
     /// e.g. to return a buffer obtained from [`Self::take_tx_buf`] that ended up
     /// not being sent.
     ///
-    /// Returns the buffer previously parked in the slot, now reclaimed - this is
-    /// the normal result when swapping a pool buffer in, not an error - or `None`
-    /// if the slot was empty (the usual take-then-return case). If the descriptor
-    /// is currently in flight (`TACT` set) the slot holds a hardware-owned buffer
-    /// that must not be displaced, so the input `buffer` is handed straight back.
+    /// Returns the buffer previously parked in the slot, now reclaimed (the
+    /// normal result when swapping a pool buffer in, not an error), or `None` if
+    /// the slot was empty (the usual take-then-return case). If the descriptor is
+    /// in flight (`TACT` set) the input `buffer` is handed straight back, since
+    /// the slot holds a hardware-owned buffer that must not be displaced.
     #[inline(always)]
     pub fn tx_buffer_update(
         self: Pin<&mut Self>,
@@ -829,7 +889,7 @@ impl<'a, const BUF_SIZE: usize> Ether<'a, BUF_SIZE, Opened> {
             let this = self.get_unchecked_mut();
             let p_desc = (*this.ctrl.get()).p_tx_descriptor;
 
-            // (Some, TACT=1): never displace a hardware-owned, in-flight buffer.
+            // TACT=1: never displace a hardware-owned, in-flight buffer (INV-TXMOVE).
             if !Descriptor::<BUF_SIZE>::is_available(p_desc) {
                 return Some(buffer);
             }
@@ -888,17 +948,10 @@ impl<const BUF_SIZE: usize, S> Ether<'_, BUF_SIZE, S> {
 #[rustfmt::skip]
 impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
     pub fn new(ether_phy_instance: DriverBox<EtherPhy<Closed>>) -> Self {
-        // BUF_SIZE is a free knob (the NetX `payload_size` analog): undersizing is
-        // memory-safe, it only caps the largest frame received whole. 60 is the
-        // min Ethernet frame, required to form/transmit a minimum-size frame;
-        // together with the multiple-of-32 rule the effective minimum is 64.
+        // INV-RBL. Undersizing BUF_SIZE is memory-safe (it only caps the largest
+        // frame received whole, the NetX `payload_size` analog); the bounds below
+        // are the load-bearing part.
         const { assert!(BUF_SIZE >= 60) };
-        // BUF_SIZE goes unrounded into each RX descriptor's RD1.RBL field
-        // (`ether_buffer_size`, FSP `ether_init_descriptors`), and the RA6M3
-        // manual (p. 932) requires RBL to be "an integral multiple of 32". An
-        // out-of-spec RBL leaves the EDMAC's write bound undefined, and
-        // `rx_loaned` sits at offset BUF_SIZE in `Buffer`, so the bound is
-        // load-bearing for memory safety, not just for frame sizing.
         const {
             assert!(
                 BUF_SIZE % 32 == 0,
@@ -933,6 +986,11 @@ impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
     pub const fn multicast(mut self) -> Self { self.multicast = true; self }
     pub const fn promiscuous(mut self) -> Self { self.promiscuous = true; self }
     pub const fn flow_control(mut self) -> Self { self.flow_control = true; self }
+    /// Enable EDMAC RPADIR padding insertion (see INV-RFL): `padding` zero-bytes
+    /// inserted into each received frame at `offset`. Requires single-buffer
+    /// reception — size `BUF_SIZE >= 1518 + padding` (INV-WHOLEFRAME), else the
+    /// frame splits and the non-zerocopy read path hits the continuation
+    /// over-read described in INV-RFL.
     pub const fn padding(mut self, padding: e_ether_padding, offset: u32) -> Self { self.padding = padding; self.padding_offset = offset; self }
     pub const fn broadcast_filter(mut self, filter: u32) -> Self { self.broadcast_filter = filter; self }
     pub const fn mac(mut self, mac: &'static [u8; 6]) -> Self { self.p_mac_address = mac; self }
@@ -954,9 +1012,9 @@ impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
     /// Beware!!! `ether_cfg_t` returned has pointer with `ext`'s address and provenance.
     /// Using those pointers is unsafe thus this function is still safe.
     pub const fn c_conf(&mut self, ext: Pin<&mut MaybeUninit<UnsafePinned<ether_extended_cfg_t>>>) -> ether_cfg_t {
-        // Re-asserted here (not only in `new`) because `EtherConfig` fields are
-        // `pub`, so a literal-constructed config bypasses `new`. Every open
-        // funnels through `c_conf`. See `new` for why this bound is load-bearing.
+        // INV-RBL, re-asserted here because `EtherConfig` fields are `pub` so a
+        // literal-constructed config bypasses `new`; every open funnels through
+        // `c_conf`.
         const {
             assert!(
                 BUF_SIZE % 32 == 0 && BUF_SIZE >= 60,
@@ -969,11 +1027,9 @@ impl<const BUF_SIZE: usize> EtherConfig<BUF_SIZE> {
         assert!(self.rx_descriptors.len() <= 4, "Max 4 descriptors");
         assert!(self.tx_descriptors.len() <= 4, "Max 4 descriptors");
 
-        // `take_tx_buf` indexes `tx_buffers` with `get_unchecked` by the current TX
-        // descriptor index, which FSP keeps in `0..num_tx_descriptors`. This bound
-        // is the safety precondition for that unchecked access, so it is enforced
-        // unconditionally here (once, at open) — `tx_buffers` may NOT be shorter than
-        // `tx_descriptors`, even for callers that never use the zero-copy TX path.
+        // INV-TXLEN, enforced unconditionally here (once, at open) — `tx_buffers`
+        // may NOT be shorter than `tx_descriptors`, even for callers that never
+        // use the zero-copy TX path.
         assert!(
             self.tx_buffers.len() >= self.tx_descriptors.len(),
             "There must be at least as many TX buffers as TX descriptors"
@@ -1080,7 +1136,6 @@ impl<const BUF_SIZE: usize> Buffer<BUF_SIZE> {
     pub const fn new() -> Self {
         Self {
             buf: UnsafePinned::new([0; BUF_SIZE]),
-            rx_loaned: UnsafePinned::new(false),
         }
     }
 
@@ -1099,8 +1154,6 @@ impl<const BUF_SIZE: usize, const TX: usize, const RX: usize> Buffers<BUF_SIZE, 
         Self {
             tx_buffers: unsafe { core::mem::transmute_copy(&tx_buffers) },
             rx_buffers: unsafe { core::mem::transmute_copy(&rx_buffers) },
-            // rx_buffers: rx_buffers.map(Pin::static_mut),
-            // rx_buffers: rx_buffers.map(Pin::static_mut),
         }
     }
 }
@@ -1154,7 +1207,8 @@ impl InterruptCause {
 impl<const BUF_SIZE: usize> Deref for Buffer<BUF_SIZE> {
     type Target = [u8; BUF_SIZE];
     fn deref(&self) -> &Self::Target {
-        // todo: audit it
+        // SAFETY: the `&self` borrow already excludes concurrent mutation of the
+        // bytes; this only re-derives a shared ref through `UnsafePinned`.
         unsafe { &*self.buf.get() }
     }
 }
@@ -1215,20 +1269,13 @@ where
         }
 
         let len = len as usize;
-        // `len` is `RFL + padding`; RFL is per-buffer, hardware-bounded by
-        // BUF_SIZE (RA6M3 RD1.RFL), so this clamp is a no-op when sized right and
-        // a safety backstop otherwise. A frame larger than BUF_SIZE is split by
-        // the EDMAC and surfaced a fragment at a time (not reassembled here).
+        // `len` is `RFL + padding`; clamp per INV-RFL (no-op when sized right,
+        // safety backstop otherwise).
         let len = len.min(BUF_SIZE);
 
-        // Record that this RX buffer is now loaned to the user, so the link-up
-        // path (`update_rx_buffers`) won't re-arm it into the DMA ring while we
-        // still hold it. One store, no scan; the flag is read only on link-up.
-        unsafe { ptr::write((*p_buf).rx_loaned.get(), true) };
-
-        // `p_buf` is the FSP-owned RX buffer of the current descriptor, which
-        // is software-owned (RACT == 0, FSP just returned it) and stays that
-        // way: the guard now holds the only route to the driver.
+        // `p_buf` is the current descriptor's RX buffer, software-owned (RACT == 0,
+        // FSP just returned it). It stays that way because `driver` — moved into
+        // the guard below — is now the only route to the driver (INV-RXLOAN).
         Ok(RxFrame {
             driver,
             buf: p_buf,
@@ -1252,18 +1299,13 @@ where
     /// re-initialized on the next link-up, so a failure here is not fatal.
     pub fn release(self) -> Result<()> {
         let mut this = ManuallyDrop::new(self);
-        let result = fsp_try_unsafe!(R_ETHER_BufferRelease(this.driver.ether_mut().ctrl_void()));
-        // Clear rx_loaned whether or not BufferRelease succeeded: there is no
-        // live `&mut` anymore, and on link-bounce re-init the buffer must be
-        // eligible for re-arm.
-        unsafe { ptr::write((*this.buf).rx_loaned.get(), false) };
-        result
+        fsp_try_unsafe!(R_ETHER_BufferRelease(this.driver.ether_mut().ctrl_void()))
     }
 
     /// Keep the current frame and swap a fresh buffer into the ring.
     ///
     /// Calls `R_ETHER_RxBufferUpdate` with `new`; on success:
-    /// - `new` enters the ring (its `rx_loaned` is cleared),
+    /// - `new` enters the ring,
     /// - the guard's buffer (containing the received frame) is returned to the
     ///   caller as `Pin<&'static mut Buffer<BUF_SIZE>>`,
     /// - the ring advances to the next descriptor.
@@ -1295,10 +1337,7 @@ where
     > {
         let mut this = ManuallyDrop::new(self);
 
-        // Clear rx_loaned on `new` before it enters the ring.
         let new_raw = unsafe { new.get_unchecked_mut() as *mut Buffer<BUF_SIZE> };
-        unsafe { ptr::write((*new_raw).rx_loaned.get(), false) };
-
         let new_data_ptr = unsafe { (*new_raw).buf.get() };
         let result = fsp_try_unsafe!(R_ETHER_RxBufferUpdate(
             this.driver.ether_mut().ctrl_void(),
@@ -1324,10 +1363,6 @@ where
                     // `Pin<&'static mut>` from a `&'static mut` reference.
                     let new_pin = unsafe { Pin::new_unchecked(&mut *new_raw) };
                     let old_pin = core::mem::replace(slot, new_pin);
-                    // Clear rx_loaned on the returned buffer: it is now the
-                    // caller's; the flag must be 0 so a future re-arm (if the
-                    // caller donates it back) goes through correctly.
-                    unsafe { ptr::write((*old_raw).rx_loaned.get(), false) };
                     Ok(old_pin)
                 } else {
                     // Invariant violation: every buffer in a descriptor should
@@ -1340,7 +1375,6 @@ where
                     debug_assert!(false, "replace_buffer: guard buffer not in rx_buffers");
                     // Return the old buffer as best-effort even without the
                     // bookkeeping update.
-                    unsafe { ptr::write((*old_raw).rx_loaned.get(), false) };
                     Ok(unsafe { Pin::new_unchecked(&mut *old_raw) })
                 }
             }
@@ -1349,7 +1383,6 @@ where
                 // BufferRelease (ignore its error) and return `new` to the
                 // caller together with the original error.
                 let _ = fsp_try_unsafe!(R_ETHER_BufferRelease(this.driver.ether_mut().ctrl_void()));
-                unsafe { ptr::write((*this.buf).rx_loaned.get(), false) };
                 Err((unsafe { Pin::new_unchecked(&mut *new_raw) }, e))
             }
         }
@@ -1386,10 +1419,6 @@ impl<'eth, D: EtherMut<'eth, BUF_SIZE>, const BUF_SIZE: usize> Drop for RxFrame<
         // ring is re-initialized on the next link-up and every descriptor is
         // re-armed then, so no frame slot is permanently lost.
         let _ = fsp_try_unsafe!(R_ETHER_BufferRelease(self.driver.ether_mut().ctrl_void()));
-        // Clear the loan flag unconditionally, even if BufferRelease failed:
-        // there is no live `&mut` anymore, and on link-bounce re-init the
-        // buffer must be eligible for re-arm by `update_rx_buffers`.
-        unsafe { ptr::write((*self.buf).rx_loaned.get(), false) };
     }
 }
 
