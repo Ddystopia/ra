@@ -29,30 +29,54 @@ use crate::{
 pub use channel::*;
 
 unsafe extern "C" {
+    /// FSP's GPT ISR entries. Prefer [`Gpt::handle_isr`] /
+    /// [`IsrPrototype::call_fsp_isr_handler`].
+    ///
+    /// # Safety
+    ///
+    /// Must run in the matching configured IRQ with the driver open. If a
+    /// non-static callback that mutates the block is registered, the ISR must
+    /// not preempt a driver call in progress — the callback would alias the
+    /// suspended call's `&mut`. Driving it through [`Gpt::handle_isr`] from a
+    /// context that owns the driver upholds both.
     pub unsafe fn gpt_counter_overflow_isr();
+    /// See [`gpt_counter_overflow_isr`]'s safety contract.
     pub unsafe fn gpt_counter_underflow_isr();
-    // pub unsafe fn gpt_capture_a_isr();
-    // pub unsafe fn gpt_capture_b_isr();
+    /// See [`gpt_counter_overflow_isr`]'s safety contract.
     pub unsafe fn gpt_capture_compare_a_isr();
+    /// See [`gpt_counter_overflow_isr`]'s safety contract.
     pub unsafe fn gpt_capture_compare_b_isr();
 }
 
 pub mod channel {
-    pub trait Channel: Send {
+    /// A GPT channel peripheral.
+    ///
+    /// # Safety
+    ///
+    /// `Gpt<C, _>` is `Send`/`Sync` and hands out `&C` from a shared
+    /// reference ([`Gpt::regs`]); implementations must tolerate that under
+    /// the crate's single-core policy: `gtcnt()` must be callable from any
+    /// context, and register access through `&Self` must not assume
+    /// exclusivity.
+    ///
+    /// [`Gpt::regs`]: super::Gpt::regs
+    pub unsafe trait Channel: Send {
         const N: usize;
         fn gtcnt() -> u32;
     }
 
     macro_rules! ch {
         ($periph: ident, $n: literal) => {
-            impl Channel for $crate::pac::$periph {
+            // SAFETY: PAC peripherals are ZST handles; GTCNT is a plain
+            // 32-bit read, valid from any context on a single core.
+            unsafe impl Channel for $crate::pac::$periph {
                 const N: usize = $n;
                 fn gtcnt() -> u32 {
                     let gpt = unsafe { $crate::pac::$periph::steal() };
                     gpt.gtcnt().read().bits()
                 }
             }
-            impl Channel for &mut $crate::pac::$periph {
+            unsafe impl Channel for &mut $crate::pac::$periph {
                 const N: usize = $n;
                 fn gtcnt() -> u32 {
                     let gpt = unsafe { $crate::pac::$periph::steal() };
@@ -155,8 +179,10 @@ unsafe impl<C: Channel, S> Block for Gpt<'_, C, S> {
     }
 }
 
-unsafe impl<C, S> Send for Gpt<'_, C, S> {}
-unsafe impl<C, S> Sync for Gpt<'_, C, S> {}
+// The `Channel` bound is load-bearing: it is an unsafe trait whose contract
+// makes sharing `&C` across contexts (via `regs`) defensible.
+unsafe impl<C: Channel, S> Send for Gpt<'_, C, S> {}
+unsafe impl<C: Channel, S> Sync for Gpt<'_, C, S> {}
 
 impl IsrPrototype {
     /// SAFETY: Call only from the correct IRQ.
