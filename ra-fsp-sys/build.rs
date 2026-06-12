@@ -184,10 +184,27 @@ fn main() {
             }
         }
 
+        // Pin the enum ABI. bindgen's clang emits int-sized enums for this
+        // target while arm-none-eabi-gcc defaults to -fshort-enums; compiled
+        // C and the Rust bindings would disagree on the layout of every
+        // enum-bearing FSP struct (e.g. ether_instance_ctrl_t: 40 vs 52
+        // bytes). The probe turns a CFLAGS override back to short enums into
+        // a build failure instead of silent layout corruption.
+        let probe = out_path.join("rs_enum_abi_probe.c");
+        fs::write(
+            &probe,
+            "enum rs_abi_probe { RS_ABI_PROBE = 1 };\n\
+             _Static_assert(sizeof(enum rs_abi_probe) == 4,\n\
+                 \"enum ABI mismatch: FSP C is compiled with -fshort-enums but the Rust \
+                  bindings use int-sized enums; remove -fshort-enums from CFLAGS\");\n",
+        )
+        .expect("failed to write enum ABI probe");
+        build.file(&probe);
+
         let objects = build
             .includes(&include_dirs)
             .define(&bsp_mcu_group, Some("1"))
-            // .flag("-fno-short-enums")
+            .flag("-fno-short-enums")
             .compile_intermediates();
 
         pre_link_archive("fsp_prelinked", objects);
@@ -288,6 +305,9 @@ fn main() {
             },
         )
         .use_core()
+        // Both sides of the FFI must agree on enum sizes; see the probe in
+        // the cc build above.
+        .clang_arg("-fno-short-enums")
         .clang_arg(format!("-D{bsp_mcu_group}=1"))
         .clang_args(
             include_dirs
