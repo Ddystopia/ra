@@ -199,6 +199,15 @@
 //!   a non-head fragment length. [`RxFrame::position`] surfaces RFP so the caller
 //!   can strip padding on the head and concatenate by position.
 //!
+//!   FSP itself cannot surface a fragment whose RFL was never written: with
+//!   `size + padding == 0`, `R_ETHER_Read` reports NO_DATA *without advancing*,
+//!   which with `padding == 0` would wedge the ring on the first split frame
+//!   landing in a fresh descriptor (descriptors start with `size == 0` and
+//!   neither `BufferRelease` nor `RxBufferUpdate` ever clears it, so the wedge
+//!   needs a descriptor that has not completed a frame before). The read path
+//!   therefore decodes the descriptor itself when FSP says NO_DATA but the head
+//!   is software-owned and armed (see [`RxFrame::read`]).
+//!
 //! - **INV-WHOLEFRAME** — A small buffer is fully supported and memory-safe:
 //!   every buffer is RBL-bounded (INV-RBL), so a frame larger than the buffer just
 //!   splits across descriptors and the zerocopy read path surfaces each fragment
@@ -1582,10 +1591,10 @@ impl<D: EtherRxMut> RxFrame<D> {
 
         // Both out-params of `R_ETHER_Read` are ignored: the length is
         // `RFL + padding` unconditionally (wrong for fragments, INV-FRAGLEN)
-        // and the pointer is re-read from the descriptor below. The call is
-        // kept for its checks and ring upkeep: link/magic-packet gating,
-        // multicast filtering, and the release-and-skip loop over errored
-        // (RFE) frames.
+        // and the pointer is re-read from the descriptor below so the NO_DATA
+        // path shares the same decode. The call is kept for its checks and
+        // ring upkeep: link/magic-packet gating, multicast filtering, and the
+        // release-and-skip loop over errored (RFE) frames.
         let mut p_data: *mut u8 = ptr::null_mut();
         let mut fsp_len = 0u32;
         let res = fsp_try_unsafe!(R_ETHER_Read(
@@ -1599,8 +1608,21 @@ impl<D: EtherRxMut> RxFrame<D> {
         // RD1.RBL and RD2 buffer pointer are ours to read.
         let p_desc = unsafe { (*ctrl).p_rx_descriptor };
 
-        if let Err(e) = res {
-            return Err((driver, e));
+        match res {
+            Ok(()) => {}
+            // FSP's blind spot (INV-FRAGLEN): a fragment whose RD1.RFL was
+            // never written reports `size + padding == 0` and FSP calls it
+            // NO_DATA without advancing — with `padding == 0` the ring would
+            // wedge on it. Software-owned (RACT clear) *and* armed
+            // (`p_buffer` set) means a received fragment is sitting there;
+            // decode it ourselves. RACT-clear with a NULL `p_buffer` is an
+            // unarmed ring — genuinely no data.
+            Err(e) if e == FSP_ERR_ETHER_ERROR_NO_DATA => {
+                if !Descriptor::is_available(p_desc) || unsafe { (*p_desc).p_buffer.is_null() } {
+                    return Err((driver, e));
+                }
+            }
+            Err(e) => return Err((driver, e)),
         }
 
         // RD0/RD1 are DMA memory the EDMAC writes back (RFL) / reads (RBL); the
