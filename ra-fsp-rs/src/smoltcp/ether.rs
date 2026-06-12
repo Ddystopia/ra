@@ -14,28 +14,28 @@ use {
     },
 };
 
-pub struct Dev<const MTU: usize> {
-    eth: RefCell<DriverBox<Ether<'static, MTU, Opened>>>,
+pub struct Dev {
+    eth: RefCell<DriverBox<Ether<'static, Opened>>>,
     capabilities: DeviceCapabilities,
 }
 
 /// The `RefCell` borrow of the driver, owned by the RX token's guard for the
 /// token's lifetime.
-type EthRefMut<'a, const MTU: usize> = RefMut<'a, DriverBox<Ether<'static, MTU, Opened>>>;
+type EthRefMut<'a> = RefMut<'a, DriverBox<Ether<'static, Opened>>>;
 
 /// Holds the frame as an [`RxFrame`] guard owning the `RefCell` borrow: the
 /// loan is exclusive by construction, and the guard's `Drop` releases the
 /// frame (`BufferRelease`), tolerating link-down instead of panicking.
-pub struct EthernetRxToken<'a, const MTU: usize>(RxFrame<'static, EthRefMut<'a, MTU>, MTU>);
+pub struct EthernetRxToken<'a>(RxFrame<'static, EthRefMut<'a>>);
 
-pub struct EthernetTxToken<'a, const MTU: usize>(
-    Option<Pin<&'static mut Buffer<MTU>>>,
-    &'a RefCell<DriverBox<Ether<'static, MTU, Opened>>>,
+pub struct EthernetTxToken<'a>(
+    Option<Pin<&'static mut Buffer>>,
+    &'a RefCell<DriverBox<Ether<'static, Opened>>>,
 );
 
-impl<const MTU: usize> Dev<MTU> {
+impl Dev {
     pub fn new(
-        eth: DriverBox<Ether<'static, MTU, Opened>>,
+        eth: DriverBox<Ether<'static, Opened>>,
         capabilities: DeviceCapabilities,
     ) -> Self {
         assert!(
@@ -49,7 +49,7 @@ impl<const MTU: usize> Dev<MTU> {
         }
     }
 
-    pub fn eth(&mut self) -> Pin<&mut Ether<'static, MTU, Opened>> {
+    pub fn eth(&mut self) -> Pin<&mut Ether<'static, Opened>> {
         self.eth.get_mut().as_mut()
     }
 
@@ -81,16 +81,16 @@ impl<const MTU: usize> Dev<MTU> {
         // descriptor TACT flag in `take_tx_buf`, not by the TC interrupt.
     }
 
-    fn send_buffer(&mut self) -> Option<Pin<&'static mut Buffer<MTU>>> {
+    fn send_buffer(&mut self) -> Option<Pin<&'static mut Buffer>> {
         // &mut self proves exclusivity here; get_mut avoids the RefCell runtime
         // borrow check (and its panic path) that borrow_mut would incur.
         self.eth.get_mut().as_mut().take_tx_buf()
     }
 }
 
-impl<const MTU: usize> Device for Dev<MTU> {
-    type RxToken<'a> = EthernetRxToken<'a, MTU>;
-    type TxToken<'a> = EthernetTxToken<'a, MTU>;
+impl Device for Dev {
+    type RxToken<'a> = EthernetRxToken<'a>;
+    type TxToken<'a> = EthernetTxToken<'a>;
 
     // N.B.: Tokens are mutable borrowing `self`, so it is impossible to have
     //       multiple tokens.
@@ -143,18 +143,24 @@ impl<const MTU: usize> Device for Dev<MTU> {
     }
 }
 
-impl<const MTU: usize> RxToken for EthernetRxToken<'_, MTU> {
+impl RxToken for EthernetRxToken<'_> {
     fn consume<R, F>(self, f: F) -> R
     where
         F: FnOnce(&[u8]) -> R,
     {
         // The guard derefs to the frame slice; dropping `self` afterwards
         // releases the descriptor (BufferRelease) and the RefCell borrow.
+        //
+        // N.B.: this surfaces a single RX fragment. smoltcp expects whole
+        // frames, so the buffers must be sized so no frame splits (every buffer
+        // >= MTU; see `INV-WHOLEFRAME`). A mixed/undersized pool that splits is
+        // not reassembled here — that is the caller's job via the lower-level
+        // [`RxFrame::position`] API, not the smoltcp glue.
         f(&self.0)
     }
 }
 
-impl<const MTU: usize> TxToken for EthernetTxToken<'_, MTU> {
+impl TxToken for EthernetTxToken<'_> {
     fn consume<R, F>(mut self, length: usize, f: F) -> R
     where
         F: FnOnce(&mut [u8]) -> R,
@@ -191,7 +197,7 @@ impl<const MTU: usize> TxToken for EthernetTxToken<'_, MTU> {
     }
 }
 
-impl<const MTU: usize> Drop for EthernetTxToken<'_, MTU> {
+impl Drop for EthernetTxToken<'_> {
     fn drop(&mut self) {
         if let Some(buf) = self.0.take() {
             log::trace!("Dropping Unused TxToken");
