@@ -149,9 +149,18 @@ impl IoPort<Closed> {
 }
 
 impl<S> IoPort<S> {
+    /// # Safety
+    ///
+    /// `ptr` must point to the `ctrl` field of a live `IoPort<S>` in the
+    /// matching state (the struct is `repr(C)` with `ctrl` first), and the
+    /// returned reference must be unique for `'a`.
     pub unsafe fn from_ptr<'a>(ptr: *mut ioport_instance_ctrl_t) -> &'a mut Self {
         unsafe { &mut *ptr.cast::<Self>() }
     }
+    // NOTE(soundness/policy): on a driver from `IoPort::<Closed>::new()` this
+    // is a zeroed placeholder token (PORT0 is a ZST), replaced by the real one
+    // at `open` — handing it out bypasses the PAC's singleton discipline, the
+    // same single-core policy as `Gpt::regs`.
     pub const fn ports(&self) -> &pac::PORT0 {
         &self.regs
     }

@@ -150,6 +150,12 @@ impl<const SIZE: usize> core::ops::DerefMut for FrameBuffer<SIZE> {
 }
 
 impl FrameBufferMut {
+    /// # Safety
+    ///
+    /// `ptr` must be valid for reads and writes of `size` bytes for
+    /// `'static`, with no other live reference to that memory for the
+    /// value's lifetime; per the [`FrameBufferMut`] invariant, `ptr` must be
+    /// 64-byte aligned and `size` a multiple of 64.
     pub unsafe fn from_raw_parts(ptr: *mut u8, size: usize) -> Self {
         unsafe { FrameBufferMut(core::slice::from_raw_parts_mut(ptr, size)) }
     }

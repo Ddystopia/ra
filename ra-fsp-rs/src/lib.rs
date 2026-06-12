@@ -1,13 +1,5 @@
 #![cfg_attr(not(test), no_std)]
 
-/*
-
-Rule for callbacks:
-- if interrupt callback can be preempted, it must have `&` for the block for
-  `p_context` to remain good.
-
-*/
-
 mod callbacks;
 mod driver_box;
 mod log;

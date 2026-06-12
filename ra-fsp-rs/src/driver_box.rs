@@ -83,7 +83,17 @@ impl<T> DriverBox<T> {
     pub unsafe fn get_unchecked_mut(&mut self) -> &mut T {
         unsafe { self.0.as_mut() }
     }
-    /// Refer to [`Pin::new_unchecked`].
+    /// # Safety
+    ///
+    /// `DriverBox` behaves as `Pin<Box<T>>`, so beyond [`Pin::new_unchecked`]'s
+    /// pinning contract the caller must uphold ownership semantics:
+    ///
+    /// - ownership transfers to the box — dropping it runs `T`'s drop in
+    ///   place, so the caller must not drop, move out of, or otherwise reuse
+    ///   the value;
+    /// - [`DriverBox::leak`] mints a borrow of any caller-chosen lifetime
+    ///   (including `'static`), so the backing memory must never be
+    ///   deallocated.
     pub unsafe fn new_unchecked(driver: &mut T) -> Self {
         DriverBox(NonNull::from_mut(driver))
     }
