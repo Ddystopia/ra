@@ -188,22 +188,28 @@
 //!   path, additionally avoid the INV-RFL over-read corner (don't combine a
 //!   splitting buffer with non-zerocopy + `padding`).
 //!
-//! - **INV-RXLEN** — `rx_buffers.len() <= rx_descriptors.len()`, enforced at open
-//!   in `c_conf`. `update_rx_buffers` walks the roster in order and, for entry `i`,
-//!   writes RD1.RBL through `rx_descriptors_base.add(i)` before arming it. The
-//!   bound keeps that index inside the descriptor allocation (memory-safety
-//!   load-bearing for the volatile RBL write) and prevents over-arming the ring.
-//!   Zerocopy roster callers size it `== rx_descriptors.len()` (one buffer per
-//!   descriptor); FSP-owned-buffer (non-zerocopy / `pp_ether_buffers`) configs
-//!   leave the roster empty, trivially satisfying it.
+//! - **INV-RXLEN** — the RX roster is empty (FSP-owned-buffer /
+//!   `pp_ether_buffers` configs) or holds exactly one buffer per RX descriptor,
+//!   enforced at open in `c_conf`. `update_rx_buffers` walks the roster in
+//!   order and, for entry `i`, writes RD1.RBL through
+//!   `rx_descriptors_base.add(i)` before arming it; memory safety needs roster
+//!   index == descriptor index == ring-head position in lockstep for the whole
+//!   pass (INV-REARM makes the pass start at descriptor 0). A roster *shorter*
+//!   than the ring is rejected: it would park the head on a never-armed
+//!   descriptor, leaving RX dead (reads inspect the head, frames land at the
+//!   ring start) and the INV-REARM marker forgeable — a second pass would then
+//!   arm roster buffers into *other* descriptors, aliasing each buffer across
+//!   two armed descriptors with a stale RBL.
 //!
 //! - **INV-REARM** — `update_rx_buffers` gates on ring state, not on an event
-//!   token. After a link-up reset every descriptor has `p_buffer == NULL` and
-//!   `p_rx_descriptor` is descriptor 0; in steady state every `p_buffer` is
-//!   non-NULL. A NULL `p_buffer` at the ring head is thus an unforgeable "FSP
-//!   just reset the ring" marker, making re-arming idempotent and bounce-proof:
-//!   it happens exactly once per FSP reset, regardless of polling cadence or a
-//!   replayed `went_up` event.
+//!   token: it re-arms only when the head is descriptor 0 **and** that
+//!   descriptor's `p_buffer` is NULL. NULL is written only by FSP's ring reset
+//!   (no driver path ever stores a NULL buffer pointer), and the head returns
+//!   to descriptor 0 only by that same reset or by a full wrap — which armed
+//!   descriptor 0 on the way, failing the NULL half. The conjunction is thus an
+//!   unforgeable "FSP just reset the ring" marker, making re-arming idempotent
+//!   and bounce-proof regardless of polling cadence or a replayed `went_up`
+//!   event.
 use core::{
     cell::RefMut,
     marker::PhantomData,
@@ -938,11 +944,13 @@ impl<'a> Ether<'a, Opened> {
         let this = unsafe { self.get_unchecked_mut() };
         let ctrl = this.ctrl.get();
 
-        // `p_rx_descriptor` is descriptor 0 after the reset and is the first
-        // descriptor `R_ETHER_RxBufferUpdate` arms, so its `p_buffer` is the
-        // NULL reset marker (INV-REARM).
+        // INV-REARM marker: head is descriptor 0 *and* unarmed. The position
+        // half keeps the loop's roster-index == head-position lockstep
+        // (INV-RXLEN); the NULL half rejects steady state.
         let head = unsafe { (*ctrl).p_rx_descriptor };
-        if head.is_null() || !unsafe { (*head).p_buffer.is_null() } {
+        if !ptr::eq(head.cast_const(), this.rx_descriptors_base)
+            || !unsafe { (*head).p_buffer.is_null() }
+        {
             return;
         }
 
@@ -1120,13 +1128,14 @@ impl EtherConfig {
         // INV-RXLEN — load-bearing for memory safety, not just arming. The RX
         // roster maps 1:1 onto the descriptor ring in order: `update_rx_buffers`
         // writes each entry's RD1.RBL through `rx_descriptors_base.add(i)` and
-        // arms it. An over-long roster would index past the descriptor array (OOB
-        // volatile write) and over-arm the ring, so the roster must not exceed it.
-        // (Non-zerocopy / FSP-owned-buffer configs leave the roster empty, which
-        // trivially satisfies this; zerocopy callers size it == the ring.)
+        // arms it, relying on roster index == descriptor index == ring head. An
+        // over-long roster would index past the descriptor array (OOB volatile
+        // write); a short non-empty one would park the head on a never-armed
+        // descriptor, leaving RX dead and the INV-REARM marker forgeable.
+        // (Non-zerocopy / FSP-owned-buffer configs leave the roster empty.)
         assert!(
-            self.rx_buffers.len() <= self.rx_descriptors.len(),
-            "There must be at least as many RX descriptors as RX buffers"
+            self.rx_buffers.is_empty() || self.rx_buffers.len() == self.rx_descriptors.len(),
+            "The RX roster must be empty or hold exactly one buffer per RX descriptor"
         );
 
         let num_tx_descriptors = self.tx_descriptors.len() as u8;
