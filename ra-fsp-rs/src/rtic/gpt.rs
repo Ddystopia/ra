@@ -34,7 +34,9 @@ macro_rules! gpt_monotonic {
                 $crate::gpt_clock::start::<$channel, Self>(gpt, self)
             }
             fn pend() {
-                // SAFETY: docs say it is always safe to call
+                // SAFETY: always safe per rtic-time docs; reached from the
+                // capture-B ISR (COMPARE_B event, possibly software-pended by
+                // `pend_interrupt`), the monotonic's interrupt.
                 unsafe { $static_name.queue.on_monotonic_interrupt() }
             }
         }
@@ -54,7 +56,7 @@ macro_rules! gpt_monotonic {
             type Ticks = u64;
 
             fn pend_interrupt() {
-                $name::pend()
+                $static_name.storage.pend_alarm()
             }
 
             fn timer_queue() -> &'static ::rtic_monotonics::rtic_time::timer_queue::TimerQueue<Self>
@@ -104,6 +106,14 @@ impl<C: Channel + 'static> RticGptTimerDriver<C> {
                 timer.reset_alarm(cs);
             }
         })
+    }
+
+    /// Pends the capture-B IRQ so `on_monotonic_interrupt` runs in the
+    /// monotonic's ISR (see [`TimerState::pend_alarm`]).
+    ///
+    /// [`TimerState::pend_alarm`]: crate::gpt_clock::TimerState::pend_alarm
+    pub fn pend_alarm(&self) {
+        self.0.timer_state.must_get().pend_alarm()
     }
 }
 

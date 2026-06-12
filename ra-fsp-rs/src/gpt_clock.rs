@@ -59,6 +59,17 @@ pub trait Storage<C: 'static> {
     fn storage(&'static self) -> &'static GptTimerStorage<C>;
 }
 
+/// Starts the shared GPT timekeeping over an opened driver.
+///
+/// Drive the three GPT IRQs (cycle-end, capture A, capture B) by calling
+/// [`IsrPrototype::call_fsp_isr_handler`] in their handlers — the static
+/// callback reaches its state through [`Storage`]. Do **not** route them
+/// through [`Gpt::handle_isr`]: that requires borrowing the driver out of
+/// [`GptTimerStorage::gpt`], which the COMPARE_B callback re-borrows — a
+/// guaranteed `RefCell` double-borrow panic.
+///
+/// [`IsrPrototype::call_fsp_isr_handler`]: crate::gpt::IsrPrototype::call_fsp_isr_handler
+/// [`Gpt::handle_isr`]: crate::gpt::Gpt::handle_isr
 pub fn start<C: Channel + 'static, Cb: Callback<timer_event_t> + Sync + Storage<C>>(
     gpt: DriverBox<Gpt<'static, C, Opened>>,
     callback: &'static Cb,
@@ -154,6 +165,16 @@ impl<C: Channel> TimerState<C> {
         unsafe { NVIC::unmask(self.capture_b_irq) }
     }
 
+    /// Pends the alarm IRQ (capture B) so the timer-queue handler runs in its
+    /// ISR at its configured priority. The IRQ may be masked (far-future
+    /// alarms are parked that way), so unmask it too; the handler's
+    /// `set_alarm` re-establishes the proper mask state. FSP's capture ISR
+    /// invokes the callback unconditionally, so a software pend reaches it.
+    pub fn pend_alarm(&self) {
+        NVIC::pend(self.capture_b_irq);
+        self.unmask_b();
+    }
+
     #[inline(always)]
     pub fn now(&self) -> u64 {
         let period = self.period.load(atomic::Ordering::Relaxed);
@@ -163,9 +184,9 @@ impl<C: Channel> TimerState<C> {
     }
 
     pub fn next_period(&self) {
-        // We only modify the period from the timer interrupt, so we know this can't race.
-        let period = self.period.load(Ordering::Relaxed) + 1;
-        self.period.store(period, Ordering::Relaxed);
+        // Two distinct IRQs land here (cycle-end and capture-A); `fetch_add`
+        // keeps the increment lossless even if one nests inside the other.
+        let period = self.period.fetch_add(1, Ordering::Relaxed) + 1;
         let t = (period as u64) << 31;
 
         critical_section::with(move |cs| {

@@ -21,6 +21,8 @@ pub struct EmbassyGptTimerDriver<C: 'static> {
 }
 
 impl<C: Channel + 'static> EmbassyGptTimerDriver<C> {
+    /// See [`gpt_clock::start`] for the ISR-driving requirements (use
+    /// `IsrPrototype::call_fsp_isr_handler`, not `Gpt::handle_isr`).
     pub fn start(&'static self, mut gpt: DriverBox<Gpt<'static, C, Opened>>) -> Result<()> {
         if gpt.as_mut().info_get()?.clock_frequency as u64 != TICK_HZ {
             log::error!("GPT frequency not matching selected tick-hz-* feature");
