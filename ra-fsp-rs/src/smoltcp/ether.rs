@@ -1,7 +1,7 @@
 use {
     crate::{
         DriverBox,
-        ether::{self, Buffer, Ether, InterruptCause, RxFrame},
+        ether::{self, Buffer, Ether, RxFrame},
         state_markers::Opened,
     },
     core::{
@@ -71,10 +71,12 @@ impl<const MTU: usize> Dev<MTU> {
         self.eth().is_up()
     }
 
-    pub fn populate_buffers(&mut self, cause: InterruptCause) {
-        if cause.went_up {
-            self.eth().as_mut().update_rx_buffers(cause);
-        }
+    /// Re-arms the RX ring if FSP has reset it on a link-up. Safe to call
+    /// unconditionally and repeatedly — the decision is derived from the
+    /// driver's ring state, not from any link event; see
+    /// [`Ether::update_rx_buffers`].
+    pub fn populate_buffers(&mut self) {
+        self.eth().as_mut().update_rx_buffers();
         // TX needs no work here: buffer reclamation is driven by the
         // descriptor TACT flag in `take_tx_buf`, not by the TC interrupt.
     }
