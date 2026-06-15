@@ -122,10 +122,15 @@
 //!   and the RX descriptor index (see `update_rx_buffers`). Descriptors stay
 //!   homogeneous even though *buffers* gain per-element sizes.
 //!
-//! - **INV-TXLEN** — `tx_buffers.len() >= num_tx_descriptors`, enforced
-//!   unconditionally at open in `c_conf`. FSP keeps `p_tx_descriptor` within
-//!   `0..num_tx_descriptors`, so a descriptor-derived slot index is always in
-//!   bounds — the safety precondition for the unchecked path in `tx_position_of`.
+//! - **INV-TXLEN** — in zerocopy, `tx_buffers.len() >= num_tx_descriptors`
+//!   (enforced at open in `EtherConfig::validate`); in non-zerocopy `tx_buffers`
+//!   is empty (FSP owns the buffers via `pp_ether_buffers`). FSP keeps
+//!   `p_tx_descriptor` within `0..num_tx_descriptors`, so a descriptor-derived
+//!   slot index is always in bounds — the safety precondition for the unchecked
+//!   path in `position_of`. The parking-slot trio (`take_tx_buf` /
+//!   `write_zerocopy` / `tx_buffer_update`) is therefore zerocopy-gated: each
+//!   returns early when `!zerocopy`, so the unchecked slot access is never reached
+//!   against the empty non-zerocopy `tx_buffers`.
 //!
 //! - **INV-RBL** — Every buffer's capacity is a multiple of 32 and `>= 60`. It is
 //!   written verbatim into the owning RX descriptor's RD1.RBL; the RA6M3 manual
@@ -219,9 +224,10 @@
 //!   path, additionally avoid the INV-RFL over-read corner (don't combine a
 //!   splitting buffer with non-zerocopy + `padding`).
 //!
-//! - **INV-RXLEN** — the RX roster is empty (FSP-owned-buffer /
-//!   `pp_ether_buffers` configs) or holds exactly one buffer per RX descriptor,
-//!   enforced at open in `c_conf`. `update_rx_buffers` walks the roster in
+//! - **INV-RXLEN** — the RX roster is empty (non-zerocopy / FSP-owned-buffer
+//!   `pp_ether_buffers` configs) or, in zerocopy, holds exactly one buffer per RX
+//!   descriptor, enforced at open in `EtherConfig::validate`. `update_rx_buffers`
+//!   walks the roster in
 //!   order and, for entry `i`, writes RD1.RBL through
 //!   `rx_descriptors_base.add(i)` before arming it; memory safety needs roster
 //!   index == descriptor index == ring-head position in lockstep for the whole
@@ -339,10 +345,11 @@ pub struct Ether<'a, S: 'static> {
     // Extra bytes FSP may copy past the payload (`e_ether_padding` as `u32`);
     // used by `read_non_zerocopy` to size the destination (INV-RFL).
     padding: u32,
-    // Largest buffer capacity in the pool (= FSP `ether_buffer_size`). Used by
-    // `read_non_zerocopy` to bound the FSP `memcpy` destination (INV-RFL); FSP
-    // sizes its non-zerocopy copies to this single value.
-    max_buf_size: u32,
+    // FSP `ether_buffer_size`: the uniform buffer capacity in non-zerocopy mode
+    // (FSP sizes its `memcpy`s to this single value), `0` in zerocopy where FSP
+    // never reads it (INV-DYNRBL/INV-NULLBUF). Used by `read_non_zerocopy` to
+    // bound the FSP `memcpy` destination (INV-RFL); unused on the zerocopy path.
+    buf_size: u32,
     // TX/RX ring bases, cached at open to avoid the
     // ctrl→p_ether_cfg→p_extend→p_*_descriptors chain on the hot paths.
     // Same allocation as `p_tx_descriptor`/`p_rx_descriptor`, so `offset_from`
@@ -390,7 +397,7 @@ pub struct EtherRx<'d> {
     rx_buffers: &'d mut [Pin<&'static mut Buffer>],
     zerocopy: bool,
     padding: u32,
-    max_buf_size: u32,
+    buf_size: u32,
 }
 
 /// TX capability of an opened [`Ether`] — one half of [`Ether::split`].
@@ -403,7 +410,7 @@ pub struct EtherTx<'d> {
     tx_buffers: &'d mut [Option<Pin<&'static mut Buffer>>],
     tx_descriptors_base: *const ether_instance_descriptor_t,
     zerocopy: bool,
-    max_buf_size: u32,
+    buf_size: u32,
 }
 
 /// Access to the RX capability — [`RxFrame::read`]'s driver handle.
@@ -550,7 +557,7 @@ impl Ether<'_, Closed> {
             rx_buffers: &mut [],
             zerocopy: false,
             padding: 0,
-            max_buf_size: 0,
+            buf_size: 0,
             tx_descriptors_base: ptr::null(),
             rx_descriptors_base: ptr::null(),
             _marker: PhantomData,
@@ -593,6 +600,11 @@ unsafe fn init_open(
         let zerocopy = cfg.zerocopy;
         let padding = cfg.padding as u32;
 
+        // Driver-side validation + FSP `ether_buffer_size`, on the intact `cfg`
+        // before the rosters are moved into the struct below. (`c_conf` is a pure
+        // transform and no longer reads the rosters.)
+        let ether_buffer_size = cfg.validate();
+
         let this = Ether {
             regs,
             ctrl: zeroed(),
@@ -603,7 +615,7 @@ unsafe fn init_open(
             user_data: ptr::null(),
             zerocopy,
             padding,
-            max_buf_size: 0,
+            buf_size: 0,
             tx_descriptors_base: ptr::null(),
             rx_descriptors_base: ptr::null(),
             cfg: zeroed(),
@@ -615,12 +627,12 @@ unsafe fn init_open(
         (*(*slot).inst.get()).p_api = ptr::from_ref(&API);
         (*slot).cfg = {
             let c_ext_projection = Pin::new_unchecked(&mut (*slot).c_ext_cfg);
-            UnsafePinned::new(cfg.c_conf(c_ext_projection))
+            UnsafePinned::new(cfg.c_conf(c_ext_projection, ether_buffer_size))
         };
         let p_extend = *(*(*slot).cfg.get()).p_extend.cast::<ether_extended_cfg_t>();
         (*slot).tx_descriptors_base = p_extend.p_tx_descriptors;
         (*slot).rx_descriptors_base = p_extend.p_rx_descriptors;
-        (*slot).max_buf_size = (*(*slot).cfg.get()).ether_buffer_size;
+        (*slot).buf_size = (*(*slot).cfg.get()).ether_buffer_size;
 
         let p_ctrl = UnsafePinned::raw_get(&raw const (*slot).ctrl);
         let p_cfg = UnsafePinned::raw_get(&raw const (*slot).cfg);
@@ -958,14 +970,14 @@ impl<'a> Ether<'a, Opened> {
                 rx_buffers: &mut *this.rx_buffers,
                 zerocopy: this.zerocopy,
                 padding: this.padding,
-                max_buf_size: this.max_buf_size,
+                buf_size: this.buf_size,
             },
             EtherTx {
                 ctrl,
                 tx_buffers: &mut *this.tx_buffers,
                 tx_descriptors_base: this.tx_descriptors_base,
                 zerocopy: this.zerocopy,
-                max_buf_size: this.max_buf_size,
+                buf_size: this.buf_size,
             },
         )
     }
@@ -1008,6 +1020,13 @@ impl EtherTx<'_> {
     #[inline(always)]
     pub fn take_tx_buf(&mut self) -> Option<Pin<&'static mut Buffer>> {
         unsafe {
+            // The parking slots only exist in zerocopy (non-zerocopy has an empty
+            // `tx_buffers`, INV-TXLEN), so the `get_unchecked` slot index below is
+            // in bounds only here.
+            if !self.zerocopy {
+                return None;
+            }
+
             let p_desc = (*self.ctrl).p_tx_descriptor;
 
             // TACT=1: in flight, EDMAC-owned; never hand it out (INV-TXMOVE).
@@ -1092,6 +1111,13 @@ impl EtherTx<'_> {
         buffer: Pin<&'static mut Buffer>,
     ) -> Option<Pin<&'static mut Buffer>> {
         unsafe {
+            // Parking slots are zerocopy-only (non-zerocopy has an empty
+            // `tx_buffers`, INV-TXLEN); hand the buffer straight back otherwise so
+            // the `get_unchecked` slot index below is reached only in bounds.
+            if !self.zerocopy {
+                return Some(buffer);
+            }
+
             let p_desc = (*self.ctrl).p_tx_descriptor;
 
             // TACT=1: never displace a hardware-owned, in-flight buffer (INV-TXMOVE).
@@ -1111,7 +1137,7 @@ impl EtherTx<'_> {
             return Err(FSP_ERR_ASSERTION);
         }
 
-        let len = buffer.len().min(self.max_buf_size as usize);
+        let len = buffer.len().min(self.buf_size as usize);
         let ptr = buffer.as_ptr().cast_mut();
         fsp_try_unsafe!(R_ETHER_Write(self.ctrl.cast(), ptr.cast(), len as u32))
     }
@@ -1132,12 +1158,12 @@ impl EtherRx<'_> {
 
         // `R_ETHER_Read` (non-zerocopy) `memcpy`s `RFL + padding` bytes into
         // `buffer` without knowing its length. By INV-RFL that is at most
-        // `max_buf_size + padding` (FSP sizes its own buffers to `max_buf_size`);
+        // `buf_size + padding` (FSP sizes its own buffers to `buf_size`);
         // requiring the destination to hold that turns an otherwise
         // safe-reachable out-of-bounds write into an error. (The matching source
         // over-read in the undersized-split + padding corner is FSP-internal and
         // unpreventable here — honor INV-WHOLEFRAME to avoid it.)
-        let required = self.max_buf_size as usize + self.padding as usize;
+        let required = self.buf_size as usize + self.padding as usize;
         if buffer.len() < required {
             log::error!(
                 "ether(read_non_zerocopy): buffer too small: {} < {}",
@@ -1164,7 +1190,7 @@ impl EtherRxMut for EtherRx<'_> {
             rx_buffers: &mut *self.rx_buffers,
             zerocopy: self.zerocopy,
             padding: self.padding,
-            max_buf_size: self.max_buf_size,
+            buf_size: self.buf_size,
         }
     }
 }
@@ -1255,71 +1281,111 @@ impl EtherConfig {
         self.tx_buffers = &mut buffers.tx_buffers;
     }
 
-    /// This function constructs a `ether_cfg_t` from this config struct.
+    /// Driver-side configuration validation, run once at open *before* the
+    /// rosters are moved into the driver. Returns the FSP `ether_buffer_size`.
+    ///
+    /// [`Self::c_conf`] is a pure transform; the checks that relate the *rosters*
+    /// to the descriptor rings and select the buffer-provisioning mode live here:
+    ///
+    /// - **zerocopy** uses the [`Self::buffers`] roster — the wrapper owns and
+    ///   re-arms the buffers (INV-NULLBUF). `pp_ether_buffers` must be unset, the
+    ///   RX roster holds exactly one slot per RX descriptor (INV-RXLEN), and there
+    ///   are at least as many TX slots as TX descriptors (INV-TXLEN). FSP never
+    ///   reads `ether_buffer_size` on this path (INV-DYNRBL: each descriptor's RBL
+    ///   is re-applied per-buffer in `update_rx_buffers`, and FSP never arms the
+    ///   ring because `pp_ether_buffers == NULL`), so it is `0`.
+    /// - **non-zerocopy** uses FSP-managed buffers via [`Self::ether_buffers`]
+    ///   (`pp_ether_buffers`, which FSP *requires* for non-zerocopy). The roster
+    ///   must be empty and the size is the uniform pool capacity (`c_conf`
+    ///   re-asserts the per-entry uniformity that makes this sound).
+    ///
+    /// Setting *both* a roster and `pp_ether_buffers` is rejected: whichever mode
+    /// is in force, its "the other one must be unset/empty" assert fires.
+    fn validate(&self) -> u32 {
+        assert!(self.tx_descriptors.len() != 0, "Descriptors cannot be empty");
+        assert!(self.rx_descriptors.len() != 0, "Descriptors cannot be empty");
+
+        if self.zerocopy {
+            assert!(
+                self.pp_ether_buffers.is_none(),
+                "zerocopy uses the buffers() roster; pp_ether_buffers (ether_buffers()) must be unset"
+            );
+            // INV-RXLEN — the roster maps 1:1 onto the descriptor ring in order;
+            // `update_rx_buffers` writes each entry's RD1.RBL and arms it relying
+            // on roster index == descriptor index == ring head. A short/long
+            // roster would park the head on a never-armed descriptor (RX dead,
+            // INV-REARM marker forgeable) or index past the descriptor array.
+            assert!(
+                self.rx_buffers.len() == self.rx_descriptors.len(),
+                "zerocopy needs exactly one RX buffer slot per RX descriptor"
+            );
+            // INV-TXLEN — descriptor-derived slot index must be in bounds.
+            assert!(
+                self.tx_buffers.len() >= self.tx_descriptors.len(),
+                "there must be at least as many TX buffer slots as TX descriptors"
+            );
+            // FSP does not read `ether_buffer_size` here.
+            0
+        } else {
+            let pp = self.pp_ether_buffers.as_ref().expect(
+                "non-zerocopy requires FSP-managed buffers via ether_buffers() (pp_ether_buffers)",
+            );
+            assert!(
+                self.rx_buffers.is_empty() && self.tx_buffers.is_empty(),
+                "non-zerocopy uses pp_ether_buffers; the buffers() roster must be empty"
+            );
+            // The size FSP memsets/arms every pp buffer to. Uniformity (every
+            // entry == this) is re-checked in `c_conf`.
+            let size = pp.first().map_or(0, |b| b.cap()) as u32;
+            assert!(size != 0, "no buffers configured");
+            size
+        }
+    }
+
+    /// Pure transformation of this config into the FSP `ether_cfg_t`. Carries
+    /// only the assertions intrinsic to a *consistent C config* (descriptor
+    /// counts, and — when FSP owns the buffers — the `pp_ether_buffers` length
+    /// and uniform size); driver-side roster/mode checks live in
+    /// [`Self::validate`], and `ether_buffer_size` is supplied by the caller.
+    ///
     /// Beware!!! `ether_cfg_t` returned has pointer with `ext`'s address and provenance.
     /// Using those pointers is unsafe thus this function is still safe.
-    pub fn c_conf(&mut self, ext: Pin<&mut MaybeUninit<UnsafePinned<ether_extended_cfg_t>>>) -> ether_cfg_t {
+    pub fn c_conf(
+        &mut self,
+        ext: Pin<&mut MaybeUninit<UnsafePinned<ether_extended_cfg_t>>>,
+        ether_buffer_size: u32,
+    ) -> ether_cfg_t {
         assert!(self.tx_descriptors.len() != 0, "Descriptors cannot be empty");
         assert!(self.rx_descriptors.len() != 0, "Descriptors cannot be empty");
         assert!(self.rx_descriptors.len() <= 4, "Max 4 descriptors");
         assert!(self.tx_descriptors.len() <= 4, "Max 4 descriptors");
 
-        // INV-TXLEN, enforced unconditionally here (once, at open) — `tx_buffers`
-        // may NOT be shorter than `tx_descriptors`, even for callers that never
-        // use the zero-copy TX path.
-        assert!(
-            self.tx_buffers.len() >= self.tx_descriptors.len(),
-            "There must be at least as many TX buffers as TX descriptors"
-        );
-
-        // INV-RXLEN — load-bearing for memory safety, not just arming. The RX
-        // roster maps 1:1 onto the descriptor ring in order: `update_rx_buffers`
-        // writes each entry's RD1.RBL through `rx_descriptors_base.add(i)` and
-        // arms it, relying on roster index == descriptor index == ring head. An
-        // over-long roster would index past the descriptor array (OOB volatile
-        // write); a short non-empty one would park the head on a never-armed
-        // descriptor, leaving RX dead and the INV-REARM marker forgeable.
-        // (Non-zerocopy / FSP-owned-buffer configs leave the roster empty.)
-        assert!(
-            self.rx_buffers.is_empty() || self.rx_buffers.len() == self.rx_descriptors.len(),
-            "The RX roster must be empty or hold exactly one buffer per RX descriptor"
-        );
-
         let num_tx_descriptors = self.tx_descriptors.len() as u8;
         let num_rx_descriptors = self.rx_descriptors.len() as u8;
 
-        // INV-DYNRBL: FSP's `ether_buffer_size` is the pool max (the reset-window
-        // default RBL; each descriptor's true RBL is re-applied in
-        // `update_rx_buffers`). Every buffer's capacity already satisfies INV-RBL
-        // (×32, >= 60) by the `const` asserts in `Buffer::new` / `Buffer::erase`,
-        // and `Buffer`'s `align(32)` guarantees RD2.RBA — there is no way to land a
-        // bad capacity in a roster, so no runtime re-check is needed here.
-        let mut max_buf_size: u32 = 0;
-        for b in self.rx_buffers.iter() {
-            max_buf_size = max_buf_size.max(b.as_ref().get_ref().cap() as u32);
-        }
-        for b in self.tx_buffers.iter().flatten() {
-            max_buf_size = max_buf_size.max(b.as_ref().get_ref().cap() as u32);
-        }
+        // C-config invariant: when FSP owns the buffers (`pp_ether_buffers`), it
+        // memsets and arms each one to `ether_buffer_size` (r_ether.c:1265/1351),
+        // at open and on every link-up. So the roster length must match what FSP
+        // indexes for the mode, and every buffer must be exactly
+        // `ether_buffer_size` — otherwise the memset / EDMAC DMA overruns a
+        // shorter one. (Holds for zerocopy-pp too, not just non-zerocopy.)
         if let Some(pp) = &self.pp_ether_buffers {
-            for b in pp.iter() {
-                max_buf_size = max_buf_size.max(b.cap() as u32);
-            }
-            if self.zerocopy {
-                assert!(pp.len() as u8 == num_rx_descriptors);
+            let expected = if self.zerocopy {
+                num_rx_descriptors
             } else {
-                assert!(pp.len() as u8 == num_tx_descriptors + num_rx_descriptors);
-                // Non-zerocopy: FSP owns its buffers and sizes all copies to the
-                // single `ether_buffer_size`, so they must be uniform.
-                for b in pp.iter() {
-                    assert!(
-                        b.cap() as u32 == max_buf_size,
-                        "non-zerocopy pp_ether_buffers must all be the same size"
-                    );
-                }
+                num_tx_descriptors + num_rx_descriptors
+            };
+            assert!(
+                pp.len() as u8 == expected,
+                "pp_ether_buffers length must match the descriptor count for the mode"
+            );
+            for b in pp.iter() {
+                assert!(
+                    b.cap() as u32 == ether_buffer_size,
+                    "every pp_ether_buffers entry must be exactly ether_buffer_size"
+                );
             }
         }
-        assert!(max_buf_size != 0, "no buffers configured");
 
         let p_extend = unsafe {
             ext.get_unchecked_mut().write(UnsafePinned::new(ether_extended_cfg_t {
@@ -1346,7 +1412,7 @@ impl EtherConfig {
             pp_ether_buffers,
             num_tx_descriptors,
             num_rx_descriptors,
-            ether_buffer_size: max_buf_size,
+            ether_buffer_size,
             irq: utils::extract_irq(self.irq),
             interrupt_priority: BSP_IRQ_DISABLED,
             p_callback: None,
@@ -1644,12 +1710,6 @@ impl<D: EtherRxMut> RxFrame<D> {
         // - End   (01): tail fragment, no padding inserted here → `RFL`.
         // - Head/Middle (10/00): the buffer "became full"; RFL is not written, so
         //   the fragment is the whole buffer → `cap`.
-        // NOTE: the `End` arm assumes RD1.RFL holds the *end fragment's* byte
-        // count (the RD1.RFL field definition, manual p. 932, "frame stored in
-        // the buffer"). If silicon instead writes the *whole-frame* length here
-        // (a possible reading of §31.3.3, p. 934), report
-        // `rfl - Σ(previous fragment caps)` instead. Unconfirmed on hardware; the
-        // field-definition wording is the stronger signal, hence per-fragment.
         let len = match pos {
             FramePos::Whole => (rfl + padding).min(cap),
             FramePos::End => rfl.min(cap),
