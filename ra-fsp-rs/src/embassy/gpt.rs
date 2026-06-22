@@ -72,7 +72,7 @@ impl<C: Channel> GptTimekeeper<C> {
     /// `Gpt` through [`GptTimerStorage::gpt`].
     fn driver_schedule_wake(&self, at: u64, waker: &core::task::Waker) {
         // FIXME(latency): opens a global critical section that spans
-        // `TimerState::set_alarm` — see the FIXME there for details.
+        // `TimerState::set_alarm`; see the FIXME there for details.
         critical_section::with(|cs| {
             let mut borrow = self.timer.gpt.borrow_ref_mut(cs);
             let gpt = borrow.as_mut().expect("Driver not initialized").as_mut();
@@ -96,10 +96,10 @@ fn check_clock<C: Channel + 'static>(gpt: Pin<&mut Gpt<'static, C, Opened>>) -> 
 /// [`handle_isr`](Self::handle_isr).
 ///
 /// `handle_isr` gates on the active IRQ *number*, so it dispatches correctly no
-/// matter how the vector table is wired — including behind a trampoline such as
-/// an RTIC `#[task(binds = ..)]`. This is the general-purpose choice; reach for
-/// [`EmbassyGptDirectTimerDriver`] only on a direct-vector install that wants the
-/// vector-verified [`IsrPrototype::call_fsp_isr_handler`] instead.
+/// matter how the vector table is wired, including behind a trampoline such as
+/// an RTIC `#[task(binds = ..)]`. Use [`EmbassyGptDirectTimerDriver`] on a
+/// direct-vector install that wants the vector-verified
+/// [`IsrPrototype::call_fsp_isr_handler`].
 ///
 /// [`IsrPrototype::call_fsp_isr_handler`]: crate::gpt::IsrPrototype::call_fsp_isr_handler
 pub struct EmbassyGptTimerDriver<C: 'static>(GptTimekeeper<C>);
@@ -120,11 +120,11 @@ impl<C: Channel + 'static> EmbassyGptTimerDriver<C> {
 
     /// Dispatch a GPT ISR from its bound interrupt handler (e.g. an RTIC
     /// hardware task). [`Gpt::handle_isr`] no-ops unless it runs in the channel's
-    /// configured IRQ, so this needs no `unsafe` and makes no assumption about
-    /// the vector table.
+    /// configured IRQ, so this needs no `unsafe` and works under any vector
+    /// wiring.
     ///
     /// The block-taking callback reaches the `Gpt` through the block passed in,
-    /// so this single `borrow_ref_mut` does not nest with the callback.
+    /// so this single `borrow_ref_mut` is the only borrow on the callback path.
     ///
     /// [`Gpt::handle_isr`]: crate::gpt::Gpt::handle_isr
     pub fn handle_isr(&'static self, isr_prototype: IsrPrototype) {
@@ -179,11 +179,11 @@ impl<C: Channel + 'static> Callback<timer_event_t, Gpt<'static, C, Opened>>
 /// [`IsrPrototype::call_fsp_isr_handler`].
 ///
 /// That dispatcher verifies the active interrupt vector points at the FSP ISR,
-/// so it is sound to call from any context — but it only matches on a
-/// direct-vector install, where the FSP ISR sits in the vector table. Behind an
-/// indirected vector (e.g. an RTIC `#[task(binds = ..)]` dispatcher) the check
-/// never matches and dispatch silently no-ops; use [`EmbassyGptTimerDriver`]
-/// there instead.
+/// so it is sound to call from any context, and matches on a direct-vector
+/// install where the FSP ISR sits in the vector table. Behind an indirected
+/// vector (e.g. an RTIC `#[task(binds = ..)]` dispatcher) the slot holds the
+/// trampoline, not the FSP ISR, so dispatch no-ops; use
+/// [`EmbassyGptTimerDriver`] there.
 ///
 /// [`IsrPrototype::call_fsp_isr_handler`]: crate::gpt::IsrPrototype::call_fsp_isr_handler
 pub struct EmbassyGptDirectTimerDriver<C: 'static>(GptTimekeeper<C>);

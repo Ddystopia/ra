@@ -43,10 +43,9 @@ unsafe extern "C" {
     pub unsafe fn gpt_counter_overflow_isr();
     /// See [`gpt_counter_overflow_isr`]'s safety contract.
     ///
-    /// FSP only compiles this for the triangle-wave PWM extra feature set; in
-    /// other configurations the symbol does not exist, so callers must guard the
-    /// reference (see [`IsrPrototype::call_fsp_isr_handler`]). The unused
-    /// declaration itself is harmless -- only a live reference needs the symbol.
+    /// FSP compiles this symbol only for the triangle-wave PWM feature set
+    /// (`GPT_CFG_OUTPUT_SUPPORT_ENABLE == 2`); guard every reference behind
+    /// `UNDERFLOW_IRQ_ENABLED` (see [`IsrPrototype::call_fsp_isr_handler`]).
     pub unsafe fn gpt_counter_underflow_isr();
     /// See [`gpt_counter_overflow_isr`]'s safety contract.
     pub unsafe fn gpt_capture_compare_a_isr();
@@ -202,10 +201,10 @@ impl IsrPrototype {
     /// direct-vector install where the FSP ISR sits directly in the vector
     /// table.
     ///
-    /// It will **not** fire when the vector slot points at a trampoline instead
-    /// of the FSP ISR — e.g. an RTIC `#[task(binds = ..)]` dispatcher — because
-    /// the addresses differ. Such setups should drive [`Gpt::handle_isr`], which
-    /// gates on the active IRQ *number* rather than the vector contents.
+    /// Behind an indirected vector (e.g. an RTIC `#[task(binds = ..)]`
+    /// dispatcher) the slot holds the trampoline, not the FSP ISR, so this
+    /// no-ops; drive [`Gpt::handle_isr`] there, which gates on the active IRQ
+    /// *number* instead of the vector contents.
     ///
     /// [`Gpt::handle_isr`]: crate::gpt::Gpt::handle_isr
     ///
@@ -242,10 +241,9 @@ impl IsrPrototype {
     ///
     /// # Safety
     ///
-    /// Call only from the channel's configured IRQ. Unlike
-    /// [`call_fsp_isr_handler`](Self::call_fsp_isr_handler) this does not verify
-    /// the active vector, so the caller is responsible for the "correct IRQ"
-    /// guarantee (e.g. a statically bound interrupt handler).
+    /// Call only from the channel's configured IRQ. This performs no vector
+    /// check, so the caller owns the "correct IRQ" guarantee (e.g. a statically
+    /// bound interrupt handler).
     #[inline(always)]
     pub unsafe fn call_fsp_isr_handler_unchecked(self) {
         unsafe {
@@ -337,12 +335,11 @@ impl<'a, C: Channel> Gpt<'a, C, Opened> {
     /// No-ops unless the active IRQ is the channel's configured IRQ for
     /// `isr_prototype` (so thread mode or the wrong IRQ is harmless). The check
     /// is on the IRQ *number*, so it holds regardless of how the vector table is
-    /// wired — including behind an RTIC `#[task(binds = ..)]` dispatcher.
+    /// wired, including behind an RTIC `#[task(binds = ..)]` dispatcher.
     ///
     /// Pairs with a block-taking callback ([`callback_set`](Self::callback_set)):
     /// it hands `self` to the callback as the block, so the COMPARE_B callback
-    /// reprograms the alarm through that block instead of re-borrowing the driver
-    /// from shared storage.
+    /// reprograms the alarm through that block.
     #[inline(always)]
     pub fn handle_isr(self: Pin<&mut Self>, isr_prototype: IsrPrototype) {
         let expected_irq = match isr_prototype {
@@ -373,10 +370,8 @@ impl<'a, C: Channel> Gpt<'a, C, Opened> {
         CallbackEvent::callback_set(self, context)
     }
 
-    /// Registers a static callback that reaches its own state (rather than the
-    /// block). Drive it with [`IsrPrototype::call_fsp_isr_handler`] or the raw
-    /// `gpt_*_isr` externs — not [`handle_isr`](Self::handle_isr), whose block
-    /// this callback ignores.
+    /// Registers a static callback that reaches its own state. Drive it with
+    /// [`IsrPrototype::call_fsp_isr_handler`] or the raw `gpt_*_isr` externs.
     ///
     /// Must be `'static` because the `Gpt` may be closed/dropped during `F`'s
     /// call.

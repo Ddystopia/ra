@@ -67,12 +67,10 @@ pub trait Storage<C: 'static> {
 /// callback that reaches its state through [`Storage`].
 ///
 /// Drive the three GPT IRQs (cycle-end, capture A, capture B) with
-/// [`IsrPrototype::call_fsp_isr_handler`] (or the raw `gpt_*_isr` externs). Do
-/// **not** use [`Gpt::handle_isr`] with this variant: it borrows the driver out
-/// of [`GptTimerStorage::gpt`], which the COMPARE_B callback re-borrows — a
-/// guaranteed `RefCell` double-borrow panic. Use [`start_with_block`] when you
-/// need `handle_isr` — e.g. behind an RTIC `#[task(binds = ..)]` dispatcher,
-/// where `call_fsp_isr_handler`'s vector-table check cannot match.
+/// [`IsrPrototype::call_fsp_isr_handler`] (or the raw `gpt_*_isr` externs). For
+/// [`Gpt::handle_isr`] (e.g. behind an RTIC `#[task(binds = ..)]` dispatcher,
+/// where `call_fsp_isr_handler`'s vector-table check cannot match) use
+/// [`start_with_block`] instead.
 ///
 /// [`IsrPrototype::call_fsp_isr_handler`]: crate::gpt::IsrPrototype::call_fsp_isr_handler
 /// [`Gpt::handle_isr`]: crate::gpt::Gpt::handle_isr
@@ -86,13 +84,12 @@ pub fn start<C: Channel + 'static, Cb: Callback<timer_event_t> + Sync + Storage<
 }
 
 /// Like [`start`], but registers a *block-taking* callback (via
-/// [`Gpt::callback_set`]) that receives the driver as an argument instead of
-/// re-borrowing [`GptTimerStorage::gpt`].
+/// [`Gpt::callback_set`]) that receives the driver as a block argument.
 ///
 /// Drive the three GPT IRQs with [`Gpt::handle_isr`]: it passes the block to the
-/// callback (so the borrow does not nest) and gates on the active IRQ *number*
-/// rather than the vector contents — the right choice when the vector points at
-/// a trampoline, e.g. an RTIC `#[task(binds = ..)]` dispatcher.
+/// callback (so the borrow does not nest) and gates on the active IRQ *number*,
+/// the right choice when the vector points at a trampoline such as an RTIC
+/// `#[task(binds = ..)]` dispatcher.
 ///
 /// [`Gpt::handle_isr`]: crate::gpt::Gpt::handle_isr
 /// [`Gpt::callback_set`]: crate::gpt::Gpt::callback_set

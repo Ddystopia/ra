@@ -135,8 +135,6 @@ impl<C: Channel + 'static> RticGptTimerDriver<C> {
     /// released before dispatch, checks it against the active IRQ, then runs the
     /// FSP ISR. Gating on the IRQ *number* (not the vector contents) works under
     /// any vector wiring.
-    ///
-    /// [`Gpt::handle_isr`]: crate::gpt::Gpt::handle_isr
     pub fn handle_isr(&self, which: IsrPrototype) {
         let expected = critical_section::with(|cs| {
             let borrow = self.0.gpt.borrow_ref_mut(cs);
@@ -154,7 +152,7 @@ impl<C: Channel + 'static> RticGptTimerDriver<C> {
 
         if expected.is_some() && utils::current_irq_get() == expected {
             // SAFETY: the active IRQ is the channel's configured IRQ for `which`.
-            //         we can't use `call_fsp_isr_handler` because RTIC introcudes
+            //         We can't use `call_fsp_isr_handler` because RTIC introduces
             //         trampolines.
             unsafe { which.call_fsp_isr_handler_unchecked() }
         }
