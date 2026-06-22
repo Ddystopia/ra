@@ -5,9 +5,10 @@ use core::{
 };
 
 use ra_fsp_sys::generated::{
-    self as api, self as raw, BSP_IRQ_DISABLED, GPT_CFG_PARAM_CHECKING_ENABLE, R_GPT_Close,
-    R_GPT_Open, R_GPT0_Type, e_fsp_err, fsp_err_t, gpt_extended_cfg_t, gpt_instance_ctrl_t,
-    timer_api_t, timer_callback_args_t, timer_cfg_t, timer_ctrl_t, timer_event_t, timer_instance_t,
+    self as api, self as raw, BSP_IRQ_DISABLED, GPT_CFG_OUTPUT_SUPPORT_ENABLE,
+    GPT_CFG_PARAM_CHECKING_ENABLE, R_GPT_Close, R_GPT_Open, R_GPT0_Type, e_fsp_err, fsp_err_t,
+    gpt_extended_cfg_t, gpt_instance_ctrl_t, timer_api_t, timer_callback_args_t, timer_cfg_t,
+    timer_ctrl_t, timer_event_t, timer_instance_t,
 };
 
 const _: () = assert!(
@@ -41,6 +42,11 @@ unsafe extern "C" {
     /// context that owns the driver upholds both.
     pub unsafe fn gpt_counter_overflow_isr();
     /// See [`gpt_counter_overflow_isr`]'s safety contract.
+    ///
+    /// FSP only compiles this for the triangle-wave PWM extra feature set; in
+    /// other configurations the symbol does not exist, so callers must guard the
+    /// reference (see [`IsrPrototype::call_fsp_isr_handler`]). The unused
+    /// declaration itself is harmless -- only a live reference needs the symbol.
     pub unsafe fn gpt_counter_underflow_isr();
     /// See [`gpt_counter_overflow_isr`]'s safety contract.
     pub unsafe fn gpt_capture_compare_a_isr();
@@ -91,6 +97,8 @@ pub mod channel {
     // PAC's generated `lib.rs` for its GPT channel peripherals.
     include!(concat!(env!("OUT_DIR"), "/gpt_channels.rs"));
 }
+
+const UNDERFLOW_IRQ_ENABLED: bool = GPT_CFG_OUTPUT_SUPPORT_ENABLE == 2;
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IsrPrototype {
@@ -185,12 +193,69 @@ unsafe impl<C: Channel, S> Send for Gpt<'_, C, S> {}
 unsafe impl<C: Channel, S> Sync for Gpt<'_, C, S> {}
 
 impl IsrPrototype {
-    /// SAFETY: Call only from the correct IRQ.
-    pub unsafe fn call_fsp_isr_handler(self) {
+    /// Drive the matching FSP GPT ISR from an interrupt handler, after checking
+    /// the interrupt vector points at it.
+    ///
+    /// Reads the active IRQ's [`pac::__INTERRUPTS`] slot and dispatches only if
+    /// it holds the expected `gpt_*_isr` address, so it is safe to call from any
+    /// context (a mismatch, or thread mode, is a no-op). This fits a
+    /// direct-vector install where the FSP ISR sits directly in the vector
+    /// table.
+    ///
+    /// It will **not** fire when the vector slot points at a trampoline instead
+    /// of the FSP ISR — e.g. an RTIC `#[task(binds = ..)]` dispatcher — because
+    /// the addresses differ. Such setups should drive [`Gpt::handle_isr`], which
+    /// gates on the active IRQ *number* rather than the vector contents.
+    ///
+    /// [`Gpt::handle_isr`]: crate::gpt::Gpt::handle_isr
+    ///
+    /// Requires the `device` feature, which brings in the PAC vector table this
+    /// check reads.
+    #[cfg(feature = "device")]
+    pub fn call_fsp_isr_handler(self) {
+        let Some(active) = utils::current_irq_get() else {
+            return;
+        };
+        // `Vector` is `union { _handler: fn(), _reserved: u32 }` -- a single
+        // word with the handler at offset 0, so reading the slot as `usize`
+        // yields the installed handler address (Thumb bit set, matching
+        // `f as *const () as usize`).
+        let Some(ptr) = pac::__INTERRUPTS.get(active as usize) else {
+            return;
+        };
+        let ptr_to_handler = core::ptr::from_ref(ptr).cast::<usize>();
+        let target = match self {
+            IsrPrototype::Overflow => gpt_counter_overflow_isr as *const () as usize,
+            IsrPrototype::Underflow if UNDERFLOW_IRQ_ENABLED => {
+                gpt_counter_underflow_isr as *const () as usize
+            }
+            IsrPrototype::Underflow => return,
+            IsrPrototype::CompareA => gpt_capture_compare_a_isr as *const () as usize,
+            IsrPrototype::CompareB => gpt_capture_compare_b_isr as *const () as usize,
+        };
+        if unsafe { *ptr_to_handler } == target {
+            unsafe { self.call_fsp_isr_handler_unchecked() }
+        }
+    }
+
+    /// Drive the matching FSP GPT ISR with no vector check.
+    ///
+    /// # Safety
+    ///
+    /// Call only from the channel's configured IRQ. Unlike
+    /// [`call_fsp_isr_handler`](Self::call_fsp_isr_handler) this does not verify
+    /// the active vector, so the caller is responsible for the "correct IRQ"
+    /// guarantee (e.g. a statically bound interrupt handler).
+    #[inline(always)]
+    pub unsafe fn call_fsp_isr_handler_unchecked(self) {
         unsafe {
             match self {
                 IsrPrototype::Overflow => gpt_counter_overflow_isr(),
-                IsrPrototype::Underflow => gpt_counter_underflow_isr(),
+                IsrPrototype::Underflow => {
+                    if UNDERFLOW_IRQ_ENABLED {
+                        gpt_counter_underflow_isr()
+                    }
+                }
                 IsrPrototype::CompareA => gpt_capture_compare_a_isr(),
                 IsrPrototype::CompareB => gpt_capture_compare_b_isr(),
             }
@@ -267,9 +332,17 @@ impl<'a, C: Channel> Gpt<'a, C, Opened> {
         }
     }
 
-    // FIXME: maybe allow calling this method even when `callback_set` is called?
-    /// Call this method on interrupt of [`IsrPrototype`].
-    /// Calling it from thread mode or the wrong IRQ is a no-op.
+    /// Drive a GPT ISR from its interrupt handler.
+    ///
+    /// No-ops unless the active IRQ is the channel's configured IRQ for
+    /// `isr_prototype` (so thread mode or the wrong IRQ is harmless). The check
+    /// is on the IRQ *number*, so it holds regardless of how the vector table is
+    /// wired — including behind an RTIC `#[task(binds = ..)]` dispatcher.
+    ///
+    /// Pairs with a block-taking callback ([`callback_set`](Self::callback_set)):
+    /// it hands `self` to the callback as the block, so the COMPARE_B callback
+    /// reprograms the alarm through that block instead of re-borrowing the driver
+    /// from shared storage.
     #[inline(always)]
     pub fn handle_isr(self: Pin<&mut Self>, isr_prototype: IsrPrototype) {
         let expected_irq = match isr_prototype {
@@ -282,12 +355,17 @@ impl<'a, C: Channel> Gpt<'a, C, Opened> {
             return;
         }
         CallbackEvent::with_callback_provenance(self, || unsafe {
-            isr_prototype.call_fsp_isr_handler()
+            isr_prototype.call_fsp_isr_handler_unchecked()
         });
     }
 
-    // May be non-static because calling that callback requires some form of `&mut Self`
-    /// For this callback to be invoked, call [`gpt_counter_overflow_isr`], [`gpt_capture_compare_a_isr`] etc in the interrup handler.
+    /// Registers a callback that receives the [`Gpt`] block when invoked. Drive
+    /// it from the interrupt handlers with [`handle_isr`](Self::handle_isr),
+    /// which passes the block in, so the callback need not borrow the driver
+    /// from shared storage.
+    ///
+    /// May be non-static because invoking the callback requires some form of
+    /// `&mut Self`.
     pub fn callback_set<F>(self: Pin<&mut Self>, context: &'a F) -> Result<()>
     where
         F: Callback<timer_event_t, Self> + Sync,
@@ -295,7 +373,13 @@ impl<'a, C: Channel> Gpt<'a, C, Opened> {
         CallbackEvent::callback_set(self, context)
     }
 
-    // Must be static because Gpt might be closed dropped etc during `F`'s call.
+    /// Registers a static callback that reaches its own state (rather than the
+    /// block). Drive it with [`IsrPrototype::call_fsp_isr_handler`] or the raw
+    /// `gpt_*_isr` externs — not [`handle_isr`](Self::handle_isr), whose block
+    /// this callback ignores.
+    ///
+    /// Must be `'static` because the `Gpt` may be closed/dropped during `F`'s
+    /// call.
     pub fn callback_set_static<F>(self: Pin<&mut Self>, context: &'static F) -> Result<()>
     where
         F: Callback<timer_event_t> + Sync,

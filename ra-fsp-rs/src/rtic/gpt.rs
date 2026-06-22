@@ -1,8 +1,9 @@
 use ra_fsp_sys::generated::e_timer_event;
 
 use crate::{
-    gpt::Channel,
+    gpt::{Channel, IsrPrototype},
     gpt_clock::{GptTimerStorage, TimerStateExt},
+    utils,
 };
 
 pub struct RticGptTimerDriver<C: 'static>(pub GptTimerStorage<C>);
@@ -25,6 +26,10 @@ macro_rules! gpt_monotonic {
             storage: $crate::rtic::gpt::RticGptTimerDriver::new(),
         };
         impl $name {
+            /// Start the monotonic over an opened GPT channel. Drive the three
+            /// GPT IRQs (cycle-end, capture A, capture B) with
+            /// [`handle_isr`](Self::handle_isr) from their bound interrupt
+            /// handlers.
             pub fn start(
                 &'static self,
                 gpt: $crate::DriverBox<
@@ -38,6 +43,13 @@ macro_rules! gpt_monotonic {
                 // capture-B ISR (COMPARE_B event, possibly software-pended by
                 // `pend_interrupt`), the monotonic's interrupt.
                 unsafe { $static_name.queue.on_monotonic_interrupt() }
+            }
+
+            /// Dispatch a GPT ISR for this monotonic from its bound interrupt
+            /// handler (e.g. an RTIC `#[task(binds = ..)]`). Safe under any
+            /// vector wiring; delegates to `RticGptTimerDriver::handle_isr`.
+            pub fn handle_isr(which: $crate::gpt::IsrPrototype) {
+                $static_name.storage.handle_isr(which)
             }
         }
         impl $crate::Callback<$crate::sys::generated::timer_event_t> for $name {
@@ -114,6 +126,38 @@ impl<C: Channel + 'static> RticGptTimerDriver<C> {
     /// [`TimerState::pend_alarm`]: crate::gpt_clock::TimerState::pend_alarm
     pub fn pend_alarm(&self) {
         self.0.timer_state.must_get().pend_alarm()
+    }
+
+    /// Safely dispatch a GPT ISR for the monotonic from its bound interrupt
+    /// handler (e.g. an RTIC `#[task(binds = ..)]`).
+    ///
+    /// Reads the channel's configured IRQ for `which` in a borrow that is
+    /// released before dispatch, checks it against the active IRQ, then runs the
+    /// FSP ISR. Gating on the IRQ *number* (not the vector contents) works under
+    /// any vector wiring.
+    ///
+    /// [`Gpt::handle_isr`]: crate::gpt::Gpt::handle_isr
+    pub fn handle_isr(&self, which: IsrPrototype) {
+        let expected = critical_section::with(|cs| {
+            let borrow = self.0.gpt.borrow_ref_mut(cs);
+            let gpt = borrow.as_ref()?;
+            match which {
+                IsrPrototype::Overflow | IsrPrototype::Underflow => gpt.cycle_end_irq(),
+                IsrPrototype::CompareA => gpt.capture_a_irq(),
+                IsrPrototype::CompareB => gpt.capture_b_irq(),
+            }
+        });
+
+        // Note: it can be safe if we call the handler in the critical section
+        //       and use `start_with_block`, but we want to reduce the critical
+        //       section time.
+
+        if expected.is_some() && utils::current_irq_get() == expected {
+            // SAFETY: the active IRQ is the channel's configured IRQ for `which`.
+            //         we can't use `call_fsp_isr_handler` because RTIC introcudes
+            //         trampolines.
+            unsafe { which.call_fsp_isr_handler_unchecked() }
+        }
     }
 }
 
