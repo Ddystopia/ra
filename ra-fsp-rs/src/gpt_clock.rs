@@ -9,7 +9,11 @@ use cortex_m::peripheral::NVIC;
 use critical_section::{CriticalSection, Mutex};
 
 use crate::{
-    Callback, DriverBox, Result, gpt::{Channel, Gpt}, pac, state_markers::Opened, timer_api::TimerApi
+    Callback, DriverBox, Result,
+    gpt::{Channel, Gpt},
+    pac,
+    state_markers::Opened,
+    timer_api::TimerApi,
 };
 
 #[allow(unused_imports)]
@@ -59,20 +63,53 @@ pub trait Storage<C: 'static> {
     fn storage(&'static self) -> &'static GptTimerStorage<C>;
 }
 
-/// Starts the shared GPT timekeeping over an opened driver.
+/// Starts shared GPT timekeeping over an opened driver, registering a *static*
+/// callback that reaches its state through [`Storage`].
 ///
-/// Drive the three GPT IRQs (cycle-end, capture A, capture B) by calling
-/// [`IsrPrototype::call_fsp_isr_handler`] in their handlers — the static
-/// callback reaches its state through [`Storage`]. Do **not** route them
-/// through [`Gpt::handle_isr`]: that requires borrowing the driver out of
-/// [`GptTimerStorage::gpt`], which the COMPARE_B callback re-borrows — a
-/// guaranteed `RefCell` double-borrow panic.
+/// Drive the three GPT IRQs (cycle-end, capture A, capture B) with
+/// [`IsrPrototype::call_fsp_isr_handler`] (or the raw `gpt_*_isr` externs). Do
+/// **not** use [`Gpt::handle_isr`] with this variant: it borrows the driver out
+/// of [`GptTimerStorage::gpt`], which the COMPARE_B callback re-borrows — a
+/// guaranteed `RefCell` double-borrow panic. Use [`start_with_block`] when you
+/// need `handle_isr` — e.g. behind an RTIC `#[task(binds = ..)]` dispatcher,
+/// where `call_fsp_isr_handler`'s vector-table check cannot match.
 ///
 /// [`IsrPrototype::call_fsp_isr_handler`]: crate::gpt::IsrPrototype::call_fsp_isr_handler
 /// [`Gpt::handle_isr`]: crate::gpt::Gpt::handle_isr
 pub fn start<C: Channel + 'static, Cb: Callback<timer_event_t> + Sync + Storage<C>>(
     gpt: DriverBox<Gpt<'static, C, Opened>>,
     callback: &'static Cb,
+) -> Result<()> {
+    start_common(gpt, callback.storage(), |gpt| {
+        gpt.callback_set_static(callback)
+    })
+}
+
+/// Like [`start`], but registers a *block-taking* callback (via
+/// [`Gpt::callback_set`]) that receives the driver as an argument instead of
+/// re-borrowing [`GptTimerStorage::gpt`].
+///
+/// Drive the three GPT IRQs with [`Gpt::handle_isr`]: it passes the block to the
+/// callback (so the borrow does not nest) and gates on the active IRQ *number*
+/// rather than the vector contents — the right choice when the vector points at
+/// a trampoline, e.g. an RTIC `#[task(binds = ..)]` dispatcher.
+///
+/// [`Gpt::handle_isr`]: crate::gpt::Gpt::handle_isr
+/// [`Gpt::callback_set`]: crate::gpt::Gpt::callback_set
+pub fn start_with_block<
+    C: Channel + 'static,
+    Cb: Callback<timer_event_t, Gpt<'static, C, Opened>> + Sync + Storage<C>,
+>(
+    gpt: DriverBox<Gpt<'static, C, Opened>>,
+    callback: &'static Cb,
+) -> Result<()> {
+    start_common(gpt, callback.storage(), |gpt| gpt.callback_set(callback))
+}
+
+fn start_common<C: Channel + 'static>(
+    gpt: DriverBox<Gpt<'static, C, Opened>>,
+    storage: &'static GptTimerStorage<C>,
+    set_callback: impl FnOnce(Pin<&mut Gpt<'static, C, Opened>>) -> Result<()>,
 ) -> Result<()> {
     if gpt.cycle_end_irq().is_none() {
         log::error!("cycle_end_irq invalid");
@@ -85,8 +122,6 @@ pub fn start<C: Channel + 'static, Cb: Callback<timer_event_t> + Sync + Storage<
 
         return Err(e_fsp_err::FSP_ERR_INVALID_ARGUMENT);
     };
-
-    let storage = callback.storage();
 
     if let Err(_) = storage.timer_state.set(TimerState {
         capture_a_irq,
@@ -119,7 +154,7 @@ pub fn start<C: Channel + 'static, Cb: Callback<timer_event_t> + Sync + Storage<
         gpt.as_mut().stop()?;
         gpt.as_mut().reset()?;
         gpt.as_mut().compare_match_set(0x80000000, channel)?;
-        gpt.as_mut().callback_set_static(callback)?;
+        set_callback(gpt.as_mut())?;
 
         NVIC::unpend(capture_a_irq);
         timer_state.unmask_a();
