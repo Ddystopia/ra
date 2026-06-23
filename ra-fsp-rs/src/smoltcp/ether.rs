@@ -51,9 +51,9 @@ impl Dev {
     ///
     /// **MDIO cost:** with `ETHER_CFG_USE_LINKSTA == 0` (default) this
     /// performs a blocking, bit-banged MDIO read that stalls the CPU for tens
-    /// of microseconds.  Call from a slow periodic task (100 ms – 1 s), not
-    /// the hot smoltcp poll loop.  Setting `ETHER_CFG_USE_LINKSTA = 1` in
-    /// FSP_CFG eliminates the cost entirely when the PHY LINKSTA pin is wired.
+    /// of microseconds.  Call from a slow periodic task (100 ms – 1 s). Setting
+    /// `ETHER_CFG_USE_LINKSTA = 1` in FSP_CFG eliminates the cost entirely when
+    /// the PHY LINKSTA pin is wired.
     pub fn poll_link(&mut self) {
         if self.eth.get_open() != 0 {
             _ = self.eth().link_process();
