@@ -129,8 +129,24 @@ impl<C: Channel + 'static> EmbassyGptTimerDriver<C> {
     /// [`Gpt::handle_isr`]: crate::gpt::Gpt::handle_isr
     pub fn handle_isr(&'static self, isr_prototype: IsrPrototype) {
         critical_section::with(|cs| {
-            let mut gpt = self.0.timer.gpt.borrow_ref_mut(cs);
-            if let Some(gpt) = gpt.as_mut() {
+            let mut borrow = self.0.timer.gpt.borrow_ref_mut(cs);
+            let Some(gpt) = borrow.as_mut() else { return };
+
+            if matches!(isr_prototype, IsrPrototype::CompareB) {
+                // Lean alarm path: clear the ICU IR flag and drive the timer
+                // queue directly, skipping the FSP capture-B ISR dispatch -- its
+                // context lookup, `callback_args` build, trampoline and event
+                // match. For a periodic compare match the FSP ISR does no more
+                // than this (it never touches GTST); this mirrors the body of
+                // `call_with_block`'s `TIMER_EVENT_COMPARE_B` arm.
+                if let Some(irq) = crate::utils::current_irq_get() {
+                    crate::icu::irq_status_clear(irq);
+                }
+                self.0
+                    .trigger_alarm(cs, gpt.as_mut())
+                    .expect("Error in alarm handler");
+            } else {
+                // Period events (overflow / compare-A) keep the FSP ISR path.
                 gpt.as_mut().handle_isr(isr_prototype);
             }
         });
