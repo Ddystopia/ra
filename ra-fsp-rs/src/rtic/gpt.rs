@@ -49,7 +49,7 @@ macro_rules! gpt_monotonic {
             /// handler (e.g. an RTIC `#[task(binds = ..)]`). Safe under any
             /// vector wiring; delegates to `RticGptTimerDriver::handle_isr`.
             pub fn handle_isr(which: $crate::gpt::IsrPrototype) {
-                $static_name.storage.handle_isr(which)
+                $static_name.storage.handle_isr(which, Self::pend)
             }
         }
         impl $crate::Callback<$crate::sys::generated::timer_event_t> for $name {
@@ -132,10 +132,11 @@ impl<C: Channel + 'static> RticGptTimerDriver<C> {
     /// handler (e.g. an RTIC `#[task(binds = ..)]`).
     ///
     /// Reads the channel's configured IRQ for `which` in a borrow that is
-    /// released before dispatch, checks it against the active IRQ, then runs the
-    /// FSP ISR. Gating on the IRQ *number* (not the vector contents) works under
-    /// any vector wiring.
-    pub fn handle_isr(&self, which: IsrPrototype) {
+    /// released before dispatch and checks it against the active IRQ; gating on
+    /// the IRQ *number* (not the vector contents) works under any vector wiring.
+    /// Capture-B (the alarm) takes a lean path; cycle-end and capture-A run the
+    /// FSP ISR.
+    pub fn handle_isr(&self, which: IsrPrototype, pend_interrupt: impl Fn()) {
         let expected = critical_section::with(|cs| {
             let borrow = self.0.gpt.borrow_ref_mut(cs);
             let gpt = borrow.as_ref()?;
@@ -150,7 +151,21 @@ impl<C: Channel + 'static> RticGptTimerDriver<C> {
         //       and use `start_with_block`, but we want to reduce the critical
         //       section time.
 
-        if expected.is_some() && utils::current_irq_get() == expected {
+        let Some(expected) = expected else { return };
+        if utils::current_irq_get() != Some(expected) {
+            return;
+        }
+
+        if matches!(which, IsrPrototype::CompareB) {
+            // Lean alarm path: clear the ICU IR flag and pend the monotonic
+            // queue directly, skipping the FSP capture-B ISR dispatch -- its
+            // context lookup, `callback_args` build, trampoline and event match.
+            // For a periodic compare match the FSP ISR does no more than this
+            // (it never touches GTST); this mirrors `gpt_callback`'s
+            // `TIMER_EVENT_COMPARE_B` arm.
+            crate::icu::irq_status_clear(expected);
+            pend_interrupt();
+        } else {
             // SAFETY: the active IRQ is the channel's configured IRQ for `which`.
             //         We can't use `call_fsp_isr_handler` because RTIC introduces
             //         trampolines.
