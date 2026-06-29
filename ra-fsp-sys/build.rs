@@ -462,18 +462,37 @@ fn pre_link_archive(new_name: &str, objects: Vec<PathBuf>) {
     let joined_obj_name = format!("{new_name}.o");
     let archive_name = format!("lib{new_name}.a");
 
-    let ld = std::env::var("LD").expect("LD must be set");
+    // For cross-language LTO the FSP objects are LLVM bitcode (CC=clang -flto).
+    // bfd `ld -r` cannot merge bitcode, so combine the modules with `llvm-link`
+    // into a single bitcode module instead. This keeps the same "pull the whole
+    // FSP unit together" semantics as the `ld -r` path: the archive ends up with
+    // one member, so referencing any FSP symbol pulls all of it, and the linker's
+    // LTO sees it as one bitcode module. Enable by setting RA_FSP_SYS_LTO.
+    if std::env::var_os("RA_FSP_SYS_LTO").is_some() {
+        let llvm_link = std::env::var("LLVM_LINK").unwrap_or_else(|_| "llvm-link".into());
+        std::process::Command::new(&llvm_link)
+            .args(objects)
+            .arg("-o")
+            .arg(&joined_obj_name)
+            .current_dir(&out_path)
+            .spawn()
+            .expect("failed to run llvm-link")
+            .wait()
+            .unwrap();
+    } else {
+        let ld = std::env::var("LD").expect("LD must be set");
 
-    std::process::Command::new(&ld)
-        .arg("-r")
-        .args(objects)
-        .arg("-o")
-        .arg(&joined_obj_name)
-        .current_dir(&out_path)
-        .spawn()
-        .expect("failed to prelink")
-        .wait()
-        .unwrap();
+        std::process::Command::new(&ld)
+            .arg("-r")
+            .args(objects)
+            .arg("-o")
+            .arg(&joined_obj_name)
+            .current_dir(&out_path)
+            .spawn()
+            .expect("failed to prelink")
+            .wait()
+            .unwrap();
+    }
 
     cc::Build::new()
         .get_archiver()
