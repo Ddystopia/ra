@@ -1,11 +1,12 @@
 use crate::pac;
 use cortex_m::{interrupt::InterruptNumber, peripheral::NVIC};
+use ra_fsp_sys::generated::IRQn_Type;
 
 #[allow(unused)] // When no drivers are enabled
-pub(crate) const fn extract_irq(this: Option<pac::Interrupt>) -> i32 {
-    let invalid_vector = ra_fsp_sys::generated::FSP_INVALID_VECTOR as i32;
+pub(crate) const fn extract_irq(this: Option<pac::Interrupt>) -> IRQn_Type {
+    let invalid_vector = ra_fsp_sys::generated::FSP_INVALID_VECTOR as IRQn_Type;
     match this {
-        Some(i) => i as u16 as i32,
+        Some(i) => i as u16 as IRQn_Type,
         None => invalid_vector,
     }
 }

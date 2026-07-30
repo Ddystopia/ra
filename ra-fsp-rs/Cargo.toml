@@ -42,6 +42,7 @@ default = ["log", "device", "ra6m3", "smoltcp-ether", "embassy-time-gpt", "rtic-
 # default = ["log", "device", "ra6m3", "mod-r_gpt", "smoltcp-ether", "embedded-graphics-glcdc", "mod-r_ioport"]
 
 device = ["ra-fsp-sys/device", "ra6m3-pac/rt"]
+short-enums = ["ra-fsp-sys/short-enums"]
 
 log = ["dep:log"]
 smoltcp-ether = ["dep:smoltcp", "mod-r_ether", "smoltcp/medium-ethernet"]

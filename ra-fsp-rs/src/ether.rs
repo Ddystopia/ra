@@ -296,7 +296,7 @@ pub struct InterruptCause {
 }
 
 use ra_fsp_sys::generated::{
-    BSP_IRQ_DISABLED, R_ETHER_BufferRelease, R_ETHER_CallbackSet, R_ETHER_Close,
+    BSP_IRQ_DISABLED, IRQn_Type, R_ETHER_BufferRelease, R_ETHER_CallbackSet, R_ETHER_Close,
     R_ETHER_LinkProcess, R_ETHER_Open, R_ETHER_Read, R_ETHER_RxBufferUpdate, R_ETHER_TxStatusGet,
     R_ETHER_WakeOnLANEnable, R_ETHER_Write, e_ether_padding, e_fsp_err, ether_ctrl_t,
     ether_extended_cfg_t, ether_instance_descriptor_t, ether_phy_instance_t, fsp_err_t,
@@ -733,7 +733,7 @@ impl<'a> Ether<'a, Opened> {
     #[inline(always)]
     pub fn handle_isr(self: Pin<&mut Self>) {
         let cfg_irq = unsafe { (*(*self.as_ref().get_ref().ctrl.get()).p_ether_cfg).irq };
-        let active = utils::current_irq_get().map(|i| i as u16 as i32);
+        let active = utils::current_irq_get().map(|i| i as u16 as IRQn_Type);
         if active != Some(cfg_irq) {
             return;
         }

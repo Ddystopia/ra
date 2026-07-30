@@ -43,6 +43,12 @@ log = ["dep:log"]
 # regardless of profile, so debug firmware doesn't silently lose driver performance.
 debug-fsp-c = []
 
+# Compile the FSP C sources and the bindings with `-fshort-enums`; without this
+# feature both are compiled with `-fno-short-enums`. Match whatever the rest of
+# the firmware's objects use, since the enum ABI changes the layout of every
+# enum-bearing FSP struct.
+short-enums = []
+
 mod-r_dmac = []
 mod-r_elc = []
 
