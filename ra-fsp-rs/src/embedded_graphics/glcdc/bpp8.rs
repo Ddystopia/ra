@@ -82,31 +82,27 @@ impl<'a, 'b> DrawTarget for Display<Bpp8> {
             return Ok(());
         }
 
-        let bounding_box = self.bounding_box();
-        let area = area.intersection(&bounding_box);
+        let Some((x0, y0, x1, y1)) = clip(area, self.size) else {
+            return Ok(());
+        };
+        let full_screen = x0 == 0
+            && y0 == 0
+            && x1 == self.size.width as usize
+            && y1 == self.size.height as usize;
+        let hstride = self.hstride_bytes;
         let buffer = match &mut self.next_buffer {
             Some(buf) => buf,
             None => return Ok(()),
         };
         let fill = color.0.into_inner();
 
-        if area == bounding_box {
+        if full_screen {
             buffer.fill(fill);
             return Ok(());
         }
 
-        let hstride = self.hstride_bytes;
-        let tl = area.top_left;
-        let Some(br) = area.bottom_right() else {
-            return Ok(());
-        };
-
-        for y in tl.y..=br.y {
-            let row = &mut buffer[(y as usize) * hstride..][..hstride];
-
-            let (sx, ex) = (tl.x as usize, br.x as usize);
-
-            row[sx..=ex].fill(fill);
+        for row in buffer[y0 * hstride..y1 * hstride].chunks_exact_mut(hstride) {
+            row[x0..x1].fill(fill);
         }
 
         Ok(())
@@ -116,11 +112,9 @@ impl<'a, 'b> DrawTarget for Display<Bpp8> {
     where
         I: IntoIterator<Item = Self::Color>,
     {
-        let bounding_box = self.bounding_box();
-        let area = area.intersection(&bounding_box);
-        if area.is_zero_sized() {
+        let Some((x0, y0, x1, y1)) = clip(area, self.size) else {
             return Ok(());
-        }
+        };
         let buffer = match &mut self.next_buffer {
             Some(buf) => buf,
             None => return Ok(()),
@@ -129,19 +123,13 @@ impl<'a, 'b> DrawTarget for Display<Bpp8> {
         let mut colors = colors.into_iter().map(|c| c.0.into_inner());
         let filter = self.filter.0.into_inner();
         let hstride = self.hstride_bytes;
-        let tl = area.top_left;
-        let Some(br) = area.bottom_right() else {
-            return Ok(());
-        };
+        let span_len = x1 - x0;
 
-        for y in tl.y..=br.y {
-            let row = &mut buffer[(y as usize) * hstride..][..hstride];
-            let (sx, ex) = (tl.x as usize, br.x as usize);
+        for row in buffer[y0 * hstride..y1 * hstride].chunks_exact_mut(hstride) {
             // Slice the span once so the compiler can see its length; the
             // zip+iter_mut pair eliminates per-pixel index arithmetic and the
             // bounds check that `row[x] = v` would otherwise emit each cycle.
-            let span = &mut row[sx..=ex];
-            let span_len = span.len();
+            let span = &mut row[x0..x1];
             let mut n = 0usize;
             for (p, v) in span.iter_mut().zip(&mut colors) {
                 n += 1;
@@ -158,6 +146,23 @@ impl<'a, 'b> DrawTarget for Display<Bpp8> {
 
         Ok(())
     }
+}
+
+/// Clips `area` to a `size`-bounded origin rectangle using plain integer
+/// arithmetic. Returns half-open pixel bounds `(x0, y0, x1, y1)`, or `None`
+/// when nothing is left.
+#[inline(always)]
+fn clip(area: &Rectangle, size: Size) -> Option<(usize, usize, usize, usize)> {
+    let w = size.width.min(i32::MAX as u32) as i32;
+    let h = size.height.min(i32::MAX as u32) as i32;
+    let x0 = area.top_left.x.max(0);
+    let y0 = area.top_left.y.max(0);
+    let x1 = area.top_left.x.saturating_add_unsigned(area.size.width).min(w);
+    let y1 = area.top_left.y.saturating_add_unsigned(area.size.height).min(h);
+    if x0 >= x1 || y0 >= y1 {
+        return None;
+    }
+    Some((x0 as usize, y0 as usize, x1 as usize, y1 as usize))
 }
 
 impl PixelColor for Clut8Pixel {

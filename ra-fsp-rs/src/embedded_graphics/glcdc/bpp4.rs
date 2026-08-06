@@ -85,8 +85,14 @@ impl<'a, 'b> DrawTarget for Display<Bpp4> {
             return Ok(());
         }
 
-        let bounding_box = self.bounding_box();
-        let area = area.intersection(&bounding_box);
+        let Some((x0, y0, x1, y1)) = clip(area, self.size) else {
+            return Ok(());
+        };
+        let full_screen = x0 == 0
+            && y0 == 0
+            && x1 == self.size.width as usize
+            && y1 == self.size.height as usize;
+        let hstride = self.hstride_bytes;
         let buffer = match &mut self.next_buffer {
             Some(buf) => buf,
             None => return Ok(()),
@@ -94,41 +100,32 @@ impl<'a, 'b> DrawTarget for Display<Bpp4> {
         let v = color.0.into_inner();
         let fill = (v << 4) | v;
 
-        if area == bounding_box {
+        if full_screen {
             buffer.fill(fill);
             return Ok(());
         }
 
-        let hstride = self.hstride_bytes;
-        let tl = area.top_left;
-        let Some(br) = area.bottom_right() else {
-            return Ok(());
-        };
+        // Byte extent of the span: sb..eb covers every touched byte. A span
+        // starting on an odd pixel owns only the high nibble of its first
+        // byte, one ending on an even pixel only the low nibble of its last
+        // byte; those edges are read-modify-write, the middle is a plain fill.
+        let sb = x0 * BPP / 8;
+        let eb = (x1 + 1) * BPP / 8;
+        let odd_start = x0 % 2 == 1;
+        let odd_end = x1 % 2 == 1;
+        let mid_s = sb + odd_start as usize;
+        let mid_e = eb - odd_end as usize;
 
-        for y in tl.y..=br.y {
-            let row = &mut buffer[(y as usize) * hstride..][..hstride];
-
-            let (mut sx, mut ex) = (tl.x as usize, br.x as usize);
-
-            if sx % 2 == 1 {
-                // x starts on high nibble
-                let p = &mut row[sx * BPP / 8];
-                write_shift(p, v, 4);
-                // starting byte done, skip it
-                sx += 1;
+        for row in buffer[y0 * hstride..y1 * hstride].chunks_exact_mut(hstride) {
+            if odd_start {
+                write_shift(&mut row[sb], v, 4);
             }
 
-            if ex % 2 == 0 {
-                // x ends on low nibble
-                let p = &mut row[ex * BPP / 8];
-                write_shift(p, v, 0);
-                // ending byte done, skip it
-                ex -= 1;
+            if odd_end {
+                write_shift(&mut row[eb - 1], v, 0);
             }
 
-            if let Some(slice) = row.get_mut(sx * BPP / 8..=ex * BPP / 8) {
-                slice.fill(fill);
-            }
+            row[mid_s..mid_e].fill(fill);
         }
 
         Ok(())
@@ -138,11 +135,9 @@ impl<'a, 'b> DrawTarget for Display<Bpp4> {
     where
         I: IntoIterator<Item = Self::Color>,
     {
-        let bounding_box = self.bounding_box();
-        let area = area.intersection(&bounding_box);
-        if area.is_zero_sized() {
+        let Some((x0, y0, x1, y1)) = clip(area, self.size) else {
             return Ok(());
-        }
+        };
         let buffer = match &mut self.next_buffer {
             Some(buf) => buf,
             None => return Ok(()),
@@ -151,96 +146,77 @@ impl<'a, 'b> DrawTarget for Display<Bpp4> {
         let mut colors = colors.into_iter().map(|c| c.0.into_inner());
         let filter = self.filter.0.into_inner();
         let hstride = self.hstride_bytes;
-        let tl = area.top_left;
-        let Some(br) = area.bottom_right() else {
-            return Ok(());
-        };
 
-        if tl.x == br.x && tl.y == br.y {
-            let shift = 4 * (tl.x % 2) as u8;
-            let i = tl.x as usize * BPP / 8;
-            let Some(v) = colors.next() else {
-                return Ok(());
-            };
-            if v == filter {
+        if x1 - x0 == 1 {
+            let i = x0 * BPP / 8;
+            let shift = 4 * (x0 % 2);
+
+            if y1 - y0 == 1 {
+                let Some(v) = colors.next() else {
+                    return Ok(());
+                };
+                if v == filter {
+                    return Ok(());
+                }
+                write_shift(&mut buffer[y0 * hstride + i], v, shift);
                 return Ok(());
             }
-            let p = &mut buffer[(tl.y as usize) * hstride..][i];
-            write_shift(p, v, shift as usize);
-            return Ok(());
-        }
 
-        if tl.x == br.x {
-            let i = tl.x as usize * BPP / 8;
-            let shift = 4 * (tl.x % 2) as u8;
-            for y in tl.y..=br.y {
+            for row in buffer[y0 * hstride..y1 * hstride].chunks_exact_mut(hstride) {
                 let Some(v) = colors.next() else { break };
                 if v == filter {
                     continue;
                 }
-                let p = &mut buffer[(y as usize) * hstride..][i];
-                write_shift(p, v, shift as usize);
+                write_shift(&mut row[i], v, shift);
             }
             return Ok(());
         }
 
-        assert!(tl.x < br.x);
+        // Byte extent of the span (see fill_solid): edge nibbles are handled
+        // separately so the middle can be packed two pixels per byte.
+        let sb = x0 * BPP / 8;
+        let eb = (x1 + 1) * BPP / 8;
+        let odd_start = x0 % 2 == 1;
+        let odd_end = x1 % 2 == 1;
+        let mid_s = sb + odd_start as usize;
+        let mid_e = eb - odd_end as usize;
 
-        // everything after that is 2ms in total
-
-        for y in tl.y..=br.y {
-            let row_start_at = (y as usize) * hstride;
-            let row = &mut buffer[row_start_at..][..hstride];
-
-            let mut sx = tl.x as usize;
-            let mut ex = br.x as usize;
-
-            // ensure sx is even
-            if sx % 2 == 1 {
+        for row in buffer[y0 * hstride..y1 * hstride].chunks_exact_mut(hstride) {
+            if odd_start {
                 let Some(v) = colors.next() else { break };
                 if v != filter {
-                    write_left(&mut row[sx * BPP / 8], v);
+                    write_left(&mut row[sb], v);
                 }
-                sx += 1;
             }
 
-            let mut last = None;
+            fill_by_two(&mut row[mid_s..mid_e], &mut colors, filter);
 
-            // ensure ex is odd
-            if ex % 2 == 0 {
-                last = Some(ex);
-                ex -= 1;
-            }
-
-            let start = sx * BPP / 8;
-            let len_bytes = (ex - sx + 1) * BPP / 8;
-            fill_by_two(&mut row[start..][..len_bytes], &mut colors, filter);
-
-            // let mut start = sx * BPP / 8;
-            // let mut len_bytes = (ex - sx + 1) * BPP / 8;
-            // if len_bytes % 16 != 0 {
-            //     let cut = len_bytes % 16;
-            //     fill_by_two(&mut row[start..][..cut], &mut colors, filter);
-            //     len_bytes -= cut;
-            //     start += cut;
-            // }
-            //
-            // if len_bytes != 0 {
-            //     let start = row_start_at + start;
-            //     let u32_buf = &mut buffer.as_u32_mut()[start / 4..][..len_bytes / 4];
-            //     fill_by_eigth(u32_buf, &mut colors, filter);
-            // }
-
-            if let Some(ex) = last {
-                let row = &mut buffer[(y as usize) * hstride..][..hstride];
+            if odd_end {
                 let Some(v) = colors.next() else { break };
                 if v != filter {
-                    write_right(&mut row[ex * BPP / 8], v);
+                    write_right(&mut row[eb - 1], v);
                 }
             }
         }
         Ok(())
     }
+}
+
+/// Clips `area` to a `size`-bounded origin rectangle using plain integer
+/// arithmetic. Returns half-open pixel bounds `(x0, y0, x1, y1)`, or `None`
+/// when nothing is left.
+#[inline(always)]
+fn clip(area: &Rectangle, size: Size) -> Option<(usize, usize, usize, usize)> {
+    let w = size.width.min(i32::MAX as u32) as i32;
+    let h = size.height.min(i32::MAX as u32) as i32;
+    let x0 = area.top_left.x.max(0);
+    let y0 = area.top_left.y.max(0);
+    let x1 = area.top_left.x.saturating_add_unsigned(area.size.width).min(w);
+    let y1 = area.top_left.y.saturating_add_unsigned(area.size.height).min(h);
+    if x0 >= x1 || y0 >= y1 {
+        return None;
+    }
+    Some((x0 as usize, y0 as usize, x1 as usize, y1 as usize))
 }
 
 #[inline(always)]
