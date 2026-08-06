@@ -1,3 +1,26 @@
+//! `embassy-time` driver backed by a GPT channel.
+//!
+//! Two driver types differ only in how the GPT interrupts reach them. Pick by
+//! what sits in the vector table for the channel's three IRQs (cycle-end,
+//! capture A, capture B):
+//!
+//! - The FSP `gpt_*_isr` symbols themselves, as an FSP-generated `vector_data.c`
+//!   installs them: use [`EmbassyGptDirectTimerDriver`]. It registers a static
+//!   callback, so FSP's control block carries the driver pointer and the ISR
+//!   reaches the callback on its own. Nothing needs to be called from the
+//!   application.
+//! - Application handlers, e.g. a cortex-m-rt `#[interrupt]` fn or an RTIC
+//!   `#[task(binds = ..)]`: use [`EmbassyGptTimerDriver`] and call
+//!   [`EmbassyGptTimerDriver::handle_isr`] from each of the three handlers.
+//!
+//! The pairing is load bearing. [`EmbassyGptTimerDriver`] registers a
+//! block-taking callback, whose FSP `p_context` is populated only for the
+//! duration of a `handle_isr` call. An interrupt that reaches the FSP ISR by any
+//! other route finds a null context and the callback body is skipped, so period
+//! tracking and the alarm both stop while [`Driver::now`] keeps returning
+//! plausible values from `GTCNT`: the executor then only makes progress when an
+//! unrelated waker happens to poll it after a deadline has already passed.
+
 use core::{cell::RefCell, pin::Pin};
 
 use critical_section::{CriticalSection, Mutex};
