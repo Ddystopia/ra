@@ -32,7 +32,7 @@ atomic_refcell = "0.1.13"
 atomic_once_cell = "0.2.0" # My PR was merged that removes crossbeam_utils crate, but not yet published (today)
 
 embedded-graphics = { version = "0.8.1", optional = true }
-buoyant = { git = "https://github.com/riley-williams/buoyant", optional = true }
+buoyant = { git = "https://github.com/riley-williams/buoyant", optional = true, version = "0.7.0" }
 diatomic-waker = { version = "0.2.3", default-features = false }
 heapless = "0.9.1"
 

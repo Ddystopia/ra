@@ -1,5 +1,5 @@
 [workspace]
-package.version = "0.2.0"
+package.version = "0.2.1"
 members = [
   "pac/ra4m1",
   "pac/ra6m3",
@@ -14,6 +14,6 @@ resolver = "2"
 buoyant = { path = "/home/ddystopia/job/buoyant", optional = true }
 
 [workspace.dependencies]
-ra-fsp-sys = { version = "0.2.0", default-features = false }
-ra6m3-pac = { version = "0.2.0", package = "ra6m3-fsp-pac", default-features = false }
-ra4m1-pac = { version = "0.2.0", package = "ra4m1-fsp-pac", default-features = false }
+ra-fsp-sys = { version = "0.2.1", default-features = false }
+ra6m3-pac = { version = "0.2.1", package = "ra6m3-fsp-pac", default-features = false }
+ra4m1-pac = { version = "0.2.1", package = "ra4m1-fsp-pac", default-features = false }
