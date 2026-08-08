@@ -38,7 +38,7 @@ heapless = "0.9.1"
 
 [features]
 # default = ["log", "device"] # this is actual published default
-default = ["log", "device", "ra6m3", "smoltcp-ether", "embassy-time-gpt", "rtic-monotonics-gpt", "embedded-graphics-glcdc", "mod-r_ioport"]
+default = ["log", "device", "ra6m3", "smoltcp-ether", "embassy-time-gpt", "rtic-monotonics-gpt", "embedded-graphics-glcdc", "glcdc-chroma-filter", "mod-r_ioport"]
 # default = ["log", "device", "ra6m3", "mod-r_gpt", "smoltcp-ether", "embedded-graphics-glcdc", "mod-r_ioport"]
 
 device = ["ra-fsp-sys/device", "ra6m3-pac/rt"]
@@ -50,6 +50,9 @@ rtic-monotonics = ["dep:rtic-monotonics"]
 rtic-monotonics-gpt = ["mod-r_gpt", "rtic-monotonics"]
 embassy-time-gpt = ["dep:embassy-time-queue-utils", "dep:embassy-time-driver", "mod-r_gpt"]
 embedded-graphics-glcdc = ["dep:embedded-graphics", "mod-r_glcdc"]
+# chroma-key filtering in the glcdc draw targets: writes of the configured
+# filter color are dropped instead of reaching the framebuffer
+glcdc-chroma-filter = []
 buoyant = ["dep:buoyant"]
 
 mod-r_dmac = ["ra-fsp-sys/mod-r_dmac"]

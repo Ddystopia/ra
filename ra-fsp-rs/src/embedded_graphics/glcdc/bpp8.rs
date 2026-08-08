@@ -5,7 +5,7 @@ use embedded_graphics::{
 };
 use ra_fsp_sys::generated::display_in_format_t;
 
-use crate::embedded_graphics::glcdc::{Display, Kind};
+use crate::embedded_graphics::glcdc::{Display, FILTERING, Kind};
 
 pub struct Bpp8;
 
@@ -42,7 +42,7 @@ impl<'a, 'b> DrawTarget for Display<Bpp8> {
         };
 
         for Pixel(Point { x, y }, Clut8Pixel(color)) in pixels {
-            if color == self.filter.0 {
+            if FILTERING && color == self.filter.0 {
                 continue;
             }
 
@@ -63,7 +63,7 @@ impl<'a, 'b> DrawTarget for Display<Bpp8> {
     }
 
     fn clear(&mut self, color: Self::Color) -> Result<(), Self::Error> {
-        if color == self.filter {
+        if FILTERING && color == self.filter {
             return Ok(());
         }
 
@@ -78,7 +78,7 @@ impl<'a, 'b> DrawTarget for Display<Bpp8> {
     }
 
     fn fill_solid(&mut self, area: &Rectangle, color: Self::Color) -> Result<(), Self::Error> {
-        if color == self.filter {
+        if FILTERING && color == self.filter {
             return Ok(());
         }
 
@@ -133,7 +133,7 @@ impl<'a, 'b> DrawTarget for Display<Bpp8> {
             let mut n = 0usize;
             for (p, v) in span.iter_mut().zip(&mut colors) {
                 n += 1;
-                if v != filter {
+                if !FILTERING || v != filter {
                     *p = v;
                 }
             }

@@ -35,6 +35,11 @@ pub trait Kind {
 mod bpp4;
 mod bpp8;
 
+/// Chroma-key filtering in the draw targets. With the `glcdc-chroma-filter`
+/// feature off this folds to `false` and every filter branch compiles out,
+/// so writes of the filter color reach the framebuffer like any other.
+const FILTERING: bool = cfg!(feature = "glcdc-chroma-filter");
+
 pub use bpp4::{Bpp4, Clut4Pixel};
 pub use bpp8::{Bpp8, Clut8Pixel};
 

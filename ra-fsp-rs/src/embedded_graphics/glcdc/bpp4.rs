@@ -5,7 +5,7 @@ use embedded_graphics::{
 };
 use ra_fsp_sys::generated::display_in_format_t;
 
-use crate::embedded_graphics::glcdc::{Display, Kind};
+use crate::embedded_graphics::glcdc::{Display, FILTERING, Kind};
 
 pub struct Bpp4;
 
@@ -44,7 +44,7 @@ impl<'a, 'b> DrawTarget for Display<Bpp4> {
         };
 
         for Pixel(Point { x, y }, Clut4Pixel(color)) in pixels {
-            if color == self.filter.0 {
+            if FILTERING && color == self.filter.0 {
                 continue;
             }
 
@@ -65,7 +65,7 @@ impl<'a, 'b> DrawTarget for Display<Bpp4> {
     }
 
     fn clear(&mut self, color: Self::Color) -> Result<(), Self::Error> {
-        if color == self.filter {
+        if FILTERING && color == self.filter {
             return Ok(());
         }
 
@@ -81,7 +81,7 @@ impl<'a, 'b> DrawTarget for Display<Bpp4> {
     }
 
     fn fill_solid(&mut self, area: &Rectangle, color: Self::Color) -> Result<(), Self::Error> {
-        if color == self.filter {
+        if FILTERING && color == self.filter {
             return Ok(());
         }
 
@@ -155,7 +155,7 @@ impl<'a, 'b> DrawTarget for Display<Bpp4> {
                 let Some(v) = colors.next() else {
                     return Ok(());
                 };
-                if v == filter {
+                if FILTERING && v == filter {
                     return Ok(());
                 }
                 write_shift(&mut buffer[y0 * hstride + i], v, shift);
@@ -164,7 +164,7 @@ impl<'a, 'b> DrawTarget for Display<Bpp4> {
 
             for row in buffer[y0 * hstride..y1 * hstride].chunks_exact_mut(hstride) {
                 let Some(v) = colors.next() else { break };
-                if v == filter {
+                if FILTERING && v == filter {
                     continue;
                 }
                 write_shift(&mut row[i], v, shift);
@@ -184,7 +184,7 @@ impl<'a, 'b> DrawTarget for Display<Bpp4> {
         for row in buffer[y0 * hstride..y1 * hstride].chunks_exact_mut(hstride) {
             if odd_start {
                 let Some(v) = colors.next() else { break };
-                if v != filter {
+                if !FILTERING || v != filter {
                     write_left(&mut row[sb], v);
                 }
             }
@@ -193,7 +193,7 @@ impl<'a, 'b> DrawTarget for Display<Bpp4> {
 
             if odd_end {
                 let Some(v) = colors.next() else { break };
-                if v != filter {
+                if !FILTERING || v != filter {
                     write_right(&mut row[eb - 1], v);
                 }
             }
@@ -225,7 +225,7 @@ fn fill_by_two<I: Iterator<Item = u8>>(place: &mut [u8], mut iter: I, filter: u8
         let v1 = iter.next();
         let v2 = iter.next();
         if let Some((v1, v2)) = v1.zip(v2) {
-            if v1 != filter && v2 != filter {
+            if !FILTERING || (v1 != filter && v2 != filter) {
                 *p = (v2 << 4) | v1;
             } else {
                 if v1 != filter {
