@@ -143,8 +143,12 @@ impl<'a, 'b> DrawTarget for Display<Bpp4> {
             None => return Ok(()),
         };
 
-        let mut colors = colors.into_iter().map(|c| c.0.into_inner());
-        let filter = self.filter.0.into_inner();
+        // No `.map()` adapter on the pixel stream: an iterator whose `next`
+        // is #[inline(always)] (egi strips) only flattens into these loops
+        // when called directly; through a `Map` wrapper the whole decode
+        // stays an out-of-line call per pixel at opt-level z.
+        let mut colors = colors.into_iter();
+        let filter = self.filter;
         let hstride = self.hstride_bytes;
 
         if x1 - x0 == 1 {
@@ -158,7 +162,7 @@ impl<'a, 'b> DrawTarget for Display<Bpp4> {
                 if FILTERING && v == filter {
                     return Ok(());
                 }
-                write_shift(&mut buffer[y0 * hstride + i], v, shift);
+                write_shift(&mut buffer[y0 * hstride + i], v.into_inner(), shift);
                 return Ok(());
             }
 
@@ -167,7 +171,7 @@ impl<'a, 'b> DrawTarget for Display<Bpp4> {
                 if FILTERING && v == filter {
                     continue;
                 }
-                write_shift(&mut row[i], v, shift);
+                write_shift(&mut row[i], v.into_inner(), shift);
             }
             return Ok(());
         }
@@ -185,7 +189,7 @@ impl<'a, 'b> DrawTarget for Display<Bpp4> {
             if odd_start {
                 let Some(v) = colors.next() else { break };
                 if !FILTERING || v != filter {
-                    write_left(&mut row[sb], v);
+                    write_left(&mut row[sb], v.into_inner());
                 }
             }
 
@@ -194,7 +198,7 @@ impl<'a, 'b> DrawTarget for Display<Bpp4> {
             if odd_end {
                 let Some(v) = colors.next() else { break };
                 if !FILTERING || v != filter {
-                    write_right(&mut row[eb - 1], v);
+                    write_right(&mut row[eb - 1], v.into_inner());
                 }
             }
         }
@@ -219,12 +223,18 @@ fn clip(area: &Rectangle, size: Size) -> Option<(usize, usize, usize, usize)> {
     Some((x0 as usize, y0 as usize, x1 as usize, y1 as usize))
 }
 
+/// `iter` is spelled `&mut I` rather than `I: Iterator` by value: the call
+/// sites hold the iterator by `&mut`, and going through the blanket
+/// `impl Iterator for &mut I` would lose the inner `next`'s
+/// #[inline(always)], reintroducing an out-of-line call per pixel.
 #[inline(always)]
-fn fill_by_two<I: Iterator<Item = u8>>(place: &mut [u8], mut iter: I, filter: u8) {
+fn fill_by_two<I: Iterator<Item = Clut4Pixel>>(place: &mut [u8], iter: &mut I, filter: Clut4Pixel) {
     for p in place.iter_mut() {
         let v1 = iter.next();
         let v2 = iter.next();
         if let Some((v1, v2)) = v1.zip(v2) {
+            let (v1, v2) = (v1.into_inner(), v2.into_inner());
+            let filter = filter.into_inner();
             if !FILTERING || (v1 != filter && v2 != filter) {
                 *p = (v2 << 4) | v1;
             } else {

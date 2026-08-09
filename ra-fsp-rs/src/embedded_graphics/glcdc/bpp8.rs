@@ -120,21 +120,26 @@ impl<'a, 'b> DrawTarget for Display<Bpp8> {
             None => return Ok(()),
         };
 
-        let mut colors = colors.into_iter().map(|c| c.0.into_inner());
-        let filter = self.filter.0.into_inner();
+        // No `.map()` adapter on the pixel stream, and `colors.next()` is
+        // called directly rather than through zip's `&mut I` blanket impl:
+        // both would drop an #[inline(always)] on the iterator's `next`
+        // (egi strips), leaving an out-of-line call per pixel at opt-level z.
+        let mut colors = colors.into_iter();
+        let filter = self.filter;
         let hstride = self.hstride_bytes;
         let span_len = x1 - x0;
 
         for row in buffer[y0 * hstride..y1 * hstride].chunks_exact_mut(hstride) {
-            // Slice the span once so the compiler can see its length; the
-            // zip+iter_mut pair eliminates per-pixel index arithmetic and the
-            // bounds check that `row[x] = v` would otherwise emit each cycle.
+            // Slice the span once so the compiler can see its length;
+            // iterating the span eliminates per-pixel index arithmetic and
+            // the bounds check that `row[x] = v` would otherwise emit.
             let span = &mut row[x0..x1];
             let mut n = 0usize;
-            for (p, v) in span.iter_mut().zip(&mut colors) {
+            for p in span.iter_mut() {
+                let Some(v) = colors.next() else { break };
                 n += 1;
                 if !FILTERING || v != filter {
-                    *p = v;
+                    *p = v.into_inner();
                 }
             }
             // `colors` was exhausted before the span was fully consumed:
